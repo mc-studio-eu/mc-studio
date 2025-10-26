@@ -1,2 +1,22 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@theme {
+    --color-black-light: #232323;
+    --color-gold: #F0BF6C;
+    --color-grey: #5D5D5D;
+    --color-black: #0F0F0F;
+    --color-white: #FFFFFF;
+    --color-grey-light: #62748E;
+    --font-host-grotesk: 'Host Grotesk', sans-serif;
+    --font-inter: Inter, sans-serif;
+}
+
+h1{
+    font-family: "Host Grotesk", sans-serif;
+}
+
+p{
+    font-family: "Inter", sans-serif;
+}
