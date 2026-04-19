@@ -1,86 +1,67 @@
+<script setup>
+const localePath = useLocalePath()
+const { t } = useI18n()
+</script>
+
 <template>
-  <footer id="footer" :style="{ backgroundImage: `url('/img/main/background.png')` }" class="rounded-lg bg-cover bg-center">
-    <div class="mx-auto max-w-7xl px-6 py-8 lg:px-8">
-
-      <!-- Main Container -->
-      <div class="flex flex-col md:flex-row items-center justify-between text-sm font-inter md:gap-0 gap-8">
-
-        <!-- Identity Group (Logo + Legal) -->
-        <!-- "contents" on mobile allows children to be sorted individually in the main flex container. 
-             "flex" on desktop groups them together on the left. -->
-        <div class="contents md:flex md:items-center md:gap-6 md:order-1 text-white">
-
-          <!-- Logo Section (Mobile: Order 1) -->
-          <div class="flex items-center gap-3 order-1">
-            <NuxtImg src="/img/main/logo.svg" alt="MC Studio Logo" class="h-10 md:h-8 w-auto" />
-            <span class="font-inter text-lg font-medium text-white tracking-tight">Studio</span>
+  <footer id="footer" class="bg-[#111111] text-white">
+    <div class="max-w-[1280px] mx-auto px-6 md:px-8">
+      
+      <!-- Main Footer Content -->
+      <div class="py-16 md:py-20">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
+          
+          <!-- Brand Column -->
+          <div class="md:col-span-5">
+            <div class="flex items-center gap-2.5 mb-6">
+              <NuxtImg src="/img/main/logo.svg" alt="MC Studio Logo" class="h-9 w-auto" />
+              <span class="font-manrope text-lg font-semibold text-white tracking-tight">Studio</span>
+            </div>
+            <p class="font-inter text-[15px] text-white/60 leading-relaxed max-w-[340px]">
+              {{ t('footer.tagline') }}
+            </p>
           </div>
 
-        </div>
-        
-        <!-- Socials Section (Mobile: Order 3, Desktop: Order 3) -->
-        <div class="flex items-center gap-4 text-white order-3">
-          <a href="https://www.linkedin.com/in/mohamed-chettah/" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--color-gold)] transition-colors">LinkedIn</a>
-          <a href="https://www.instagram.com/mc_studio_eu/" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--color-gold)] transition-colors">Instagram</a>
-          <a href="https://x.com/MohameDevWeb" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--color-gold)] transition-colors">X</a>
+          <!-- Navigation Column -->
+          <div class="md:col-span-3">
+            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">Navigation</h4>
+            <nav class="flex flex-col gap-3">
+              <NuxtLink :to="localePath('/services')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.services') }}</NuxtLink>
+              <NuxtLink :to="localePath('/projets')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.projects') }}</NuxtLink>
+              <NuxtLink :to="localePath('/a-propos')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.about') }}</NuxtLink>
+              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.contact') }}</NuxtLink>
+            </nav>
+          </div>
+
+          <!-- Socials Column -->
+          <div class="md:col-span-2">
+            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">Socials</h4>
+            <nav class="flex flex-col gap-3">
+              <a href="https://www.linkedin.com/in/mohamed-chettah/" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">LinkedIn</a>
+              <a href="https://www.instagram.com/mc_studio_eu/" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Instagram</a>
+              <a href="https://x.com/MohameDevWeb" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">X (Twitter)</a>
+            </nav>
+          </div>
+
+          <!-- Contact Column -->
+          <div class="md:col-span-2">
+            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">Contact</h4>
+            <nav class="flex flex-col gap-3">
+              <a href="https://api.whatsapp.com/send/?phone=%2B33781724683" target="_blank" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">WhatsApp</a>
+              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.book_call') }}</NuxtLink>
+            </nav>
+          </div>
         </div>
       </div>
 
-      <!-- Legal Section (Mobile: Order 4) -->
-      <div class="flex flex-col justify-center md:flex-row items-center gap-2 md:gap-4 text-white order-4 md:order-none w-full md:w-auto mt-12">
-        <p class="text-sm md:text-xs">&copy; {{ new Date().getFullYear() }} MC Studio</p>
-        <!-- Links -->
-        <div class="flex gap-4 text-xs">
-          <NuxtLink :to="localePath('/privacy')" class="hover:text-white transition-colors">{{ $t('legal.links.privacy') }}</NuxtLink>
-          <NuxtLink :to="localePath('/terms')" class="hover:text-white transition-colors">{{ $t('legal.links.terms') }}</NuxtLink>
+      <!-- Bottom Bar -->
+      <div class="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="font-inter text-xs text-white/40">&copy; {{ new Date().getFullYear() }} {{ t('footer.copyright') }}</p>
+        <div class="flex items-center gap-6">
+          <NuxtLink :to="localePath('/privacy')" class="font-inter text-xs text-white/40 hover:text-white/70 transition-colors no-underline">{{ $t('legal.links.privacy') }}</NuxtLink>
+          <NuxtLink :to="localePath('/terms')" class="font-inter text-xs text-white/40 hover:text-white/70 transition-colors no-underline">{{ $t('legal.links.terms') }}</NuxtLink>
         </div>
       </div>
     </div>
   </footer>
 </template>
-
-<script setup>
-const localePath = useLocalePath()
-const { t } = useI18n()
-
-// Time logic
-const timeMontreal = ref('')
-const timeLyon = ref('')
-const timeLondon = ref('')
-
-let interval
-
-const updateTime = () => {
-  const now = new Date()
-  
-  timeMontreal.value = new Intl.DateTimeFormat('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'America/Montreal',
-    hour12: false
-  }).format(now)
-
-  timeLyon.value = new Intl.DateTimeFormat('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/Paris',
-    hour12: false
-  }).format(now)
-
-  timeLondon.value = new Intl.DateTimeFormat('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/London',
-    hour12: false
-  }).format(now)
-}
-
-onMounted(() => {
-  updateTime()
-  interval = setInterval(updateTime, 1000)
-})
-
-onUnmounted(() => {
-  if (interval) clearInterval(interval)
-})
-</script>

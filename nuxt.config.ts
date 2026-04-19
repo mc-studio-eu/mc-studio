@@ -16,16 +16,16 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      title: "MC Studio | Création d'expériences digital",
+      title: "MC Studio | Agence de développement d'apps pour créateurs",
       htmlAttrs: {
-        lang: 'en'
+        lang: 'fr'
       },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Le Studio de Design & Développement' },
+        { name: 'description', content: "L'agence qui développe les apps des créateurs de contenu. Design, développement web & mobile sur mesure." },
         { name: 'format-detection', content: 'telephone=no' },
-        { property: 'og:title', content: "MC Studio" },
+        { property: 'og:title', content: "MC Studio | Agence de développement d'apps pour créateurs" },
         { property: 'og:type', content: 'website' },
         { property: 'og:url', content: 'https://www.mc-studio.eu' },
         { property: 'og:image', content: 'https://www.mc-studio.eu/hero.png' },
@@ -36,20 +36,14 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', href: '/favicon-new.png' },
         { rel: 'shortcut icon', type: 'image/png', href: '/favicon-new.png' },
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-      ],
-      script: [
-        {
-          innerHTML: `(function(){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';localStorage.setItem('nuxt-color-mode','dark');})();`,
-          type: 'text/javascript'
-        }
       ]
-    }
+    },
+    pageTransition: { name: 'page', mode: 'out-in' }
   },
-  
 
   colorMode: {
-    preference: 'dark',
-    fallback: 'dark',
+    preference: 'light',
+    fallback: 'light',
     classSuffix: '',
     storage: 'localStorage',
     storageKey: 'nuxt-color-mode',
