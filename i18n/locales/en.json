@@ -21,19 +21,12 @@
         },
         "badges": {
             "rotating_stats": [
-                "+10 projects delivered",
-                "100% satisfaction",
                 "+5 years experience"
             ],
             "location": [
-                "Lyon",
-                "London",
-                "Montreal"
+                "Lyon"
             ],
             "rotating_services": [
-                "Branding",
-                "Design",
-                "Development",
                 "World Class"
             ]
         },
