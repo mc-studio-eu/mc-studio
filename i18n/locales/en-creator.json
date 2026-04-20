@@ -4,6 +4,7 @@
         "services": "Services",
         "reviews": "Reviews",
         "faq": "FAQ",
+        "contact": "Contact",
         "book_call": "Book a call",
         "free_call": "Free discussion",
         "team": "Team"
@@ -345,6 +346,10 @@
         }
     },
     "footer": {
+        "tagline": "Branding, design and development to launch useful, elegant apps built to grow.",
+        "navigation_title": "Navigation",
+        "socials_title": "Socials",
+        "contact_title": "Contact",
         "copyright": "MC Studio. All rights reserved."
     },
     "meta": {

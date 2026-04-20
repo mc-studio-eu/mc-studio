@@ -24,18 +24,18 @@ const { t } = useI18n()
 
           <!-- Navigation Column -->
           <div class="md:col-span-3">
-            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">Navigation</h4>
+            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.navigation_title') }}</h4>
             <nav class="flex flex-col gap-3">
-              <NuxtLink :to="localePath('/services')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.services') }}</NuxtLink>
-              <NuxtLink :to="localePath('/projets')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.projects') }}</NuxtLink>
-              <NuxtLink :to="localePath('/a-propos')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.about') }}</NuxtLink>
-              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.contact') }}</NuxtLink>
+              <NuxtLink :to="`${localePath('/')}#services`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.services') }}</NuxtLink>
+              <NuxtLink :to="`${localePath('/')}#projets`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.projects') }}</NuxtLink>
+              <NuxtLink :to="`${localePath('/')}#equipe`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.team') }}</NuxtLink>
+              <NuxtLink :to="`${localePath('/')}#contact`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.contact') }}</NuxtLink>
             </nav>
           </div>
 
           <!-- Socials Column -->
           <div class="md:col-span-2">
-            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">Socials</h4>
+            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.socials_title') }}</h4>
             <nav class="flex flex-col gap-3">
               <a href="https://www.linkedin.com/in/mohamed-chettah/" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">LinkedIn</a>
               <a href="https://www.instagram.com/mc_studio_eu/" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Instagram</a>
@@ -45,10 +45,10 @@ const { t } = useI18n()
 
           <!-- Contact Column -->
           <div class="md:col-span-2">
-            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">Contact</h4>
+            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.contact_title') }}</h4>
             <nav class="flex flex-col gap-3">
               <a href="https://api.whatsapp.com/send/?phone=%2B33781724683" target="_blank" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">WhatsApp</a>
-              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.book_call') }}</NuxtLink>
+              <NuxtLink :to="`${localePath('/')}#contact`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.book_call') }}</NuxtLink>
             </nav>
           </div>
         </div>

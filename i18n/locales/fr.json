@@ -5,11 +5,16 @@
         "services": "Services",
         "reviews": "Avis",
         "faq": "FAQ",
+        "contact": "Contact",
         "book_call": "Réserver un appel",
         "free_call": "Discussion gratuite",
         "team": "Équipe"
     },
     "footer": {
+        "tagline": "Branding, design et développement pour lancer des applications utiles, élégantes et prêtes à grandir.",
+        "navigation_title": "Navigation",
+        "socials_title": "Réseaux",
+        "contact_title": "Contact",
         "copyright": "MC Studio. Tous droits réservés."
     },
     "hero": {
