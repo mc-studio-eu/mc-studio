@@ -219,6 +219,17 @@
         "subtitle": "A selection of projects where design, code and strategy meet.",
         "cta": "View project",
         "items": {
+            "amg_promotion": {
+            "description": "AMG Promotion is a company specialized in creating promotional products (textiles, goodies, personalized items, and more), working with well-known brands and organizations such as Groupe SEB, ALTRAD, and the French National Police.",
+            "tags": [
+                "Landing Page",
+                "Branding",
+                "Design",
+                "UI/UX",
+                "Copywriting",
+                "Sales Promotion"
+            ]
+            },
             "arises": {
                 "description": "Arises is an AI SaaS that turns your calendar into an action plan.\nWe designed this SaaS from logo to online launch, all custom-made to maximize activation.",
                 "tags": [

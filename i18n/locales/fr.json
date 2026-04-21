@@ -219,6 +219,17 @@
         "subtitle": "Une sélection de projets où design, code et stratégie se rencontrent.",
         "cta": "Voir le projet",
         "items": {
+            "amg_promotion": {
+                "description": "AMG Promotion, c’est une entreprise spécialisée dans la création de produits promotionnels (textile, goodies, objets personnalisés…), qui accompagne des références reconnues comme Groupe SEB, ALTRAD ou encore la Police Nationale.",
+                "tags": [
+                    "Landing Page",
+                    "Branding",
+                    "Design",
+                    "UI/UX",
+                    "Copywriting",
+                    "Promotion des ventes"
+                ]
+            },
             "arises": {
                 "description": "Arises est un SaaS IA qui transforme votre calendrier en plan d’action.\nOn a conçu ce SaaS du logo jusqu'au lancement en ligne, tout sur mesure pour maximiser l’activation.",
                 "tags": [

@@ -29,6 +29,15 @@ useTextSlideAnimation(projectCtaBtn, projectCtaWrapper)
 const projects = computed<Project[]>(() => [
   {
     id: 1,
+    title: 'Amg Promotion',
+    description: t('projects.items.amg_promotion.description'),
+    image: '/img/project/amgprom.png',
+    tags: Object.values(tm('projects.items.amg_promotion.tags') as Record<string, any> || {}).map(tag => rt(tag)),
+    testimonials: false,
+    link: 'https://amgprom.com/'
+  },
+  {
+    id: 2,
     title: 'Arises',
     description: t('projects.items.arises.description'),
     image: '/img/project/arises-tablet.jpeg',
@@ -37,7 +46,7 @@ const projects = computed<Project[]>(() => [
     link: 'https://arises.app/'
   },
   {
-    id: 2,
+    id: 3,
     title: 'Souji Nova',
     description: t('projects.items.souji_nova.description'),
     image: '/img/project/souji-nova-desktop.png',
@@ -52,7 +61,7 @@ const projects = computed<Project[]>(() => [
     link: 'https://soujinova.fr/'
   },
   {
-    id: 3,
+    id: 4,
     title: 'R&A Energy',
     description: t('projects.items.ra_energy.description'),
     image: '/img/project/ra-energy.png',
@@ -67,7 +76,7 @@ const projects = computed<Project[]>(() => [
     link: 'https://ra-energy.fr/'
   },
   {
-    id: 4,
+    id: 5,
     title: 'Fontaines VTC',
     description: t('projects.items.fontaines_vtc.description'),
     image: '/img/project/fontaines-vtc-dark.jpeg',
