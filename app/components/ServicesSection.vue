@@ -73,7 +73,7 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
             </div>
 
             <!-- Description -->
-            <p class="text-[13px] leading-[1.7] mb-6 transition-colors duration-300 text-[var(--text-secondary)]">
+            <p class="text-[13px] leading-[1.7] mb-6 transition-colors duration-300 text-[var(--text-primary)]/90">
               {{ offer.description }}
             </p>
 
@@ -86,7 +86,7 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
                 {{ $t('services.common.for_who') }}
               </h4>
               <ul class="space-y-2">
-                <li v-for="item in offer.forWho" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-secondary)]">
+                <li v-for="item in offer.forWho" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-primary)]">
                   <span class="offer-bullet mt-[3px]">•</span>
                   <span>{{ item }}</span>
                 </li>
@@ -99,28 +99,13 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
                 {{ $t('services.common.ideal_if') }}
               </h4>
               <ul class="space-y-2.5">
-                <li v-for="item in offer.idealIf" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-secondary)]">
+                <li v-for="item in offer.idealIf" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-primary)]">
                   <UIcon name="i-heroicons-check-circle-solid" class="w-4 h-4 mt-[1px] flex-shrink-0" :class="offer.featured ? 'text-[#F0BF6C]' : 'text-[#F0BF6C]/60'" />
                   <span>{{ item }}</span>
                 </li>
               </ul>
             </div>
 
-            <!-- Spacer -->
-            <div class="flex-1"></div>
-
-            <!-- CTA -->
-            <div class="pt-4">
-
-              <a 
-                href="#contact" 
-                class="offer-cta block text-center"
-                :class="offer.featured ? 'offer-cta--featured' : 'offer-cta--default'"
-              >
-                {{ $t('hero.cta.book') }}
-                <UIcon name="i-heroicons-arrow-right-20-solid" class="inline-block w-4 h-4 ml-1.5 -mt-[1px]" />
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -234,34 +219,6 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
   color: rgba(240, 191, 108, 0.7);
 }
 
-/* ─── CTA buttons ─── */
-.offer-cta {
-  display: block;
-  padding: 10px 20px;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 10px;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
-}
-
-.offer-cta:active {
-  transform: scale(0.98);
-}
-
-.offer-cta--default {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.offer-cta--featured {
-  background: linear-gradient(135deg, #F0BF6C 0%, #e0a84d 100%);
-  color: #0f0f0f;
-  border: none;
-  box-shadow: 0 4px 15px rgba(240, 191, 108, 0.2);
-}
 
 /* ─── Other services ─── */
 .other-services-card {
