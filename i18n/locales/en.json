@@ -1,606 +1,620 @@
 {
-    "welcome": "Welcome",
-    "nav": {
-        "projects": "Projects",
-        "services": "Services",
-        "reviews": "Reviews",
-        "faq": "FAQ",
-        "contact": "Contact",
-        "book_call": "Book a call",
-        "free_call": "Free discussion",
-        "team": "Team"
+  "welcome": "Welcome",
+  "nav": {
+    "projects": "Projects",
+    "services": "Services",
+    "reviews": "Reviews",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "book_call": "Book a call",
+    "free_call": "Free discussion",
+    "team": "Team"
+  },
+  "footer": {
+    "tagline": "Branding, design and development to launch useful, elegant apps built to grow.",
+    "navigation_title": "Navigation",
+    "socials_title": "Socials",
+    "contact_title": "Contact",
+    "copyright": "MC Studio. All rights reserved."
+  },
+  "hero": {
+    "title": "Design & Development to<br class=\"hidden xs:inline\"> launch fast, and well.",
+    "subtitle": "Branding, landing page and apps: we support<br> entrepreneurs and companies from concept to launch.",
+    "cta": {
+      "book": "Book a call",
+      "whatsapp": "Chat on WhatsApp"
     },
-    "footer": {
-        "tagline": "Branding, design and development to launch useful, elegant apps built to grow.",
-        "navigation_title": "Navigation",
-        "socials_title": "Socials",
-        "contact_title": "Contact",
-        "copyright": "MC Studio. All rights reserved."
+    "badges": {
+      "rotating_stats": [
+        "+5 years experience"
+      ],
+      "location": [
+        "Lyon"
+      ],
+      "rotating_services": [
+        "World Class"
+      ]
+    },
+    "marquee": [
+      "design",
+      "SaaS",
+      "MVP",
+      "development",
+      "design",
+      "SaaS",
+      "branding",
+      "SEO",
+      "development",
+      "branding",
+      "UI/UX",
+      "AI",
+      "development",
+      "deployment",
+      "wireframe",
+      "UI/UX",
+      "AI"
+    ]
+  },
+  "services": {
+    "title": "Our <span class=\"text-gradient\">offers</span>",
+    "subtitle": "Offers tailored to every profile.<br class=\"sm:hidden\"> Entrepreneurs, creators or businesses.",
+    "other_services": {
+      "title": "Other Services",
+      "subtitle": "Need a custom service? We adapt.",
+      "list": {
+        "branding": "Branding",
+        "web_design": "Web Design",
+        "product_design": "Product Design",
+        "showcase": "Showcase Sites",
+        "seo": "SEO",
+        "copywriting": "Copywriting",
+        "strategy": "Strategic Support",
+        "ai": "AI Integration",
+        "web_dev": "Web Development",
+        "mobile_dev": "Mobile Development"
+      }
+    },
+    "cards": {
+      "entrepreneur": {
+        "title": "Entrepreneurs",
+        "icon": "rocket",
+        "description": "We help entrepreneurs turn a vision into a clear, credible application ready to launch.",
+        "for_who": {
+          "0": "founders",
+          "1": "freelancers",
+          "2": "startups",
+          "3": "project owners"
+        },
+        "ideal_if": {
+          "0": "you need to clarify an idea",
+          "1": "you need to scope an MVP",
+          "2": "you need to launch a first version",
+          "3": "you need to build on solid foundations"
+        },
+        "budget": "Custom quote"
+      },
+      "creator": {
+        "title": "Creators",
+        "icon": "sparkles",
+        "description": "We help creators turn their audience into a useful app, aligned with their universe and designed for their community.",
+        "for_who": {
+          "0": "content creators",
+          "1": "influencers",
+          "2": "youtubers",
+          "3": "profiles with an engaged community"
+        },
+        "ideal_if": {
+          "0": "you need to bring more value to your audience",
+          "1": "you need to launch an app aligned with your brand",
+          "2": "you need to create a new revenue stream",
+          "3": "you need to build around your niche"
+        },
+        "budget": "Custom quote"
+      },
+      "enterprise": {
+        "title": "Businesses",
+        "icon": "building",
+        "description": "We help businesses design custom applications and tools to streamline their operations and support their growth.",
+        "for_who": {
+          "0": "SMBs",
+          "1": "growing companies",
+          "2": "brands",
+          "3": "organizations with specific operational needs"
+        },
+        "ideal_if": {
+          "0": "you need to streamline workflows",
+          "1": "you need to improve operational efficiency",
+          "2": "you need to centralize or automate processes",
+          "3": "you need to develop an internal tool or business platform"
+        },
+        "budget": "Custom quote"
+      }
+    },
+    "common": {
+      "deliverables_label": "Deliverables:",
+      "details": "Details",
+      "for_who": "FOR WHOM",
+      "included": "Included",
+      "delay": "Delay",
+      "ideal_if": "IDEAL IF",
+      "budget": "INDICATIVE BUDGET"
+    },
+    "modals": {
+      "landing": {
+        "title": "Landing Page",
+        "result": "A premium page designed to convert",
+        "for_who": {
+          "0": "You have a clear offer and want more requests",
+          "1": "You are launching a product/service and want to test an angle",
+          "2": "You have traffic but the page doesn't convert"
+        },
+        "included": {
+          "0": "Analysis (offer, USP, ICP, objections, proofs, competitors)",
+          "1": "Page architecture (sections + flow)",
+          "2": "Structural Copywriting (hooks, proofs, CTA)",
+          "3": "Visual Identity",
+          "4": "Premium UI Design (Figma) - Unlimited revisions until satisfaction",
+          "5": "Front integration (perf + responsive): Custom Code or No-Code",
+          "6": "SEO Optimization",
+          "7": "Form (or Calendly)",
+          "8": "Tracking: Google Analytics",
+          "9": "Go live + QA (mobile/tablet/desktop)",
+          "10": "Animations & Micro-interactions"
+        },
+        "delay": "7–10 days"
+      },
+      "sprint": {
+        "title": "Sprint: MVP",
+        "result": "Validate your product in production",
+        "for_who": {
+          "0": "You have an idea and want to validate without burning 6 months",
+          "1": "You need a \"serious\" prototype in production",
+          "2": "You need to show a product to partners / early users"
+        },
+        "included": {
+          "0": "Landing Page included",
+          "1": "Scoping workshop (scope = 1 core value)",
+          "2": "UI/UX on Figma (main flow)",
+          "3": "Full-stack Dev (front + back)",
+          "4": "Auth + user management",
+          "5": "Database + essential CRUD",
+          "6": "Deployment (staging + prod)",
+          "7": "Basic Analytics / logs",
+          "8": "1 iteration post-feedback (small improvement loop)"
+        },
+        "delay": "3–6 weeks (depending on complexity)"
+      },
+      "saas": {
+        "title": "Launch: SaaS",
+        "result": "A complete, robust product ready to scale.",
+        "for_who": {
+          "0": "You have validated interest and want to accelerate time-to-market",
+          "1": "You want a clean base (security, perf, maintenance) from the start",
+          "2": "You need + features, payments, roles, admin, onboarding..."
+        },
+        "included": {
+          "0": "Landing Page included",
+          "1": "Product scoping (MVP++: short roadmap + priorities)",
+          "2": "Design system + UI/UX (key screens + components)",
+          "3": "Complete Full-stack Dev (front + back)",
+          "4": "Auth + roles/permissions",
+          "5": "Back-office / admin (user management, content, etc.)",
+          "6": "Payments (Stripe): checkout + subscriptions",
+          "7": "Transactional emails + onboarding",
+          "8": "CI/CD + deployment (staging + prod) + monitoring",
+          "9": "Baseline security + backups + handover docs"
+        },
+        "delay": "6–10+ weeks (depending on complexity)",
+        "scope": {
+          "0": "Complete product",
+          "1": "solid tech foundations",
+          "2": "scalability"
+        }
+      }
+    },
+    "marquee": [
+      "Fast and Efficient",
+      "World Class",
+      "Tailor Made",
+      "Your Partner",
+      "Pixel Perfect",
+      "100% Satisfaction",
+      "Seamless Communication",
+      "Premium Quality",
+      "Coherent Branding",
+      "SaaS Ready",
+      "Conversion Boost",
+      "Clean & Modern",
+      "Impeccable Details"
+    ]
+  },
+  "projects": {
+    "title": "Our <span class=\"text-gradient\">Projects</span>",
+    "subtitle": "A selection of projects where design, code and strategy meet.",
+    "cta": "View project",
+    "items": {
+      "amg_promotion": {
+        "description": "AMG Promotion is a company specialized in creating promotional products (textiles, goodies, personalized items, and more), working with well-known brands and organizations such as Groupe SEB, ALTRAD, and the French National Police.",
+        "tags": [
+          "Landing Page",
+          "Branding",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Sales Promotion"
+        ]
+      },
+      "arises": {
+        "description": "Arises is an AI SaaS that turns your calendar into an action plan.\nWe designed this SaaS from logo to online launch, all custom-made to maximize activation.",
+        "tags": [
+          "Launch",
+          "AI SaaS",
+          "Landing Page",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Branding"
+        ]
+      },
+      "souji_nova": {
+        "description": "Souji Nova is a cleaning company for individuals and professionals.\nCustom landing page: reassuring design, clear offer, optimized path to generate more requests.",
+        "tags": [
+          "Landing Page",
+          "Branding",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Cleaning Company"
+        ],
+        "testimonial": {
+          "review": "MC Studio created a great website for us, very intuitive and very professional. Good advice and attentive to its clients, I recommend!",
+          "job": "Co-founder Souji Nova"
+        }
+      },
+      "ra_energy": {
+        "description": "R&A Energy is an energy broker dedicated to businesses and pros.\n\nPremium branding & landing page: simplified message, reinforced reassurance and contact-oriented path.",
+        "tags": [
+          "Landing Page",
+          "Branding",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Logo",
+          "Energy Brokerage"
+        ],
+        "testimonial": {
+          "review": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
+          "job": "Co-founder R&A Energy"
+        }
+      },
+      "fontaines_vtc": {
+        "description": "Fontaines VTC is a private transport company (online bookings).\nSEO Optimization + CTA: better local visibility and more conversions on booking.",
+        "tags": [
+          "SEO",
+          "CTA Optimization",
+          "Design",
+          "Copywriting",
+          "VTC Company"
+        ],
+        "testimonial": {
+          "review": "MC Studio accompanied me in my digital project, very serious professional company I recommend it!",
+          "job": "Manager Fontaines VTC"
+        }
+      }
+    }
+  },
+  "process": {
+    "title": "How we <span class=\"text-gradient\">work</span>",
+    "subtitle": "A simple 3-step approach to bring your project to life.",
+    "duration_label": "Average duration:",
+    "duration_value": "2-4 weeks",
+    "steps": {
+      "1": {
+        "title": "1. Discovery Call",
+        "description": "We discuss your project, goals, and challenges. We then propose the best strategy tailored to your needs."
+      },
+      "2": {
+        "title": "2. Commercial Proposal",
+        "description": "You receive a detailed proposal including scope, budget, and timeline. Everything is clear, no surprises."
+      },
+      "3": {
+        "title": "3. Project Kickoff",
+        "description": "Once approved, we set up the kickoff. You get access to your Notion workspace and work begins immediately."
+      }
+    }
+  },
+  "testimonials": {
+    "intro_label": "The Independent Studio",
+    "intro_text": "At MC Studio we have a taste for well-done work, we iterate fast <br> while paying particular attention <br> to delivered work",
+    "title": "What <span class=\"text-gradient\">our clients</span> say",
+    "items": {
+      "ra_energy": {
+        "content": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
+        "role": "Co-founder, R&A Energy"
+      },
+      "souji_nova": {
+        "content": "MC Studio created a great website for us, very intuitive and very professional. Good advice and attentive to its clients, I recommend!",
+        "role": "Co-founder, Souji Nova"
+      },
+      "fontaines_vtc": {
+        "content": "MC Studio accompanied me in my digital project, very serious professional company I recommend it!",
+        "role": "Manager, Fontaines VTC"
+      },
+      "liquid_scan": {
+        "content": "Mohamed supported us in the development of our startup.\nWe were looking for someone driven, committed, and passionate, and he fully met our expectations.\nI highly recommend him.",
+        "role": "Co-founder, Liquid Scan"
+      }
+    }
+  },
+  "faq": {
+    "title": "<span class=\"text-gradient\">FAQ</span>",
+    "subtitle": "We answer your questions:",
+    "founder_role": "Founder {'@'}MC Studio",
+    "contact_text": "Other questions? Contact me directly here:",
+    "whatsapp_btn": "Message on WhatsApp",
+    "items": {
+      "0": {
+        "question": "What types of clients do you support?",
+        "answer": "We support entrepreneurs, influencer, startups and companies. Our projects range from conversion-oriented landing pages to more complete platforms (MVP, SaaS, dashboards), with an approach focused on design, solving problem, clarity of offer and performance."
+      },
+      "1": {
+        "question": "How to get a quote and how long do you take to respond?",
+        "answer": "Book a call or contact us directly on WhatsApp. We usually respond within 24h with a few quick questions and a first estimate. A detailed quote is then sent after a scoping exchange (objectives, content, deadlines, scope)."
+      },
+      "2": {
+        "question": "What happens if the design doesn't match your expectations?",
+        "answer": "We move step by step with validations (creative direction, mockups, iterations). Each project includes revisions to adjust until we get a result aligned with your vision. The goal: a design that looks like you and converts."
+      },
+      "3": {
+        "question": "What is the cost of a project?",
+        "answer": "The budget depends on the scope (number of pages, features, animations, content, integrations). After a first exchange, we propose a clear recommendation with a transparent quote — no surprises."
+      },
+      "4": {
+        "question": "Who is behind MC Studio?",
+        "answer": "MC Studio brings together a team of 4 experts from different fields (product direction, design, frontend dev, backend dev and project management). Founded and led by Mohamed Chettah, the studio supports entrepreneurs, startups and companies from strategy to launch."
+      },
+      "5": {
+        "question": "How does the collaboration work?",
+        "answer": "You will have a private WhatsApp channel with us to streamline exchanges, briefs and delivery. If needed, we schedule follow-up points.\n\nEverything happens on Notion: you deposit your requests (text, video, docs), we analyze them and give you a deadline. In general, we deliver 2 to 3 tasks per week depending on complexity.\n\nOnce delivered, you validate or ask for revisions, then we move on to the next."
+      }
+    }
+  },
+  "cta": {
+    "title": "Tell us about <span class=\"text-gradient\">your Project</span>",
+    "subtitle": "Our mission: help entrepreneurs and companies transform an idea into a concrete product"
+  },
+  "team": {
+    "badge": "Our team",
+    "title": "The <span class=\"text-gradient\">MC Studio</span> team",
+    "subtitle": "Strategy, design and development to turn a vision into a clear, useful, well-executed product.",
+    "cards": {
+      "collective": {
+        "title": "A team at the service of the product.",
+        "text": "Strategic thinking, product framing, design and development brought together in a team. Lean, experienced, and focused on what truly matters."
+      },
+      "specialists": {
+        "title": "From strategy to execution.",
+        "text": "From business thinking to interface design and development, each skill is aligned to deliver coherent, useful digital products built to support real goals."
+      }
+    },
+    "members": {
+      "mohamed": {
+        "role": "Founder — Creative Director"
+      },
+      "liam": {
+        "role": "Head of Product"
+      },
+      "mateo": {
+        "role": "Backend Developer"
+      },
+      "romain": {
+        "role": "Frontend Developer"
+      }
+    },
+    "specialist_badges": [
+      "Business strategy",
+      "Product strategy",
+      "Product framing",
+      "UX/UI",
+      "Design system",
+      "Prototyping",
+      "Front-end",
+      "Back-end",
+      "Roadmap",
+      "Launch",
+      "Execution",
+      "Delivery"
+    ]
+  },
+  "partners": {
+    "nav": {
+      "cta": "Sign up"
     },
     "hero": {
-        "title": "Design & Development to<br class=\"hidden xs:inline\"> launch fast, and well.",
-        "subtitle": "Branding, landing page and apps: we support<br> entrepreneurs and companies from concept to launch.",
-        "cta": {
-            "book": "Book a call",
-            "whatsapp": "Chat on WhatsApp"
-        },
-        "badges": {
-            "rotating_stats": [
-                "+5 years experience"
-            ],
-            "location": [
-                "Lyon"
-            ],
-            "rotating_services": [
-                "World Class"
-            ]
-        },
-        "marquee": [
-            "design",
-            "SaaS",
-            "MVP",
-            "development",
-            "design",
-            "SaaS",
-            "branding",
-            "SEO",
-            "development",
-            "branding",
-            "UI/UX",
-            "AI",
-            "development",
-            "deployment",
-            "wireframe",
-            "UI/UX",
-            "AI"
-        ]
+      "badge": "Partner Program · MC Studio",
+      "title": "Become a growth partner of MC Studio.",
+      "subtitle": "Recommend strategic projects to MC Studio and directly contribute to the studio’s growth.",
+      "primary_main": "Join the Partner Program",
+      "primary_sub": "Access via the platform",
+      "secondary": "How it works",
+      "example_label": "Concrete example",
+      "example_text": "Project signed at <span class=\"font-semibold text-[var(--color-gold)]\">€15,000</span> → you earn <span class=\"font-semibold text-[var(--color-gold)]\">€1,500</span>.",
+      "commission_label": "Commission",
+      "commission_note": "on each signed project"
     },
-    "services": {
-        "title": "Our <span class=\"text-gradient\">Services</span>",
-        "subtitle": "Branding, sites & applications<br class=\"sm:hidden\"> from landing to MVP, up to SaaS ready to launch.",
-        "other_services": {
-            "title": "Other Services",
-            "subtitle": "Need a custom service? We adapt.",
-            "list": {
-                "branding": "Branding",
-                "web_design": "Web Design",
-                "product_design": "Product Design",
-                "showcase": "Showcase Sites",
-                "seo": "SEO",
-                "copywriting": "Copywriting",
-                "strategy": "Strategic Support",
-                "ai": "AI Integration",
-                "web_dev": "Web Development",
-                "mobile_dev": "Mobile Development"
-            }
+    "principle": {
+      "title": "The principle of the Partner Program.",
+      "subtitle": "You recommend a qualified prospect, MC Studio handles the conversations, and if the project is signed, you earn 10% of the amount.",
+      "steps": {
+        "1": {
+          "label": "01",
+          "title": "You recommend a qualified prospect",
+          "text": "You identify a clear need to create an application or a website and introduce us to the person (or team) in charge of the project."
         },
-        "cards": {
-            "landing": {
-                "title": "Landing Page",
-                "subtitle": "A premium page designed to convert.",
-                "features": {
-                    "0": "Premium Design (Figma)",
-                    "1": "Conversion-oriented copy & structure",
-                    "2": "Custom Dev (mobile and desktop)",
-                    "3": "Tracking (GA) + Deployment"
-                },
-                "deliverables": {
-                    "0": "Live Landing Page",
-                    "1": "Ready to convert"
-                }
-            },
-            "sprint": {
-                "title": "Sprint: MVP",
-                "subtitle": "Validate your product in production",
-                "features": {
-                    "0": "Minimal UI/UX (essential screens)",
-                    "1": "1 key feature",
-                    "2": "Payment / Subscriptions (Stripe)",
-                    "3": "Deployment + QA"
-                },
-                "deliverables": {
-                    "0": "MVP in production",
-                    "1": "Ready to iterate"
-                }
-            },
-            "saas": {
-                "title": "Launch: SaaS",
-                "subtitle": "A complete product, ready to scale.",
-                "features": {
-                    "0": "Branding + Complete Design (UI/UX)",
-                    "1": "3 key features",
-                    "2": "Payment & Subscriptions (Stripe) + Onboarding",
-                    "3": "Deployment + QA + Scalable Base"
-                },
-                "deliverables": {
-                    "0": "SaaS in production",
-                    "1": "Ready to scale"
-                }
-            }
+        "2": {
+          "label": "02",
+          "title": "MC Studio handles the conversations",
+          "text": "We scope the need, build the proposal, lead the discussions and keep you informed of the progress."
         },
-        "common": {
-            "deliverables_label": "Deliverables:",
-            "details": "Details",
-            "for_who": "For whom",
-            "included": "Included",
-            "delay": "Delay"
-        },
-        "modals": {
-            "landing": {
-                "title": "Landing Page",
-                "result": "A premium page designed to convert",
-                "for_who": {
-                    "0": "You have a clear offer and want more requests",
-                    "1": "You are launching a product/service and want to test an angle",
-                    "2": "You have traffic but the page doesn't convert"
-                },
-                "included": {
-                    "0": "Analysis (offer, USP, ICP, objections, proofs, competitors)",
-                    "1": "Page architecture (sections + flow)",
-                    "2": "Structural Copywriting (hooks, proofs, CTA)",
-                    "3": "Visual Identity",
-                    "4": "Premium UI Design (Figma) - Unlimited revisions until satisfaction",
-                    "5": "Front integration (perf + responsive): Custom Code or No-Code",
-                    "6": "SEO Optimization",
-                    "7": "Form (or Calendly)",
-                    "8": "Tracking: Google Analytics",
-                    "9": "Go live + QA (mobile/tablet/desktop)",
-                    "10": "Animations & Micro-interactions"
-                },
-                "delay": "7–10 days"
-            },
-            "sprint": {
-                "title": "Sprint: MVP",
-                "result": "Validate your product in production",
-                "for_who": {
-                    "0": "You have an idea and want to validate without burning 6 months",
-                    "1": "You need a \"serious\" prototype in production",
-                    "2": "You need to show a product to partners / early users"
-                },
-                "included": {
-                    "0": "Landing Page included",
-                    "1": "Scoping workshop (scope = 1 core value)",
-                    "2": "UI/UX on Figma (main flow)",
-                    "3": "Full-stack Dev (front + back)",
-                    "4": "Auth + user management",
-                    "5": "Database + essential CRUD",
-                    "6": "Deployment (staging + prod)",
-                    "7": "Basic Analytics / logs",
-                    "8": "1 iteration post-feedback (small improvement loop)"
-                },
-                "delay": "3–6 weeks (depending on complexity)"
-            },
-            "saas": {
-                "title": "Launch: SaaS",
-                "result": "A complete, robust product ready to scale.",
-                "for_who": {
-                    "0": "You have validated interest and want to accelerate time-to-market",
-                    "1": "You want a clean base (security, perf, maintenance) from the start",
-                    "2": "You need + features, payments, roles, admin, onboarding..."
-                },
-                "included": {
-                    "0": "Landing Page included",
-                    "1": "Product scoping (MVP++: short roadmap + priorities)",
-                    "2": "Design system + UI/UX (key screens + components)",
-                    "3": "Complete Full-stack Dev (front + back)",
-                    "4": "Auth + roles/permissions",
-                    "5": "Back-office / admin (user management, content, etc.)",
-                    "6": "Payments (Stripe): checkout + subscriptions",
-                    "7": "Transactional emails + onboarding",
-                    "8": "CI/CD + deployment (staging + prod) + monitoring",
-                    "9": "Baseline security + backups + handover docs"
-                },
-                "delay": "6–10+ weeks (depending on complexity)",
-                "scope": {
-                    "0": "Complete product",
-                    "1": "solid tech foundations",
-                    "2": "scalability"
-                }
-            }
-        },
-        "marquee": [
-            "Fast and Efficient",
-            "World Class",
-            "Tailor Made",
-            "Your Partner",
-            "Pixel Perfect",
-            "100% Satisfaction",
-            "Seamless Communication",
-            "Premium Quality",
-            "Coherent Branding",
-            "SaaS Ready",
-            "Conversion Boost",
-            "Clean & Modern",
-            "Impeccable Details"
-        ]
-    },
-    "projects": {
-        "title": "Our <span class=\"text-gradient\">Projects</span>",
-        "subtitle": "A selection of projects where design, code and strategy meet.",
-        "cta": "View project",
-        "items": {
-            "amg_promotion": {
-            "description": "AMG Promotion is a company specialized in creating promotional products (textiles, goodies, personalized items, and more), working with well-known brands and organizations such as Groupe SEB, ALTRAD, and the French National Police.",
-            "tags": [
-                "Landing Page",
-                "Branding",
-                "Design",
-                "UI/UX",
-                "Copywriting",
-                "Sales Promotion"
-            ]
-            },
-            "arises": {
-                "description": "Arises is an AI SaaS that turns your calendar into an action plan.\nWe designed this SaaS from logo to online launch, all custom-made to maximize activation.",
-                "tags": [
-                    "Launch",
-                    "AI SaaS",
-                    "Landing Page",
-                    "Design",
-                    "UI/UX",
-                    "Copywriting",
-                    "Branding"
-                ]
-            },
-            "souji_nova": {
-                "description": "Souji Nova is a cleaning company for individuals and professionals.\nCustom landing page: reassuring design, clear offer, optimized path to generate more requests.",
-                "tags": [
-                    "Landing Page",
-                    "Branding",
-                    "Design",
-                    "UI/UX",
-                    "Copywriting",
-                    "Cleaning Company"
-                ],
-                "testimonial": {
-                    "review": "MC Studio created a great website for us, very intuitive and very professional. Good advice and attentive to its clients, I recommend!",
-                    "job": "Co-founder Souji Nova"
-                }
-            },
-            "ra_energy": {
-                "description": "R&A Energy is an energy broker dedicated to businesses and pros.\n\nPremium branding & landing page: simplified message, reinforced reassurance and contact-oriented path.",
-                "tags": [
-                    "Landing Page",
-                    "Branding",
-                    "Design",
-                    "UI/UX",
-                    "Copywriting",
-                    "Logo",
-                    "Energy Brokerage"
-                ],
-                "testimonial": {
-                    "review": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
-                    "job": "Co-founder R&A Energy"
-                }
-            },
-            "fontaines_vtc": {
-                "description": "Fontaines VTC is a private transport company (online bookings).\nSEO Optimization + CTA: better local visibility and more conversions on booking.",
-                "tags": [
-                    "SEO",
-                    "CTA Optimization",
-                    "Design",
-                    "Copywriting",
-                    "VTC Company"
-                ],
-                "testimonial": {
-                    "review": "MC Studio accompanied me in my digital project, very serious professional company I recommend it!",
-                    "job": "Manager Fontaines VTC"
-                }
-            }
+        "3": {
+          "label": "03",
+          "title": "You earn 10% if the project is signed",
+          "text": "Once the engagement is signed and paid, you receive 10% of the ex-VAT amount of the first invoice, in a clear and documented way."
         }
+      }
     },
-    "process": {
-        "title": "How we <span class=\"text-gradient\">work</span>",
-        "subtitle": "A simple 3-step approach to bring your project to life.",
-        "duration_label": "Average duration:",
-        "duration_value": "2-4 weeks",
-        "steps": {
-            "1": {
-                "title": "1. Discovery Call",
-                "description": "We discuss your project, goals, and challenges. We then propose the best strategy tailored to your needs."
-            },
-            "2": {
-                "title": "2. Commercial Proposal",
-                "description": "You receive a detailed proposal including scope, budget, and timeline. Everything is clear, no surprises."
-            },
-            "3": {
-                "title": "3. Project Kickoff",
-                "description": "Once approved, we set up the kickoff. You get access to your Notion workspace and work begins immediately."
-            }
-        }
-    },
-    "testimonials": {
-        "intro_label": "The Independent Studio",
-        "intro_text": "At MC Studio we have a taste for well-done work, we iterate fast <br> while paying particular attention <br> to delivered work",
-        "title": "What <span class=\"text-gradient\">our clients</span> say",
-        "items": {
-            "ra_energy": {
-                "content": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
-                "role": "Co-founder, R&A Energy"
-            },
-            "souji_nova": {
-                "content": "MC Studio created a great website for us, very intuitive and very professional. Good advice and attentive to its clients, I recommend!",
-                "role": "Co-founder, Souji Nova"
-            },
-            "fontaines_vtc": {
-                "content": "MC Studio accompanied me in my digital project, very serious professional company I recommend it!",
-                "role": "Manager, Fontaines VTC"
-            },
-            "liquid_scan": {
-                "content": "Mohamed supported us in the development of our startup.\nWe were looking for someone driven, committed, and passionate, and he fully met our expectations.\nI highly recommend him.",
-                "role": "Co-founder, Liquid Scan"
-            }
-        }
-    },
-    "faq": {
-        "title": "<span class=\"text-gradient\">FAQ</span>",
-        "subtitle": "We answer your questions:",
-        "founder_role": "Founder {'@'}MC Studio",
-        "contact_text": "Other questions? Contact me directly here:",
-        "whatsapp_btn": "Message on WhatsApp",
-        "items": {
-            "0": {
-                "question": "What types of clients do you support?",
-                "answer": "We support entrepreneurs, influencer, startups and companies. Our projects range from conversion-oriented landing pages to more complete platforms (MVP, SaaS, dashboards), with an approach focused on design, solving problem, clarity of offer and performance."
-            },
-            "1": {
-                "question": "How to get a quote and how long do you take to respond?",
-                "answer": "Book a call or contact us directly on WhatsApp. We usually respond within 24h with a few quick questions and a first estimate. A detailed quote is then sent after a scoping exchange (objectives, content, deadlines, scope)."
-            },
-            "2": {
-                "question": "What happens if the design doesn't match your expectations?",
-                "answer": "We move step by step with validations (creative direction, mockups, iterations). Each project includes revisions to adjust until we get a result aligned with your vision. The goal: a design that looks like you and converts."
-            },
-            "3": {
-                "question": "What is the cost of a project?",
-                "answer": "The budget depends on the scope (number of pages, features, animations, content, integrations). After a first exchange, we propose a clear recommendation with a transparent quote — no surprises."
-            },
-            "4": {
-                "question": "Who is behind MC Studio?",
-                "answer": "MC Studio brings together a team of 4 experts from different fields (product direction, design, frontend dev, backend dev and project management). Founded and led by Mohamed Chettah, the studio supports entrepreneurs, startups and companies from strategy to launch."
-            },
-            "5": {
-                "question": "How does the collaboration work?",
-                "answer": "You will have a private WhatsApp channel with us to streamline exchanges, briefs and delivery. If needed, we schedule follow-up points.\n\nEverything happens on Notion: you deposit your requests (text, video, docs), we analyze them and give you a deadline. In general, we deliver 2 to 3 tasks per week depending on complexity.\n\nOnce delivered, you validate or ask for revisions, then we move on to the next."
-            }
-        }
-    },
-    "cta": {
-        "title": "Tell us about <span class=\"text-gradient\">your Project</span>",
-        "subtitle": "Our mission: help entrepreneurs and companies transform an idea into a concrete product"
-    },
-    "team": {
-        "badge": "Our team",
-        "title": "The <span class=\"text-gradient\">MC Studio</span> team",
-        "subtitle": "Strategy, design and development to turn a vision into a clear, useful, well-executed product.",
-        "cards": {
-            "collective": {
-                "title": "A team at the service of the product.",
-                "text": "Strategic thinking, product framing, design and development brought together in a team. Lean, experienced, and focused on what truly matters."
-            },
-            "specialists": {
-                "title": "From strategy to execution.",
-                "text": "From business thinking to interface design and development, each skill is aligned to deliver coherent, useful digital products built to support real goals."
-            }
+    "why": {
+      "title": "Why join the program",
+      "subtitle": "A serious additional revenue stream, backed by a demanding studio, with a dedicated partner space to track your results.",
+      "side": "MC Studio supports entrepreneurs, creators, startups and SMEs on high-stakes product topics. As a partner, you associate your name with a serious, committed and selective team.",
+      "items": {
+        "income": {
+          "title": "Additional income",
+          "text": "Each project signed through your recommendations generates a clear, materialised and trackable commission over time."
         },
-        "members": {
-            "mohamed": {
-                "role": "Founder — Creative Director"
-            },
-            "liam": {
-                "role": "Head of Product"
-            },
-            "mateo": {
-                "role": "Backend Developer"
-            },
-            "romain": {
-                "role": "Frontend Developer"
-            }
-        },
-        "specialist_badges": [
-            "Business strategy",
-            "Product strategy",
-            "Product framing",
-            "UX/UI",
-            "Design system",
-            "Prototyping",
-            "Front-end",
-            "Back-end",
-            "Roadmap",
-            "Launch",
-            "Execution",
-            "Delivery"
-        ]
-    },
-    "partners": {
-        "nav": {
-            "cta": "Sign up"
-        },
-        "hero": {
-            "badge": "Partner Program · MC Studio",
-            "title": "Become a growth partner of MC Studio.",
-            "subtitle": "Recommend strategic projects to MC Studio and directly contribute to the studio’s growth.",
-            "primary_main": "Join the Partner Program",
-            "primary_sub": "Access via the platform",
-            "secondary": "How it works",
-            "example_label": "Concrete example",
-            "example_text": "Project signed at <span class=\"font-semibold text-[var(--color-gold)]\">€15,000</span> → you earn <span class=\"font-semibold text-[var(--color-gold)]\">€1,500</span>.",
-            "commission_label": "Commission",
-            "commission_note": "on each signed project"
-        },
-        "principle": {
-            "title": "The principle of the Partner Program.",
-            "subtitle": "You recommend a qualified prospect, MC Studio handles the conversations, and if the project is signed, you earn 10% of the amount.",
-            "steps": {
-                "1": {
-                    "label": "01",
-                    "title": "You recommend a qualified prospect",
-                    "text": "You identify a clear need to create an application or a website and introduce us to the person (or team) in charge of the project."
-                },
-                "2": {
-                    "label": "02",
-                    "title": "MC Studio handles the conversations",
-                    "text": "We scope the need, build the proposal, lead the discussions and keep you informed of the progress."
-                },
-                "3": {
-                    "label": "03",
-                    "title": "You earn 10% if the project is signed",
-                    "text": "Once the engagement is signed and paid, you receive 10% of the ex-VAT amount of the first invoice, in a clear and documented way."
-                }
-            }
-        },
-        "why": {
-            "title": "Why join the program",
-            "subtitle": "A serious additional revenue stream, backed by a demanding studio, with a dedicated partner space to track your results.",
-            "side": "MC Studio supports entrepreneurs, creators, startups and SMEs on high-stakes product topics. As a partner, you associate your name with a serious, committed and selective team.",
-            "items": {
-                "income": {
-                    "title": "Additional income",
-                    "text": "Each project signed through your recommendations generates a clear, materialised and trackable commission over time."
-                },
-                "transparency": {
-                    "title": "Transparency on every deal",
-                    "text": "You know exactly where each prospect stands: first call, proposal sent, signed, not retained. No grey area."
-                },
-                "tracking": {
-                    "title": "Structured tracking of your referrals",
-                    "text": "All your introductions are tracked, logged and linked to the corresponding projects."
-                },
-                "monetization": {
-                    "title": "Smart monetisation of your network",
-                    "text": "You create value for your network while generating income aligned with the quality of the projects you bring."
-                },
-                "app": {
-                    "title": "Dedicated partner app",
-                    "text": "Access to an online dashboard to record your leads, track the projects you bring and visualise your commissions."
-                },
-                "long_term": {
-                    "title": "Long-term relationship",
-                    "text": "Our goal is not one-shot deals, but building a strong and engaged network of partners."
-                }
-            }
+        "transparency": {
+          "title": "Transparency on every deal",
+          "text": "You know exactly where each prospect stands: first call, proposal sent, signed, not retained. No grey area."
         },
         "tracking": {
-            "title": "A clear view of the value you create.",
-            "subtitle": "Through a dedicated partner app, you are not recommending “blindly”. Each introduction is tracked, logged and documented, with regular touchpoints when needed.",
-            "items": {
-                "prospects": {
-                    "title": "Prospects sent",
-                    "text": "Clear list of all people you introduced us to, with the key information attached."
-                },
-                "contracts": {
-                    "title": "Signed contracts",
-                    "text": "For each prospect, you know if the project was signed, when, and for what amount."
-                },
-                "revenue": {
-                    "title": "Revenue generated",
-                    "text": "Tracking of the total revenue generated by your recommendations over the period."
-                },
-                "commissions": {
-                    "title": "Commissions earned",
-                    "text": "Clear view of commissions due, upcoming and already paid, with associated records."
-                }
-            }
+          "title": "Structured tracking of your referrals",
+          "text": "All your introductions are tracked, logged and linked to the corresponding projects."
         },
-        "rewards": {
-            "label": "Tiers & rewards",
-            "title": "A recognition system designed for the long run.",
-            "subtitle": "Commissions are the foundation of the program. As you help grow the studio, tiers structure how we recognise your role in that growth.",
-            "card": {
-                "badge": "Evolving reward",
-                "note": "Details are shared when you join the program.",
-                "tier_1_title": "3 successful referrals",
-                "tier_1_text": "You start generating a recurring flow of qualified projects. Each signed engagement is tracked, and your first commissions lay the foundations of the collaboration.",
-                "tier_2_title": "10 successful referrals",
-                "tier_2_text": "You unlock a premium reward dedicated to the most engaged partners, designed to fit your professional daily life, not as a simple gimmick.",
-                "tier_3_title": "20+ successful referrals",
-                "tier_3_text": "The program becomes a real additional revenue lever. Together we refine tracking, reporting and recognition rules to build a long-term relationship."
-            },
-            "list": {
-                "tier_1_title": "First tier: 3 successful referrals",
-                "tier_1_text": "You structure your participation in the program and start building a serious additional income.",
-                "tier_2_title": "Key threshold: 10 successful referrals",
-                "tier_2_text": "You join the circle of key partners, with stronger recognition and dedicated benefits.",
-                "tier_3_title": "Advanced tier: 20+ successful referrals",
-                "tier_3_text": "The program becomes a strategic partnership: detailed tracking, regular check-ins and joint adjustments."
-            }
+        "monetization": {
+          "title": "Smart monetisation of your network",
+          "text": "You create value for your network while generating income aligned with the quality of the projects you bring."
         },
-        "faq": {
-            "title": "Frequently asked questions about the Partner Program.",
-            "subtitle": "If you have more questions, we’ll cover them during our first call. The program’s framework is designed to be clear from day one.",
-            "items": {
-                "0": {
-                    "question": "Who can join the program?",
-                    "answer": "The MC Studio Partner Program is open to anyone with a strong network: independents, freelancers, creatives, sales profiles, agencies, as well as your personal and professional network.\n\nThe key: understand our offers, recommend serious and qualified prospects, and maintain a professional posture."
-                },
-                "1": {
-                    "question": "How does the 10% commission work?",
-                    "answer": "You introduce us to a prospect with a clear need in design, product or application development.\nWe talk directly with them, scope the need and send a proposal.\n\nIf the project is signed, you receive 10% of the total ex‑VAT amount billed on the first engagement (excluding renewals and any recurring subscriptions)."
-                },
-                "2": {
-                    "question": "When is the commission paid?",
-                    "answer": "The commission is paid as soon as the deposit has been received.\n\nIn practice, the payment happens right after signature."
-                },
-                "3": {
-                    "question": "Can I track my referrals and earnings?",
-                    "answer": "Yes. Each partner benefits from a structured tracking system:\n- list of prospects sent\n- deal status (in progress, signed, not retained)\n- amount of signed projects\n- associated commissions.\n\nYou keep a clear and transparent view of the value you create."
-                },
-                "4": {
-                    "question": "Are there additional rewards?",
-                    "answer": "Yes. On top of the 10% commission per signed project, we set up a tier system.\n\nFor instance, from 10 successful referrals onwards, you unlock a premium reward designed for the most engaged partners.\n\nThe goal: build a long-term, win‑win relationship."
-                }
-            }
+        "app": {
+          "title": "Dedicated partner app",
+          "text": "Access to an online dashboard to record your leads, track the projects you bring and visualise your commissions."
         },
-        "cta": {
-            "eyebrow": "Join the program",
-            "title": "You have a strong network and want to monetise it smartly?",
-            "subtitle": "Take 20 minutes to understand exactly how the Partner Program works, see if your profile is a fit and clarify all your questions.",
-            "primary": "Sign up on the platform",
-            "helper": "Create your partner account to submit leads and track your commissions.",
-            "card_title": "Direct call with MC Studio",
-            "card_text": "Understanding your profile, your network and your expectations.",
-            "commission_label": "Commission",
-            "tracking_label": "Referral tracking",
-            "tracking_value": "Structured"
-        },
-        "cal": {
-            "eyebrow": "Schedule a call",
-            "title": "Book a slot to talk about the Partner Program.",
-            "subtitle": "Directly pick a time in the calendar to discuss how the program works, your profile and potential next steps.",
-            "iframe_title": "Book a Partner MC Studio call"
-        },
-        "example": {
-            "title": "A simple example to help you project yourself.",
-            "subtitle": "You recommend a prospect with a clear need to redesign their product or launch a new interface. After scoping, the project is signed at <span class=\"font-semibold text-[var(--color-gold)]\">€15,000 ex-VAT</span>.",
-            "amount_label": "Project amount",
-            "amount_value": "€15,000",
-            "rate_label": "Commission rate",
-            "rate_value": "10%",
-            "commission_label": "Commission paid",
-            "commission_value": "€1,500",
-            "quote": "“The ambition of the Partner Program is not to multiply leads, but to focus our energy on truly qualified referrals. If you share this vision, we’ll work very well together.”",
-            "founder_name": "Mohamed Chettah",
-            "founder_role": "Founder · MC Studio"
+        "long_term": {
+          "title": "Long-term relationship",
+          "text": "Our goal is not one-shot deals, but building a strong and engaged network of partners."
         }
+      }
     },
-    "meta": {
-        "title": "MC Studio - The Design & Development Studio",
-        "description": "Design & Development to launch fast and right. Branding, landing page and apps: we support entrepreneurs and companies from concept to launch."
-    },
-    "legal": {
-        "privacy": {
-            "title": "Privacy <span class=\"text-gradient\">Policy</span>",
-            "subtitle": "Last updated: January 2026",
-            "content": "<h2>1. Introduction</h2><p>Welcome to MC Studio. We respect your privacy and represent that we collect as little data as possible.</p><h2>2. Data Collection</h2><p>We may collect personal identification information from Users such as name, email address, phone number when they visit our site, register on the site, place an order, fill out a form, respond to a survey, and in connection with other activities, services, features or resources we make available on our Site.</p><h2>3. Use of Data</h2><p>We collect and use Users personal information for the following purposes: To improve customer service, To personalize user experience, To improve our Site, To process payments, To send periodic emails.</p><h2>4. Contact</h2><p>If you have any questions about this Privacy Policy, the practices of this site, or your dealings with this site, please contact us.</p>"
+    "tracking": {
+      "title": "A clear view of the value you create.",
+      "subtitle": "Through a dedicated partner app, you are not recommending “blindly”. Each introduction is tracked, logged and documented, with regular touchpoints when needed.",
+      "items": {
+        "prospects": {
+          "title": "Prospects sent",
+          "text": "Clear list of all people you introduced us to, with the key information attached."
         },
-        "terms": {
-            "title": "Terms of <span class=\"text-gradient\">Service</span>",
-            "subtitle": "Last updated: January 2026",
-            "content": "<h2>1. Acceptance of Terms</h2><p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p><h2>2. Services</h2><p>MC Studio provides design and development services. All services are subject to a separate service agreement.</p><h2>3. Intellectual Property</h2><p>The content, organization, graphics, design, compilation, magnetic translation, digital conversion and other matters related to the Site are protected under applicable copyrights, trademarks and other proprietary (including but not limited to intellectual property) rights.</p><h2>4. Changes</h2><p>We reserve the right to modify these terms from time to time at our sole discretion.</p>"
+        "contracts": {
+          "title": "Signed contracts",
+          "text": "For each prospect, you know if the project was signed, when, and for what amount."
         },
-        "links": {
-            "privacy": "Privacy Policy",
-            "terms": "Terms of Service"
+        "revenue": {
+          "title": "Revenue generated",
+          "text": "Tracking of the total revenue generated by your recommendations over the period."
+        },
+        "commissions": {
+          "title": "Commissions earned",
+          "text": "Clear view of commissions due, upcoming and already paid, with associated records."
         }
+      }
+    },
+    "rewards": {
+      "label": "Tiers & rewards",
+      "title": "A recognition system designed for the long run.",
+      "subtitle": "Commissions are the foundation of the program. As you help grow the studio, tiers structure how we recognise your role in that growth.",
+      "card": {
+        "badge": "Evolving reward",
+        "note": "Details are shared when you join the program.",
+        "tier_1_title": "3 successful referrals",
+        "tier_1_text": "You start generating a recurring flow of qualified projects. Each signed engagement is tracked, and your first commissions lay the foundations of the collaboration.",
+        "tier_2_title": "10 successful referrals",
+        "tier_2_text": "You unlock a premium reward dedicated to the most engaged partners, designed to fit your professional daily life, not as a simple gimmick.",
+        "tier_3_title": "20+ successful referrals",
+        "tier_3_text": "The program becomes a real additional revenue lever. Together we refine tracking, reporting and recognition rules to build a long-term relationship."
+      },
+      "list": {
+        "tier_1_title": "First tier: 3 successful referrals",
+        "tier_1_text": "You structure your participation in the program and start building a serious additional income.",
+        "tier_2_title": "Key threshold: 10 successful referrals",
+        "tier_2_text": "You join the circle of key partners, with stronger recognition and dedicated benefits.",
+        "tier_3_title": "Advanced tier: 20+ successful referrals",
+        "tier_3_text": "The program becomes a strategic partnership: detailed tracking, regular check-ins and joint adjustments."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions about the Partner Program.",
+      "subtitle": "If you have more questions, we’ll cover them during our first call. The program’s framework is designed to be clear from day one.",
+      "items": {
+        "0": {
+          "question": "Who can join the program?",
+          "answer": "The MC Studio Partner Program is open to anyone with a strong network: independents, freelancers, creatives, sales profiles, agencies, as well as your personal and professional network.\n\nThe key: understand our offers, recommend serious and qualified prospects, and maintain a professional posture."
+        },
+        "1": {
+          "question": "How does the 10% commission work?",
+          "answer": "You introduce us to a prospect with a clear need in design, product or application development.\nWe talk directly with them, scope the need and send a proposal.\n\nIf the project is signed, you receive 10% of the total ex‑VAT amount billed on the first engagement (excluding renewals and any recurring subscriptions)."
+        },
+        "2": {
+          "question": "When is the commission paid?",
+          "answer": "The commission is paid as soon as the deposit has been received.\n\nIn practice, the payment happens right after signature."
+        },
+        "3": {
+          "question": "Can I track my referrals and earnings?",
+          "answer": "Yes. Each partner benefits from a structured tracking system:\n- list of prospects sent\n- deal status (in progress, signed, not retained)\n- amount of signed projects\n- associated commissions.\n\nYou keep a clear and transparent view of the value you create."
+        },
+        "4": {
+          "question": "Are there additional rewards?",
+          "answer": "Yes. On top of the 10% commission per signed project, we set up a tier system.\n\nFor instance, from 10 successful referrals onwards, you unlock a premium reward designed for the most engaged partners.\n\nThe goal: build a long-term, win‑win relationship."
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "Join the program",
+      "title": "You have a strong network and want to monetise it smartly?",
+      "subtitle": "Take 20 minutes to understand exactly how the Partner Program works, see if your profile is a fit and clarify all your questions.",
+      "primary": "Sign up on the platform",
+      "helper": "Create your partner account to submit leads and track your commissions.",
+      "card_title": "Direct call with MC Studio",
+      "card_text": "Understanding your profile, your network and your expectations.",
+      "commission_label": "Commission",
+      "tracking_label": "Referral tracking",
+      "tracking_value": "Structured"
+    },
+    "cal": {
+      "eyebrow": "Schedule a call",
+      "title": "Book a slot to talk about the Partner Program.",
+      "subtitle": "Directly pick a time in the calendar to discuss how the program works, your profile and potential next steps.",
+      "iframe_title": "Book a Partner MC Studio call"
+    },
+    "example": {
+      "title": "A simple example to help you project yourself.",
+      "subtitle": "You recommend a prospect with a clear need to redesign their product or launch a new interface. After scoping, the project is signed at <span class=\"font-semibold text-[var(--color-gold)]\">€15,000 ex-VAT</span>.",
+      "amount_label": "Project amount",
+      "amount_value": "€15,000",
+      "rate_label": "Commission rate",
+      "rate_value": "10%",
+      "commission_label": "Commission paid",
+      "commission_value": "€1,500",
+      "quote": "“The ambition of the Partner Program is not to multiply leads, but to focus our energy on truly qualified referrals. If you share this vision, we’ll work very well together.”",
+      "founder_name": "Mohamed Chettah",
+      "founder_role": "Founder · MC Studio"
     }
+  },
+  "meta": {
+    "title": "MC Studio - The Design & Development Studio",
+    "description": "Design & Development to launch fast and right. Branding, landing page and apps: we support entrepreneurs and companies from concept to launch."
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy <span class=\"text-gradient\">Policy</span>",
+      "subtitle": "Last updated: January 2026",
+      "content": "<h2>1. Introduction</h2><p>Welcome to MC Studio. We respect your privacy and represent that we collect as little data as possible.</p><h2>2. Data Collection</h2><p>We may collect personal identification information from Users such as name, email address, phone number when they visit our site, register on the site, place an order, fill out a form, respond to a survey, and in connection with other activities, services, features or resources we make available on our Site.</p><h2>3. Use of Data</h2><p>We collect and use Users personal information for the following purposes: To improve customer service, To personalize user experience, To improve our Site, To process payments, To send periodic emails.</p><h2>4. Contact</h2><p>If you have any questions about this Privacy Policy, the practices of this site, or your dealings with this site, please contact us.</p>"
+    },
+    "terms": {
+      "title": "Terms of <span class=\"text-gradient\">Service</span>",
+      "subtitle": "Last updated: January 2026",
+      "content": "<h2>1. Acceptance of Terms</h2><p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p><h2>2. Services</h2><p>MC Studio provides design and development services. All services are subject to a separate service agreement.</p><h2>3. Intellectual Property</h2><p>The content, organization, graphics, design, compilation, magnetic translation, digital conversion and other matters related to the Site are protected under applicable copyrights, trademarks and other proprietary (including but not limited to intellectual property) rights.</p><h2>4. Changes</h2><p>We reserve the right to modify these terms from time to time at our sole discretion.</p>"
+    },
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    }
+  }
 }

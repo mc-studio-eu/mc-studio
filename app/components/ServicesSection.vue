@@ -1,76 +1,35 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 
 const { t, tm, rt } = useI18n();
 
-// Expanded card state
-const expandedCard = ref<number | null>(null);
-
-const toggleExpand = (index: number) => {
-  expandedCard.value = expandedCard.value === index ? null : index;
-};
-
-const services = computed(() => [
+const offers = computed(() => [
   {
-    title: t('services.cards.landing.title'),
-    subtitle: t('services.cards.landing.subtitle'),
-    image: "/img/services/lp.png",
-    deliverables: Object.values(tm('services.cards.landing.deliverables') as object || {}).map(i => rt(i)),
-    result: t('services.modals.landing.result'),
-    forWho: Object.values(tm('services.modals.landing.for_who') as object || {}).map(i => rt(i)),
-    included: [
-      { text: t('services.modals.landing.included.0'), icon: "i-heroicons-magnifying-glass" },
-      { text: t('services.modals.landing.included.1'), icon: "i-heroicons-squares-2x2" },
-      { text: t('services.modals.landing.included.2'), icon: "i-heroicons-pencil-square" },
-      { text: t('services.modals.landing.included.3'), icon: "i-heroicons-swatch" },
-      { text: t('services.modals.landing.included.4'), icon: "i-heroicons-paint-brush" },
-      { text: t('services.modals.landing.included.5'), icon: "i-heroicons-code-bracket" },
-      { text: t('services.modals.landing.included.6'), icon: "i-heroicons-arrow-trending-up" },
-      { text: t('services.modals.landing.included.7'), icon: "i-heroicons-clipboard-document-list" },
-      { text: t('services.modals.landing.included.8'), icon: "i-heroicons-chart-bar" },
-      { text: t('services.modals.landing.included.9'), icon: "i-heroicons-rocket-launch" },
-      { text: t('services.modals.landing.included.10'), icon: "i-heroicons-sparkles" }
-    ],
-    delay: t('services.modals.landing.delay'),
+    key: 'entrepreneur',
+    title: t('services.cards.entrepreneur.title'),
+    description: t('services.cards.entrepreneur.description'),
+    icon: 'i-heroicons-rocket-launch',
+    forWho: Object.values(tm('services.cards.entrepreneur.for_who') as object || {}).map(i => rt(i)),
+    idealIf: Object.values(tm('services.cards.entrepreneur.ideal_if') as object || {}).map(i => rt(i)),
+    budget: t('services.cards.entrepreneur.budget'),
   },
   {
-    title: t('services.cards.sprint.title'),
-    subtitle: t('services.cards.sprint.subtitle'),
-    image: "/img/services/sprint.png",
-    deliverables: Object.values(tm('services.cards.sprint.deliverables') as object || {}).map(i => rt(i)),
-    result: t('services.modals.sprint.result'),
-    forWho: Object.values(tm('services.modals.sprint.for_who') as object || {}).map(i => rt(i)),
-    included: [
-      { text: t('services.modals.sprint.included.0'), icon: "i-heroicons-magnifying-glass" },
-      { text: t('services.modals.sprint.included.1'), icon: "i-heroicons-squares-2x2" },
-      { text: t('services.modals.sprint.included.2'), icon: "i-heroicons-pencil-square" },
-      { text: t('services.modals.sprint.included.3'), icon: "i-heroicons-swatch" },
-      { text: t('services.modals.sprint.included.4'), icon: "i-heroicons-paint-brush" },
-      { text: t('services.modals.sprint.included.5'), icon: "i-heroicons-code-bracket" },
-      { text: t('services.modals.sprint.included.6'), icon: "i-heroicons-arrow-trending-up" },
-      { text: t('services.modals.sprint.included.7'), icon: "i-heroicons-clipboard-document-list" },
-    ],
-    delay: t('services.modals.sprint.delay'),
+    key: 'creator',
+    title: t('services.cards.creator.title'),
+    description: t('services.cards.creator.description'),
+    icon: 'i-heroicons-sparkles',
+    forWho: Object.values(tm('services.cards.creator.for_who') as object || {}).map(i => rt(i)),
+    idealIf: Object.values(tm('services.cards.creator.ideal_if') as object || {}).map(i => rt(i)),
+    budget: t('services.cards.creator.budget'),
   },
   {
-    title: t('services.cards.saas.title'),
-    subtitle: t('services.cards.saas.subtitle'),
-    image: "/img/services/launch.png",
-    deliverables: Object.values(tm('services.cards.saas.deliverables') as object || {}).map(i => rt(i)),
-    result: t('services.modals.saas.result'),
-    forWho: Object.values(tm('services.modals.saas.for_who') as object || {}).map(i => rt(i)),
-    included: [
-      { text: t('services.modals.saas.included.0'), icon: "i-heroicons-magnifying-glass" },
-      { text: t('services.modals.saas.included.1'), icon: "i-heroicons-squares-2x2" },
-      { text: t('services.modals.saas.included.2'), icon: "i-heroicons-pencil-square" },
-      { text: t('services.modals.saas.included.3'), icon: "i-heroicons-swatch" },
-      { text: t('services.modals.saas.included.4'), icon: "i-heroicons-paint-brush" },
-      { text: t('services.modals.saas.included.5'), icon: "i-heroicons-code-bracket" },
-      { text: t('services.modals.saas.included.6'), icon: "i-heroicons-arrow-trending-up" },
-      { text: t('services.modals.saas.included.7'), icon: "i-heroicons-clipboard-document-list" },
-      { text: t('services.modals.saas.included.8'), icon: "i-heroicons-chart-bar" },
-    ],
-    delay: t('services.modals.saas.delay'),
+    key: 'enterprise',
+    title: t('services.cards.enterprise.title'),
+    description: t('services.cards.enterprise.description'),
+    icon: 'i-heroicons-building-office-2',
+    forWho: Object.values(tm('services.cards.enterprise.for_who') as object || {}).map(i => rt(i)),
+    idealIf: Object.values(tm('services.cards.enterprise.ideal_if') as object || {}).map(i => rt(i)),
+    budget: t('services.cards.enterprise.budget'),
   },
 ]);
 
@@ -88,97 +47,65 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
         </p>
       </div>
 
-      <!-- Service Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8 md:mb-10 items-start">
+      <!-- Offer Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8 md:mb-10 items-stretch">
         <div 
-          v-for="(service, index) in services" 
-          :key="index"
-          class="service-card border-white/10 rounded-2xl overflow-hidden bg-[#1a1a1a] shadow-[0_8px_30px_rgba(0,0,0,0.4)] border transition-all duration-300"        >
-          <!-- Card Content -->
-          <div class="p-6 sm:p-8">
-            <!-- Title -->
-            <h3 class="font-semibold text-xl sm:text-2xl mb-2 transition-colors duration-300 text-[var(--text-primary)]">{{ service.title }}</h3>
-            <p class="text-xs mb-6 transition-colors duration-300 text-[var(--text-secondary)]">{{ service.subtitle }}</p>
-
-            <!-- Image -->
-            <div class="w-full h-[200px] rounded-lg mb-6 overflow-hidden transition-colors duration-300 bg-[var(--bg-card)] border border-[var(--border-subtle)]">
-              <NuxtImg
-                :src="service.image"
-                alt="Service Image"
-                class="w-full h-full object-cover"
-              />
+          v-for="offer in offers" 
+          :key="offer.key"
+          class="offer-card rounded-2xl overflow-hidden transition-all duration-300"
+        >
+          <div class="p-6 sm:p-7 h-full flex flex-col">
+            <!-- Header: Title + Icon -->
+            <div class="flex items-start justify-between mb-4">
+              <h3 class="font-semibold text-xl sm:text-[22px] transition-colors duration-300 text-[var(--text-primary)]">
+                {{ offer.title }}
+              </h3>
+              <div class="offer-icon-wrapper flex-shrink-0 ml-3">
+                <UIcon :name="offer.icon" class="w-5 h-5 text-[#F0BF6C]" />
+              </div>
             </div>
 
-            <!-- Deliverables -->
+            <!-- Description -->
+            <p class="text-sm leading-relaxed mb-6 transition-colors duration-300 text-[var(--text-secondary)]">
+              {{ offer.description }}
+            </p>
+
+            <!-- Pour qui -->
             <div class="mb-5">
-              <p class="font-light text-sm sm:text-[15px] mb-2 transition-colors duration-300 text-[var(--text-primary)]">{{ $t('services.common.deliverables_label') }}</p>
-              <div class="flex flex-wrap gap-2">
-                <span 
-                  v-for="deliverable in service.deliverables" 
-                  :key="deliverable"
-                  class="inline-flex items-center px-2 py-1 bg-white border border-[#cad5e2] rounded text-[11px] sm:text-xs text-[#314158] font-medium"
-                >
-                  {{ deliverable }}
-                </span>
-              </div>
+              <h4 class="offer-label text-[11px] font-bold uppercase tracking-wider mb-3 text-[#F0BF6C]">
+                {{ $t('services.common.for_who') }}
+              </h4>
+              <ul class="space-y-1.5">
+                <li v-for="item in offer.forWho" :key="item" class="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+                  <span class="text-[#F0BF6C] mt-0.5 text-xs">•</span>
+                  <span>{{ item }}</span>
+                </li>
+              </ul>
             </div>
 
-            <!-- Details Button -->
-            <button 
-              class="details-btn bg-[#2a2a2a] text-white shadow-[0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.1)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.15)] flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300"
-              @click="toggleExpand(index)"
-            >
-              <UIcon 
-                :name="expandedCard === index ? 'i-heroicons-minus' : 'i-heroicons-plus'" 
-                class="w-4 h-4 transition-transform duration-300" 
-              />
-              <span class="text-sm font-medium">{{ $t('services.common.details') }}</span>
-            </button>
+            <!-- Idéal si -->
+            <div class="mb-6">
+              <h4 class="offer-label text-[11px] font-bold uppercase tracking-wider mb-3 text-[#F0BF6C]">
+                {{ $t('services.common.ideal_if') }}
+              </h4>
+              <ul class="space-y-1.5">
+                <li v-for="item in offer.idealIf" :key="item" class="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
+                  <span class="text-[#F0BF6C] mt-0.5 text-xs">•</span>
+                  <span>{{ item }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Budget -->
+            <div class="mt-auto pt-4">
+              <h4 class="offer-label text-[11px] font-bold uppercase tracking-wider mb-1 text-[#F0BF6C]">
+                {{ $t('services.common.budget') }}
+              </h4>
+              <p class="text-sm font-medium transition-colors duration-300 text-[var(--text-primary)]">
+                {{ offer.budget }}
+              </p>
+            </div>
           </div>
-
-          <!-- Expanded Details -->
-          <Transition name="expand">
-            <div v-if="expandedCard === index" class="expanded-section">
-              <div class="px-6 sm:px-8 pb-6 sm:pb-8 border-t border-white/10">
-                <!-- Result -->
-                <div class="pt-6 pb-4">
-                  <p class="text-sm text-[var(--text-secondary)] leading-relaxed">{{ service.result }}</p>
-                </div>
-
-                <!-- Pour qui -->
-                <div class="mb-5">
-                  <h4 class="text-xs font-semibold uppercase tracking-wider mb-3 text-[#F0BF6C]">{{ $t('services.common.for_who') }}</h4>
-                  <ul class="space-y-2">
-                    <li v-for="item in service.forWho" :key="item" class="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
-                      <span class="text-[#F0BF6C] mt-0.5">•</span>
-                      <span>{{ item }}</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <!-- Inclus -->
-                <div class="mb-5">
-                  <h4 class="text-xs font-semibold uppercase tracking-wider mb-3 text-[#F0BF6C]">{{ $t('services.common.included') }}</h4>
-                  <ul class="grid grid-cols-1 gap-2">
-                    <li v-for="item in service.included" :key="item.text" class="flex items-center gap-2.5 text-sm text-[var(--text-secondary)]">
-                      <div class="w-6 h-6 rounded-md bg-[#F0BF6C]/10 flex items-center justify-center flex-shrink-0">
-                        <UIcon :name="item.icon" class="w-3.5 h-3.5 text-[#F0BF6C]" />
-                      </div>
-                      <span>{{ item.text }}</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <!-- Delay -->
-                <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[var(--bg-card)]">
-                  <div>
-                    <span class="text-[10px] uppercase tracking-wider text-[var(--text-secondary)]">{{ $t('services.common.delay') }}</span>
-                    <p class="text-sm font-medium text-[var(--text-primary)]">{{ service.delay }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Transition>
         </div>
       </div>
 
@@ -203,42 +130,30 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 </template>
 
 <style scoped>
-.service-card {
+.offer-card {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* Expand transition */
-.expand-enter-active {
-  animation: expandIn 0.4s ease-out;
+.offer-card:hover {
+  border-color: rgba(240, 191, 108, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
 }
 
-.expand-leave-active {
-  animation: expandOut 0.3s ease-in;
+.offer-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(240, 191, 108, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes expandIn {
-  from {
-    opacity: 0;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    max-height: 600px;
-  }
-}
-
-@keyframes expandOut {
-  from {
-    opacity: 1;
-    max-height: 600px;
-  }
-  to {
-    opacity: 0;
-    max-height: 0;
-  }
-}
-
-.expanded-section {
-  overflow: hidden;
+.offer-label {
+  letter-spacing: 0.08em;
 }
 </style>
