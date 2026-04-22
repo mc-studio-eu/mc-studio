@@ -11,7 +11,7 @@ const offers = computed(() => [
     icon: 'i-heroicons-rocket-launch',
     forWho: Object.values(tm('services.cards.entrepreneur.for_who') as object || {}).map(i => rt(i)),
     idealIf: Object.values(tm('services.cards.entrepreneur.ideal_if') as object || {}).map(i => rt(i)),
-    budget: t('services.cards.entrepreneur.budget'),
+    featured: false,
   },
   {
     key: 'creator',
@@ -20,7 +20,7 @@ const offers = computed(() => [
     icon: 'i-heroicons-sparkles',
     forWho: Object.values(tm('services.cards.creator.for_who') as object || {}).map(i => rt(i)),
     idealIf: Object.values(tm('services.cards.creator.ideal_if') as object || {}).map(i => rt(i)),
-    budget: t('services.cards.creator.budget'),
+    featured: true,
   },
   {
     key: 'enterprise',
@@ -29,7 +29,7 @@ const offers = computed(() => [
     icon: 'i-heroicons-building-office-2',
     forWho: Object.values(tm('services.cards.enterprise.for_who') as object || {}).map(i => rt(i)),
     idealIf: Object.values(tm('services.cards.enterprise.ideal_if') as object || {}).map(i => rt(i)),
-    budget: t('services.cards.enterprise.budget'),
+    featured: false,
   },
 ]);
 
@@ -48,36 +48,46 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
       </div>
 
       <!-- Offer Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8 md:mb-10 items-stretch">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch">
         <div 
           v-for="offer in offers" 
           :key="offer.key"
-          class="offer-card rounded-2xl overflow-hidden transition-all duration-300"
+          class="offer-card relative rounded-2xl overflow-hidden flex flex-col"
+          :class="{ 'offer-card--featured': offer.featured }"
         >
+          <!-- Featured badge -->
+          <div v-if="offer.featured" class="offer-badge">
+            <UIcon name="i-heroicons-star-solid" class="w-3 h-3" />
+            <span>Populaire</span>
+          </div>
+
           <div class="p-6 sm:p-7 h-full flex flex-col">
-            <!-- Header: Title + Icon -->
-            <div class="flex items-start justify-between mb-4">
-              <h3 class="font-semibold text-xl sm:text-[22px] transition-colors duration-300 text-[var(--text-primary)]">
+            <!-- Header: Icon + Title -->
+            <div class="flex items-center gap-3.5 mb-4">
+              <div class="offer-icon-wrapper" :class="{ 'offer-icon-wrapper--featured': offer.featured }">
+                <UIcon :name="offer.icon" class="w-5 h-5" :class="offer.featured ? 'text-[#0f0f0f]' : 'text-[#F0BF6C]'" />
+              </div>
+              <h3 class="font-manrope font-semibold text-xl sm:text-[22px] transition-colors duration-300 text-[var(--text-primary)]">
                 {{ offer.title }}
               </h3>
-              <div class="offer-icon-wrapper flex-shrink-0 ml-3">
-                <UIcon :name="offer.icon" class="w-5 h-5 text-[#F0BF6C]" />
-              </div>
             </div>
 
             <!-- Description -->
-            <p class="text-sm leading-relaxed mb-6 transition-colors duration-300 text-[var(--text-secondary)]">
+            <p class="text-[13px] leading-[1.7] mb-6 transition-colors duration-300 text-[var(--text-secondary)]">
               {{ offer.description }}
             </p>
 
+            <!-- Divider -->
+            <div class="offer-divider mb-5"></div>
+
             <!-- Pour qui -->
             <div class="mb-5">
-              <h4 class="offer-label text-[11px] font-bold uppercase tracking-wider mb-3 text-[#F0BF6C]">
+              <h4 class="offer-label">
                 {{ $t('services.common.for_who') }}
               </h4>
-              <ul class="space-y-1.5">
-                <li v-for="item in offer.forWho" :key="item" class="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
-                  <span class="text-[#F0BF6C] mt-0.5 text-xs">•</span>
+              <ul class="space-y-2">
+                <li v-for="item in offer.forWho" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-secondary)]">
+                  <span class="offer-bullet mt-[3px]">•</span>
                   <span>{{ item }}</span>
                 </li>
               </ul>
@@ -85,41 +95,47 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 
             <!-- Idéal si -->
             <div class="mb-6">
-              <h4 class="offer-label text-[11px] font-bold uppercase tracking-wider mb-3 text-[#F0BF6C]">
+              <h4 class="offer-label">
                 {{ $t('services.common.ideal_if') }}
               </h4>
-              <ul class="space-y-1.5">
-                <li v-for="item in offer.idealIf" :key="item" class="flex items-start gap-2 text-sm text-[var(--text-secondary)]">
-                  <span class="text-[#F0BF6C] mt-0.5 text-xs">•</span>
+              <ul class="space-y-2.5">
+                <li v-for="item in offer.idealIf" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-secondary)]">
+                  <UIcon name="i-heroicons-check-circle-solid" class="w-4 h-4 mt-[1px] flex-shrink-0" :class="offer.featured ? 'text-[#F0BF6C]' : 'text-[#F0BF6C]/60'" />
                   <span>{{ item }}</span>
                 </li>
               </ul>
             </div>
 
-            <!-- Budget -->
-            <div class="mt-auto pt-4">
-              <h4 class="offer-label text-[11px] font-bold uppercase tracking-wider mb-1 text-[#F0BF6C]">
-                {{ $t('services.common.budget') }}
-              </h4>
-              <p class="text-sm font-medium transition-colors duration-300 text-[var(--text-primary)]">
-                {{ offer.budget }}
-              </p>
+            <!-- Spacer -->
+            <div class="flex-1"></div>
+
+            <!-- CTA -->
+            <div class="pt-4">
+
+              <a 
+                href="#contact" 
+                class="offer-cta block text-center"
+                :class="offer.featured ? 'offer-cta--featured' : 'offer-cta--default'"
+              >
+                {{ $t('hero.cta.book') }}
+                <UIcon name="i-heroicons-arrow-right-20-solid" class="inline-block w-4 h-4 ml-1.5 -mt-[1px]" />
+              </a>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Other Services -->
-      <div class="p-6 sm:p-8 rounded-2xl overflow-hidden bg-[#1a1a1a] shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-white/10">
+      <div class="other-services-card p-6 sm:p-8 rounded-2xl overflow-hidden">
         <div class="mb-5">
           <h4 class="font-manrope font-semibold text-lg mb-1 transition-colors duration-300 text-[var(--text-primary)]">{{ $t('services.other_services.title') }}</h4>
           <p class="text-sm transition-colors duration-300 text-[var(--text-secondary)]">{{ $t('services.other_services.subtitle') }}</p>
         </div>
-        <div class="flex flex-wrap gap-2 sm:gap-3">
+        <div class="flex flex-wrap gap-2 sm:gap-2.5">
           <span 
             v-for="svc in otherServices" 
             :key="svc"
-            class="inline-flex items-center px-3 sm:px-4 py-2 bg-white text-black border rounded-lg text-xs sm:text-sm transition-colors cursor-default"
+            class="other-service-tag"
           >
             {{ svc }}
           </span>
@@ -130,30 +146,140 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 </template>
 
 <style scoped>
+/* ─── Card base ─── */
 .offer-card {
-  background: #1a1a1a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
 }
 
-.offer-card:hover {
-  border-color: rgba(240, 191, 108, 0.3);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  transform: translateY(-2px);
+/* ─── Featured card ─── */
+.offer-card--featured {
+  background: linear-gradient(180deg, #1c1a15 0%, #161616 100%);
+  border-color: rgba(240, 191, 108, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(240, 191, 108, 0.08),
+    0 20px 50px -10px rgba(240, 191, 108, 0.06);
 }
 
+/* ─── Featured badge ─── */
+.offer-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #F0BF6C 0%, #e0a84d 100%);
+  color: #0f0f0f;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 20px;
+}
+
+/* ─── Icon wrapper ─── */
 .offer-icon-wrapper {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(240, 191, 108, 0.1);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(240, 191, 108, 0.08);
+  border: 1px solid rgba(240, 191, 108, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
+.offer-icon-wrapper--featured {
+  background: linear-gradient(135deg, #F0BF6C 0%, #e0a84d 100%);
+  border-color: transparent;
+}
+
+/* ─── Section labels ─── */
 .offer-label {
-  letter-spacing: 0.08em;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(240, 191, 108, 0.7);
+  margin-bottom: 10px;
+}
+
+/* ─── Divider ─── */
+.offer-divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%);
+}
+
+.offer-card--featured .offer-divider {
+  background: linear-gradient(90deg, rgba(240, 191, 108, 0.15) 0%, rgba(240, 191, 108, 0.03) 100%);
+}
+
+.offer-card--featured .offer-label {
+  color: #F0BF6C;
+}
+
+/* ─── Bullet ─── */
+.offer-bullet {
+  color: rgba(240, 191, 108, 0.45);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.offer-card--featured .offer-bullet {
+  color: rgba(240, 191, 108, 0.7);
+}
+
+/* ─── CTA buttons ─── */
+.offer-cta {
+  display: block;
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.offer-cta:active {
+  transform: scale(0.98);
+}
+
+.offer-cta--default {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.offer-cta--featured {
+  background: linear-gradient(135deg, #F0BF6C 0%, #e0a84d 100%);
+  color: #0f0f0f;
+  border: none;
+  box-shadow: 0 4px 15px rgba(240, 191, 108, 0.2);
+}
+
+/* ─── Other services ─── */
+.other-services-card {
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.other-service-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: default;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 </style>
