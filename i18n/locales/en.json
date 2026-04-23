@@ -19,7 +19,7 @@
   },
   "hero": {
     "title": "Design & Development to<br class=\"hidden xs:inline\"> launch fast, and well.",
-    "subtitle": "Branding, landing page and apps: we support<br> from concept to launch.",
+    "subtitle": "We support from concept to launch.",
     "cta": {
       "book": "Book a call",
       "whatsapp": "Chat on WhatsApp"
@@ -42,10 +42,8 @@
       "development",
       "design",
       "SaaS",
-      "branding",
       "SEO",
       "development",
-      "branding",
       "UI/UX",
       "AI",
       "development",
@@ -62,7 +60,6 @@
       "title": "Other Services",
       "subtitle": "Need a custom service? We adapt.",
       "list": {
-        "branding": "Branding",
         "web_design": "Web Design",
         "product_design": "Product Design",
         "showcase": "Showcase Sites",
@@ -237,7 +234,6 @@
         "description": "AMG Promotion is a company specialized in creating promotional products (textiles, goodies, personalized items, and more), working with well-known brands and organizations such as Groupe SEB, ALTRAD, and the French National Police.",
         "tags": [
           "Landing Page",
-          "Branding",
           "Design",
           "UI/UX",
           "Copywriting",
@@ -252,15 +248,13 @@
           "Landing Page",
           "Design",
           "UI/UX",
-          "Copywriting",
-          "Branding"
+          "Copywriting"
         ]
       },
       "souji_nova": {
         "description": "Souji Nova is a cleaning company for individuals and professionals.\nCustom landing page: reassuring design, clear offer, optimized path to generate more requests.",
         "tags": [
           "Landing Page",
-          "Branding",
           "Design",
           "UI/UX",
           "Copywriting",

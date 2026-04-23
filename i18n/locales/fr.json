@@ -19,7 +19,7 @@
   },
   "hero": {
     "title": "Design & Développement pour<br class=\"hidden xs:inline\"> lancer vite, et bien.",
-    "subtitle": "Branding, landing page et apps : nous vous accompagnons<br> du concept au lancement.",
+    "subtitle": "Nous vous accompagnons du concept au lancement.",
     "cta": {
       "book": "Réserver un appel",
       "whatsapp": "Discuter sur WhatsApp"
@@ -42,10 +42,8 @@
       "développement",
       "design",
       "SaaS",
-      "branding",
       "SEO",
       "développement",
-      "branding",
       "UI/UX",
       "IA",
       "développement",
@@ -62,7 +60,6 @@
       "title": "Autres Services",
       "subtitle": "Besoin d'un service sur mesure ? On s'adapte.",
       "list": {
-        "branding": "Branding",
         "web_design": "Web Design",
         "product_design": "Product Design",
         "showcase": "Site Vitrines",
@@ -237,7 +234,6 @@
         "description": "AMG Promotion, c’est une entreprise spécialisée dans la création de produits promotionnels (textile, goodies, objets personnalisés…), qui accompagne des références reconnues comme Groupe SEB, ALTRAD ou encore la Police Nationale.",
         "tags": [
           "Landing Page",
-          "Branding",
           "Design",
           "UI/UX",
           "Copywriting",
@@ -260,7 +256,6 @@
         "description": "Souji Nova est une société de nettoyage pour particuliers et professionnels.\nLanding page sur-mesure : design rassurant, offre claire, parcours optimisé pour générer plus de demandes.",
         "tags": [
           "Landing Page",
-          "Branding",
           "Design",
           "UI/UX",
           "Copywriting",
@@ -274,8 +269,7 @@
       "ra_energy": {
         "description": "R&A Energy est un courtier en énergie dédié aux entreprises et aux pros.\n\nBranding & landing page premium : message simplifié, réassurance renforcée et parcours orienté prise de contact.",
         "tags": [
-          "Landing Page",
-          "Branding",
+          "Landing Page", 
           "Design",
           "UI/UX",
           "Copywriting",

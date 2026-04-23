@@ -23,26 +23,6 @@ defineProps<{
 <template>
   <div class="space-y-6 lg:sticky lg:top-8">
     <div>
-      <div class="mb-5 flex items-center gap-3">
-        <div
-          class="flex h-11 w-11 items-center justify-center rounded-[14px]"
-          :class="featured ? 'bg-[linear-gradient(135deg,#F0BF6C_0%,#e0a84d_100%)]' : 'bg-[#f0bf6c]/10'"
-        >
-          <UIcon
-            :name="icon"
-            class="h-5 w-5"
-            :class="featured ? 'text-[#0f0f0f]' : 'text-[#F0BF6C]'"
-          />
-        </div>
-
-        <span
-          v-if="featured"
-          class="inline-flex items-center gap-1 rounded-full bg-[linear-gradient(135deg,#F0BF6C_0%,#e0a84d_100%)] px-3 py-1 text-[11px] font-semibold text-[#0f0f0f]"
-        >
-          <UIcon name="i-heroicons-star-solid" class="h-3 w-3" />
-          {{ featuredTag }}
-        </span>
-      </div>
 
       <p class="font-manrope text-[40px] font-semibold leading-[0.95] tracking-[-0.04em] text-[var(--text-primary)] sm:text-[52px]">
         {{ title }}
