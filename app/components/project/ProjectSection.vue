@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import gsap from 'gsap'
+import { projects as projectData } from '../../data/projects'
 
-// Types
-interface Project {
+const { t, tm, rt } = useI18n()
+const localePath = useLocalePath()
+
+interface ProjectCard {
   id: number
+  slug: string
   title: string
   description: string
   image: string
   tags: string[]
-  link: string,
-  testimonials?: boolean,
   testimonial?: {
     avis: string
     name: string
@@ -18,80 +19,29 @@ interface Project {
   }
 }
 
-// Data
-const { t, tm, rt } = useI18n();
-
 // Text slide animation refs
 const projectCtaBtn = ref(null)
 const projectCtaWrapper = ref(null)
 useTextSlideAnimation(projectCtaBtn, projectCtaWrapper)
 
-const projects = computed<Project[]>(() => [
-  {
-    id: 1,
-    title: 'Amg Promotion',
-    description: t('projects.items.amg_promotion.description'),
-    image: '/img/project/amgprom.png',
-    tags: Object.values(tm('projects.items.amg_promotion.tags') as Record<string, any> || {}).map(tag => rt(tag)),
-    testimonials: false,
-    link: 'https://amgprom.com/'
-  },
-  {
-    id: 2,
-    title: 'Arises',
-    description: t('projects.items.arises.description'),
-    image: '/img/project/arises-tablet.jpeg',
-    tags: Object.values(tm('projects.items.arises.tags') as Record<string, any> || {}).map(tag => rt(tag)),
-    testimonials: false,
-    link: 'https://arises.app/'
-  },
-  {
-    id: 3,
-    title: 'Souji Nova',
-    description: t('projects.items.souji_nova.description'),
-    image: '/img/project/souji-nova-desktop.png',
-    tags: Object.values(tm('projects.items.souji_nova.tags') as Record<string, any> || {}).map(tag => rt(tag)),
-    testimonials: true,
-    testimonial: {
-      avis: t('projects.items.souji_nova.testimonial.review'),
-      name: "Nelson M.",
-      job: t('projects.items.souji_nova.testimonial.job'),
-      avatar: "/img/project/avis-souji-nova.jpg"
-    },
-    link: 'https://soujinova.fr/'
-  },
-  {
-    id: 4,
-    title: 'R&A Energy',
-    description: t('projects.items.ra_energy.description'),
-    image: '/img/project/ra-energy.png',
-    tags: Object.values(tm('projects.items.ra_energy.tags') as Record<string, any> || {}).map(tag => rt(tag)),
-    testimonials: true,
-    testimonial: {
-      avis: t('projects.items.ra_energy.testimonial.review'),
-      name: "Yazid C.",
-      job: t('projects.items.ra_energy.testimonial.job'),
-      avatar: "/img/project/avis-ra-energy.jpg"
-    },
-    link: 'https://ra-energy.fr/'
-  },
-  {
-    id: 5,
-    title: 'Fontaines VTC',
-    description: t('projects.items.fontaines_vtc.description'),
-    image: '/img/project/fontaines-vtc-dark.jpeg',
-    tags: Object.values(tm('projects.items.fontaines_vtc.tags') as Record<string, any> || {}).map(tag => rt(tag)),
-    testimonials: true,
-    testimonial: {
-      avis: t('projects.items.fontaines_vtc.testimonial.review'),
-      name: "Mario C.",
-      job: t('projects.items.fontaines_vtc.testimonial.job'),
-      avatar: "/img/project/avis-fontaines-vtc.jpg"
-    },
-    link: 'https://fontaines-vtc.fr/'
-  }
-])
-
+const projects = computed<ProjectCard[]>(() =>
+  projectData.map((project, index) => ({
+    id: index + 1,
+    slug: project.slug,
+    title: project.title,
+    description: t(`projects.items.${project.i18nKey}.description`),
+    image: project.image,
+    tags: Object.values(tm(`projects.items.${project.i18nKey}.tags`) as Record<string, string> || {}).map(tag => rt(tag)),
+    testimonial: project.testimonial
+      ? {
+          avis: t(`projects.items.${project.i18nKey}.testimonial.review`),
+          name: project.testimonial.name,
+          job: t(`projects.items.${project.i18nKey}.testimonial.job`),
+          avatar: project.testimonial.avatar,
+        }
+      : undefined,
+  }))
+)
 
 const currentIndex = ref(0)
 const isPaused = ref(false)
@@ -180,22 +130,29 @@ onUnmounted(() => {
 
             <!-- Call to Action -->
             <!-- Call to Action -->
-            <a ref="projectCtaBtn"
-               :href="currentProject.link"
-               target="_blank"
-               class="w-36 flex items-center justify-center h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline"
+            <NuxtLink
+              :to="localePath(`/projects/${currentProject.slug}`)"
+              custom
+              v-slot="{ href, navigate }"
             >
-              <span class="text-slide-container h-[20px]">
-                <span ref="projectCtaWrapper" class="text-slide-wrapper">
-                  <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('projects.cta') }}</span>
-                  <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('projects.cta') }}</span>
+              <a
+                ref="projectCtaBtn"
+                :href="href"
+                class="w-36 flex items-center justify-center h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline"
+                @click="navigate"
+              >
+                <span class="text-slide-container h-[20px]">
+                  <span ref="projectCtaWrapper" class="text-slide-wrapper">
+                    <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('projects.cta') }}</span>
+                    <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('projects.cta') }}</span>
+                  </span>
                 </span>
-              </span>
-              <UIcon name="i-heroicons-arrow-right-20-solid" class="ml-1 w-5 h-5" />
-            </a>
+                <UIcon name="i-heroicons-arrow-right-20-solid" class="ml-1 w-5 h-5" />
+              </a>
+            </NuxtLink>
 
             <!-- Testimonials -->
-            <div v-if="currentProject.testimonials && currentProject?.testimonial">
+            <div v-if="currentProject?.testimonial">
               <div class="flex flex-col p-3 gap-3 rounded-xl text-white bg-[#232323]">
 
                 <p class="text-xs xl:whitespace-pre-line"> {{ currentProject?.testimonial.avis }}</p>
