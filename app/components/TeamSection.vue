@@ -70,14 +70,14 @@ const titleWithBreaks = (key: string) => {
                 class="team-member-pill"
               >
                 <div
-                  class="w-10 h-10 rounded-xl overflow-hidden shrink-0 ring-1"
+                  class="w-14 h-14 rounded-xl overflow-hidden shrink-0 ring-1"
                   :class="member.accent ? 'ring-[var(--color-gold)]/25' : 'ring-black/10 dark:ring-white/10'"
                 >
                   <NuxtImg
                     v-if="member.image"
                     :src="member.image"
                     :alt="member.name"
-                    class="h-full w-full object-cover object-top"
+                    class="h-full w-full object-cover object-center"
                     loading="lazy"
                   />
                   <div v-else class="h-full w-full flex items-center justify-center bg-black/10 dark:bg-white/5">
