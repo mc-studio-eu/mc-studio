@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { findOfferBySlug, offers } from '../../data/offers'
+import Navbar from '../../components/layouts/Navbar.vue'
+import OfferDetailSidebar from '../../components/services/detail/OfferDetailSidebar.vue'
+import OfferDetailListSection from '../../components/services/detail/OfferDetailListSection.vue'
+import OfferDetailDeliverablesSection from '../../components/services/detail/OfferDetailDeliverablesSection.vue'
+import OfferDetailProcessSection from '../../components/services/detail/OfferDetailProcessSection.vue'
+import OfferDetailNextOffer from '../../components/services/detail/OfferDetailNextOffer.vue'
 
 type LocaleKey = 'fr' | 'en'
 
@@ -119,10 +125,12 @@ useSeoMeta({
 
 <template>
   <main class="min-h-screen bg-[var(--bg-primary)] px-6 py-6 transition-colors duration-300">
+    <Navbar />
+
     <div class="mx-auto max-w-[1360px]">
       <NuxtLink
         :to="backToServicesLink"
-        class="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-primary)] px-4 py-2 text-sm text-[var(--text-secondary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
+        class="mb-8 inline-flex items-center gap-2 px-4 py-2 text-sm text-[var(--text-secondary)] no-underline transition-all duration-200 hover:text-[var(--text-primary)]"
       >
         <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
         <span>{{ labels.back }}</span>

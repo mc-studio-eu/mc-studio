@@ -7,8 +7,8 @@ defineProps<{
 </script>
 
 <template>
-  <section class="rounded-[28px] border border-[var(--border-subtle)] bg-white/[0.03] p-6">
-    <h2 class="font-manrope text-[38px] font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
+  <section>
+    <h2 class="font-manrope text-[44px] font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
       {{ title }}
     </h2>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { findProjectBySlug, projects } from '../../data/projects'
 import type { LocalizedValue, Project, ProjectActionItem } from '../../data/projects'
+import Navbar from '../../components/layouts/Navbar.vue'
 
 type DeviceMode = 'desktop' | 'mobile'
 type LocaleKey = 'fr' | 'en'
@@ -153,6 +154,8 @@ useSeoMeta({
 
 <template>
   <main class="min-h-screen bg-[var(--bg-primary)] px-6 py-6 transition-colors duration-300">
+    <Navbar />
+
     <div class="mx-auto max-w-[1360px]">
       <NuxtLink
         :to="backToProjectsLink"

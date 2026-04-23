@@ -21,7 +21,7 @@ defineProps<{
       <article
         v-for="step in processItems"
         :key="step.title"
-        class="rounded-[24px] border border-[var(--border-subtle)] bg-white/[0.03] p-6"
+        class="border-t border-[var(--border-subtle)] pt-6"
       >
         <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
           <div>

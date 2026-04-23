@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="rounded-[28px] border border-[var(--border-subtle)] bg-white/[0.03] p-6">
+  <section>
     <h2 class="font-manrope text-[42px] font-semibold tracking-[-0.04em] text-[var(--text-primary)]">
       {{ title }}
     </h2>
@@ -20,7 +20,7 @@ defineProps<{
       <article
         v-for="deliverable in deliverables"
         :key="deliverable.title"
-        class="rounded-[22px] border border-[var(--border-subtle)] bg-black/10 p-5"
+        class="border-t border-[var(--border-subtle)] pt-5"
       >
         <h3 class="font-manrope text-xl font-semibold text-[var(--text-primary)]">
           {{ deliverable.title }}
