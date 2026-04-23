@@ -1,39 +1,21 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
+import { offers as offerData } from '../data/offers'
 
-const { t, tm, rt } = useI18n();
+const { t, tm, rt } = useI18n()
+const localePath = useLocalePath()
 
-const offers = computed(() => [
-  {
-    key: 'entrepreneur',
-    title: t('services.cards.entrepreneur.title'),
-    description: t('services.cards.entrepreneur.description'),
-    icon: 'i-heroicons-rocket-launch',
-    forWho: Object.values(tm('services.cards.entrepreneur.for_who') as object || {}).map(i => rt(i)),
-    idealIf: Object.values(tm('services.cards.entrepreneur.ideal_if') as object || {}).map(i => rt(i)),
-    featured: false,
-  },
-  {
-    key: 'creator',
-    title: t('services.cards.creator.title'),
-    description: t('services.cards.creator.description'),
-    icon: 'i-heroicons-sparkles',
-    forWho: Object.values(tm('services.cards.creator.for_who') as object || {}).map(i => rt(i)),
-    idealIf: Object.values(tm('services.cards.creator.ideal_if') as object || {}).map(i => rt(i)),
-    featured: true,
-  },
-  {
-    key: 'enterprise',
-    title: t('services.cards.enterprise.title'),
-    description: t('services.cards.enterprise.description'),
-    icon: 'i-heroicons-building-office-2',
-    forWho: Object.values(tm('services.cards.enterprise.for_who') as object || {}).map(i => rt(i)),
-    idealIf: Object.values(tm('services.cards.enterprise.ideal_if') as object || {}).map(i => rt(i)),
-    featured: false,
-  },
-]);
+const offers = computed(() =>
+  offerData.map((offer) => ({
+    ...offer,
+    title: t(`services.cards.${offer.key}.title`),
+    description: t(`services.cards.${offer.key}.description`),
+    forWho: Object.values(tm(`services.cards.${offer.key}.for_who`) as object || {}).map(i => rt(i)),
+    idealIf: Object.values(tm(`services.cards.${offer.key}.ideal_if`) as object || {}).map(i => rt(i)),
+  }))
+)
 
-const otherServices = computed(() => Object.values(tm('services.other_services.list') as object || {}).map(i => rt(i)));
+const otherServices = computed(() => Object.values(tm('services.other_services.list') as object || {}).map(i => rt(i)))
 </script>
 
 <template>
@@ -49,10 +31,11 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 
       <!-- Offer Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch">
-        <div 
+        <NuxtLink
           v-for="offer in offers" 
           :key="offer.key"
-          class="offer-card relative rounded-2xl overflow-hidden flex flex-col"
+          :to="localePath(`/services/${offer.slug}`)"
+          class="offer-card group relative rounded-2xl overflow-hidden flex flex-col no-underline"
           :class="{ 'offer-card--featured': offer.featured }"
         >
           <!-- Featured badge -->
@@ -67,7 +50,7 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
               <div class="offer-icon-wrapper" :class="{ 'offer-icon-wrapper--featured': offer.featured }">
                 <UIcon :name="offer.icon" class="w-5 h-5" :class="offer.featured ? 'text-[#0f0f0f]' : 'text-[#F0BF6C]'" />
               </div>
-              <h3 class="font-manrope font-semibold text-xl sm:text-[22px] transition-colors duration-300 text-[var(--text-primary)]">
+              <h3 class="font-manrope font-semibold text-xl sm:text-[22px] transition-colors duration-300 text-[var(--text-primary)] group-hover:text-white">
                 {{ offer.title }}
               </h3>
             </div>
@@ -106,8 +89,13 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
               </ul>
             </div>
 
+            <div class="mt-auto flex items-center gap-2 pt-4 text-sm font-medium text-[var(--color-gold)]">
+              <span>{{ $t('services.common.details') }}</span>
+              <UIcon name="i-heroicons-arrow-right-20-solid" class="h-4 w-4 " />
+            </div>
+
           </div>
-        </div>
+        </NuxtLink>
       </div>
 
       <!-- Other Services -->
