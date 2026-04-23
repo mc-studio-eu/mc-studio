@@ -156,7 +156,7 @@ useSeoMeta({
     <div class="mx-auto max-w-[1360px]">
       <NuxtLink
         :to="backToProjectsLink"
-        class="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-primary)] px-4 py-2 text-sm text-[var(--text-secondary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
+        class="mb-8 inline-flex items-center gap-2 px-4 py-2 text-sm text-[var(--text-secondary)] no-underline transition-all duration-200 hover:text-[var(--text-primary)]"
       >
         <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
         <span>{{ labels.back }}</span>

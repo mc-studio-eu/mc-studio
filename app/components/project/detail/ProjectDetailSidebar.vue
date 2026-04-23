@@ -21,10 +21,10 @@ defineProps<{
 </script>
 
 <template>
-  <div class="space-y-6 lg:sticky lg:top-8">
-    <div class="rounded-[28px] border border-[var(--border-subtle)] bg-white/[0.03] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur-sm">
+  <div class="space-y-6 lg:top-8">
+    <div class="">
       <div class="mb-5">
-        <p class="font-manrope text-[44px] font-semibold leading-none tracking-[-0.04em] text-[var(--text-primary)] sm:text-[56px]">
+        <p class="font-manrope text-[38px] font-semibold leading-none tracking-[-0.04em] text-[var(--text-primary)]">
           {{ title }}
         </p>
       </div>
@@ -56,7 +56,7 @@ defineProps<{
       </div>
     </div>
 
-    <div class="rounded-[24px] border border-[var(--border-subtle)] bg-white/[0.03] p-6">
+    <div class="border-t border-[var(--border-subtle)] pt-6">
       <div class="space-y-5">
         <div>
           <h2 class="font-manrope text-2xl font-semibold text-[var(--text-primary)]">
