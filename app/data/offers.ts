@@ -174,19 +174,19 @@ export const offers: OfferData[] = [
     icon: 'i-heroicons-sparkles',
     featured: true,
     heroTitle: {
-      fr: 'Transformer une audience en produit, app ou experience utile.',
+      fr: 'Passer du contenu à un vrai produit digital.',
       en: 'Turn an audience into a product, app or useful experience.',
     },
     heroSummary: {
-      fr: "Pour les createurs qui veulent lancer quelque chose de coherent avec leur univers, sans tomber dans le gadget ni dans le produit mal pense.",
-      en: 'For creators who want to launch something coherent with their universe, without falling into gimmicks or poorly thought-out products.',
+      fr: "Nous aidons les créateurs à transformer leur audience en produit digital utile et monétisable, pour sortir d'une dépendance totale aux plateformes et construire un nouvel actif plus durable.",
+      en: 'We help creators turn their audience into a useful and monetizable digital product, so they are less dependent on platforms and can build a stronger long-term asset.',
     },
     profileLabel: {
       fr: 'Profil',
       en: 'Profile',
     },
     profileValue: {
-      fr: 'Createurs, influenceurs, medias, profils a forte audience',
+      fr: 'Créateurs, influenceurs, médias, profils à forte audience',
       en: 'Creators, influencers, media brands, audience-driven profiles',
     },
     timeframeLabel: {
@@ -194,7 +194,7 @@ export const offers: OfferData[] = [
       en: 'Focus',
     },
     timeframeValue: {
-      fr: 'Audience, valeur, execution premium',
+      fr: 'Audience, valeur, exécution premium',
       en: 'Audience, value, premium execution',
     },
     investmentLabel: {
@@ -202,102 +202,118 @@ export const offers: OfferData[] = [
       en: 'Ambition',
     },
     investmentValue: {
-      fr: 'Construire un vrai actif, pas une simple operation',
-      en: 'Build a real asset, not just a one-off launch',
+      fr: 'Créer un actif digital pour moins dépendre d’Instagram, TikTok ou du sponsoring',
+      en: 'Build a digital asset to be less dependent on Instagram, TikTok or sponsorships',
     },
     fitBullets: {
       fr: [
-        'Apporter plus de valeur a son audience',
-        'Lancer une app alignee avec son univers',
-        'Creer une nouvelle source de revenus plus solide',
+        'Apporter plus de valeur à sa communauté',
+        'Monétiser son audience autrement qu’avec du sponsoring',
+        'Lancer une application cohérente avec son univers',
       ],
       en: [
         'Bring more value to an audience',
+        'Monetize an audience beyond sponsorships',
         'Launch an app aligned with a creator universe',
-        'Create a stronger new revenue stream',
       ],
     },
     challenges: {
       fr: [
-        'Passer du contenu au produit sans casser la marque personnelle',
-        'Trouver une execution qui reste premium et simple a utiliser',
-        'Concevoir quelque chose d utile, pas juste visuellement attirant',
+        'Transformer une audience en produit sans trahir la marque personnelle',
+        'Créer quelque chose d’utile, pas juste une idée séduisante sur le papier',
+        'Éviter une dépendance totale aux plateformes sociales',
       ],
       en: [
         'Move from content to product without breaking brand identity',
-        'Find an execution that stays premium and easy to use',
-        'Design something useful, not just visually attractive',
+        'Build something useful, not just appealing in theory',
+        'Avoid total dependence on social platforms',
       ],
     },
     objectives: {
       fr: [
         'Aligner produit, image et audience',
-        'Donner envie de s engager avec une experience nette',
-        'Poser des bases solides pour faire evoluer le produit',
+        'Créer une nouvelle source de revenus plus durable',
+        'Lancer une expérience claire, engageante et désirable',
       ],
       en: [
         'Align product, image and audience',
-        'Create a clean experience people want to engage with',
-        'Lay strong foundations for future product growth',
+        'Create a more durable revenue stream',
+        'Launch a clear and desirable experience',
       ],
     },
     deliverables: {
       fr: [
         {
-          title: 'Strategie produit legere',
-          description: 'On clarifie la promesse, le positionnement et la place du produit dans l ecosysteme du createur.',
+          title: 'Réflexion stratégique',
+          description: "Analyse de l’audience, brainstorming de concepts, étude de faisabilité, validation du besoin et réflexion sur le modèle économique.",
         },
         {
-          title: 'Design aligne a la marque',
-          description: "L'interface reprend l'energie du createur sans devenir superficielle.",
+          title: 'Conception produit & design',
+          description: 'Direction artistique, identité visuelle, branding, UX/UI design, parcours utilisateurs et structure des fonctionnalités.',
         },
         {
-          title: 'Execution complete',
-          description: 'De la landing au produit lui-meme, on pense experience, retention et perception.',
+          title: 'Développement',
+          description: 'Développement front-end, back-end, infrastructure technique, gestion de projet et mise en ligne.',
+        },
+        {
+          title: 'Lancement',
+          description: 'Déploiement, tests, accompagnement au lancement et conseils sur la mise en avant du produit.',
         },
       ],
       en: [
         {
-          title: 'Light product strategy',
-          description: 'We clarify promise, positioning and the place of the product within the creator ecosystem.',
+          title: 'Strategic thinking',
+          description: 'Audience analysis, concept brainstorming, feasibility review, need validation and business model thinking.',
         },
         {
-          title: 'Brand-aligned design',
-          description: 'The interface reflects the creator brand without becoming superficial.',
+          title: 'Product design',
+          description: 'Art direction, visual identity, branding, UX/UI design, user journeys and feature structure.',
         },
         {
-          title: 'Full execution',
-          description: 'From landing to product itself, we think about experience, retention and perception.',
+          title: 'Development',
+          description: 'Front-end, back-end, technical infrastructure, project management and launch-ready implementation.',
+        },
+        {
+          title: 'Launch',
+          description: 'Deployment, testing, launch support and guidance on how to put the product forward.',
         },
       ],
     },
     process: {
       fr: [
         {
-          title: '1. Comprendre la communaute',
-          body: 'On part des attentes de l audience, pas uniquement des envies du createur.',
+          title: '1. Trouver la bonne opportunité',
+          body: "Avant de concevoir quoi que ce soit, nous travaillons l’idée de produit pour qu’elle soit cohérente avec la niche, l’audience et l’image du créateur.",
         },
         {
-          title: '2. Definir le bon format',
-          body: 'App, espace membre, outil, experience : on choisit le vehicule le plus pertinent.',
+          title: '2. Donner forme au produit',
+          body: 'Nous concevons une expérience engageante, claire et désirable, pensée pour la communauté et alignée avec l’univers du créateur.',
         },
         {
-          title: '3. Lancer proprement',
-          body: 'On produit une execution premium capable de soutenir la valeur percue et la monetisation.',
+          title: '3. Développer sur mesure',
+          body: 'Nous développons l’application selon les besoins du projet pour aboutir à un produit fiable, propre et prêt à être lancé.',
+        },
+        {
+          title: '4. Accompagner le lancement',
+          body: 'Nous allons jusqu’à la mise en ligne pour livrer une application prête à être utilisée, mise en avant et monétisée.',
         },
       ],
       en: [
         {
-          title: '1. Understand the audience',
-          body: 'We start from audience expectations, not only from the creator’s desires.',
+          title: '1. Find the right opportunity',
+          body: 'Before designing anything, we work on the product idea so it fits the niche, the audience and the creator’s image.',
         },
         {
-          title: '2. Define the right format',
-          body: 'App, member area, tool, experience: we choose the most relevant vehicle.',
+          title: '2. Shape the product',
+          body: 'We design an experience that is engaging, clear and desirable for the community while staying aligned with the creator universe.',
         },
         {
-          title: '3. Launch cleanly',
-          body: 'We build a premium execution able to support perceived value and monetization.',
+          title: '3. Build it properly',
+          body: 'We develop the application according to the project needs so the product is reliable, polished and ready to launch.',
+        },
+        {
+          title: '4. Support the launch',
+          body: 'We go through deployment so the app is ready to be used, promoted and monetized.',
         },
       ],
     },

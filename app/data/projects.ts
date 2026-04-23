@@ -58,8 +58,6 @@ export const projects: Project[] = [
     screenshots: {
       desktop: [
         '/img/project/amgprom.png',
-        '/img/project/alertes-infos.png',
-        '/img/project/how-it-work-ra.png',
       ],
       mobile: [
         '/img/project/amgprom.png',

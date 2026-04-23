@@ -58,8 +58,8 @@ const labels = computed(() =>
         featuredTag: 'Populaire',
         fitTitle: 'Cette offre est faite pour',
         challengesTitle: 'Enjeux typiques',
-        objectivesTitle: 'Ce qu on cherche a obtenir',
-        deliverablesTitle: 'Ce qu on construit',
+        objectivesTitle: 'Ce qu’on cherche à obtenir',
+        deliverablesTitle: 'Ce que comprend l’offre',
         processTitle: 'Comment on travaille',
         nextOffer: 'Offre suivante',
       }
