@@ -36,12 +36,12 @@ defineProps<{
       <div class="mt-6 space-y-3">
         <NuxtLink
           :to="contactLink"
-          class="inline-flex w-fit items-center gap-2.5 rounded-2xl bg-[linear-gradient(90deg,#ffffff_0%,#f6ebd5_48%,#f3c56f_100%)] p-1.5 pr-4 font-inter text-[#121212] no-underline shadow-[0_8px_24px_rgba(240,191,108,0.14)] transition-all duration-200 hover:brightness-105"
+          class="inline-flex w-fit items-center gap-2.5 rounded-lg bg-[linear-gradient(90deg,#ffffff_0%,#f6ebd5_48%,#f3c56f_100%)] p-1.5 pr-4 font-inter text-[#121212] no-underline shadow-[0_8px_24px_rgba(240,191,108,0.14)] transition-all duration-200 hover:brightness-105"
         >
           <NuxtImg
             src="/img/main/founder.png"
             alt="MC Studio"
-            class="h-10 w-10 rounded-xl object-cover"
+            class="h-10 w-10 rounded-lg object-cover"
           />
 
           <div class="flex flex-col items-start leading-none">

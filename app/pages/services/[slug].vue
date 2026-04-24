@@ -11,8 +11,8 @@ type LocaleKey = 'fr' | 'en'
 
 const PAGE_LABELS = {
   fr: {
-    back: 'Retour aux offres',
-    featuredTag: 'Populaire',
+    back: 'Retour à l’offre',
+    featuredTag: 'Offre signature',
     fitTitle: 'Cette offre est faite pour',
     challengesTitle: 'Enjeux typiques',
     objectivesTitle: 'Ce qu’on cherche à obtenir',
@@ -22,8 +22,8 @@ const PAGE_LABELS = {
     browseNext: 'Explorer le profil suivant.',
   },
   en: {
-    back: 'Back to offers',
-    featuredTag: 'Popular',
+    back: 'Back to the offer',
+    featuredTag: 'Signature Offer',
     fitTitle: 'This offer is built for',
     challengesTitle: 'Typical challenges',
     objectivesTitle: 'What we aim to achieve',
@@ -78,6 +78,10 @@ const localizedOffer = computed(() => {
 })
 
 const nextOffer = computed(() => {
+  if (offers.length < 2) {
+    return undefined
+  }
+
   const currentIndex = offers.findIndex((item) => item.slug === localizedOffer.value.slug)
   if (currentIndex < 0) {
     return undefined

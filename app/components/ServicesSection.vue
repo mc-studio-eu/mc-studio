@@ -16,6 +16,7 @@ const offers = computed(() =>
 )
 
 const otherServices = computed(() => Object.values(tm('services.other_services.list') as object || {}).map(i => rt(i)))
+const isSingleOffer = computed(() => offers.value.length === 1)
 </script>
 
 <template>
@@ -30,7 +31,10 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
       </div>
 
       <!-- Offer Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch">
+      <div
+        class="grid grid-cols-1 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch"
+        :class="isSingleOffer ? 'max-w-[820px] mx-auto' : 'md:grid-cols-2 lg:grid-cols-3'"
+      >
         <NuxtLink
           v-for="offer in offers" 
           :key="offer.key"
@@ -38,12 +42,6 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
           class="offer-card group relative rounded-2xl overflow-hidden flex flex-col no-underline"
           :class="{ 'offer-card--featured': offer.featured }"
         >
-          <!-- Featured badge -->
-          <div v-if="offer.featured" class="offer-badge">
-            <UIcon name="i-heroicons-star-solid" class="w-3 h-3" />
-            <span>Populaire</span>
-          </div>
-
           <div class="p-6 sm:p-7 h-full flex flex-col">
             <!-- Header: Icon + Title -->
             <div class="flex items-center gap-3.5 mb-4">
@@ -91,7 +89,7 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 
             <div class="mt-auto flex items-center gap-2 pt-4 text-sm font-medium text-[var(--color-gold)]">
               <span>{{ $t('services.common.details') }}</span>
-              <UIcon name="i-heroicons-arrow-right-20-solid" class="h-4 w-4 " />
+              <UIcon name="i-heroicons-arrow-right-20-solid" class="h-4 w-4" />
             </div>
 
           </div>
@@ -129,28 +127,10 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 /* ─── Featured card ─── */
 .offer-card--featured {
   background: linear-gradient(180deg, #1c1a15 0%, #161616 100%);
-  border-color: rgba(240, 191, 108, 0.25);
+  border-color: rgba(240, 191, 108, 0.24);
   box-shadow:
     0 0 0 1px rgba(240, 191, 108, 0.08),
     0 20px 50px -10px rgba(240, 191, 108, 0.06);
-}
-
-/* ─── Featured badge ─── */
-.offer-badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  background: linear-gradient(135deg, #F0BF6C 0%, #e0a84d 100%);
-  color: #0f0f0f;
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  border-radius: 20px;
 }
 
 /* ─── Icon wrapper ─── */

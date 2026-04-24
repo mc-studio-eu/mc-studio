@@ -64,8 +64,8 @@ export const projects: Project[] = [
       ],
     },
     summary: {
-      fr: "AMG Promotion accompagne les marques dans la creation d'objets promotionnels sur mesure avec une image plus premium et un discours commercial plus clair.",
-      en: 'AMG Promotion helps brands create custom promotional products with a more premium image and a clearer commercial message.',
+      fr: "AMG Promotion accompagne les marques dans la creation d'objets promotionnels sur mesure avec une image plus soignee et un discours commercial plus clair.",
+      en: 'AMG Promotion helps brands create custom promotional products with a more polished image and a clearer commercial message.',
     },
     aboutCompany: {
       fr: "Entreprise specialisee dans les textiles, goodies et supports personnalises pour des references nationales. L'enjeu etait de moderniser la perception tout en renforcant la lisibilite de l'offre.",
@@ -78,19 +78,19 @@ export const projects: Project[] = [
     companySize: '20 - 50',
     supportBullets: {
       fr: [
-        'Positionnement plus premium',
+        'Positionnement plus soigné',
         'Message plus lisible',
         'Parcours plus simple pour convertir',
       ],
       en: [
-        'More premium positioning',
+        'More polished positioning',
         'Clearer messaging',
         'Simpler path to convert',
       ],
     },
     context: {
       fr: "Le site precedent ne mettait pas assez en valeur la qualite percue ni la diversite des prestations. Nous avons donc repense la structure pour rassurer, clarifier et donner une impression plus haut de gamme.",
-      en: 'The previous website did not highlight perceived quality enough or clearly explain the breadth of the offer. We reworked the structure to reassure, clarify and create a more premium feel.',
+      en: 'The previous website did not highlight perceived quality enough or clearly explain the breadth of the offer. We reworked the structure to reassure, clarify and create a more polished feel.',
     },
     solution: {
       fr: "Nouvelle landing page, direction artistique plus nette, hierarchie de contenu plus forte et sections pensees pour aider un prospect a comprendre vite et demander un devis.",
@@ -124,7 +124,7 @@ export const projects: Project[] = [
       fr: [
         {
           title: 'Direction artistique',
-          body: "Refonte visuelle plus premium avec une mise en page plus respirante et une meilleure hierarchie des blocs.",
+          body: "Refonte visuelle plus soignee avec une mise en page plus respirante et une meilleure hierarchie des blocs.",
         },
         {
           title: 'Structure de landing',
@@ -134,7 +134,7 @@ export const projects: Project[] = [
       en: [
         {
           title: 'Art direction',
-          body: 'A more premium visual redesign with more breathing room and stronger hierarchy between content blocks.',
+          body: 'A more polished visual redesign with more breathing room and stronger hierarchy between content blocks.',
         },
         {
           title: 'Landing structure',
@@ -363,8 +363,8 @@ export const projects: Project[] = [
       ],
     },
     summary: {
-      fr: "R&A Energy voulait un site plus premium pour mieux porter son expertise, rassurer les entreprises et fluidifier la prise de contact.",
-      en: 'R&A Energy wanted a more premium website to better convey expertise, reassure companies and streamline contact requests.',
+      fr: "R&A Energy voulait un site plus soigné pour mieux porter son expertise, rassurer les entreprises et fluidifier la prise de contact.",
+      en: 'R&A Energy wanted a more polished website to better convey expertise, reassure companies and streamline contact requests.',
     },
     aboutCompany: {
       fr: "Courtier en energie pour professionnels avec une offre parfois complexe a expliquer. L'enjeu etait de simplifier sans perdre la perception d'expertise.",
@@ -382,7 +382,7 @@ export const projects: Project[] = [
         'Prise de contact plus fluide',
       ],
       en: [
-        'More premium image',
+        'More polished image',
         'Simplified messaging',
         'Smoother lead capture',
       ],
@@ -392,8 +392,8 @@ export const projects: Project[] = [
       en: 'The topic was business-heavy and required strong framing to be understood quickly. The website also needed to support a trust-based message in a sensitive market.',
     },
     solution: {
-      fr: "Nous avons construit une landing plus premium avec un branding plus propre, une offre simplifiee et un parcours oriente prise de rendez-vous.",
-      en: 'We built a more premium landing page with cleaner branding, a simplified offer and a journey focused on booking calls.',
+      fr: "Nous avons construit une landing plus soignee avec un branding plus propre, une offre simplifiee et un parcours oriente prise de rendez-vous.",
+      en: 'We built a more polished landing page with cleaner branding, a simplified offer and a journey focused on booking calls.',
     },
     challenges: {
       fr: [
@@ -409,12 +409,12 @@ export const projects: Project[] = [
     },
     objectives: {
       fr: [
-        'Donner une image plus credible et premium',
+        'Donner une image plus credible et soignee',
         'Rendre la proposition plus facile a comprendre',
         'Encourager la prise de rendez-vous',
       ],
       en: [
-        'Create a more credible and premium image',
+        'Create a more credible and polished image',
         'Make the value proposition easier to understand',
         'Encourage meeting bookings',
       ],

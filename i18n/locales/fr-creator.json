@@ -20,20 +20,19 @@
             "experience": "+5 ans d'expériences",
             "projects": "+10 projets réalisés",
             "rotating_stats": [
-                "+10 projets réalisés",
-                "10 000 users générés",
-                "+5 ans d'expériences"
+                "+ 5 ans d'expérience",
+                "Stratégie produit claire",
+                "Exécution de bout en bout"
             ],
             "location": [
-                "Lyon",
-                "Londres",
-                "Montréal"
+                "Studio indépendant",
+                "Approche sur mesure",
+                "Exécution soignée"
             ],
             "rotating_services": [
-                "App Mobile",
-                "App Web",
-                "SaaS",
-                "Communauté"
+                "Apps web & mobile",
+                "Pensé pour créateurs",
+                "Du concept au lancement"
             ]
         },
         "marquee": [
@@ -150,7 +149,7 @@
             "Votre Communauté",
             "Distribution",
             "Monétisation",
-            "Design Premium",
+            "Design",
             "100% de satisfaction",
             "SaaS Ready",
             "Scalable",
@@ -314,7 +313,7 @@
                 }
             },
             "ra_energy": {
-                "description": "R&A Energy est un courtier en énergie dédié aux entreprises et aux pros.\n\nBranding & landing page premium : message simplifié, réassurance renforcée et parcours orienté prise de contact.",
+                "description": "R&A Energy est un courtier en énergie dédié aux entreprises et aux pros.\n\nBranding & landing page : message simplifié, réassurance renforcée et parcours orienté prise de contact.",
                 "tags": [
                     "Landing Page",
                     "Branding",

@@ -216,7 +216,6 @@ useSeoMeta({
             :title="nextProject.title"
             :description="labels.browseNext"
             :link="nextProjectLink"
-            :cta-label="t('projects.cta')"
           />
         </div>
       </section>

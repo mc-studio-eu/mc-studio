@@ -1,8 +1,8 @@
 {
   "welcome": "Welcome",
   "nav": {
-    "projects": "Projects",
-    "services": "Services",
+    "projects": "Selected Work",
+    "services": "Offer",
     "reviews": "Reviews",
     "faq": "FAQ",
     "contact": "Contact",
@@ -11,118 +11,81 @@
     "team": "Team"
   },
   "footer": {
-    "tagline": "Branding, design and development to launch useful, elegant apps built to grow.",
+    "tagline": "Web and mobile apps for content creators.",
     "navigation_title": "Navigation",
     "socials_title": "Socials",
     "contact_title": "Contact",
     "copyright": "MC Studio. All rights reserved."
   },
   "hero": {
-    "title": "Design & Development to<br class=\"hidden xs:inline\"> launch fast, and well.",
-    "subtitle": "We support from concept to launch.",
+    "title": "Turn your audience<br class=\"hidden xs:inline\"> into a digital product.",
+    "subtitle": "Web and mobile apps for content creators,<br>from concept to launch.",
     "cta": {
       "book": "Book a call",
       "whatsapp": "Chat on WhatsApp"
     },
     "badges": {
       "rotating_stats": [
-        "+5 years experience"
+        "5+ years in product"
       ],
       "location": [
-        "Lyon"
+        "Built for creators"
       ],
       "rotating_services": [
-        "World Class"
+        "Web & mobile apps"
       ]
     },
     "marquee": [
+      "creator economy",
+      "web app",
+      "mobile app",
+      "digital product",
+      "audience",
+      "community",
+      "monetization",
       "design",
-      "SaaS",
-      "MVP",
-      "development",
-      "design",
-      "SaaS",
-      "SEO",
+      "product strategy",
       "development",
       "UI/UX",
-      "AI",
-      "development",
-      "deployment",
-      "wireframe",
-      "UI/UX",
-      "AI"
+      "launch",
+      "retention",
+      "owned platform"
     ]
   },
   "services": {
-    "title": "Our <span class=\"text-gradient\">offers</span>",
-    "subtitle": "Offers tailored to every profile.<br class=\"sm:hidden\"> Entrepreneurs, creators or businesses.",
+    "title": "One <span class=\"text-gradient\">clear offer</span>",
+    "subtitle": "One offer: conceive, build, and launch your app.",
     "other_services": {
-      "title": "Other Services",
-      "subtitle": "Need a custom service? We adapt.",
+      "title": "App Types",
+      "subtitle": "The format depends on your audience and what would create the most value.",
       "list": {
-        "web_design": "Web Design",
-        "product_design": "Product Design",
-        "showcase": "Showcase Sites",
-        "seo": "SEO",
-        "copywriting": "Copywriting",
-        "strategy": "Strategic Support",
-        "ai": "AI Integration",
-        "web_dev": "Web Development",
-        "mobile_dev": "Mobile Development"
+        "web_design": "Learning apps",
+        "product_design": "Community apps",
+        "showcase": "Content companion apps",
+        "seo": "Member experiences",
+        "copywriting": "Coaching platforms",
+        "strategy": "Niche utility apps",
+        "ai": "Content layers",
+        "web_dev": "Web apps",
+        "mobile_dev": "Mobile apps"
       }
     },
     "cards": {
-      "entrepreneur": {
-        "title": "Entrepreneurs",
-        "icon": "rocket",
-        "description": "We help entrepreneurs turn a vision into a clear, credible application ready to launch.",
-        "for_who": {
-          "0": "founders",
-          "1": "freelancers",
-          "2": "startups",
-          "3": "project owners"
-        },
-        "ideal_if": {
-          "0": "you need to clarify an idea",
-          "1": "you need to scope an MVP",
-          "2": "you need to launch a first version",
-          "3": "you need to build on solid foundations"
-        },
-        "budget": "Custom quote"
-      },
       "creator": {
-        "title": "Creators",
+        "title": "Creator Apps",
         "icon": "sparkles",
-        "description": "We help creators turn their audience into a useful app, aligned with their universe and designed for their community.",
+        "description": "One end-to-end offer, from concept to launch.",
         "for_who": {
           "0": "content creators",
-          "1": "influencers",
-          "2": "youtubers",
-          "3": "profiles with an engaged community"
+          "1": "creators with an engaged audience",
+          "2": "profiles with clear expertise or a strong universe",
+          "3": "communities ready for a deeper digital experience"
         },
         "ideal_if": {
-          "0": "you need to bring more value to your audience",
-          "1": "you need to launch an app aligned with your brand",
-          "2": "you need to create a new revenue stream",
-          "3": "you need to build around your niche"
-        },
-        "budget": "Custom quote"
-      },
-      "enterprise": {
-        "title": "Businesses",
-        "icon": "building",
-        "description": "We help businesses design custom applications and tools to streamline their operations and support their growth.",
-        "for_who": {
-          "0": "SMBs",
-          "1": "growing companies",
-          "2": "brands",
-          "3": "organizations with specific operational needs"
-        },
-        "ideal_if": {
-          "0": "you need to streamline workflows",
-          "1": "you need to improve operational efficiency",
-          "2": "you need to centralize or automate processes",
-          "3": "you need to develop an internal tool or business platform"
+          "0": "you want to turn your audience into a real product",
+          "1": "you want an app aligned with your brand and community",
+          "2": "you want a more durable monetization layer",
+          "3": "you want one partner from concept to launch"
         },
         "budget": "Custom quote"
       }
@@ -139,7 +102,7 @@
     "modals": {
       "landing": {
         "title": "Landing Page",
-        "result": "A premium page designed to convert",
+        "result": "A page designed to convert",
         "for_who": {
           "0": "You have a clear offer and want more requests",
           "1": "You are launching a product/service and want to test an angle",
@@ -150,7 +113,7 @@
           "1": "Page architecture (sections + flow)",
           "2": "Structural Copywriting (hooks, proofs, CTA)",
           "3": "Visual Identity",
-          "4": "Premium UI Design (Figma) - Unlimited revisions until satisfaction",
+          "4": "UI Design (Figma) - Unlimited revisions until satisfaction",
           "5": "Front integration (perf + responsive): Custom Code or No-Code",
           "6": "SEO Optimization",
           "7": "Form (or Calendly)",
@@ -210,24 +173,23 @@
       }
     },
     "marquee": [
-      "Fast and Efficient",
-      "World Class",
-      "Tailor Made",
-      "Your Partner",
-      "Pixel Perfect",
-      "100% Satisfaction",
-      "Seamless Communication",
-      "Premium Quality",
-      "Coherent Branding",
-      "SaaS Ready",
-      "Conversion Boost",
-      "Clean & Modern",
-      "Impeccable Details"
+      "Creator Product",
+      "Web App",
+      "Mobile App",
+      "Monetization",
+      "Design",
+      "Owned Experience",
+      "Community Utility",
+      "Launch Ready",
+      "Product Strategy",
+      "Retention",
+      "User Experience",
+      "Custom Build"
     ]
   },
   "projects": {
-    "title": "Our <span class=\"text-gradient\">Projects</span>",
-    "subtitle": "A selection of projects where design, code and strategy meet.",
+    "title": "Selected <span class=\"text-gradient\">Work</span>",
+    "subtitle": "Examples of the level of clarity, design, and execution we bring to digital products.",
     "cta": "View project",
     "items": {
       "amg_promotion": {
@@ -241,24 +203,25 @@
         ]
       },
       "arises": {
-        "description": "Arises is an AI SaaS that turns your calendar into an action plan.\nWe designed this SaaS from logo to online launch, all custom-made to maximize activation.",
+        "description": "Arises is an AI product that turns a calendar into an action plan.\nWe shaped the product from identity to launch, with a focus on clarity, activation, and a strong user experience.",
         "tags": [
+          "Product",
+          "AI",
           "Launch",
-          "AI SaaS",
-          "Landing Page",
           "Design",
           "UI/UX",
-          "Copywriting"
+          "Strategy"
         ]
       },
       "souji_nova": {
-        "description": "Souji Nova is a cleaning company for individuals and professionals.\nCustom landing page: reassuring design, clear offer, optimized path to generate more requests.",
+        "description": "Souji Nova needed a sharper digital presence and a clearer experience.\nWe designed a conversion-focused product layer with stronger positioning and a simpler path to action.",
         "tags": [
-          "Landing Page",
+          "Positioning",
+          "Branding",
           "Design",
           "UI/UX",
-          "Copywriting",
-          "Cleaning Company"
+          "Copy",
+          "Launch"
         ],
         "testimonial": {
           "review": "MC Studio created a great website for us, very intuitive and very professional. Good advice and attentive to its clients, I recommend!",
@@ -266,15 +229,14 @@
         }
       },
       "ra_energy": {
-        "description": "R&A Energy is an energy broker dedicated to businesses and pros.\n\nPremium branding & landing page: simplified message, reinforced reassurance and contact-oriented path.",
+        "description": "R&A Energy needed a clearer and more legible digital experience.\n\nWe clarified the message, refined the identity, and built a cleaner product experience from brand to interface.",
         "tags": [
-          "Landing Page",
           "Branding",
           "Design",
           "UI/UX",
-          "Copywriting",
-          "Logo",
-          "Energy Brokerage"
+          "Copy",
+          "Strategy",
+          "Launch"
         ],
         "testimonial": {
           "review": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
@@ -282,13 +244,13 @@
         }
       },
       "fontaines_vtc": {
-        "description": "Fontaines VTC is a private transport company (online bookings).\nSEO Optimization + CTA: better local visibility and more conversions on booking.",
+        "description": "Fontaines VTC needed a clearer journey and stronger digital performance.\nWe improved the experience, sharpened key actions, and helped create a cleaner path from traffic to booking.",
         "tags": [
-          "SEO",
-          "CTA Optimization",
+          "UX",
+          "Conversion",
           "Design",
-          "Copywriting",
-          "VTC Company"
+          "Copy",
+          "SEO"
         ],
         "testimonial": {
           "review": "MC Studio accompanied me in my digital project, very serious professional company I recommend it!",
@@ -298,29 +260,29 @@
     }
   },
   "process": {
-    "title": "How we <span class=\"text-gradient\">work</span>",
-    "subtitle": "A simple 3-step approach to bring your project to life.",
+    "title": "How the <span class=\"text-gradient\">collaboration works</span>",
+    "subtitle": "A focused process from first conversation to launch, with clarity at every stage.",
     "duration_label": "Average duration:",
-    "duration_value": "2-4 weeks",
+    "duration_value": "4-10 weeks",
     "steps": {
       "1": {
         "title": "1. Discovery Call",
-        "description": "We discuss your project, goals, and challenges. We then propose the best strategy tailored to your needs."
+        "description": "We look at your audience, your positioning, and the kind of product worth building around your universe."
       },
       "2": {
-        "title": "2. Commercial Proposal",
-        "description": "You receive a detailed proposal including scope, budget, and timeline. Everything is clear, no surprises."
+        "title": "2. Proposal & Scope",
+        "description": "You receive a clear recommendation with scope, priorities, timeline, and budget so the project starts on solid ground."
       },
       "3": {
-        "title": "3. Project Kickoff",
-        "description": "Once approved, we set up the kickoff. You get access to your Notion workspace and work begins immediately."
+        "title": "3. Build & Launch",
+        "description": "Once aligned, we handle strategy, design, development, and launch while you stay involved in the key decisions."
       }
     }
   },
   "testimonials": {
-    "intro_label": "The Independent Studio",
-    "intro_text": "At MC Studio we have a taste for well-done work, we iterate fast <br> while paying particular attention <br> to delivered work",
-    "title": "What <span class=\"text-gradient\">our clients</span> say",
+    "intro_label": "Clear Execution",
+    "intro_text": "Clear thinking, strong design,<br> solid development,<br> and a launch handled end to end.",
+    "title": "What clients say about <span class=\"text-gradient\">working with us</span>",
     "items": {
       "ra_energy": {
         "content": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
@@ -342,53 +304,53 @@
   },
   "faq": {
     "title": "<span class=\"text-gradient\">FAQ</span>",
-    "subtitle": "We answer your questions:",
+    "subtitle": "Frequently asked questions:",
     "founder_role": "Founder {'@'}MC Studio",
     "contact_text": "Other questions? Contact me directly here:",
     "whatsapp_btn": "Message on WhatsApp",
     "items": {
       "0": {
-        "question": "What types of clients do you support?",
-        "answer": "We support entrepreneurs, influencer, startups and companies. Our projects range from conversion-oriented landing pages to more complete platforms (MVP, SaaS, dashboards), with an approach focused on design, solving problem, clarity of offer and performance."
+        "question": "Who is this for?",
+        "answer": "MC Studio is for content creators who want to turn their audience, expertise, or community into a web or mobile app with real value."
       },
       "1": {
-        "question": "How to get a quote and how long do you take to respond?",
-        "answer": "Book a call or contact us directly on WhatsApp. We usually respond within 24h with a few quick questions and a first estimate. A detailed quote is then sent after a scoping exchange (objectives, content, deadlines, scope)."
+        "question": "How do we start?",
+        "answer": "Book a call or contact us directly on WhatsApp. We usually reply within 24 hours, ask a few focused questions, and then send a clear proposal after a short scoping exchange."
       },
       "2": {
-        "question": "What happens if the design doesn't match your expectations?",
-        "answer": "We move step by step with validations (creative direction, mockups, iterations). Each project includes revisions to adjust until we get a result aligned with your vision. The goal: a design that looks like you and converts."
+        "question": "What if I do not have the final idea yet?",
+        "answer": "That is part of the process. We help clarify the concept, define the core use case, and shape the right product before design and development begin."
       },
       "3": {
         "question": "What is the cost of a project?",
-        "answer": "The budget depends on the scope (number of pages, features, animations, content, integrations). After a first exchange, we propose a clear recommendation with a transparent quote — no surprises."
+        "answer": "The budget depends on the product scope, the number of core features, and whether the app is web, mobile, or both. After a first exchange, we send a transparent recommendation and quote."
       },
       "4": {
         "question": "Who is behind MC Studio?",
-        "answer": "MC Studio brings together a team of 4 experts from different fields (product direction, design, frontend dev, backend dev and project management). Founded and led by Mohamed Chettah, the studio supports entrepreneurs, startups and companies from strategy to launch."
+        "answer": "MC Studio brings together a compact team across product thinking, design, frontend, backend, and project management. Founded and led by Mohamed Chettah, the studio helps creators go from concept to launch with one aligned team."
       },
       "5": {
         "question": "How does the collaboration work?",
-        "answer": "You will have a private WhatsApp channel with us to streamline exchanges, briefs and delivery. If needed, we schedule follow-up points.\n\nEverything happens on Notion: you deposit your requests (text, video, docs), we analyze them and give you a deadline. In general, we deliver 2 to 3 tasks per week depending on complexity.\n\nOnce delivered, you validate or ask for revisions, then we move on to the next."
+        "answer": "You get a private WhatsApp channel for fast communication and a structured Notion workspace to follow the project. We move through scoping, design, development, and launch with regular validations so everything stays clear."
       }
     }
   },
   "cta": {
-    "title": "Tell us about <span class=\"text-gradient\">your Project</span>",
-    "subtitle": "Our mission: help entrepreneurs and companies transform an idea into a concrete product"
+    "title": "Ready to turn your audience into <span class=\"text-gradient\">an app</span>?",
+    "subtitle": "We shape, build, and launch your app."
   },
   "team": {
     "badge": "Our team",
     "title": "The <span class=\"text-gradient\">MC Studio</span> team",
-    "subtitle": "Strategy, design and development to turn a vision into a clear, useful, well-executed product.",
+    "subtitle": "Strategy, design and development for creators who want a real digital product.",
     "cards": {
       "collective": {
-        "title": "A team at the service of the product.",
-        "text": "Strategic thinking, product framing, design and development brought together in a team. Lean, experienced, and focused on what truly matters."
+        "title": "A studio built for product clarity.",
+        "text": "We combine product thinking, design, and development inside one tight team. The goal is not to add more noise around your brand, but to build the right app with the right level of quality."
       },
       "specialists": {
-        "title": "From strategy to execution.",
-        "text": "From business thinking to interface design and development, each skill is aligned to deliver coherent, useful digital products built to support real goals."
+        "title": "From concept to launch.",
+        "text": "Every discipline is aligned around one objective: helping creators launch a product that feels useful, polished, and ready for real users."
       }
     },
     "members": {
@@ -406,18 +368,19 @@
       }
     },
     "specialist_badges": [
-      "Business strategy",
+      "Creator Monetization",
       "Product strategy",
-      "Product framing",
+      "Community Experience",
       "UX/UI",
       "Design system",
-      "Prototyping",
       "Front-end",
       "Back-end",
-      "Roadmap",
+      "Web App",
+      "Mobile App",
+      "Payments",
       "Launch",
-      "Execution",
-      "Delivery"
+      "Analytics",
+      "Retention"
     ]
   },
   "partners": {
@@ -520,7 +483,7 @@
         "tier_1_title": "3 successful referrals",
         "tier_1_text": "You start generating a recurring flow of qualified projects. Each signed engagement is tracked, and your first commissions lay the foundations of the collaboration.",
         "tier_2_title": "10 successful referrals",
-        "tier_2_text": "You unlock a premium reward dedicated to the most engaged partners, designed to fit your professional daily life, not as a simple gimmick.",
+        "tier_2_text": "You unlock a dedicated reward for the most engaged partners, designed to fit your professional daily life, not as a simple gimmick.",
         "tier_3_title": "20+ successful referrals",
         "tier_3_text": "The program becomes a real additional revenue lever. Together we refine tracking, reporting and recognition rules to build a long-term relationship."
       },
@@ -555,7 +518,7 @@
         },
         "4": {
           "question": "Are there additional rewards?",
-          "answer": "Yes. On top of the 10% commission per signed project, we set up a tier system.\n\nFor instance, from 10 successful referrals onwards, you unlock a premium reward designed for the most engaged partners.\n\nThe goal: build a long-term, win‑win relationship."
+          "answer": "Yes. On top of the 10% commission per signed project, we set up a tier system.\n\nFor instance, from 10 successful referrals onwards, you unlock a dedicated reward designed for the most engaged partners.\n\nThe goal: build a long-term, win‑win relationship."
         }
       }
     },
@@ -592,8 +555,8 @@
     }
   },
   "meta": {
-    "title": "MC Studio - The Design & Development Studio",
-    "description": "Design & Development to launch fast and right. Branding, landing page and apps: we support entrepreneurs and companies from concept to launch."
+    "title": "MC Studio - Apps for Content Creators",
+    "description": "MC Studio designs and builds web and mobile apps for content creators, from concept to launch."
   },
   "legal": {
     "privacy": {

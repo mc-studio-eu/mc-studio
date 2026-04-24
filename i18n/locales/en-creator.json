@@ -1,7 +1,7 @@
 {
     "nav": {
-        "projects": "Projects",
-        "services": "Services",
+        "projects": "Selected Work",
+        "services": "Offer",
         "reviews": "Reviews",
         "faq": "FAQ",
         "contact": "Contact",
@@ -10,54 +10,53 @@
         "team": "Team"
     },
     "hero": {
-        "title": "Grow your community<br class=\"hidden xs:inline\"> with a custom app.",
-        "subtitle": "More value for your followers, new revenue for you.<br>We design and build the web or mobile app that extends your content.",
+        "title": "Turn your audience<br class=\"hidden xs:inline\"> into a digital product.",
+        "subtitle": "Web and mobile apps for content creators,<br>from concept to launch.",
         "cta": {
             "book": "Book a call",
             "whatsapp": "Chat on WhatsApp"
         },
         "badges": {
             "experience": "+5 years of experience",
-            "projects": "+10 projects delivered",
+            "projects": "Digital products",
             "rotating_stats": [
-                "+10 projects delivered",
-                "10,000 users generated",
-                "+5 years of experience"
+                "5+ years in product",
+                "Clear product strategy",
+                "End-to-end execution"
             ],
             "location": [
-                "Lyon",
-                "London",
-                "Montreal"
+                "Independent studio",
+                "Tailored approach",
+                "Polished execution"
             ],
             "rotating_services": [
-                "Mobile App",
-                "Web App",
-                "SaaS",
-                "Community"
+                "Web & mobile apps",
+                "Built for creators",
+                "From concept to launch"
             ]
         },
         "marquee": [
             "creator economy",
+            "web app",
             "mobile app",
+            "audience",
             "community",
             "monetization",
-            "web app",
-            "SaaS",
-            "content",
-            "audience",
-            "followers",
-            "revenue",
-            "distribution",
-            "branding",
-            "UI/UX",
+            "digital product",
+            "product experience",
+            "product strategy",
+            "design",
             "development",
-            "launch"
+            "launch",
+            "retention",
+            "owned platform",
+            "creator app"
         ]
     },
     "case_study": {
-        "badge": "Case Study",
+        "badge": "Public Example",
         "title": "Maison AWL — <span class=\"text-gradient\">180k followers</span>, 10,000 users.",
-        "subtitle": "We helped Maison AWL design and build their platform. Result: 10,000 active users directly from their community.",
+        "subtitle": "One visible example of what can happen when a creator audience is turned into a product with real utility and a clear experience.",
         "stats": {
             "followers": {
                 "value": "180k",
@@ -72,116 +71,116 @@
                 "label": "Conversion rate"
             }
         },
-        "quote": "A creator's strength is their distribution. We turn that audience into users of a real product.",
+        "quote": "The audience creates the signal. The product gives it structure, utility, and long-term revenue potential.",
         "author": "Mohamed Chettah",
         "author_role": "Founder · MC Studio"
     },
     "pitch": {
-        "title": "Your audience is your <span class=\"text-gradient\">greatest asset</span>.",
+        "title": "Why creators are building <span class=\"text-gradient\">apps now</span>.",
         "blocks": [
             {
-                "title": "Distribution is everything.",
-                "text": "Today anyone can build a standard web or mobile app. But what makes the difference — and always will — is distribution. You have a targeted audience, in a specific niche, that knows and trusts you."
+                "title": "Your audience is already distribution.",
+                "text": "The hardest part of any product is getting attention and trust. As a creator, you already have both. Your audience knows your world, values your point of view, and is ready for a deeper experience."
             },
             {
-                "title": "Your revenue is limited to your content.",
-                "text": "Sponsorships, affiliates, brand deals… It's good, but it's capped. And those revenues depend on platforms you don't control. It's time to build something that's yours."
+                "title": "Content alone has limits.",
+                "text": "Brand deals, sponsorships, and platform reach can work, but they are not fully yours. An app creates a more durable layer around your content: something people return to, use, and pay for."
             },
             {
-                "title": "We build the app that changes everything.",
-                "text": "We design and develop a web or mobile app to add new value to your profile, offer more to your community, and generate a new revenue stream — recurring, scalable, and yours."
+                "title": "An app changes the model.",
+                "text": "A well-conceived app can turn expertise into utility, community into retention, and attention into a real product. Not more noise around your brand. A digital experience people want to keep."
             }
         ]
     },
     "services": {
-        "title": "Our <span class=\"text-gradient\">Process</span>",
-        "subtitle": "From idea to launch — we handle everything, you stay focused on your content.",
+        "title": "One <span class=\"text-gradient\">clear offer</span>",
+        "subtitle": "One offer: conceive, build, and launch your app.",
         "steps": {
             "business": {
                 "number": "01",
-                "title": "Business & Market Research",
-                "description": "We validate the idea with you: market research, feasibility, positioning. We go beyond a simple survey — active prospecting for real feedback, forms on your social media, competitor analysis.",
+                "title": "Product Strategy",
+                "description": "We clarify the concept, the audience need, the right product format, and the monetization logic before anything gets built.",
                 "items": [
-                    "Market research & feasibility",
-                    "Active prospecting (real feedback)",
-                    "Forms on your social media",
-                    "Positioning & strategy"
+                    "Audience signal",
+                    "Product concept",
+                    "Monetization model",
+                    "Scope & roadmap"
                 ]
             },
             "design": {
                 "number": "02",
-                "title": "Design",
-                "description": "We create the visual identity of your app and design every screen to deliver the best experience for your users.",
+                "title": "Product Design",
+                "description": "We shape the user flows, visual direction, and interface so the experience feels clear, simple, and fully aligned with your universe.",
                 "items": [
-                    "Art Direction",
-                    "Brand Identity",
-                    "UI/UX Design",
-                    "Product Design"
+                    "UX flows",
+                    "Art direction",
+                    "UI design",
+                    "Product structure"
                 ]
             },
             "development": {
                 "number": "03",
                 "title": "Development",
-                "description": "We code your custom app — frontend, backend, infrastructure. Everything is built to be solid, performant and scalable.",
+                "description": "We build the product end to end, with the right technical foundations for users, payments, content, performance, and long-term growth.",
                 "items": [
-                    "Frontend Development",
-                    "Backend Development",
-                    "Infrastructure & DevOps",
-                    "Project Management"
+                    "Front-end build",
+                    "Back-end systems",
+                    "Users & payments",
+                    "Infrastructure & QA"
                 ]
             },
             "launch": {
                 "number": "04",
-                "title": "Launch & Go Live",
-                "description": "We deploy your app to production. Everything is ready to welcome your first users. Distribution? We advise, but you have the firepower.",
+                "title": "Launch",
+                "description": "We prepare the release, refine the details, and put the app online in a way that feels credible, polished, and ready for real users.",
                 "items": [
-                    "Production deployment",
-                    "QA & testing",
-                    "Distribution advice",
-                    "Post-launch support"
+                    "Production setup",
+                    "Testing & polish",
+                    "Launch support",
+                    "Post-launch iteration"
                 ]
             }
         },
-        "distribution_note": "Distribution is your superpower — we provide guidance, but your audience does the rest.",
+        "distribution_note": "You bring the audience signal. We turn it into a product people want to use.",
         "marquee": [
-            "Creator Economy",
-            "Custom App",
-            "New Revenue Stream",
-            "Your Community",
-            "Distribution",
+            "Creator Product",
+            "Web App",
+            "Mobile App",
             "Monetization",
-            "Premium Design",
-            "100% Satisfaction",
-            "SaaS Ready",
-            "Scalable",
-            "Mobile First",
-            "Pixel Perfect"
+            "Design",
+            "Owned Experience",
+            "Community Utility",
+            "Launch Ready",
+            "Product Strategy",
+            "Retention",
+            "User Experience",
+            "Custom Build"
         ]
     },
     "process": {
-        "title": "How we <span class=\"text-gradient\">work</span>",
-        "subtitle": "A simple 3-step approach to turn your audience into users.",
+        "title": "How the <span class=\"text-gradient\">collaboration works</span>",
+        "subtitle": "A focused process from first conversation to launch, with clarity at every stage.",
         "duration_label": "Average timeline:",
         "duration_value": "4-10 weeks",
         "steps": {
             "1": {
                 "title": "1. Discovery Call",
-                "description": "We discuss your audience, your niche, and the app idea. We propose the best strategy to turn your followers into users."
+                "description": "We look at your audience, your positioning, and the kind of product worth building around your universe."
             },
             "2": {
-                "title": "2. Proposal & Scoping",
-                "description": "You receive a detailed proposal with scope, budget, and timeline. Market research, design, development, launch — everything is included."
+                "title": "2. Proposal & Scope",
+                "description": "You receive a clear recommendation with scope, priorities, timeline, and budget so the project starts on solid ground."
             },
             "3": {
-                "title": "3. We Build Your App",
-                "description": "The project starts. Design, development, testing — you follow progress in real time. At the end, your app is live, ready to welcome your community."
+                "title": "3. Build & Launch",
+                "description": "Once aligned, we handle strategy, design, development, and launch while you stay involved in the key decisions."
             }
         }
     },
     "testimonials": {
-        "intro_label": "The Creator's Studio",
-        "intro_text": "We help content creators <br> turn their audience <br> into a real, profitable product.",
-        "title": "What our <span class=\"text-gradient\">clients say</span>",
+        "intro_label": "Clear Execution",
+        "intro_text": "Clear thinking, strong design,<br> solid development,<br> and a launch handled end to end.",
+        "title": "What clients say about <span class=\"text-gradient\">working with us</span>",
         "items": {
             "ra_energy": {
                 "content": "MC Studio built our website and the result is excellent. Fast, professional and very polished work. The site is modern, fluid and perfectly adapted to our business.",
@@ -203,52 +202,52 @@
     },
     "faq": {
         "title": "<span class=\"text-gradient\">FAQ</span>",
-        "subtitle": "Frequently asked questions for creators:",
+        "subtitle": "Frequently asked questions:",
         "founder_role": "Founder @MC Studio",
         "contact_text": "More questions? Contact me directly here:",
         "whatsapp_btn": "Message on WhatsApp",
         "items": {
             "0": {
-                "question": "I'm a content creator, is this for me?",
-                "answer": "Yes, if you have an engaged audience (even modest) and want to go beyond content: offer a tool, platform, or digital service to your community. We work with creators on Instagram, YouTube, LinkedIn, Twitch, and other niches."
+                "question": "Who is this for?",
+                "answer": "MC Studio is for content creators who want to turn their audience, expertise, or community into a web or mobile app with real value."
             },
             "1": {
-                "question": "How much does it cost to build an app?",
-                "answer": "The budget depends on the scope: simple web app, full mobile app, number of features. After a first call, we provide a clear, transparent budget — no surprises. We also adapt to different ambition levels (MVP vs. full product)."
+                "question": "What do you actually build?",
+                "answer": "We build custom web and mobile apps for creators. That can mean a learning product, a community app, a member experience, a tool layer around your content, or a more original product tied to your niche."
             },
             "2": {
-                "question": "I don't have a precise idea, can you help?",
-                "answer": "Absolutely. We always start with a discovery call to understand your audience, niche, and goals. We then propose concrete ideas based on what works in the creator economy. Market research is included in our process."
+                "question": "I do not have the final idea yet. Can you help?",
+                "answer": "Yes. Many creators come with a direction rather than a finished concept. We help define the right product, the core use case, and the clearest way to turn your audience into users."
             },
             "3": {
-                "question": "Do you also handle distribution?",
-                "answer": "We advise on launch strategy (teasing, forms, early access…) but distribution is your superpower. You have the audience — we give you the app. It's this combination that makes the difference."
+                "question": "Do you handle strategy, design, and development?",
+                "answer": "Yes. This is one end-to-end offer. We handle the thinking, product design, development, and launch so the whole experience stays coherent from start to finish."
             },
             "4": {
                 "question": "How long does it take?",
-                "answer": "On average 4 to 10 weeks depending on project complexity. An MVP can be ready in 3-4 weeks, a more complete product in 8-10 weeks. It all depends on the number of features and desired level of polish."
+                "answer": "Most projects take between 4 and 10 weeks depending on complexity, feature depth, and platform scope. We define that clearly before the project starts."
             },
             "5": {
-                "question": "Have other creators done this?",
-                "answer": "Yes! We worked with Maison AWL (180k followers): 10,000 users on the platform. And it's a strong trend — more and more creators are developing their own app to diversify revenue and offer more value to their community."
+                "question": "Can this still feel credible if you do not have many public creator case studies?",
+                "answer": "Yes. Credibility comes from the clarity of the concept, the quality of the product, and how well it fits your audience. The goal is not to fake proof. It is to build something strong enough to speak for itself."
             }
         }
     },
     "cta": {
-        "title": "Ready to launch <span class=\"text-gradient\">your app</span>?",
-        "subtitle": "Turn your audience into users. We build the app that extends your content and generates new revenue."
+        "title": "Ready to turn your audience into <span class=\"text-gradient\">an app</span>?",
+        "subtitle": "We shape, build, and launch your app."
     },
     "team": {
         "title": "The <span class=\"text-gradient\">MC Studio</span> team",
-        "subtitle": "Strategy, design and development to turn your audience into a real product.",
+        "subtitle": "Strategy, design and development for creators who want a real digital product.",
         "cards": {
             "collective": {
-                "title": "A team at the service of creators.",
-                "text": "Strategy, design and development united in an experienced team. We understand the creator economy and know how to build products that convert an audience into users."
+                "title": "A studio built for product clarity.",
+                "text": "We combine product thinking, design, and development inside one tight team. The goal is not to add more noise around your brand, but to build the right app with the right level of quality."
             },
             "specialists": {
-                "title": "From idea to launch.",
-                "text": "From business strategy to interface design and development, every skill is aligned to deliver a coherent, useful digital product designed for your community."
+                "title": "From concept to launch.",
+                "text": "Every discipline is aligned around one objective: helping creators launch a product that feels useful, polished, and ready for real users."
             }
         },
         "members": {
@@ -267,46 +266,46 @@
         },
         "badge": "Our team",
         "specialist_badges": [
-            "Creator Economy",
             "Product Strategy",
-            "Market Research",
+            "Creator Monetization",
+            "Community Experience",
             "UX/UI",
             "Design System",
-            "Prototyping",
             "Front-end",
             "Back-end",
             "Mobile App",
+            "Web App",
+            "Payments",
             "Launch",
-            "Monetization",
-            "Distribution"
+            "Analytics"
         ]
     },
     "projects": {
-        "title": "Our <span class=\"text-gradient\">Projects</span>",
-        "subtitle": "A selection of projects where design, code and strategy come together.",
+        "title": "Selected <span class=\"text-gradient\">Work</span>",
+        "subtitle": "Examples of the level of clarity, design, and execution we bring to digital products.",
         "cta": "View project",
         "items": {
             "arises": {
-                "description": "Arises is an AI SaaS that transforms your calendar into an action plan.\nWe designed this SaaS from logo to online launch, all custom-made to maximize activation.",
+                "description": "Arises is an AI product that turns a calendar into an action plan.\nWe shaped the product from identity to launch, with a focus on clarity, activation, and a strong user experience.",
                 "tags": [
+                    "Product",
+                    "AI",
                     "Launch",
-                    "AI SaaS",
-                    "Landing Page",
                     "Design",
                     "UI/UX",
-                    "Copywriting",
+                    "Strategy",
                     "Branding"
                 ]
             },
             "souji_nova": {
-                "description": "Souji Nova is a cleaning company for individuals and professionals.\nCustom landing page: reassuring design, clear offer, optimized journey to generate more requests.",
+                "description": "Souji Nova needed a sharper digital presence and a clearer experience.\nWe designed a conversion-focused product layer with stronger positioning and a simpler path to action.",
                 "tags": [
-                    "Landing Page",
+                    "Positioning",
                     "Branding",
                     "Design",
                     "UI/UX",
-                    "Copywriting",
-                    "Cleaning Company"
+                    "Copy",
+                    "Launch"
                 ],
                 "testimonial": {
                     "review": "MC Studio built us a great website, very intuitive and professional. Great advice and attentive to their clients, I recommend!",
@@ -314,15 +313,14 @@
                 }
             },
             "ra_energy": {
-                "description": "R&A Energy is an energy broker dedicated to businesses and professionals.\n\nPremium branding & landing page: simplified message, reinforced reassurance and contact-oriented journey.",
+                "description": "R&A Energy needed a clearer and more legible digital experience.\nWe clarified the message, refined the identity, and built a cleaner product experience from brand to interface.",
                 "tags": [
-                    "Landing Page",
                     "Branding",
                     "Design",
                     "UI/UX",
-                    "Copywriting",
-                    "Logo",
-                    "Energy Brokerage"
+                    "Copy",
+                    "Strategy",
+                    "Launch"
                 ],
                 "testimonial": {
                     "review": "MC Studio built our website and the result is excellent. Fast, professional and very polished work. The site is modern, fluid and perfectly adapted to our business.",
@@ -330,13 +328,13 @@
                 }
             },
             "fontaines_vtc": {
-                "description": "Fontaines VTC is a private transport company (online bookings).\nSEO + CTA optimization: better local visibility and more conversions on booking.",
+                "description": "Fontaines VTC needed a clearer journey and stronger digital performance.\nWe improved the experience, sharpened key actions, and helped create a cleaner path from traffic to booking.",
                 "tags": [
-                    "SEO",
-                    "CTA Optimization",
+                    "UX",
+                    "Conversion",
                     "Design",
-                    "Copywriting",
-                    "VTC Company"
+                    "Copy",
+                    "SEO"
                 ],
                 "testimonial": {
                     "review": "MC Studio accompanied me in my digital project, a very serious and professional company, I recommend!",
@@ -346,14 +344,14 @@
         }
     },
     "footer": {
-        "tagline": "Branding, design and development to launch useful, elegant apps built to grow.",
+        "tagline": "Web and mobile apps for content creators.",
         "navigation_title": "Navigation",
         "socials_title": "Socials",
         "contact_title": "Contact",
         "copyright": "MC Studio. All rights reserved."
     },
     "meta": {
-        "title": "MC Studio - Custom Apps for Content Creators",
-        "description": "Grow your community with a custom app. More value for your followers, new revenue for you."
+        "title": "MC Studio - Apps for Content Creators",
+        "description": "Web and mobile apps for content creators, from concept to launch."
     }
 }

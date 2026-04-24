@@ -19,27 +19,21 @@ const rotatingServices = computed(() => {
   return Object.values(services || {}).map(s => rt(s))
 })
 
-const locations = computed(() => [
-  { city: locationNames.value[0] || 'Lyon', flag: 'france' },
-  { city: locationNames.value[1] || 'London', flag: 'uk' },
-  { city: locationNames.value[2] || 'Montreal', flag: 'canada' }
-])
-
 const statsIndex = ref(0)
-const locationIndex = ref(0)
+const proofIndex = ref(0)
 const servicesIndex = ref(0)
 const statsWrapper = ref(null)
-const locationWrapper = ref(null)
+const proofWrapper = ref(null)
 const servicesWrapper = ref(null)
 
 const currentStat = computed(() => rotatingStats.value[statsIndex.value] || '')
-const currentLocation = computed(() => locations.value[locationIndex.value])
 const currentService = computed(() => rotatingServices.value[servicesIndex.value] || '')
+const currentProof = computed(() => locationNames.value[proofIndex.value] || '')
 
 let mainInterval = null
 
 const animateAll = () => {
-  const wrappers = [statsWrapper.value, servicesWrapper.value, locationWrapper.value].filter(Boolean)
+  const wrappers = [statsWrapper.value, servicesWrapper.value, proofWrapper.value].filter(Boolean)
   
   gsap.to(wrappers, {
     yPercent: -100,
@@ -50,7 +44,7 @@ const animateAll = () => {
     onComplete: () => {
       statsIndex.value = (statsIndex.value + 1) % rotatingStats.value.length
       servicesIndex.value = (servicesIndex.value + 1) % rotatingServices.value.length
-      locationIndex.value = (locationIndex.value + 1) % locations.value.length
+      proofIndex.value = (proofIndex.value + 1) % locationNames.value.length
       
       gsap.set(wrappers, { yPercent: 100 })
       
@@ -83,7 +77,7 @@ onUnmounted(() => {
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
         <polyline points="22 4 12 14.01 9 11.01"/>
       </svg>
-      <div class="text-container w-[120px] sm:w-[140px]">
+      <div class="text-container w-[145px] sm:w-[170px]">
         <span ref="statsWrapper" class="text-content font-medium text-[11px] sm:text-xs md:text-sm text-[#474747] whitespace-nowrap text-center">
           {{ currentStat }}
         </span>
@@ -96,47 +90,23 @@ onUnmounted(() => {
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
         <polyline points="22 4 12 14.01 9 11.01"/>
       </svg>
-      <div class="text-container w-[90px] sm:w-[100px]">
+      <div class="text-container w-[140px] sm:w-[165px]">
         <span ref="servicesWrapper" class="text-content font-medium text-[11px] sm:text-xs md:text-sm text-[#474747] whitespace-nowrap text-center">
           {{ currentService }}
         </span>
       </div>
     </div>
     
-    <!-- Badge 3: Location -->
-    <div class="badge-fixed flex items-center justify-center h-7 sm:h-8 md:h-9 py-1 sm:py-1.5 px-2.5 sm:px-3 md:px-4 bg-white border border-[#f0bf6c] rounded-md sm:rounded-lg transition-all duration-200 hover:-translate-y-px hover:shadow-[0_2px_8px_rgba(240,191,108,0.2)]">
-      <div class="text-container w-[75px] sm:w-[90px]">
-        <div ref="locationWrapper" class="location-content">
-          <div v-if="currentLocation.flag === 'france'" class="flex w-5 h-3 sm:w-6 sm:h-4 rounded-[2px] overflow-hidden shadow-sm shrink-0">
-            <div class="w-1/3 bg-[#002395]"></div>
-            <div class="w-1/3 bg-white border-y border-gray-200"></div>
-            <div class="w-1/3 bg-[#ED2939]"></div>
-          </div>
-          <div v-else-if="currentLocation.flag === 'uk'" class="flex w-5 h-3 sm:w-6 sm:h-4 rounded-[2px] overflow-hidden shadow-sm shrink-0 relative bg-[#012169]">
-            <svg viewBox="0 0 60 40" class="w-full h-full">
-              <clipPath id="creator-uk-clip"><rect width="60" height="40"/></clipPath>
-              <g clip-path="url(#creator-uk-clip)">
-                <rect width="60" height="40" fill="#012169"/>
-                <path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/>
-                <path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="4"/>
-                <path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/>
-                <path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="6"/>
-              </g>
-            </svg>
-          </div>
-          <div v-else-if="currentLocation.flag === 'canada'" class="flex w-5 h-3 sm:w-6 sm:h-4 rounded-[2px] overflow-hidden shadow-sm shrink-0">
-            <div class="w-1/4 bg-[#FF0000]"></div>
-            <div class="w-2/4 bg-white flex items-center justify-center">
-              <svg viewBox="0 0 24 24" class="w-2 h-2 sm:w-2.5 sm:h-2.5 text-[#FF0000]" fill="currentColor">
-                <path d="M12 2L9.5 8.5L3 9L7.5 14L6 21L12 17L18 21L16.5 14L21 9L14.5 8.5L12 2Z"/>
-              </svg>
-            </div>
-            <div class="w-1/4 bg-[#FF0000]"></div>
-          </div>
-          <span class="font-medium text-[11px] sm:text-xs md:text-sm text-[#474747] whitespace-nowrap">
-            {{ currentLocation.city }}
-          </span>
-        </div>
+    <!-- Badge 3: Proof -->
+    <div class="badge-fixed flex items-center justify-center gap-1.5 sm:gap-2 h-7 sm:h-8 md:h-9 py-1 sm:py-1.5 px-2.5 sm:px-3 md:px-4 bg-white border border-[#f0bf6c] rounded-md sm:rounded-lg transition-all duration-200 hover:-translate-y-px hover:shadow-[0_2px_8px_rgba(240,191,108,0.2)]">
+      <svg class="shrink-0 w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="#0f0f0f" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <div class="text-container w-[145px] sm:w-[170px]">
+        <span ref="proofWrapper" class="text-content font-medium text-[11px] sm:text-xs md:text-sm text-[#474747] whitespace-nowrap text-center">
+          {{ currentProof }}
+        </span>
       </div>
     </div>
   </div>
@@ -157,20 +127,9 @@ onUnmounted(() => {
   text-align: center;
 }
 
-.location-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-}
-
 @media (min-width: 640px) {
   .text-container {
     height: 18px;
-  }
-  .location-content {
-    gap: 8px;
   }
 }
 </style>
