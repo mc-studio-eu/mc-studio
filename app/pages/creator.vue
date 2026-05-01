@@ -25,6 +25,14 @@ useSeoMeta({
 // Cleanup: restore original messages on unmount
 import frOriginal from '../../i18n/locales/fr.json'
 import enOriginal from '../../i18n/locales/en.json'
+
+// Cream theme is applied by the force-dark-mode plugin (route-aware)
+useHead({
+  bodyAttrs: {
+    style: 'background-color: #F8F6F1;'
+  }
+})
+
 onUnmounted(() => {
   mergeLocaleMessage('fr', frOriginal)
   mergeLocaleMessage('en', enOriginal)
@@ -52,6 +60,10 @@ onUnmounted(() => {
       <div class="section-separator"></div>
       <CreatorCaseStudySection />
 
+      <!-- Concepts par profil -->
+      <div class="section-separator"></div>
+      <CreatorConceptsSection />
+
       <div class="section-separator"></div>
 
       <CreatorServicesMarquee />
@@ -60,6 +72,10 @@ onUnmounted(() => {
 
       <!-- Services / Accompagnement Section -->
       <CreatorServicesSection />
+
+      <!-- Bénéfices -->
+      <div class="section-separator"></div>
+      <CreatorBenefitsSection />
 
       <ScreenMarquee />
 

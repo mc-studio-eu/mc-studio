@@ -10,8 +10,8 @@
         "team": "Équipe"
     },
     "hero": {
-        "title": "Développez votre communauté<br class=\"hidden xs:inline\"> grâce à une app sur mesure.",
-        "subtitle": "Plus de valeur pour vos followers, nouveau revenu pour vous.<br>On conçoit et développe l'app web ou mobile qui prolonge votre contenu.",
+        "title": "Passez du contenu<br class=\"hidden xs:inline\"> à un vrai produit digital.",
+        "subtitle": "On transforme votre audience en une app qui vous appartient.<br>Stratégie, design, développement, lancement — sans que vous ayez à devenir chef de projet technique.",
         "cta": {
             "book": "Réserver un appel",
             "whatsapp": "Discuter sur WhatsApp"
@@ -177,6 +177,79 @@
             }
         }
     },
+    "concepts": {
+        "badge": "Idées de concepts",
+        "title": "Une app <span class=\"text-gradient\">pensée pour votre niche</span>.",
+        "subtitle": "On part de votre audience et de votre univers pour proposer un concept déjà adapté — pas un brief générique.",
+        "items": {
+            "coach": {
+                "tag": "Coach sportif",
+                "title": "App de programmes & suivi",
+                "text": "Programmes hebdo, suivi de séances, communauté premium et coaching personnalisé pour les abonnés les plus engagés."
+            },
+            "food": {
+                "tag": "Créateur food",
+                "title": "Recettes premium & planning repas",
+                "text": "Bibliothèque de recettes exclusives, planning de repas hebdomadaire, liste de courses générée et espace membre."
+            },
+            "formateur": {
+                "tag": "Formateur",
+                "title": "Plateforme de formation",
+                "text": "Modules vidéo, ressources téléchargeables, suivi de progression et certifications. Une vraie alternative aux outils génériques."
+            },
+            "business": {
+                "tag": "Créateur business",
+                "title": "Communauté privée & outils",
+                "text": "Accès payant à votre cercle privé, contenus exclusifs, outils métiers, événements et networking de qualité."
+            },
+            "lifestyle": {
+                "tag": "Influenceur lifestyle",
+                "title": "App communautaire & recommandations",
+                "text": "Espace social autour de votre univers : recommandations vérifiées, contenus exclusifs, lieux, produits, inspirations."
+            },
+            "expert": {
+                "tag": "Expert métier",
+                "title": "Outil spécialisé pour votre audience",
+                "text": "Un outil utilitaire taillé pour les besoins concrets de votre audience — calculateur, simulateur, générateur, base de données."
+            },
+            "niche": {
+                "tag": "Créateur de niche",
+                "title": "Plateforme verticale dédiée",
+                "text": "Une plateforme construite autour d'une passion ou d'un sujet pointu, qui devient l'endroit de référence pour votre communauté."
+            }
+        }
+    },
+    "benefits": {
+        "badge": "Pourquoi maintenant",
+        "title": "Ce que ça <span class=\"text-gradient\">change pour vous</span>.",
+        "subtitle": "Un produit propriétaire ne remplace pas votre contenu — il le transforme en actif durable.",
+        "items": {
+            "revenue": {
+                "title": "Un revenu récurrent",
+                "text": "Un abonnement, un membership ou un produit qui génère du chiffre chaque mois — prévisible, qui grossit avec votre audience."
+            },
+            "ownership": {
+                "title": "Un actif qui vous appartient",
+                "text": "Vos utilisateurs, vos données, votre relation. Plus dépendant d'un algorithme ou d'une plateforme qui peut tomber."
+            },
+            "relationship": {
+                "title": "Une relation plus profonde",
+                "text": "Vous passez d'une audience qui consomme du contenu à une communauté qui utilise votre produit au quotidien."
+            },
+            "image": {
+                "title": "Une image plus premium",
+                "text": "Avoir son app, son espace, sa plateforme — c'est un cap de crédibilité que peu de créateurs franchissent."
+            },
+            "data": {
+                "title": "Des données propriétaires",
+                "text": "Vous savez enfin qui sont vraiment vos utilisateurs, ce qu'ils aiment, ce qu'ils font. Une base pour décider mieux."
+            },
+            "retention": {
+                "title": "Une rétention décuplée",
+                "text": "Une app, on la garde. Un compte Insta, on le scrolle. Un produit utile devient un réflexe, pas un contenu de plus."
+            }
+        }
+    },
     "testimonials": {
         "intro_label": "Le studio des Créateurs",
         "intro_text": "On accompagne les créateurs de contenu <br> à transformer leur audience <br> en un produit concret et rentable.",
@@ -230,6 +303,22 @@
             "5": {
                 "question": "D'autres créateurs ont déjà fait ça ?",
                 "answer": "Oui ! Nous avons travaillé avec Maison AWL (180k abonnés) : 10 000 utilisateurs sur la plateforme. Et c'est une tendance forte — de plus en plus de créateurs développent leur propre app pour diversifier leurs revenus et offrir plus de valeur à leur communauté."
+            },
+            "6": {
+                "question": "Je ne sais pas si ma communauté va payer.",
+                "answer": "C'est exactement ce qu'on valide avant de construire. On analyse votre audience, on teste l'appétence (formulaires, retours directs, prospection ciblée) et on calcule un Revenue Gap réaliste. Si l'opportunité n'est pas là, on vous le dit — on ne construit pas pour construire."
+            },
+            "7": {
+                "question": "Je ne suis pas technique. Je vais m'en sortir ?",
+                "answer": "C'est précisément notre rôle. Vous restez créateur, on s'occupe du reste : stratégie, design, code, infra, mise en ligne. Vous décidez, on exécute. Pas besoin de comprendre la technique pour avoir un produit solide."
+            },
+            "8": {
+                "question": "Je ne veux pas créer une usine à gaz.",
+                "answer": "Nous non plus. On commence par un MVP ciblé — la fonctionnalité qui crée le maximum de valeur pour votre communauté. On itère après le lancement, en fonction des vrais retours utilisateurs. Pas de fonctionnalités gadget."
+            },
+            "9": {
+                "question": "Je ne sais pas par où commencer.",
+                "answer": "C'est le point de départ le plus fréquent. On arrive avec une idée déjà pensée pour vous : on analyse votre compte avant le premier appel et on vous propose un concept adapté à votre niche. Vous n'avez pas à arriver avec un brief — c'est nous qui le posons."
             }
         }
     },

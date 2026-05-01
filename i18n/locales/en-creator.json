@@ -10,8 +10,8 @@
         "team": "Team"
     },
     "hero": {
-        "title": "Turn your audience<br class=\"hidden xs:inline\"> into a digital product.",
-        "subtitle": "Web and mobile apps for content creators,<br>from concept to launch.",
+        "title": "Go from content<br class=\"hidden xs:inline\"> to a real digital product.",
+        "subtitle": "We turn your audience into an app that you own.<br>Strategy, design, build, launch — without you having to become a tech project manager.",
         "cta": {
             "book": "Book a call",
             "whatsapp": "Chat on WhatsApp"
@@ -177,6 +177,79 @@
             }
         }
     },
+    "concepts": {
+        "badge": "Concept ideas",
+        "title": "An app <span class=\"text-gradient\">built for your niche</span>.",
+        "subtitle": "We start from your audience and your world to bring a concept already shaped — not a blank brief.",
+        "items": {
+            "coach": {
+                "tag": "Fitness coach",
+                "title": "Programs & tracking app",
+                "text": "Weekly programs, session tracking, premium community and personal coaching for your most engaged followers."
+            },
+            "food": {
+                "tag": "Food creator",
+                "title": "Premium recipes & meal plans",
+                "text": "Exclusive recipe library, weekly meal plans, generated grocery lists and a member space."
+            },
+            "formateur": {
+                "tag": "Educator",
+                "title": "Learning platform",
+                "text": "Video modules, downloadable resources, progress tracking and certifications. A real alternative to generic tools."
+            },
+            "business": {
+                "tag": "Business creator",
+                "title": "Private community & tools",
+                "text": "Paid access to your inner circle, exclusive content, work tools, events and high-quality networking."
+            },
+            "lifestyle": {
+                "tag": "Lifestyle influencer",
+                "title": "Community app & curation",
+                "text": "A social space around your world: vetted recommendations, exclusive content, places, products, inspiration."
+            },
+            "expert": {
+                "tag": "Domain expert",
+                "title": "Specialized utility",
+                "text": "A focused utility tailored to your audience's real needs — calculator, simulator, generator, database."
+            },
+            "niche": {
+                "tag": "Niche creator",
+                "title": "Vertical platform",
+                "text": "A platform built around a passion or sharp topic — the reference destination for your community."
+            }
+        }
+    },
+    "benefits": {
+        "badge": "Why now",
+        "title": "What it <span class=\"text-gradient\">changes for you</span>.",
+        "subtitle": "An owned product doesn't replace your content — it turns it into a lasting asset.",
+        "items": {
+            "revenue": {
+                "title": "Recurring revenue",
+                "text": "A subscription, a membership or a product that earns every month — predictable, growing with your audience."
+            },
+            "ownership": {
+                "title": "An asset you own",
+                "text": "Your users, your data, your relationship. No longer dependent on an algorithm or a platform that can fall."
+            },
+            "relationship": {
+                "title": "A deeper relationship",
+                "text": "You move from an audience that consumes content to a community that uses your product every day."
+            },
+            "image": {
+                "title": "A premium image",
+                "text": "Owning your app, your space, your platform — a credibility step very few creators take."
+            },
+            "data": {
+                "title": "First-party data",
+                "text": "You finally know who your users really are, what they love, what they do. A solid base to decide better."
+            },
+            "retention": {
+                "title": "Stronger retention",
+                "text": "An app gets kept. An Insta feed gets scrolled. A useful product becomes a habit, not just one more piece of content."
+            }
+        }
+    },
     "testimonials": {
         "intro_label": "Clear Execution",
         "intro_text": "Clear thinking, strong design,<br> solid development,<br> and a launch handled end to end.",
@@ -230,6 +303,22 @@
             "5": {
                 "question": "Can this still feel credible if you do not have many public creator case studies?",
                 "answer": "Yes. Credibility comes from the clarity of the concept, the quality of the product, and how well it fits your audience. The goal is not to fake proof. It is to build something strong enough to speak for itself."
+            },
+            "6": {
+                "question": "I'm not sure my community will pay.",
+                "answer": "That's exactly what we validate before building. We analyze your audience, test demand (forms, direct feedback, targeted outreach) and run a realistic Revenue Gap. If the opportunity isn't there, we'll tell you — we don't build for the sake of building."
+            },
+            "7": {
+                "question": "I'm not technical. Will I be able to handle it?",
+                "answer": "That's exactly our job. You stay a creator — we handle strategy, design, code, infra, launch. You decide, we execute. No tech background needed."
+            },
+            "8": {
+                "question": "I don't want to build a bloated mess.",
+                "answer": "Neither do we. We start with a focused MVP — the one feature that creates the most value for your community. We iterate after launch, based on real user feedback. No gimmick features."
+            },
+            "9": {
+                "question": "I don't know where to start.",
+                "answer": "That's the most common starting point. We arrive with an idea already shaped for you: we analyze your account before the first call and propose a concept fitted to your niche. No brief required — we bring it."
             }
         }
     },

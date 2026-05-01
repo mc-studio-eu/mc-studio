@@ -120,12 +120,12 @@ const closeMenu = () => isMenuOpen.value = false
       <NuxtLink to="/" class="flex items-center">
         <NuxtImg src="/img/main/logo.svg" alt="MC Studio" class="w-9 h-[34px] md:w-[50px] md:h-12 object-contain" />
       </NuxtLink>
-      <span class="font-inter font-normal text-sm md:text-[18px] text-white">Studio</span>
+      <span class="font-inter font-normal text-sm md:text-[18px] text-[#1a1a1a]">Studio</span>
     </div>
 
     <!-- Nav desktop -->
     <nav class="hidden lg:flex items-center gap-[26px]">
-      <a v-for="item in navItems" :key="item.key" :href="`#${item.id}`" class="font-inter font-medium text-sm text-white no-underline transition-colors duration-200 hover:text-[#f0bf6c]">{{ t(`nav.${item.key}`) }}</a>
+      <a v-for="item in navItems" :key="item.key" :href="`#${item.id}`" class="font-inter font-medium text-sm text-[#1a1a1a] no-underline transition-colors duration-200 hover:text-[#f0bf6c]">{{ t(`nav.${item.key}`) }}</a>
     </nav>
 
     <!-- CTA Desktop -->

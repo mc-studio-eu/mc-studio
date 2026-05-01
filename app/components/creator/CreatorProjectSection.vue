@@ -180,7 +180,7 @@ onUnmounted(() => {
 
             <!-- Testimonials -->
             <div v-if="currentProject.testimonials && currentProject?.testimonial">
-              <div class="flex flex-col p-3 gap-3 rounded-xl text-white bg-[#232323]">
+              <div class="flex flex-col p-3 gap-3 rounded-xl text-[#1a1a1a] bg-[#F0EDE5] border border-[#1a1a1a]/8">
                 <p class="text-xs xl:whitespace-pre-line"> {{ currentProject?.testimonial.avis }}</p>
                 <div class="flex items-center gap-3">
                   <div>
@@ -198,14 +198,14 @@ onUnmounted(() => {
         <div class="flex gap-8 mt-2.5 justify-start sm:flex-row flex-col">
           <div class="flex gap-[18px]">
             <button
-              class="flex items-center justify-center w-[44px] h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+              class="flex items-center justify-center w-[44px] h-[42px] bg-white border border-[#1a1a1a]/10 rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
               @click="prevProject"
               aria-label="Projet précédent"
             >
               <UIcon name="i-lucide-chevron-left" />
             </button>
             <button
-              class="flex items-center justify-center w-[44px] h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+              class="flex items-center justify-center w-[44px] h-[42px] bg-white border border-[#1a1a1a]/10 rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
               @click="nextProject"
               aria-label="Projet suivant"
             >

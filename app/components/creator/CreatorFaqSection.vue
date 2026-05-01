@@ -17,7 +17,11 @@ const faqItems = computed<FaqItem[]>(() => [
   { id: 2, question: t('faq.items.2.question'), answer: t('faq.items.2.answer') },
   { id: 3, question: t('faq.items.3.question'), answer: t('faq.items.3.answer') },
   { id: 4, question: t('faq.items.4.question'), answer: t('faq.items.4.answer') },
-  { id: 5, question: t('faq.items.5.question'), answer: t('faq.items.5.answer') }
+  { id: 5, question: t('faq.items.5.question'), answer: t('faq.items.5.answer') },
+  { id: 6, question: t('faq.items.6.question'), answer: t('faq.items.6.answer') },
+  { id: 7, question: t('faq.items.7.question'), answer: t('faq.items.7.answer') },
+  { id: 8, question: t('faq.items.8.question'), answer: t('faq.items.8.answer') },
+  { id: 9, question: t('faq.items.9.question'), answer: t('faq.items.9.answer') }
 ])
 
 const openItems = ref<number[]>([])
@@ -71,7 +75,7 @@ const founder = computed(() => ({
           </p>
 
           <a ref="faqWhatsappBtn" href="https://api.whatsapp.com/send/?phone=%2B33781724683&text&type=phone_number&app_absent=0" target="_blank"
-            class="mt-2 w-fit px-4 py-2 rounded-md font-medium text-sm cursor-pointer bg-[#232323] text-white hover:bg-transparent transition-colors duration-200 no-underline inline-block"
+            class="mt-2 w-fit px-4 py-2 rounded-md font-medium text-sm cursor-pointer bg-[#1a1a1a] text-white hover:bg-[#2a2a2a] transition-colors duration-200 no-underline inline-block"
           >
             <span class="text-slide-container h-[20px]">
               <span ref="faqWhatsappWrapper" class="text-slide-wrapper">

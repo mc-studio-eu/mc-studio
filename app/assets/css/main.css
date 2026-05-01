@@ -56,6 +56,21 @@ html {
   --color-grey-light: #5D5D5D;
 }
 
+/* Cream theme — Creator landing page */
+.creator-cream {
+  --bg-primary: #F8F6F1;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --text-primary: #1a1a1a;
+  --text-secondary: #5D5D5D;
+  --text-muted: #8a8a8a;
+  --border-color: rgba(26, 26, 26, 0.10);
+  --border-subtle: rgba(26, 26, 26, 0.06);
+}
+.creator-cream body {
+  background-color: #F8F6F1;
+}
+
 .dark {
   --ui-primary: var(--color-gold);
   --ui-secondary: var(--color-grey);

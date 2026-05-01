@@ -51,7 +51,7 @@ onUnmounted(() => {
               mode="out-in"
             >
               <div v-if="activeStep === 1" key="step1" class="absolute inset-0 flex items-center justify-center">
-                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-white/5 bg-[#1c1c1c]">
+                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-[#1a1a1a]/8 bg-white">
                     <NuxtImg 
                       src="/img/process/step1_calendar.png" 
                       alt="Discovery Call Calendar" 
@@ -61,7 +61,7 @@ onUnmounted(() => {
               </div>
 
               <div v-if="activeStep === 2" key="step2" class="absolute inset-0 flex items-center justify-center">
-                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-white/5 bg-[#1c1c1c]">
+                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-[#1a1a1a]/8 bg-white">
                     <NuxtImg 
                       src="/img/process/step2_proposal.png" 
                       alt="Proposal Document" 
@@ -71,7 +71,7 @@ onUnmounted(() => {
               </div>
 
               <div v-if="activeStep === 3" key="step3" class="absolute inset-0 flex items-center justify-center">
-                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-white/5 bg-[#1c1c1c]">
+                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-[#1a1a1a]/8 bg-white">
                     <NuxtImg 
                       src="/img/process/step3_kickoff.png" 
                       alt="Project Kickoff Dashboard" 

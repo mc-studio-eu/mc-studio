@@ -33,8 +33,8 @@ const activeStep = ref(0)
         <div 
           v-for="(step, index) in steps" 
           :key="index"
-          class="p-6 sm:p-8 rounded-2xl bg-[#1a1a1a] border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300 cursor-pointer"
-          :class="activeStep === index ? 'border-[#f0bf6c]/40 shadow-[0_8px_30px_rgba(240,191,108,0.1)]' : 'hover:border-white/20'"
+          class="p-6 sm:p-8 rounded-2xl bg-white border border-[#1a1a1a]/8 shadow-[0_4px_20px_rgba(26,26,26,0.04)] transition-all duration-300 cursor-pointer"
+          :class="activeStep === index ? 'border-[#f0bf6c]/50 shadow-[0_8px_30px_rgba(240,191,108,0.15)]' : 'hover:border-[#1a1a1a]/15'"
           @mouseenter="activeStep = index"
         >
           <!-- Step Number -->
