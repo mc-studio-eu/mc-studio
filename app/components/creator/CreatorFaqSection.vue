@@ -53,7 +53,7 @@ const founder = computed(() => ({
           <div class="flex items-center gap-3.5 py-4">
             <div class="w-[55px] h-[55px] rounded-lg bg-[linear-gradient(135deg,var(--color-gold)_0%,#e8a84c_100%)] flex items-center justify-center font-inter font-bold text-lg text-black shrink-0 relative overflow-hidden">
               <NuxtImg
-                src="/img/main/founder.png"
+                src="/img/main/founder.jpeg"
                 alt="Avatar de Mohamed Chettah"
                 width="55"
                 height="55"

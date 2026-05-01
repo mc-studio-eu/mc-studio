@@ -82,19 +82,19 @@ const founder = computed(() => ({
           <p class="font-inter text-base text-[var(--text-secondary)] mb-4 transition-colors duration-300">{{ $t('faq.subtitle') }}</p>
 
           <!-- Founder Card -->
-          <div class="flex items-center gap-3.5 py-4">
-            <div class="w-[55px] h-[55px] rounded-lg bg-[linear-gradient(135deg,var(--color-gold)_0%,#e8a84c_100%)] flex items-center justify-center font-inter font-bold text-lg text-black shrink-0 relative overflow-hidden">
+          <div class="flex items-center gap-4 py-4">
+            <div class="w-[72px] h-[72px] rounded-xl bg-[linear-gradient(135deg,var(--color-gold)_0%,#e8a84c_100%)] flex items-center justify-center font-inter font-bold text-lg text-black shrink-0 relative overflow-hidden shadow-[0_16px_32px_rgba(15,15,15,0.14)] ring-1 ring-black/10">
               <NuxtImg
-                src="/img/main/founder.png"
+                src="/img/main/founder.jpeg"
                 alt="Avatar de Mohamed Chettah"
-                width="55"
-                height="55"
-                class="rounded-md object-cover absolute inset-0 w-full h-full"
+                width="72"
+                height="72"
+                class="rounded-xl object-cover object-[center_18%] absolute inset-0 w-full h-full"
               />
             </div>
             <div class="flex flex-col gap-1">
-              <span class="font-inter text-sm font-semibold text-[var(--text-primary)] transition-colors duration-300">{{ founder.name }}</span>
-              <span class="font-inter text-[13px] text-[var(--text-secondary)] transition-colors duration-300">{{ founder.role }}</span>
+              <span class="font-inter text-base font-semibold text-[var(--text-primary)] transition-colors duration-300">{{ founder.name }}</span>
+              <span class="font-inter text-sm text-[var(--text-secondary)] transition-colors duration-300">{{ founder.role }}</span>
             </div>
           </div>
 

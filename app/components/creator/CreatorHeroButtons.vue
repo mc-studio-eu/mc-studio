@@ -19,7 +19,7 @@ useTextSlideAnimation(secondaryBtn, secondaryWrapper)
     <a ref="primaryBtn" href="#contact" class="cta-primary gap-2 flex items-center justify-center px-3 py-2 rounded-lg font-medium text-[15px] sm:text-sm md:text-[15px]
     lg:text-base text-[#0f0f0f] cursor-pointer backdrop-blur-md transition-all
     duration-200 no-underline">
-     <NuxtImg src="/img/main/founder.png" alt="MC Studio" class="w-6 h-6 md:w-8 md:h-8 object-contain rounded-lg flex items-center justify-center font-inter font-semibold text-[10px] text-[#0f0f0f]" />
+     <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-6 h-6 md:w-8 md:h-8 object-contain rounded-lg flex items-center justify-center font-inter font-semibold text-[10px] text-[#0f0f0f]" />
       <div class="flex flex-col items-start gap-px">
         <span class="text-slide-container h-[18px]">
           <span ref="primaryWrapper1" class="text-slide-wrapper">

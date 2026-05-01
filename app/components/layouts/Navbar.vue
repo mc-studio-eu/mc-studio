@@ -257,11 +257,11 @@ const closeMenu = () => isMenuOpen.value = false
               ref="desktopCtaBtn"
               :to="`${localePath('/')}#contact`"
               :class="[
-                'hidden md:flex items-center gap-2 border-none rounded-lg py-1 pr-3 pl-1 md:py-1.5 md:pr-4 md:pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
+                'hidden md:flex items-center gap-2 border-none rounded-xl py-1.5 pr-3 pl-1.5 md:py-1.5 md:pr-3.5 md:pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
                 colorMode.value === 'dark' ? 'flex items-center justify-center bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
               ]"
             >
-              <NuxtImg src="/img/main/founder.png" alt="MC Studio" class="w-6 h-6 md:w-7 md:h-7 rounded-lg bg-gradient-to-br from-[#f0bf6c] to-[#e8a84c] flex items-center justify-center font-inter font-semibold text-[9px] md:text-[10px] text-[#0f0f0f] object-contain" />
+              <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-8 h-8 md:w-9 md:h-9 rounded-xl object-cover object-[center_18%] scale-[1.18] shrink-0 ring-1 ring-black/10 shadow-[0_8px_16px_rgba(15,15,15,0.12)]" />
               <div class="flex flex-col items-start gap-px">
                 <span class="text-slide-container h-[14px]">
                   <span ref="desktopCtaWrapper1" class="text-slide-wrapper">
@@ -346,11 +346,11 @@ const closeMenu = () => isMenuOpen.value = false
                   ref="mobileCtaBtn"
                   :to="`${localePath('/')}#contact`"
                   :class="[
-                    'flex items-center gap-2 border-none rounded-lg py-1.5 pr-4 pl-1.5 cursor-pointer transition-all bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105',
+                    'flex items-center gap-2 border-none rounded-xl py-1.5 pr-3 pl-1.5 cursor-pointer transition-all bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105',
                     colorMode.value === 'dark' ? 'bg-white hover:bg-gray-100' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
                   ]"
                 >
-                  <NuxtImg src="/img/main/founder.png" alt="MC Studio" class="w-6 h-6 md:w-7 md:h-7 object-contain rounded-lg flex items-center justify-center font-inter font-semibold text-[10px] text-[#0f0f0f]" />
+                  <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-8 h-8 rounded-xl object-cover object-[center_18%] scale-[1.18] shrink-0 ring-1 ring-black/10 shadow-[0_8px_16px_rgba(15,15,15,0.12)]" />
                   <div class="flex flex-col items-start gap-px">
                     <span class="text-slide-container h-[14px]">
                       <span ref="mobileCtaWrapper1" class="text-slide-wrapper">

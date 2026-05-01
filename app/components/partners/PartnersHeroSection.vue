@@ -133,7 +133,7 @@ onMounted(() => {
             duration-200 no-underline"
           >
             <NuxtImg
-              src="/img/main/founder.png"
+              src="/img/main/founder.jpeg"
               alt="MC Studio"
               class="w-6 h-6 md:w-8 md:h-8 object-cover rounded-lg flex items-center justify-center font-inter font-semibold text-[10px] text-[#0f0f0f]"
             />

@@ -17,10 +17,10 @@ useTextSlideAnimation(secondaryBtn, secondaryWrapper)
 <template>
   <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-12 mt-6 sm:mt-7 md:mt-8 lg:mt-9 w-full px-4 sm:px-0">
     <!-- Primary CTA -->
-    <a ref="primaryBtn" href="#contact" class="cta-primary gap-2 flex items-center justify-center px-3 py-2 rounded-lg font-medium text-[15px] sm:text-sm md:text-[15px]
+    <a ref="primaryBtn" href="#contact" class="cta-primary gap-2.5 flex items-center justify-center px-3 py-2 rounded-xl font-medium text-[15px] sm:text-sm md:text-[15px]
     lg:text-base text-[#0f0f0f] cursor-pointer backdrop-blur-md transition-all
     duration-200 no-underline">
-     <NuxtImg src="/img/main/founder.png" alt="MC Studio" class="w-6 h-6 md:w-8 md:h-8 object-contain rounded-lg flex items-center justify-center font-inter font-semibold text-[10px] text-[#0f0f0f]" />
+     <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-9 h-9 md:w-10 md:h-10 object-cover object-[center_18%] scale-[1.18] rounded-xl shrink-0 ring-1 ring-black/10 shadow-[0_8px_16px_rgba(15,15,15,0.16)]" />
       <div class="flex flex-col items-start gap-px">
         <!-- Premier texte avec effet slide -->
         <span class="text-slide-container h-[18px]">

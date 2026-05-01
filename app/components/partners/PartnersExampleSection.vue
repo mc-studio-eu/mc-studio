@@ -61,7 +61,7 @@ const { t } = useI18n()
             class="w-[44px] h-[44px] rounded-lg bg-[linear-gradient(135deg,var(--color-gold)_0%,#e8a84c_100%)] flex items-center justify-center font-inter font-bold text-sm text-black shrink-0 relative overflow-hidden"
           >
             <NuxtImg
-              src="/img/main/founder.png"
+              src="/img/main/founder.jpeg"
               alt="Avatar de Mohamed Chettah"
               width="44"
               height="44"

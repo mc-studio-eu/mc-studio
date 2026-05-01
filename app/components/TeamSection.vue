@@ -11,7 +11,7 @@ interface TeamMember {
 }
 
 const team: TeamMember[] = [
-  { id: 1, name: 'Mohamed Chettah', role: t('team.members.mohamed.role'), initials: 'MC', image: '/img/main/founder.jpg', accent: false },
+  { id: 1, name: 'Mohamed Chettah', role: t('team.members.mohamed.role'), initials: 'MC', image: '/img/main/founder.jpeg', accent: false },
   { id: 2, name: 'Liam Faucitano', role: t('team.members.liam.role'), initials: 'LF', image: '/img/main/liam.jpg', accent: false },
   { id: 3, name: 'Mateo Carciu', role: t('team.members.mateo.role'), initials: 'MC', image: '/img/main/mateo.jpeg', accent: false },
   { id: 4, name: 'Romain Grange', role: t('team.members.romain.role'), initials: 'RG', image: '/img/main/romain.jpg', accent: false }
@@ -70,14 +70,14 @@ const titleWithBreaks = (key: string) => {
                 class="team-member-pill"
               >
                 <div
-                  class="w-14 h-14 rounded-xl overflow-hidden shrink-0 ring-1"
+                  class="w-16 h-16 rounded-2xl overflow-hidden shrink-0 ring-1"
                   :class="member.accent ? 'ring-[var(--color-gold)]/25' : 'ring-black/10 dark:ring-white/10'"
                 >
                   <NuxtImg
                     v-if="member.image"
                     :src="member.image"
                     :alt="member.name"
-                    class="h-full w-full object-cover object-center"
+                    class="h-full w-full object-cover object-[center_18%]"
                     loading="lazy"
                   />
                   <div v-else class="h-full w-full flex items-center justify-center bg-black/10 dark:bg-white/5">

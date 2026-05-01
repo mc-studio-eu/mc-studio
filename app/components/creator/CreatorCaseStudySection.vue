@@ -36,7 +36,7 @@ const { t } = useI18n()
         </p>
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-lg overflow-hidden">
-            <NuxtImg src="/img/main/founder.png" alt="Mohamed Chettah" class="w-full h-full object-cover" />
+            <NuxtImg src="/img/main/founder.jpeg" alt="Mohamed Chettah" class="w-full h-full object-cover" />
           </div>
           <div>
             <p class="font-inter text-sm font-semibold text-[var(--text-primary)]">{{ t('case_study.author') }}</p>
