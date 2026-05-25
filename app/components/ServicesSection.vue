@@ -30,7 +30,7 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
       </div>
 
       <!-- Offer Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch max-w-[980px] mx-auto">
         <NuxtLink
           v-for="offer in offers" 
           :key="offer.key"

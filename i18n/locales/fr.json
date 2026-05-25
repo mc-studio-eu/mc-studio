@@ -55,7 +55,7 @@
   },
   "services": {
     "title": "Nos <span class=\"text-gradient\">offres</span>",
-    "subtitle": "Des offres adaptées à chaque profil.<br class=\"sm:hidden\"> Entrepreneurs, créateurs ou entreprises.",
+    "subtitle": "Des offres adaptées à chaque profil.<br class=\"sm:hidden\"> Entrepreneurs ou entreprises.",
     "other_services": {
       "title": "Autres Services",
       "subtitle": "Besoin d'un service sur mesure ? On s'adapte.",
@@ -87,24 +87,6 @@
           "1": "il faut cadrer un MVP",
           "2": "il faut lancer une première version",
           "3": "il faut construire sur des bases solides"
-        },
-        "budget": "Sur devis"
-      },
-      "creator": {
-        "title": "Créateurs",
-        "icon": "sparkles",
-        "description": "Nous aidons les créateurs à transformer leur audience en application utile, cohérente avec leur univers et pensée pour leur communauté.",
-        "for_who": {
-          "0": "créateurs de contenu",
-          "1": "influenceurs",
-          "2": "youtubeurs",
-          "3": "profils avec une communauté engagée"
-        },
-        "ideal_if": {
-          "0": "il faut apporter plus de valeur à son audience",
-          "1": "il faut lancer une application alignée avec son univers",
-          "2": "il faut créer une nouvelle source de revenus",
-          "3": "il faut construire autour de sa niche"
         },
         "budget": "Sur devis"
       },

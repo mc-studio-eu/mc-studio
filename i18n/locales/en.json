@@ -55,7 +55,7 @@
   },
   "services": {
     "title": "Our <span class=\"text-gradient\">offers</span>",
-    "subtitle": "Offers tailored to every profile.<br class=\"sm:hidden\"> Entrepreneurs, creators or businesses.",
+    "subtitle": "Offers tailored to every profile.<br class=\"sm:hidden\"> Entrepreneurs or businesses.",
     "other_services": {
       "title": "Other Services",
       "subtitle": "Need a custom service? We adapt.",
@@ -87,24 +87,6 @@
           "1": "you need to scope an MVP",
           "2": "you need to launch a first version",
           "3": "you need to build on solid foundations"
-        },
-        "budget": "Custom quote"
-      },
-      "creator": {
-        "title": "Creators",
-        "icon": "sparkles",
-        "description": "We help creators turn their audience into a useful app, aligned with their universe and designed for their community.",
-        "for_who": {
-          "0": "content creators",
-          "1": "influencers",
-          "2": "youtubers",
-          "3": "profiles with an engaged community"
-        },
-        "ideal_if": {
-          "0": "you need to bring more value to your audience",
-          "1": "you need to launch an app aligned with your brand",
-          "2": "you need to create a new revenue stream",
-          "3": "you need to build around your niche"
         },
         "budget": "Custom quote"
       },
