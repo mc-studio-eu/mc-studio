@@ -205,7 +205,7 @@ useSeoMeta({
           </NuxtLink>
 
           <section class="mx-auto w-full max-w-[760px]">
-            <h1 class="case-study-title m-0 text-center text-balance font-manrope font-medium tracking-normal text-[var(--text-primary)]">
+            <h1 class="case-study-title m-0 text-center text-balance font-manrope font-medium tracking-normal">
               {{ localizedProject.title }}
             </h1>
 
@@ -223,7 +223,7 @@ useSeoMeta({
                   </p>
                 </div>
 
-                <div class="mt-7 flex flex-wrap items-center gap-x-3 gap-y-3">
+                <div class="mt-7 flex flex-wrap items-center gap-x-3 gap-y-3 sm:flex-nowrap">
                   <NuxtLink
                     ref="bookCallBtn"
                     :to="contactLink"
@@ -254,7 +254,7 @@ useSeoMeta({
                     :href="localizedProject.externalLink"
                     target="_blank"
                     rel="noreferrer"
-                    class="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-md border border-[var(--border-subtle)] bg-white/[0.03] px-4 py-2 text-center text-[13px] font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)]"
+                    class="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-[var(--border-subtle)] bg-white/[0.03] px-4 py-2 text-center text-[13px] font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)]"
                   >
                     <span>{{ labels.visitWebsite }}</span>
                     <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
@@ -351,9 +351,6 @@ useSeoMeta({
   overflow-wrap: anywhere;
   font-size: clamp(30px, 3.6vw, 52px);
   line-height: 1.08;
-  color: var(--text-primary);
-  background: none;
-  -webkit-text-fill-color: currentColor;
 }
 
 .case-study-heading {
@@ -362,8 +359,12 @@ useSeoMeta({
   font-size: clamp(23px, 3vw, 32px);
   font-weight: 500;
   line-height: 1.12;
-  color: var(--text-primary);
   text-wrap: balance;
+  background: var(--gold-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .case-study-copy {
