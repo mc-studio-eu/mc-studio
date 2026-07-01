@@ -55,6 +55,10 @@ export const projects: Project[] = [
     image: '/img/project/amgprom.png',
     externalLink: 'https://amgprom.com/',
     verified: true,
+    testimonial: {
+      name: 'Jean francois Fialaire',
+      avatar: '/img/testimonials/jean-francois-fialaire.svg',
+    },
     screenshots: {
       desktop: [
         '/img/project/amgprom.png',
@@ -249,7 +253,7 @@ export const projects: Project[] = [
     verified: true,
     testimonial: {
       name: 'Nelson M.',
-      avatar: '/img/project/avis-souji-nova.jpg',
+      avatar: '/img/testimonials/nelson-souji-nova.jpg',
     },
     screenshots: {
       desktop: [
@@ -349,7 +353,7 @@ export const projects: Project[] = [
     verified: true,
     testimonial: {
       name: 'Yazid C.',
-      avatar: '/img/project/avis-ra-energy.jpg',
+      avatar: '/img/testimonials/yazid-ra-energy.jpeg',
     },
     screenshots: {
       desktop: [
@@ -451,7 +455,7 @@ export const projects: Project[] = [
     verified: true,
     testimonial: {
       name: 'Mario C.',
-      avatar: '/img/project/avis-fontaines-vtc.jpg',
+      avatar: '/img/testimonials/mario-fontaines-vtc.png',
     },
     screenshots: {
       desktop: [

@@ -220,7 +220,11 @@
           "UI/UX",
           "Copywriting",
           "Sales Promotion"
-        ]
+        ],
+        "testimonial": {
+          "review": "Creating our website was a success!\nWe truly recommend MC studio!\nEfficient work and a very good understanding of our expectations.",
+          "job": "Founder of AMG Promotion"
+        }
       },
       "arises": {
         "description": "Arises is an AI SaaS that turns your calendar into an action plan.\nWe designed this SaaS from logo to online launch, all custom-made to maximize activation.",
@@ -304,6 +308,10 @@
     "intro_text": "At MC Studio we have a taste for well-done work, we iterate fast <br> while paying particular attention <br> to delivered work",
     "title": "What <span class=\"text-gradient\">our clients</span> say",
     "items": {
+      "amg_promotion": {
+        "content": "Creating our website was a success!\nWe truly recommend MC studio!\nEfficient work and a very good understanding of our expectations.",
+        "role": "Founder of AMG Promotion"
+      },
       "ra_energy": {
         "content": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
         "role": "Co-founder, R&A Energy"

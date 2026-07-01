@@ -49,6 +49,15 @@ const testimonials = computed<Testimonial[]>(() => [
       role: t('testimonials.items.liquid_scan.role'),
       avatar: '/img/testimonials/pierre jean.jpg'
     }
+  },
+  {
+    id: 5,
+    content: t('testimonials.items.amg_promotion.content'),
+    author: {
+      name: 'Jean francois Fialaire',
+      role: t('testimonials.items.amg_promotion.role'),
+      avatar: '/img/testimonials/jean-francois-fialaire.svg'
+    },
   }
 ])
 
@@ -163,4 +172,3 @@ onUnmounted(() => {
     </div>
   </section>
 </template>
-

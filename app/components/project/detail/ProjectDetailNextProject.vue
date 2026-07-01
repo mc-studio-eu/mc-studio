@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps<{
-  kicker: string
+  kicker?: string
   title: string
-  description: string
+  description?: string
   link: string
   ctaLabel: string
 }>()
@@ -10,15 +10,15 @@ defineProps<{
 
 <template>
   <section class="rounded-[28px] border border-[var(--border-subtle)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-6">
-    <p class="text-xs uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+    <p v-if="kicker" class="text-xs uppercase tracking-[0.18em] text-[var(--text-secondary)]">
       {{ kicker }}
     </p>
-    <div class="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between" :class="kicker ? 'mt-4' : ''">
       <div>
         <h3 class="font-manrope text-3xl font-semibold text-[var(--text-primary)]">
           {{ title }}
         </h3>
-        <p class="mt-2 text-sm text-[var(--text-secondary)]">
+        <p v-if="description" class="mt-2 text-sm text-[var(--text-secondary)]">
           {{ description }}
         </p>
       </div>
