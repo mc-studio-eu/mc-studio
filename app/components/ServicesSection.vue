@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { offers as offerData } from '../data/offers'
 
 const { t, tm, rt } = useI18n()
-const localePath = useLocalePath()
 
 const offers = computed(() =>
   offerData.map((offer) => ({
@@ -31,11 +30,10 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 
       <!-- Offer Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch">
-        <NuxtLink
-          v-for="offer in offers" 
+        <div
+          v-for="offer in offers"
           :key="offer.key"
-          :to="localePath(`/services/${offer.slug}`)"
-          class="offer-card group relative rounded-2xl overflow-hidden flex flex-col no-underline"
+          class="offer-card group relative rounded-2xl overflow-hidden flex flex-col"
           :class="{ 'offer-card--featured': offer.featured }"
         >
           <!-- Featured badge -->
@@ -89,13 +87,8 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
               </ul>
             </div>
 
-            <div class="mt-auto flex items-center gap-2 pt-4 text-sm font-medium text-[var(--color-gold)]">
-              <span>{{ $t('services.common.details') }}</span>
-              <UIcon name="i-heroicons-arrow-right-20-solid" class="h-4 w-4 " />
-            </div>
-
           </div>
-        </NuxtLink>
+        </div>
       </div>
 
       <!-- Other Services -->
