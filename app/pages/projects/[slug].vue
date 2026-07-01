@@ -234,17 +234,17 @@ useSeoMeta({
                       alt="MC Studio"
                       class="h-9 w-9 shrink-0 scale-[1.18] rounded-xl object-cover object-[center_18%] shadow-[0_8px_16px_rgba(15,15,15,0.16)] ring-1 ring-black/10 md:h-10 md:w-10"
                     />
-                    <div class="flex flex-col items-start gap-px">
+                    <div class="flex shrink-0 flex-col items-start gap-px">
                       <span class="text-slide-container h-[18px]">
                         <span ref="bookCallWrapper1" class="text-slide-wrapper">
-                          <span class="text-slide-text h-[18px] font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
-                          <span class="text-slide-text h-[18px] font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
+                          <span class="text-slide-text h-[18px] whitespace-nowrap font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
+                          <span class="text-slide-text h-[18px] whitespace-nowrap font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
                         </span>
                       </span>
                       <span class="text-slide-container h-[12px]">
                         <span ref="bookCallWrapper2" class="text-slide-wrapper">
-                          <span class="text-slide-text h-[12px] font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
-                          <span class="text-slide-text h-[12px] font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
+                          <span class="text-slide-text h-[12px] whitespace-nowrap font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
+                          <span class="text-slide-text h-[12px] whitespace-nowrap font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
                         </span>
                       </span>
                     </div>
@@ -254,7 +254,7 @@ useSeoMeta({
                     :href="localizedProject.externalLink"
                     target="_blank"
                     rel="noreferrer"
-                    class="inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-[var(--border-subtle)] bg-white/[0.03] px-4 py-2 text-center text-[13px] font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)]"
+                    class="inline-flex shrink-0 items-center justify-center gap-2 self-stretch whitespace-nowrap rounded-xl border border-[var(--border-subtle)] bg-white/[0.03] px-5 text-center text-sm font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)]"
                   >
                     <span>{{ labels.visitWebsite }}</span>
                     <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
@@ -308,7 +308,7 @@ useSeoMeta({
             v-if="projectTestimonial"
             class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
           >
-            <div class="mx-auto flex w-full max-w-[460px] flex-col gap-6 rounded-2xl border border-[var(--border-subtle)] bg-[#232323] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-colors duration-300 dark:shadow-none">
+            <div class="flex w-full flex-col gap-6 rounded-2xl border border-[var(--border-subtle)] bg-[#232323] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-colors duration-300 dark:shadow-none">
               <p class="m-0 whitespace-pre-line font-inter text-xs leading-[1.7] text-white transition-colors duration-300 sm:text-sm">
                 {{ projectTestimonial.review }}
               </p>

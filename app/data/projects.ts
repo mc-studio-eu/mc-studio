@@ -68,11 +68,11 @@ export const projects: Project[] = [
       ],
     },
     summary: {
-      fr: "AMG Promotion accompagne les marques dans la creation d'objets promotionnels sur mesure avec une image plus premium et un discours commercial plus clair.",
+      fr: "AMG Promotion accompagne les marques dans la création d'objets promotionnels sur mesure avec une image plus premium et un discours commercial plus clair.",
       en: 'AMG Promotion helps brands create custom promotional products with a more premium image and a clearer commercial message.',
     },
     aboutCompany: {
-      fr: "Entreprise specialisee dans les textiles, goodies et supports personnalises pour des references nationales. L'enjeu etait de moderniser la perception tout en renforcant la lisibilite de l'offre.",
+      fr: "Entreprise spécialisée dans les textiles, goodies et supports personnalisés pour des références nationales. L'enjeu était de moderniser la perception tout en renforçant la lisibilité de l'offre.",
       en: 'A company specialized in textiles, goodies and personalized materials for major national brands. The challenge was to modernize perception while making the offer easier to understand.',
     },
     industry: {
@@ -93,18 +93,18 @@ export const projects: Project[] = [
       ],
     },
     context: {
-      fr: "Le site precedent ne mettait pas assez en valeur la qualite percue ni la diversite des prestations. Nous avons donc repense la structure pour rassurer, clarifier et donner une impression plus haut de gamme.",
+      fr: "Le site précédent ne mettait pas assez en valeur la qualité perçue ni la diversité des prestations. Nous avons donc repensé la structure pour rassurer, clarifier et donner une impression plus haut de gamme.",
       en: 'The previous website did not highlight perceived quality enough or clearly explain the breadth of the offer. We reworked the structure to reassure, clarify and create a more premium feel.',
     },
     solution: {
-      fr: "Nouvelle landing page, direction artistique plus nette, hierarchie de contenu plus forte et sections pensees pour aider un prospect a comprendre vite et demander un devis.",
+      fr: "Nouvelle landing page, direction artistique plus nette, hiérarchie de contenu plus forte et sections pensées pour aider un prospect à comprendre vite et demander un devis.",
       en: 'A new landing page, sharper art direction, stronger content hierarchy and sections designed to help prospects understand the offer quickly and request a quote.',
     },
     challenges: {
       fr: [
-        "Image de marque trop generique",
-        'Offre peu structuree pour un nouveau visiteur',
-        'Manque de hierarchie dans les contenus cles',
+        "Image de marque trop générique",
+        'Offre peu structurée pour un nouveau visiteur',
+        'Manque de hiérarchie dans les contenus clés',
       ],
       en: [
         'Brand image felt too generic',
@@ -114,9 +114,9 @@ export const projects: Project[] = [
     },
     objectives: {
       fr: [
-        'Renforcer la credibilite des le premier ecran',
-        "Mieux presenter l'offre et les cas d'usage",
-        'Ameliorer la prise de contact commerciale',
+        'Renforcer la crédibilité dès le premier écran',
+        "Mieux présenter l'offre et les cas d'usage",
+        'Améliorer la prise de contact commerciale',
       ],
       en: [
         'Increase credibility from the first screen',
@@ -128,11 +128,11 @@ export const projects: Project[] = [
       fr: [
         {
           title: 'Direction artistique',
-          body: "Refonte visuelle plus premium avec une mise en page plus respirante et une meilleure hierarchie des blocs.",
+          body: "Refonte visuelle plus premium avec une mise en page plus respirante et une meilleure hiérarchie des blocs.",
         },
         {
           title: 'Structure de landing',
-          body: "Reecriture et reorganisation du contenu pour guider la lecture et rendre l'offre plus immediate.",
+          body: "Réécriture et réorganisation du contenu pour guider la lecture et rendre l'offre plus immédiate.",
         },
       ],
       en: [
@@ -165,11 +165,11 @@ export const projects: Project[] = [
       ],
     },
     summary: {
-      fr: "Arises est un SaaS IA concu pour transformer un calendrier en plan d'action. L'objectif etait de lancer une presence forte, claire et credible des les premiers utilisateurs.",
+      fr: "Arises est un SaaS IA conçu pour transformer un calendrier en plan d'action. L'objectif était de lancer une présence forte, claire et crédible dès les premiers utilisateurs.",
       en: 'Arises is an AI SaaS designed to turn a calendar into an action plan. The goal was to launch with a strong, clear and credible presence from day one.',
     },
     aboutCompany: {
-      fr: "Produit SaaS en phase de lancement avec un univers digital ambitieux. Il fallait faire coexister innovation, simplicite et pedagogie dans une meme interface.",
+      fr: "Produit SaaS en phase de lancement avec un univers digital ambitieux. Il fallait faire coexister innovation, simplicité et pédagogie dans une même interface.",
       en: 'A SaaS product in launch phase with an ambitious digital universe. The challenge was to balance innovation, simplicity and clarity in one interface.',
     },
     industry: {
@@ -190,18 +190,18 @@ export const projects: Project[] = [
       ],
     },
     context: {
-      fr: "Le produit avait besoin d'une identite forte et d'un cadre visuel coherent pour expliquer un concept nouveau sans perdre l'utilisateur.",
+      fr: "Le produit avait besoin d'une identité forte et d'un cadre visuel cohérent pour expliquer un concept nouveau sans perdre l'utilisateur.",
       en: 'The product needed a strong identity and a coherent visual system to explain a new concept without losing the user.',
     },
     solution: {
-      fr: "Nous avons travaille le branding, la landing et plusieurs ecrans produit pour creer une experience de lancement complete et consistante.",
+      fr: "Nous avons travaillé le branding, la landing et plusieurs écrans produit pour créer une expérience de lancement complète et consistante.",
       en: 'We worked on branding, landing and several product screens to create a complete and consistent launch experience.',
     },
     challenges: {
       fr: [
-        'Expliquer une promesse IA de facon concrete',
-        'Trouver le bon equilibre entre innovation et clarte',
-        'Poser une image de produit credible des le lancement',
+        'Expliquer une promesse IA de façon concrète',
+        'Trouver le bon équilibre entre innovation et clarté',
+        'Poser une image de produit crédible dès le lancement',
       ],
       en: [
         'Explain an AI promise in a concrete way',
@@ -211,9 +211,9 @@ export const projects: Project[] = [
     },
     objectives: {
       fr: [
-        'Rendre la proposition de valeur immediate',
+        'Rendre la proposition de valeur immédiate',
         "Donner envie d'essayer le produit",
-        'Construire un univers cohérent du branding a l’UI',
+        'Construire un univers cohérent du branding à l’UI',
       ],
       en: [
         'Make the value proposition immediate',
@@ -224,12 +224,12 @@ export const projects: Project[] = [
     actions: {
       fr: [
         {
-          title: 'Branding & systeme visuel',
-          body: 'Creation d une base graphique pour soutenir le discours produit et poser les codes du lancement.',
+          title: 'Branding & système visuel',
+          body: "Création d'une base graphique pour soutenir le discours produit et poser les codes du lancement.",
         },
         {
           title: 'Landing de conversion',
-          body: "Construction d'une page qui explique le benefice, rassure rapidement et pousse a l'activation.",
+          body: "Construction d'une page qui explique le bénéfice, rassure rapidement et pousse à l'activation.",
         },
       ],
       en: [
@@ -269,7 +269,7 @@ export const projects: Project[] = [
       en: 'Souji Nova needed a clear and reassuring landing page to turn more visitors into quote requests.',
     },
     aboutCompany: {
-      fr: "Societe de nettoyage a destination des particuliers et professionnels. Le sujet principal etait de rassurer rapidement et de structurer une offre simple a comprendre.",
+      fr: "Société de nettoyage à destination des particuliers et professionnels. Le sujet principal était de rassurer rapidement et de structurer une offre simple à comprendre.",
       en: 'A cleaning company serving both consumers and businesses. The main challenge was to reassure quickly and structure the offer so it felt easy to understand.',
     },
     industry: {
@@ -281,7 +281,7 @@ export const projects: Project[] = [
       fr: [
         'Offre plus claire',
         'Image plus rassurante',
-        'Parcours de demande simplifie',
+        'Parcours de demande simplifié',
       ],
       en: [
         'Clearer offer',
@@ -290,17 +290,17 @@ export const projects: Project[] = [
       ],
     },
     context: {
-      fr: "Le marche demande de la confiance immediate. Le site devait donc etre simple, propre et efficace pour convaincre sans trop de friction.",
+      fr: "Le marché demande de la confiance immédiate. Le site devait donc être simple, propre et efficace pour convaincre sans trop de friction.",
       en: 'This market requires immediate trust. The site had to feel simple, clean and effective to convert without unnecessary friction.',
     },
     solution: {
-      fr: "Nous avons concu une landing orientee conversion avec une offre mieux segmentee, des messages rassurants et des points d'entree clairs.",
+      fr: "Nous avons conçu une landing orientée conversion avec une offre mieux segmentée, des messages rassurants et des points d'entrée clairs.",
       en: 'We designed a conversion-focused landing page with a better segmented offer, reassuring messaging and clear entry points.',
     },
     challenges: {
       fr: [
-        'Installer la confiance tres vite',
-        'Clarifier les services proposes',
+        'Installer la confiance très vite',
+        'Clarifier les services proposés',
         'Mieux orienter vers la prise de contact',
       ],
       en: [
@@ -311,9 +311,9 @@ export const projects: Project[] = [
     },
     objectives: {
       fr: [
-        'Generer plus de demandes entrantes',
+        'Générer plus de demandes entrantes',
         'Mieux distinguer les profils de clients',
-        "Ameliorer la comprehension de l'offre",
+        "Améliorer la compréhension de l'offre",
       ],
       en: [
         'Generate more inbound requests',
@@ -324,12 +324,12 @@ export const projects: Project[] = [
     actions: {
       fr: [
         {
-          title: 'Reassurance & contenu',
-          body: 'Travail sur les messages, la lisibilite des services et les preuves qui aident a se projeter.',
+          title: 'Réassurance & contenu',
+          body: 'Travail sur les messages, la lisibilité des services et les preuves qui aident à se projeter.',
         },
         {
           title: 'Optimisation conversion',
-          body: 'CTA, structure et enchainement des sections ont ete ajustes pour reduire les hesitations.',
+          body: 'CTA, structure et enchaînement des sections ont été ajustés pour réduire les hésitations.',
         },
       ],
       en: [
@@ -371,18 +371,18 @@ export const projects: Project[] = [
       en: 'R&A Energy wanted a more premium website to better convey expertise, reassure companies and streamline contact requests.',
     },
     aboutCompany: {
-      fr: "Courtier en energie pour professionnels avec une offre parfois complexe a expliquer. L'enjeu etait de simplifier sans perdre la perception d'expertise.",
+      fr: "Courtier en énergie pour professionnels avec une offre parfois complexe à expliquer. L'enjeu était de simplifier sans perdre la perception d'expertise.",
       en: 'An energy broker serving professionals with an offer that can be complex to explain. The challenge was to simplify without losing expert positioning.',
     },
     industry: {
-      fr: 'Courtage en energie',
+      fr: 'Courtage en énergie',
       en: 'Energy brokerage',
     },
     companySize: '10 - 20',
     supportBullets: {
       fr: [
         'Image plus haut de gamme',
-        'Discours simplifie',
+        'Discours simplifié',
         'Prise de contact plus fluide',
       ],
       en: [
@@ -392,18 +392,18 @@ export const projects: Project[] = [
       ],
     },
     context: {
-      fr: "Le sujet etait tres business et demandait un cadrage fort pour etre compris rapidement. Le site devait aussi soutenir un discours de confiance sur un marche sensible.",
+      fr: "Le sujet était très business et demandait un cadrage fort pour être compris rapidement. Le site devait aussi soutenir un discours de confiance sur un marché sensible.",
       en: 'The topic was business-heavy and required strong framing to be understood quickly. The website also needed to support a trust-based message in a sensitive market.',
     },
     solution: {
-      fr: "Nous avons construit une landing plus premium avec un branding plus propre, une offre simplifiee et un parcours oriente prise de rendez-vous.",
+      fr: "Nous avons construit une landing plus premium avec un branding plus propre, une offre simplifiée et un parcours orienté prise de rendez-vous.",
       en: 'We built a more premium landing page with cleaner branding, a simplified offer and a journey focused on booking calls.',
     },
     challenges: {
       fr: [
-        'Sujet percu comme technique et parfois opaque',
+        'Sujet perçu comme technique et parfois opaque',
         'Besoin de rassurer des profils B2B exigeants',
-        'Structurer un parcours tres commercial sans etre agressif',
+        'Structurer un parcours très commercial sans être agressif',
       ],
       en: [
         'The topic felt technical and sometimes opaque',
@@ -413,8 +413,8 @@ export const projects: Project[] = [
     },
     objectives: {
       fr: [
-        'Donner une image plus credible et premium',
-        'Rendre la proposition plus facile a comprendre',
+        'Donner une image plus crédible et premium',
+        'Rendre la proposition plus facile à comprendre',
         'Encourager la prise de rendez-vous',
       ],
       en: [
@@ -427,11 +427,11 @@ export const projects: Project[] = [
       fr: [
         {
           title: 'Branding & interface',
-          body: "Refonte de l'identite visuelle de la page pour gagner en clarte, en qualite percue et en professionnalisme.",
+          body: "Refonte de l'identité visuelle de la page pour gagner en clarté, en qualité perçue et en professionnalisme.",
         },
         {
           title: 'Copywriting & structure',
-          body: 'Simplification du discours et meilleure hierarchie des sections pour soutenir la conversion.',
+          body: 'Simplification du discours et meilleure hiérarchie des sections pour soutenir la conversion.',
         },
       ],
       en: [
@@ -466,23 +466,23 @@ export const projects: Project[] = [
       ],
     },
     summary: {
-      fr: "Fontaines VTC cherchait a gagner en visibilite locale et a capter davantage de reservations grace a une presence web plus lisible.",
+      fr: "Fontaines VTC cherchait à gagner en visibilité locale et à capter davantage de réservations grâce à une présence web plus lisible.",
       en: 'Fontaines VTC wanted to improve local visibility and capture more bookings through a clearer web presence.',
     },
     aboutCompany: {
-      fr: "Service de transport prive avec enjeu local fort. Le travail a porte sur la lisibilite, le SEO et l'efficacite des appels a l'action.",
+      fr: "Service de transport privé avec enjeu local fort. Le travail a porté sur la lisibilité, le SEO et l'efficacité des appels à l'action.",
       en: 'A private transportation service with strong local acquisition needs. The work focused on clarity, SEO and CTA efficiency.',
     },
     industry: {
-      fr: 'Transport prive',
+      fr: 'Transport privé',
       en: 'Private transportation',
     },
     companySize: '1 - 10',
     supportBullets: {
       fr: [
-        'SEO local renforce',
+        'SEO local renforcé',
         'CTA plus visibles',
-        'Parcours plus direct vers la reservation',
+        'Parcours plus direct vers la réservation',
       ],
       en: [
         'Stronger local SEO',
@@ -491,18 +491,18 @@ export const projects: Project[] = [
       ],
     },
     context: {
-      fr: "Le besoin etait moins de reimaginer totalement l'image que de rendre le site plus performant pour un usage concret : etre trouve et etre contacte.",
+      fr: "Le besoin était moins de réimaginer totalement l'image que de rendre le site plus performant pour un usage concret : être trouvé et être contacté.",
       en: 'The need was less about fully reinventing the brand and more about making the website perform for a clear business goal: being found and contacted.',
     },
     solution: {
-      fr: "Optimisation des points de contact, meilleure mise en avant des CTA et ajustements SEO pour soutenir la prise de reservation.",
+      fr: "Optimisation des points de contact, meilleure mise en avant des CTA et ajustements SEO pour soutenir la prise de réservation.",
       en: 'Contact points were optimized, CTAs were made more visible and SEO improvements supported booking intent.',
     },
     challenges: {
       fr: [
-        'Visibilite locale a renforcer',
-        'Parcours de reservation a simplifier',
-        'Besoin d une presence digitale plus efficace',
+        'Visibilité locale à renforcer',
+        'Parcours de réservation à simplifier',
+        "Besoin d'une présence digitale plus efficace",
       ],
       en: [
         'Local visibility needed improvement',
@@ -512,9 +512,9 @@ export const projects: Project[] = [
     },
     objectives: {
       fr: [
-        'Ameliorer le trafic local qualifie',
-        'Generer plus de prises de contact',
-        'Rendre la reservation plus intuitive',
+        'Améliorer le trafic local qualifié',
+        'Générer plus de prises de contact',
+        'Rendre la réservation plus intuitive',
       ],
       en: [
         'Improve qualified local traffic',
@@ -530,7 +530,7 @@ export const projects: Project[] = [
         },
         {
           title: 'CTA & conversion',
-          body: "Repositionnement des appels a l'action pour rendre la prise de reservation plus immediate.",
+          body: "Repositionnement des appels à l'action pour rendre la prise de réservation plus immédiate.",
         },
       ],
       en: [
