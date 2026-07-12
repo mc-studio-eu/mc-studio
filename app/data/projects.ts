@@ -49,6 +49,118 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    slug: 'crm-ra-energy',
+    i18nKey: 'crm_ra_energy',
+    title: 'CRM R&A Energy',
+    image: '/img/project/crm-ra/crm-hero-mockup.png',
+    externalLink: 'https://ra-energy.fr/',
+    verified: true,
+    testimonial: {
+      name: 'Yazid C.',
+      avatar: '/img/testimonials/yazid-ra-energy.jpeg',
+    },
+    screenshots: {
+      desktop: [
+        '/img/project/crm-ra/crm-hero-mockup.png',
+        '/img/project/crm-ra/crm-dashboard.png',
+        '/img/project/crm-ra/crm-prospects.png',
+        '/img/project/crm-ra/crm-planning.png',
+        '/img/project/crm-ra/crm-carte.png',
+      ],
+      mobile: [
+        '/img/project/crm-ra/crm-mobile-dashboard.png',
+        '/img/project/crm-ra/crm-mobile-prospects.png',
+      ],
+    },
+    summary: {
+      fr: "Après sa landing page, R&A Energy nous a confié la création de son outil interne : un CRM sur mesure pour piloter la prospection, les rendez-vous commerciaux et les tournées terrain de toute l'équipe.",
+      en: 'After their landing page, R&A Energy asked us to build their internal tool: a custom CRM to manage prospecting, sales appointments and field routes for the whole team.',
+    },
+    aboutCompany: {
+      fr: "Courtier en énergie pour professionnels, avec une équipe mêlant téléprospecteurs, commerciaux terrain et apporteurs d'affaires. Les fichiers Excel et les agendas dispersés ne suivaient plus le rythme de la croissance.",
+      en: 'An energy broker for professionals, with a team of telemarketers, field sales reps and business introducers. Spreadsheets and scattered calendars could no longer keep up with their growth.',
+    },
+    industry: {
+      fr: 'Courtage en énergie',
+      en: 'Energy brokerage',
+    },
+    companySize: '10 - 20',
+    supportBullets: {
+      fr: [
+        'Un outil unique pour toute l\'équipe',
+        'RDV vérifiés : agenda + temps de trajet',
+        'Données sécurisées rôle par rôle',
+      ],
+      en: [
+        'One tool for the whole team',
+        'Verified meetings: calendar + travel time',
+        'Data secured role by role',
+      ],
+    },
+    context: {
+      fr: "La prospection était gérée sur des fichiers partagés : doublons, RDV impossibles à honorer faute de temps de trajet, aucun suivi d'historique et des informations sensibles accessibles à tous. Il fallait un outil central, simple pour le terrain et strict sur les accès.",
+      en: 'Prospecting was managed in shared spreadsheets: duplicates, meetings impossible to honor due to travel time, no activity history and sensitive data visible to everyone. They needed one central tool, simple for the field and strict on access.',
+    },
+    solution: {
+      fr: "Nous avons conçu et développé un CRM web sur mesure : pipeline de prospects avec fiches enrichies (SIRET et adresses auto-complétés, commentaires, documents), prise de RDV avec vérification automatique des disponibilités Google Calendar et du temps de trajet, planning d'équipe, carte des tournées et gestion fine des rôles (admin, télépro, commercial, régies).",
+      en: 'We designed and built a custom web CRM: a prospect pipeline with enriched records (auto-completed company data and addresses, comments, documents), meeting booking with automatic Google Calendar availability and travel-time checks, a team planning view, a map of field routes and fine-grained roles (admin, telemarketer, sales rep, partners).',
+    },
+    challenges: {
+      fr: [
+        'Remplacer des habitudes Excel par un outil adopté par tous',
+        'Fiabiliser la prise de RDV terrain (agenda + itinéraires)',
+        'Cloisonner les données selon 5 rôles différents',
+      ],
+      en: [
+        'Replace spreadsheet habits with a tool the whole team adopts',
+        'Make field meeting booking reliable (calendar + routes)',
+        'Partition data across 5 different roles',
+      ],
+    },
+    objectives: {
+      fr: [
+        'Centraliser prospects, RDV et documents au même endroit',
+        'Éliminer les conflits d\'agenda et les trajets intenables',
+        'Donner à chaque rôle exactement ce qu\'il doit voir',
+      ],
+      en: [
+        'Centralize prospects, meetings and documents in one place',
+        'Eliminate calendar conflicts and unrealistic travel times',
+        'Give each role exactly what it should see',
+      ],
+    },
+    actions: {
+      fr: [
+        {
+          title: 'Produit & développement sur mesure',
+          body: "Application web complète (Nuxt + Supabase) : pipeline de prospects, fiches enrichies par les API SIRET et adresse, commentaires, documents et historique d'activité automatique.",
+        },
+        {
+          title: 'RDV intelligents',
+          body: "Chaque créneau est vérifié en direct : disponibilité dans le Google Calendar du commercial et temps de trajet réaliste entre deux rendez-vous, avec planning d'équipe et carte des tournées.",
+        },
+        {
+          title: 'Sécurité par rôles',
+          body: "Cinq rôles aux permissions distinctes, appliquées jusqu'à la base de données : chacun ne voit que ses fiches, ses RDV et les documents auxquels il a droit.",
+        },
+      ],
+      en: [
+        {
+          title: 'Custom product & development',
+          body: 'A complete web app (Nuxt + Supabase): prospect pipeline, records enriched via company and address APIs, comments, documents and automatic activity history.',
+        },
+        {
+          title: 'Smart meeting booking',
+          body: "Every slot is checked live: availability in the sales rep's Google Calendar and realistic travel time between meetings, with a team planning view and a route map.",
+        },
+        {
+          title: 'Role-based security',
+          body: 'Five roles with distinct permissions enforced down to the database: everyone sees only their own records, meetings and authorized documents.',
+        },
+      ],
+    },
+  },
+  {
     slug: 'amg-promotion',
     i18nKey: 'amg_promotion',
     title: 'AMG Promotion',
@@ -442,118 +554,6 @@ export const projects: Project[] = [
         {
           title: 'Copywriting & structure',
           body: 'Messaging was simplified and sections were reorganized to support conversion.',
-        },
-      ],
-    },
-  },
-  {
-    slug: 'crm-ra-energy',
-    i18nKey: 'crm_ra_energy',
-    title: 'CRM R&A Energy',
-    image: '/img/project/crm-ra/crm-hero-mockup.png',
-    externalLink: 'https://ra-energy.fr/',
-    verified: true,
-    testimonial: {
-      name: 'Yazid C.',
-      avatar: '/img/testimonials/yazid-ra-energy.jpeg',
-    },
-    screenshots: {
-      desktop: [
-        '/img/project/crm-ra/crm-hero-mockup.png',
-        '/img/project/crm-ra/crm-dashboard.png',
-        '/img/project/crm-ra/crm-prospects.png',
-        '/img/project/crm-ra/crm-planning.png',
-        '/img/project/crm-ra/crm-carte.png',
-      ],
-      mobile: [
-        '/img/project/crm-ra/crm-mobile-dashboard.png',
-        '/img/project/crm-ra/crm-mobile-prospects.png',
-      ],
-    },
-    summary: {
-      fr: "Après sa landing page, R&A Energy nous a confié la création de son outil interne : un CRM sur mesure pour piloter la prospection, les rendez-vous commerciaux et les tournées terrain de toute l'équipe.",
-      en: 'After their landing page, R&A Energy asked us to build their internal tool: a custom CRM to manage prospecting, sales appointments and field routes for the whole team.',
-    },
-    aboutCompany: {
-      fr: "Courtier en énergie pour professionnels, avec une équipe mêlant téléprospecteurs, commerciaux terrain et apporteurs d'affaires. Les fichiers Excel et les agendas dispersés ne suivaient plus le rythme de la croissance.",
-      en: 'An energy broker for professionals, with a team of telemarketers, field sales reps and business introducers. Spreadsheets and scattered calendars could no longer keep up with their growth.',
-    },
-    industry: {
-      fr: 'Courtage en énergie',
-      en: 'Energy brokerage',
-    },
-    companySize: '10 - 20',
-    supportBullets: {
-      fr: [
-        'Un outil unique pour toute l\'équipe',
-        'RDV vérifiés : agenda + temps de trajet',
-        'Données sécurisées rôle par rôle',
-      ],
-      en: [
-        'One tool for the whole team',
-        'Verified meetings: calendar + travel time',
-        'Data secured role by role',
-      ],
-    },
-    context: {
-      fr: "La prospection était gérée sur des fichiers partagés : doublons, RDV impossibles à honorer faute de temps de trajet, aucun suivi d'historique et des informations sensibles accessibles à tous. Il fallait un outil central, simple pour le terrain et strict sur les accès.",
-      en: 'Prospecting was managed in shared spreadsheets: duplicates, meetings impossible to honor due to travel time, no activity history and sensitive data visible to everyone. They needed one central tool, simple for the field and strict on access.',
-    },
-    solution: {
-      fr: "Nous avons conçu et développé un CRM web sur mesure : pipeline de prospects avec fiches enrichies (SIRET et adresses auto-complétés, commentaires, documents), prise de RDV avec vérification automatique des disponibilités Google Calendar et du temps de trajet, planning d'équipe, carte des tournées et gestion fine des rôles (admin, télépro, commercial, régies).",
-      en: 'We designed and built a custom web CRM: a prospect pipeline with enriched records (auto-completed company data and addresses, comments, documents), meeting booking with automatic Google Calendar availability and travel-time checks, a team planning view, a map of field routes and fine-grained roles (admin, telemarketer, sales rep, partners).',
-    },
-    challenges: {
-      fr: [
-        'Remplacer des habitudes Excel par un outil adopté par tous',
-        'Fiabiliser la prise de RDV terrain (agenda + itinéraires)',
-        'Cloisonner les données selon 5 rôles différents',
-      ],
-      en: [
-        'Replace spreadsheet habits with a tool the whole team adopts',
-        'Make field meeting booking reliable (calendar + routes)',
-        'Partition data across 5 different roles',
-      ],
-    },
-    objectives: {
-      fr: [
-        'Centraliser prospects, RDV et documents au même endroit',
-        'Éliminer les conflits d\'agenda et les trajets intenables',
-        'Donner à chaque rôle exactement ce qu\'il doit voir',
-      ],
-      en: [
-        'Centralize prospects, meetings and documents in one place',
-        'Eliminate calendar conflicts and unrealistic travel times',
-        'Give each role exactly what it should see',
-      ],
-    },
-    actions: {
-      fr: [
-        {
-          title: 'Produit & développement sur mesure',
-          body: "Application web complète (Nuxt + Supabase) : pipeline de prospects, fiches enrichies par les API SIRET et adresse, commentaires, documents et historique d'activité automatique.",
-        },
-        {
-          title: 'RDV intelligents',
-          body: "Chaque créneau est vérifié en direct : disponibilité dans le Google Calendar du commercial et temps de trajet réaliste entre deux rendez-vous, avec planning d'équipe et carte des tournées.",
-        },
-        {
-          title: 'Sécurité par rôles',
-          body: "Cinq rôles aux permissions distinctes, appliquées jusqu'à la base de données : chacun ne voit que ses fiches, ses RDV et les documents auxquels il a droit.",
-        },
-      ],
-      en: [
-        {
-          title: 'Custom product & development',
-          body: 'A complete web app (Nuxt + Supabase): prospect pipeline, records enriched via company and address APIs, comments, documents and automatic activity history.',
-        },
-        {
-          title: 'Smart meeting booking',
-          body: "Every slot is checked live: availability in the sales rep's Google Calendar and realistic travel time between meetings, with a team planning view and a route map.",
-        },
-        {
-          title: 'Role-based security',
-          body: 'Five roles with distinct permissions enforced down to the database: everyone sees only their own records, meetings and authorized documents.',
         },
       ],
     },
