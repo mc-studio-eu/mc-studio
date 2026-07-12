@@ -267,6 +267,21 @@
           "job": "Co-founder R&A Energy"
         }
       },
+      "crm_ra_energy": {
+        "description": "After the landing page, R&A Energy trusted us with their custom CRM: prospects, meetings and field routes, all in one tool.",
+        "tags": [
+          "Custom CRM",
+          "SaaS",
+          "Development",
+          "UI/UX",
+          "Google Calendar",
+          "Energy Brokerage"
+        ],
+        "testimonial": {
+          "review": "MC Studio created our website and the result is excellent. Fast, professional and very neat work. The site is modern, fluid and perfectly adapted to our activity.",
+          "job": "Co-founder R&A Energy"
+        }
+      },
       "fontaines_vtc": {
         "description": "Fontaines VTC is a private transport company (online bookings).\nSEO Optimization + CTA: better local visibility and more conversions on booking.",
         "tags": [

@@ -255,11 +255,26 @@
       "ra_energy": {
         "description": "R&A Energy est un courtier en énergie dédié aux entreprises et aux pros.\n\nBranding & landing page premium : message simplifié, réassurance renforcée et parcours orienté prise de contact.",
         "tags": [
-          "Landing Page", 
+          "Landing Page",
           "Design",
           "UI/UX",
           "Copywriting",
           "Logo",
+          "Courtage en énergie"
+        ],
+        "testimonial": {
+          "review": "MC Studio a réalisé notre site internet et le résultat est excellent. Travail rapide, professionnel et très soigné. Le site est moderne, fluide et parfaitement adapté à notre activité.",
+          "job": "Co-fondateur R&A Energy"
+        }
+      },
+      "crm_ra_energy": {
+        "description": "Après la landing page, R&A Energy nous a confié son CRM sur mesure : prospects, RDV et tournées terrain, réunis dans un seul outil.",
+        "tags": [
+          "CRM sur mesure",
+          "SaaS",
+          "Développement",
+          "UI/UX",
+          "Google Calendar",
           "Courtage en énergie"
         ],
         "testimonial": {
