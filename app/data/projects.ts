@@ -460,7 +460,7 @@ export const projects: Project[] = [
     slug: 'ra-energy',
     i18nKey: 'ra_energy',
     title: 'R&A Energy',
-    image: '/img/project/ra-energy.png',
+    image: '/img/project/ra-energy-.png',
     externalLink: 'https://ra-energy.fr/',
     verified: true,
     testimonial: {
@@ -469,13 +469,13 @@ export const projects: Project[] = [
     },
     screenshots: {
       desktop: [
-        '/img/project/ra-energy.png',
+        '/img/project/ra-energy-.png',
         '/img/project/hero-raenergy.png',
         '/img/project/how-it-work-ra.png',
         '/img/project/logo-raenergy.png',
       ],
       mobile: [
-        '/img/project/ra-energy.png',
+        '/img/project/ra-energy-.png',
       ],
     },
     summary: {

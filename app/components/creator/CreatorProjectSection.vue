@@ -52,7 +52,7 @@ const projects = computed<Project[]>(() => [
     id: 3,
     title: 'R&A Energy',
     description: t('projects.items.ra_energy.description'),
-    image: '/img/project/ra-energy.png',
+    image: '/img/project/ra-energy-.png',
     tags: Object.values(tm('projects.items.ra_energy.tags') as Record<string, any> || {}).map(tag => rt(tag)),
     testimonials: true,
     testimonial: {
