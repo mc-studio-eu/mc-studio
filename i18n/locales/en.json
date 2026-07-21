@@ -55,7 +55,55 @@
   },
   "services": {
     "title": "Our <span class=\"text-gradient\">offers</span>",
-    "subtitle": "Offers tailored to every profile.<br class=\"sm:hidden\"> Entrepreneurs or businesses.",
+    "subtitle": "Bring us in when your idea, product, website, or brand needs to feel sharper, clearer, and ready for what comes next.",
+    "accordion": {
+      "branding": {
+        "title": "Branding",
+        "description": "We build coherent, credible brand identities. The work shows up everywhere: website, product, social media, pitch decks. Not a logo in a zip file, but a system that makes every touchpoint look professional.",
+        "items": {
+          "0": "Logo & visual identity",
+          "1": "Art direction",
+          "2": "Brand guidelines",
+          "3": "Naming & verbal identity",
+          "4": "Social & content templates",
+          "5": "Pitch decks & investor collateral"
+        }
+      },
+      "website": {
+        "title": "Website",
+        "description": "Websites designed to convert, not just to look good. Landing pages, showcase sites and custom builds, with premium design, clear copywriting and fast execution.",
+        "items": {
+          "0": "Landing pages",
+          "1": "Showcase websites",
+          "2": "Custom websites",
+          "3": "SEO & performance",
+          "4": "Copywriting",
+          "5": "Animations & interactions"
+        }
+      },
+      "product_design": {
+        "title": "Product Design",
+        "description": "We design clear, usable interfaces for your digital products: from idea to high-fidelity mockups, ready for development.",
+        "items": {
+          "0": "UX/UI design",
+          "1": "Wireframes & prototypes",
+          "2": "Design system",
+          "3": "High-fidelity mockups",
+          "4": "Testing & iterations"
+        }
+      },
+      "product": {
+        "title": "Product",
+        "description": "We build custom web and mobile applications: MVPs, SaaS, internal tools and business platforms, built on solid, scalable foundations.",
+        "items": {
+          "0": "MVP & SaaS",
+          "1": "Web & mobile applications",
+          "2": "Internal tools & CRM",
+          "3": "Dashboards & business platforms",
+          "4": "AI integration"
+        }
+      }
+    },
     "other_services": {
       "title": "Other Services",
       "subtitle": "Need a custom service? We adapt.",

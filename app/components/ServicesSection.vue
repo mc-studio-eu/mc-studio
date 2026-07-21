@@ -1,18 +1,29 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { offers as offerData } from '../data/offers'
+import { computed, ref } from 'vue'
 
 const { t, tm, rt } = useI18n()
 
+const accordionItems = [
+  { key: 'branding', image: '/img/project/ra-branding.png' },
+  { key: 'website', image: '/img/project/souji-nova-desktop.png' },
+  { key: 'product_design', image: '/img/project/arises-saas.png' },
+  { key: 'product', image: '/img/project/crm-ra/crm-dashboard.png' },
+]
+
 const offers = computed(() =>
-  offerData.map((offer) => ({
-    ...offer,
-    title: t(`services.cards.${offer.key}.title`),
-    description: t(`services.cards.${offer.key}.description`),
-    forWho: Object.values(tm(`services.cards.${offer.key}.for_who`) as object || {}).map(i => rt(i)),
-    idealIf: Object.values(tm(`services.cards.${offer.key}.ideal_if`) as object || {}).map(i => rt(i)),
+  accordionItems.map((item) => ({
+    ...item,
+    title: t(`services.accordion.${item.key}.title`),
+    description: t(`services.accordion.${item.key}.description`),
+    items: Object.values(tm(`services.accordion.${item.key}.items`) as object || {}).map(i => rt(i)),
   }))
 )
+
+const openIndex = ref(0)
+
+function toggleOffer(index: number) {
+  openIndex.value = openIndex.value === index ? -1 : index
+}
 
 const otherServices = computed(() => Object.values(tm('services.other_services.list') as object || {}).map(i => rt(i)))
 </script>
@@ -28,65 +39,65 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
         </p>
       </div>
 
-      <!-- Offer Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-5 mb-8 md:mb-10 items-stretch">
+      <!-- Offers Accordion -->
+      <div class="mb-8 md:mb-10">
         <div
-          v-for="offer in offers"
+          v-for="(offer, index) in offers"
           :key="offer.key"
-          class="offer-card group relative rounded-2xl overflow-hidden flex flex-col"
-          :class="{ 'offer-card--featured': offer.featured }"
+          class="offer-row"
         >
-          <!-- Featured badge -->
-          <div v-if="offer.featured" class="offer-badge">
-            <UIcon name="i-heroicons-star-solid" class="w-3 h-3" />
-            <span>Populaire</span>
-          </div>
+          <!-- Row header -->
+          <button
+            type="button"
+            class="offer-row-header group"
+            :aria-expanded="openIndex === index"
+            @click="toggleOffer(index)"
+          >
+            <span class="offer-number">{{ String(index + 1).padStart(2, '0') }}</span>
+            <h3 class="offer-row-title">
+              {{ offer.title }}
+            </h3>
+            <span class="offer-toggle" :class="{ 'offer-toggle--open': openIndex === index }">
+              <span class="offer-toggle-bar"></span>
+              <span class="offer-toggle-bar offer-toggle-bar--vertical"></span>
+            </span>
+          </button>
 
-          <div class="p-6 sm:p-7 h-full flex flex-col">
-            <!-- Header: Icon + Title -->
-            <div class="flex items-center gap-3.5 mb-4">
-              <div class="offer-icon-wrapper" :class="{ 'offer-icon-wrapper--featured': offer.featured }">
-                <UIcon :name="offer.icon" class="w-5 h-5" :class="offer.featured ? 'text-[#0f0f0f]' : 'text-[#F0BF6C]'" />
+          <!-- Expandable content -->
+          <div class="offer-row-content" :class="{ 'offer-row-content--open': openIndex === index }">
+            <div class="overflow-hidden">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 pb-10 md:pb-14 pt-2">
+                <!-- Image -->
+                <div class="offer-visual">
+                  <img
+                    :src="offer.image"
+                    :alt="offer.title"
+                    class="w-full h-full object-cover object-top"
+                    loading="lazy"
+                  >
+                </div>
+
+                <!-- Texte -->
+                <div class="flex flex-col">
+                  <p class="text-sm sm:text-[15px] leading-[1.8] mb-8 transition-colors duration-300 text-[var(--text-primary)]/90">
+                    {{ offer.description }}
+                  </p>
+
+                  <!-- Inclus -->
+                  <div>
+                    <h4 class="offer-label">
+                      {{ $t('services.common.included') }}
+                    </h4>
+                    <ul class="space-y-2.5">
+                      <li v-for="item in offer.items" :key="item" class="flex items-start gap-2.5 text-[13px] sm:text-sm text-[var(--text-primary)]">
+                        <UIcon name="i-heroicons-check-circle-solid" class="w-4 h-4 mt-[2px] flex-shrink-0 text-[#F0BF6C]" />
+                        <span>{{ item }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-              <h3 class="font-manrope font-semibold text-xl sm:text-[22px] transition-colors duration-300 text-[var(--text-primary)] group-hover:text-white">
-                {{ offer.title }}
-              </h3>
             </div>
-
-            <!-- Description -->
-            <p class="text-[13px] leading-[1.7] mb-6 transition-colors duration-300 text-[var(--text-primary)]/90">
-              {{ offer.description }}
-            </p>
-
-            <!-- Divider -->
-            <div class="offer-divider mb-5"></div>
-
-            <!-- Pour qui -->
-            <div class="mb-5">
-              <h4 class="offer-label">
-                {{ $t('services.common.for_who') }}
-              </h4>
-              <ul class="space-y-2">
-                <li v-for="item in offer.forWho" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-primary)]">
-                  <span class="offer-bullet mt-[3px]">•</span>
-                  <span>{{ item }}</span>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Idéal si -->
-            <div class="mb-6">
-              <h4 class="offer-label">
-                {{ $t('services.common.ideal_if') }}
-              </h4>
-              <ul class="space-y-2.5">
-                <li v-for="item in offer.idealIf" :key="item" class="flex items-start gap-2.5 text-[13px] text-[var(--text-primary)]">
-                  <UIcon name="i-heroicons-check-circle-solid" class="w-4 h-4 mt-[1px] flex-shrink-0" :class="offer.featured ? 'text-[#F0BF6C]' : 'text-[#F0BF6C]/60'" />
-                  <span>{{ item }}</span>
-                </li>
-              </ul>
-            </div>
-
           </div>
         </div>
       </div>
@@ -112,56 +123,119 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
 </template>
 
 <style scoped>
-/* ─── Card base ─── */
-.offer-card {
-  background: #161616;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
+/* ─── Accordion row ─── */
+.offer-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ─── Featured card ─── */
-.offer-card--featured {
-  background: linear-gradient(180deg, #1c1a15 0%, #161616 100%);
-  border-color: rgba(240, 191, 108, 0.25);
-  box-shadow:
-    0 0 0 1px rgba(240, 191, 108, 0.08),
-    0 20px 50px -10px rgba(240, 191, 108, 0.06);
+.offer-row:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ─── Featured badge ─── */
-.offer-badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
+/* ─── Row header ─── */
+.offer-row-header {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  background: linear-gradient(135deg, #F0BF6C 0%, #e0a84d 100%);
-  color: #0f0f0f;
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
+  gap: 24px;
+  width: 100%;
+  padding: 28px 0;
+  cursor: pointer;
+  text-align: left;
+  background: none;
+  border: none;
+}
+
+@media (min-width: 640px) {
+  .offer-row-header {
+    gap: 48px;
+    padding: 36px 0;
+  }
+}
+
+.offer-number {
+  font-family: 'Manrope', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(240, 191, 108, 0.6);
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .offer-number {
+    font-size: 32px;
+  }
+}
+
+.offer-row-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 26px;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  border-radius: 20px;
+  color: var(--text-primary);
+  flex: 1;
+  transition: color 0.3s ease;
 }
 
-/* ─── Icon wrapper ─── */
-.offer-icon-wrapper {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: rgba(240, 191, 108, 0.08);
-  border: 1px solid rgba(240, 191, 108, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@media (min-width: 640px) {
+  .offer-row-title {
+    font-size: 38px;
+  }
+}
+
+.offer-row-header:hover .offer-row-title {
+  color: #F0BF6C;
+}
+
+.offer-row-header:hover .offer-number {
+  color: #F0BF6C;
+}
+
+/* ─── Toggle (+/−) ─── */
+.offer-toggle {
+  position: relative;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
 }
 
-.offer-icon-wrapper--featured {
-  background: linear-gradient(135deg, #F0BF6C 0%, #e0a84d 100%);
-  border-color: transparent;
+.offer-toggle-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  margin-top: -1px;
+  background: #F0BF6C;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+}
+
+.offer-toggle-bar--vertical {
+  transform: rotate(90deg);
+}
+
+.offer-toggle--open .offer-toggle-bar--vertical {
+  transform: rotate(0deg);
+}
+
+/* ─── Expandable content ─── */
+.offer-row-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.offer-row-content--open {
+  grid-template-rows: 1fr;
+}
+
+/* ─── Visual ─── */
+.offer-visual {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #161616;
+  aspect-ratio: 16 / 10;
 }
 
 /* ─── Section labels ─── */
@@ -172,34 +246,8 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: rgba(240, 191, 108, 0.7);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
-
-/* ─── Divider ─── */
-.offer-divider {
-  height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%);
-}
-
-.offer-card--featured .offer-divider {
-  background: linear-gradient(90deg, rgba(240, 191, 108, 0.15) 0%, rgba(240, 191, 108, 0.03) 100%);
-}
-
-.offer-card--featured .offer-label {
-  color: #F0BF6C;
-}
-
-/* ─── Bullet ─── */
-.offer-bullet {
-  color: rgba(240, 191, 108, 0.45);
-  font-size: 14px;
-  line-height: 1;
-}
-
-.offer-card--featured .offer-bullet {
-  color: rgba(240, 191, 108, 0.7);
-}
-
 
 /* ─── Other services ─── */
 .other-services-card {

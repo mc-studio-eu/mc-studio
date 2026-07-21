@@ -19,7 +19,7 @@
   },
   "hero": {
     "title": "Design & Développement pour<br class=\"hidden xs:inline\"> lancer vite, et bien.",
-    "subtitle": "Nous vous accompagnons du concept au lancement.",
+    "subtitle": "We help startups, AI companies, and product teams shape sharper brands, websites, products, and launch experiences.",
     "cta": {
       "book": "Réserver un appel",
       "whatsapp": "Discuter sur WhatsApp"
@@ -55,7 +55,55 @@
   },
   "services": {
     "title": "Nos <span class=\"text-gradient\">offres</span>",
-    "subtitle": "Des offres adaptées à chaque profil.<br class=\"sm:hidden\"> Entrepreneurs ou entreprises.",
+    "subtitle": "Faites appel à nous quand votre idée, votre produit, votre site ou votre marque doit devenir plus net, plus clair et prêt pour la suite.",
+    "accordion": {
+      "branding": {
+        "title": "Branding",
+        "description": "Nous construisons des identités de marque cohérentes et crédibles. Le travail se retrouve partout : site, produit, réseaux sociaux, pitch decks. Pas un logo dans un fichier zip, mais un système qui rend chaque point de contact professionnel.",
+        "items": {
+          "0": "Logo & identité visuelle",
+          "1": "Direction artistique",
+          "2": "Guidelines de marque",
+          "3": "Naming & identité verbale",
+          "4": "Templates réseaux sociaux & contenus",
+          "5": "Pitch decks & supports investisseurs"
+        }
+      },
+      "website": {
+        "title": "Website",
+        "description": "Des sites pensés pour convertir, pas seulement pour faire joli. Landing pages, sites vitrines et sites sur mesure, avec un design premium, un copywriting clair et une exécution rapide.",
+        "items": {
+          "0": "Landing pages",
+          "1": "Sites vitrines",
+          "2": "Sites sur mesure",
+          "3": "SEO & performance",
+          "4": "Copywriting",
+          "5": "Animations & interactions"
+        }
+      },
+      "product_design": {
+        "title": "Design produit",
+        "description": "Nous concevons des interfaces claires et utilisables pour vos produits digitaux : de l'idée aux maquettes haute fidélité, prêtes pour le développement.",
+        "items": {
+          "0": "UX/UI design",
+          "1": "Wireframes & prototypes",
+          "2": "Design system",
+          "3": "Maquettes haute fidélité",
+          "4": "Tests & itérations"
+        }
+      },
+      "product": {
+        "title": "Produit",
+        "description": "Nous développons des applications web et mobiles sur mesure : MVP, SaaS, outils internes et plateformes métier, construits sur des bases solides et évolutives.",
+        "items": {
+          "0": "MVP & SaaS",
+          "1": "Applications web & mobiles",
+          "2": "Outils internes & CRM",
+          "3": "Dashboards & plateformes métier",
+          "4": "Intégration IA"
+        }
+      }
+    },
     "other_services": {
       "title": "Autres Services",
       "subtitle": "Besoin d'un service sur mesure ? On s'adapte.",
