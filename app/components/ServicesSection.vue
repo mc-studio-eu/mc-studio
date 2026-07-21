@@ -6,8 +6,8 @@ const { t, tm, rt } = useI18n()
 const accordionItems = [
   { key: 'branding', image: '/img/project/ra-branding.png' },
   { key: 'website', image: '/img/project/souji-nova-desktop.png' },
-  { key: 'product_design', image: '/img/project/arises-saas.png' },
-  { key: 'product', image: '/img/project/crm-ra/crm-dashboard.png' },
+  { key: 'product_design', image: '/img/project/arises-figma.png' },
+  { key: 'product', image: '/img/project/crm-ra/crm-hero-mockup.png' },
 ]
 
 const offers = computed(() =>
@@ -68,11 +68,11 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
             <div class="overflow-hidden">
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 pb-10 md:pb-14 pt-2">
                 <!-- Image -->
-                <div class="offer-visual">
+                <div class="offer-visual self-start">
                   <img
                     :src="offer.image"
                     :alt="offer.title"
-                    class="w-full h-full object-cover object-top"
+                    class="w-full h-auto block"
                     loading="lazy"
                   >
                 </div>
@@ -235,7 +235,6 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: #161616;
-  aspect-ratio: 16 / 10;
 }
 
 /* ─── Section labels ─── */
