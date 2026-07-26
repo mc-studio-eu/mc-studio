@@ -3,6 +3,7 @@
   "nav": {
     "projects": "Projets",
     "services": "Services",
+    "pricing": "Tarifs",
     "reviews": "Avis",
     "faq": "FAQ",
     "contact": "Contact",
@@ -102,21 +103,6 @@
           "3": "Dashboards & plateformes métier",
           "4": "Intégration IA"
         }
-      }
-    },
-    "other_services": {
-      "title": "Autres Services",
-      "subtitle": "Besoin d'un service sur mesure ? On s'adapte.",
-      "list": {
-        "web_design": "Web Design",
-        "product_design": "Product Design",
-        "showcase": "Site Vitrines",
-        "seo": "SEO",
-        "copywriting": "Copywriting",
-        "strategy": "Accompagnement Stratégique",
-        "ai": "AI Intégration",
-        "web_dev": "Développement Web",
-        "mobile_dev": "Développement Mobile"
       }
     },
     "cards": {
@@ -254,6 +240,86 @@
       "Clean & Moderne",
       "Détails Impeccables"
     ]
+  },
+  "pricing": {
+    "aria_label": "Tarifs et formules",
+    "title": "Des forfaits clairs, <span class=\"text-gradient\">sans surprise</span>",
+    "subtitle": "Trois offres avec un périmètre et un prix fixes. Pour les produits plus complexes, nous construisons un devis adapté à votre besoin.",
+    "popular": "Le plus choisi",
+    "included": "Ce qui est inclus",
+    "delay_label": "Livraison :",
+    "note": "Les prix affichés sont des forfaits fixes hors taxes. Le périmètre est confirmé avant le démarrage.",
+    "plans": {
+      "branding": {
+        "title": "Branding",
+        "price": "490 €",
+        "description": "Une identité visuelle claire et professionnelle pour donner de la crédibilité à votre marque.",
+        "delay": "3 jours",
+        "cta": "Choisir le branding",
+        "features": {
+          "0": "Brief et questionnaire de marque",
+          "1": "2 pistes créatives de logo",
+          "2": "Logo principal et déclinaisons",
+          "3": "Icône et version monochrome",
+          "4": "Palette de couleurs",
+          "5": "Sélection des typographies",
+          "6": "Mini guide d’utilisation",
+          "7": "Exports SVG, PNG et PDF",
+          "8": "2 séries de retours incluses"
+        }
+      },
+      "landing": {
+        "title": "Landing page",
+        "price": "1 290 €",
+        "description": "Une page sur mesure pensée pour présenter votre offre et générer des demandes.",
+        "delay": "7 jours",
+        "cta": "Créer ma landing page",
+        "features": {
+          "0": "Atelier de cadrage de l’offre",
+          "1": "Architecture complète de la page",
+          "2": "Copywriting orienté conversion",
+          "3": "Design UI sur mesure",
+          "4": "Intégration responsive",
+          "5": "Formulaire ou prise de rendez-vous",
+          "6": "SEO technique et performance",
+          "7": "Analytics et suivi des conversions",
+          "8": "Mise en ligne et vérification qualité",
+          "9": "Retours illimités jusqu’à validation"
+        }
+      },
+      "showcase": {
+        "title": "Site 5 pages",
+        "price": "2 390 €",
+        "description": "Un site vitrine complet pour présenter clairement votre activité et vos services.",
+        "delay": "15 jours",
+        "cta": "Créer mon site",
+        "features": {
+          "0": "Arborescence jusqu’à 5 pages",
+          "1": "Cadrage des contenus et parcours",
+          "2": "Copywriting structurel",
+          "3": "Design UI sur mesure",
+          "4": "Intégration responsive",
+          "5": "Formulaires et appels à l’action",
+          "6": "SEO optimisé sur les 5 pages",
+          "7": "Performance et sécurité essentielles",
+          "8": "Analytics et suivi des conversions",
+          "9": "Mise en ligne et vérification qualité",
+          "10": "Retours illimités jusqu’à validation"
+        }
+      }
+    },
+    "custom": {
+      "title": "Prestation sur mesure",
+      "description": "CRM, SaaS et applications web ou mobiles sont étudiés selon les fonctionnalités, les intégrations et le niveau d’accompagnement nécessaires.",
+      "price": "Sur devis",
+      "cta": "Parler du projet",
+      "services": {
+        "0": "CRM",
+        "1": "SaaS",
+        "2": "Application web",
+        "3": "Application mobile"
+      }
+    }
   },
   "projects": {
     "title": "Nos <span class=\"text-gradient\">Projets</span>",

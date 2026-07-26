@@ -30,6 +30,8 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
       <!-- Services Section -->
       <ServicesSection id="services" />
 
+      <div class="section-separator mt-10"></div>
+
       <ScreenMarquee />
 
       <div class="section-separator mt-10"></div>
@@ -50,6 +52,10 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
       <!-- Testimonials Section -->
       <TestimonialSection id="avis" />
 
+      <div class="section-separator"></div>
+
+      <!-- Pricing Section -->
+      <PricingSection id="tarifs" />
 
       <div class="section-separator"></div>
 

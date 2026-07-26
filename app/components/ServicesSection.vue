@@ -24,8 +24,6 @@ const openIndex = ref(0)
 function toggleOffer(index: number) {
   openIndex.value = openIndex.value === index ? -1 : index
 }
-
-const otherServices = computed(() => Object.values(tm('services.other_services.list') as object || {}).map(i => rt(i)))
 </script>
 
 <template>
@@ -102,22 +100,6 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
         </div>
       </div>
 
-      <!-- Other Services -->
-      <div class="other-services-card p-6 sm:p-8 rounded-2xl overflow-hidden">
-        <div class="mb-5">
-          <h4 class="font-manrope font-semibold text-lg mb-1 transition-colors duration-300 text-[var(--text-primary)]">{{ $t('services.other_services.title') }}</h4>
-          <p class="text-sm transition-colors duration-300 text-[var(--text-secondary)]">{{ $t('services.other_services.subtitle') }}</p>
-        </div>
-        <div class="flex flex-wrap gap-2 sm:gap-2.5">
-          <span 
-            v-for="svc in otherServices" 
-            :key="svc"
-            class="other-service-tag"
-          >
-            {{ svc }}
-          </span>
-        </div>
-      </div>
     </div>
   </section>
 </template>
@@ -248,23 +230,4 @@ const otherServices = computed(() => Object.values(tm('services.other_services.l
   margin-bottom: 12px;
 }
 
-/* ─── Other services ─── */
-.other-services-card {
-  background: #161616;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.other-service-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  color: var(--text-secondary);
-  cursor: default;
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
 </style>

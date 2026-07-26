@@ -3,6 +3,7 @@
   "nav": {
     "projects": "Projects",
     "services": "Services",
+    "pricing": "Pricing",
     "reviews": "Reviews",
     "faq": "FAQ",
     "contact": "Contact",
@@ -102,21 +103,6 @@
           "3": "Dashboards & business platforms",
           "4": "AI integration"
         }
-      }
-    },
-    "other_services": {
-      "title": "Other Services",
-      "subtitle": "Need a custom service? We adapt.",
-      "list": {
-        "web_design": "Web Design",
-        "product_design": "Product Design",
-        "showcase": "Showcase Sites",
-        "seo": "SEO",
-        "copywriting": "Copywriting",
-        "strategy": "Strategic Support",
-        "ai": "AI Integration",
-        "web_dev": "Web Development",
-        "mobile_dev": "Mobile Development"
       }
     },
     "cards": {
@@ -254,6 +240,86 @@
       "Clean & Modern",
       "Impeccable Details"
     ]
+  },
+  "pricing": {
+    "aria_label": "Pricing and packages",
+    "title": "Clear packages, <span class=\"text-gradient\">no surprises</span>",
+    "subtitle": "Three offers with a fixed scope and price. For more complex products, we prepare a quote tailored to your requirements.",
+    "popular": "Most popular",
+    "included": "What is included",
+    "delay_label": "Delivery:",
+    "note": "Displayed prices are fixed packages excluding VAT. The scope is confirmed before work begins.",
+    "plans": {
+      "branding": {
+        "title": "Branding",
+        "price": "€490",
+        "description": "A clear, professional visual identity that gives your brand credibility.",
+        "delay": "3 days",
+        "cta": "Choose branding",
+        "features": {
+          "0": "Brand brief and questionnaire",
+          "1": "2 creative logo directions",
+          "2": "Primary logo and variations",
+          "3": "Icon and monochrome version",
+          "4": "Color palette",
+          "5": "Typography selection",
+          "6": "Mini usage guide",
+          "7": "SVG, PNG and PDF exports",
+          "8": "2 revision rounds included"
+        }
+      },
+      "landing": {
+        "title": "Landing page",
+        "price": "€1,290",
+        "description": "A custom page designed to present your offer and generate enquiries.",
+        "delay": "7 days",
+        "cta": "Create my landing page",
+        "features": {
+          "0": "Offer scoping workshop",
+          "1": "Complete page architecture",
+          "2": "Conversion-focused copywriting",
+          "3": "Custom UI design",
+          "4": "Responsive integration",
+          "5": "Form or appointment booking",
+          "6": "Technical SEO and performance",
+          "7": "Analytics and conversion tracking",
+          "8": "Go-live and quality assurance",
+          "9": "Unlimited revisions until approval"
+        }
+      },
+      "showcase": {
+        "title": "5-page website",
+        "price": "€2,390",
+        "description": "A complete business website that clearly presents your company and services.",
+        "delay": "15 days",
+        "cta": "Create my website",
+        "features": {
+          "0": "Site structure up to 5 pages",
+          "1": "Content and user-flow scoping",
+          "2": "Structural copywriting",
+          "3": "Custom UI design",
+          "4": "Responsive integration",
+          "5": "Forms and calls to action",
+          "6": "SEO across all 5 pages",
+          "7": "Essential performance and security",
+          "8": "Analytics and conversion tracking",
+          "9": "Go-live and quality assurance",
+          "10": "Unlimited revisions until approval"
+        }
+      }
+    },
+    "custom": {
+      "title": "Custom service",
+      "description": "CRM, SaaS, web and mobile applications are scoped according to the required features, integrations and level of support.",
+      "price": "Custom quote",
+      "cta": "Discuss the project",
+      "services": {
+        "0": "CRM",
+        "1": "SaaS",
+        "2": "Web application",
+        "3": "Mobile application"
+      }
+    }
   },
   "projects": {
     "title": "Our <span class=\"text-gradient\">Projects</span>",

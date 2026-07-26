@@ -18,6 +18,7 @@ const navItems = [
   { key: 'projects', id: 'projets' },
   { key: 'services', id: 'services' },
   { key: 'reviews', id: 'avis' },
+  { key: 'pricing', id: 'tarifs' },
   { key: 'faq', id: 'faq' }
 ]
 
@@ -86,7 +87,7 @@ onMounted(() => {
     isScrolled.value = window.scrollY > 200
     
     // Detect active section based on scroll position
-    const sections = ['projets', 'services', 'avis', 'faq']
+    const sections = ['projets', 'services', 'avis', 'tarifs', 'faq']
     for (const section of sections.reverse()) {
       const el = document.getElementById(section)
       if (el) {
@@ -125,7 +126,7 @@ const closeMenu = () => isMenuOpen.value = false
 <template>
   <div>
     <!-- Header -->
-    <header class="flex items-center justify-between gap-0 pt-6 px-4 justify-center md:gap-[100px] md:pt-12 md:px-5 w-full max-w-[782px] mx-auto">
+    <header class="flex items-center justify-between gap-0 pt-6 px-4 justify-center lg:gap-10 xl:gap-[70px] md:pt-12 md:px-5 w-full max-w-[1050px] mx-auto">
     <!-- Logo -->
     <div class="flex items-center gap-2.5 shrink-0">
       <NuxtLink to="/" class="flex items-center">
@@ -135,7 +136,7 @@ const closeMenu = () => isMenuOpen.value = false
     </div>
 
     <!-- Nav desktop -->
-    <nav class="hidden lg:flex items-center gap-[26px]">
+    <nav class="hidden lg:flex items-center gap-5 xl:gap-[26px]">
       <NuxtLink v-for="item in navItems" :key="item.key" :to="`${localePath('/')}#${item.id}`" class="font-inter font-medium text-sm text-white no-underline transition-colors duration-200 hover:text-[#f0bf6c]">{{ t(`nav.${item.key}`) }}</NuxtLink>
     </nav>
 
@@ -157,7 +158,7 @@ const closeMenu = () => isMenuOpen.value = false
 
   <!-- Floating Navbar -->
   <Transition enter-active-class="transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]" leave-active-class="transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]" enter-from-class="opacity-0 translate-y-24" leave-to-class="opacity-0 translate-y-24">
-    <nav v-if="isScrolled && !isFooterVisible" class="fixed bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 z-[1000] px-3 md:px-6 w-full pointer-events-none" :class="[isMenuOpen ? 'max-w-[340px]' : 'max-w-[700px]']">
+    <nav v-if="isScrolled && !isFooterVisible" class="fixed bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 z-[1000] px-3 md:px-6 w-full pointer-events-none" :class="[isMenuOpen ? 'max-w-[340px]' : 'max-w-[860px]']">
       <div 
         :class="[
           'backdrop-blur-[20px] pointer-events-auto overflow-hidden',
@@ -195,13 +196,13 @@ const closeMenu = () => isMenuOpen.value = false
             </NuxtLink>
 
             <!-- Desktop Links -->
-            <div class="hidden md:flex items-center gap-1">
+            <div class="hidden lg:flex items-center gap-1">
               <NuxtLink 
                 v-for="item in navItems" 
                 :key="item.key" 
                 :to="`${localePath('/')}#${item.id}`" 
                 :class="[
-                  'font-inter font-medium text-[13px] px-3 py-1.5 rounded-lg no-underline transition-all duration-200 whitespace-nowrap',
+                  'font-inter font-medium text-[13px] px-2.5 xl:px-3 py-1.5 rounded-lg no-underline transition-all duration-200 whitespace-nowrap',
                   activeSection === item.id
                     ? (colorMode.value === 'dark' ? 'bg-[#333] text-white' : 'bg-[#e8e8e8] text-[#1a1a1a]')
                     : (colorMode.value === 'dark' ? 'text-white/80 hover:bg-[#2a2a2a]' : 'text-[#1a1a1a] hover:bg-[#f0f0f0]')
@@ -214,7 +215,7 @@ const closeMenu = () => isMenuOpen.value = false
             <!-- Desktop Language Selector -->
             <div 
               :class="[
-                'hidden md:flex items-center gap-0.5 rounded-lg p-0.5 shrink-0',
+                'hidden lg:flex items-center gap-0.5 rounded-lg p-0.5 shrink-0',
                 colorMode.value === 'dark' ? 'bg-[#2a2a2a]' : 'bg-[#f5f5f5]'
               ]"
             >
@@ -237,7 +238,7 @@ const closeMenu = () => isMenuOpen.value = false
             <button 
               @click="toggleMenu"
               :class="[
-                'md:hidden flex items-center justify-center w-9 h-9 rounded-lg cursor-pointer transition-all duration-300',
+                'lg:hidden flex items-center justify-center w-9 h-9 rounded-lg cursor-pointer transition-all duration-300',
                 isMenuOpen 
                   ? (colorMode.value === 'dark' ? 'bg-[#2a2a2a] hover:bg-[#333]' : 'bg-[#f0f0f0] hover:bg-[#e5e5e5]')
                   : (colorMode.value === 'dark' ? 'bg-white hover:bg-gray-100' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]')
@@ -257,7 +258,7 @@ const closeMenu = () => isMenuOpen.value = false
               ref="desktopCtaBtn"
               :to="`${localePath('/')}#contact`"
               :class="[
-                'hidden md:flex items-center gap-2 border-none rounded-xl py-1.5 pr-3 pl-1.5 md:py-1.5 md:pr-3.5 md:pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
+                'hidden lg:flex items-center gap-2 border-none rounded-xl py-1.5 pr-3.5 pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
                 colorMode.value === 'dark' ? 'flex items-center justify-center bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
               ]"
             >
@@ -282,7 +283,7 @@ const closeMenu = () => isMenuOpen.value = false
           <!-- Expanded content (mobile only) - Smooth expansion like the SUNDAY reference -->
           <div 
             :class="[
-              'md:hidden overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]',
+              'lg:hidden overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]',
               isMenuOpen ? 'max-h-[400px] opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'
             ]"
           >
