@@ -180,11 +180,14 @@ const closeMenu = () => isMenuOpen.value = false
             <!-- Logo with Studio -->
             <NuxtLink 
               to="/" 
-              :class="[
-                'flex items-center shrink-0'
-              ]"
+              aria-label="MC Studio — Accueil"
+              class="flex h-10 items-center justify-center shrink-0 pl-2 pr-1 md:pl-3 md:pr-2"
             >
-              <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-20 h-auto md:w-[88px] object-contain" />
+              <NuxtImg
+                src="/img/logo/mc-studio.svg"
+                alt="MC Studio"
+                class="block w-[82px] h-auto md:w-24 object-contain"
+              />
             </NuxtLink>
 
             <!-- Desktop Links -->
