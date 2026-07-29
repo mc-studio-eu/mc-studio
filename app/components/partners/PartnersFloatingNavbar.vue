@@ -92,19 +92,10 @@ onMounted(() => {
           <NuxtLink
             to="/"
             :class="[
-              'flex items-center gap-1.5 rounded-lg py-1 px-2 md:py-1.5 md:px-3 shrink-0 transition-colors',
-              colorMode.value === 'dark' ? 'bg-[#2a2a2a] hover:bg-[#333]' : 'bg-[#f5f5f5] hover:bg-[#ebebeb]'
+              'flex items-center rounded-lg py-1 px-2 md:py-1.5 md:px-3 shrink-0 bg-[#2a2a2a] hover:bg-[#333] transition-colors'
             ]"
           >
-            <NuxtImg src="/img/main/logo.svg" alt="MC Studio" class="w-6 h-6 md:w-7 md:h-7 object-contain" />
-            <span
-              :class="[
-                'font-inter font-medium text-xs md:text-sm',
-                colorMode.value === 'dark' ? 'text-white' : 'text-[#1a1a1a]'
-              ]"
-            >
-              Studio
-            </span>
+            <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-14 h-auto md:w-16 object-contain" />
           </NuxtLink>
 
           <!-- Desktop Links -->
@@ -323,4 +314,3 @@ onMounted(() => {
     </nav>
   </Transition>
 </template>
-

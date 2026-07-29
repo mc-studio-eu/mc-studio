@@ -128,11 +128,10 @@ const closeMenu = () => isMenuOpen.value = false
     <!-- Header -->
     <header class="flex items-center justify-between gap-0 pt-6 px-4 justify-center lg:gap-10 xl:gap-[70px] md:pt-12 md:px-5 w-full max-w-[1050px] mx-auto">
     <!-- Logo -->
-    <div class="flex items-center gap-2.5 shrink-0">
+    <div class="flex items-center shrink-0">
       <NuxtLink to="/" class="flex items-center">
-        <NuxtImg src="/img/main/logo.svg" alt="MC Studio" class="w-9 h-[34px] md:w-[50px] md:h-12 object-contain" />
+        <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-[100px] h-auto md:w-[125px] object-contain" />
       </NuxtLink>
-      <span class="font-inter font-normal text-sm md:text-[18px] text-white">Studio</span>
     </div>
 
     <!-- Nav desktop -->
@@ -182,17 +181,10 @@ const closeMenu = () => isMenuOpen.value = false
             <NuxtLink 
               to="/" 
               :class="[
-                'flex items-center gap-1.5 rounded-lg py-1 px-2 md:py-1.5 md:px-3 shrink-0 transition-colors',
-                colorMode.value === 'dark' ? 'bg-[#2a2a2a] hover:bg-[#333]' : 'bg-[#f5f5f5] hover:bg-[#ebebeb]'
+                'flex items-center rounded-lg py-1 px-2 md:py-1.5 md:px-3 shrink-0 bg-[#2a2a2a] hover:bg-[#333] transition-colors'
               ]"
             >
-              <NuxtImg src="/img/main/logo.svg" alt="MC Studio" class="w-6 h-6 md:w-7 md:h-7 object-contain" />
-              <span 
-                :class="[
-                  'font-inter font-medium text-xs md:text-sm',
-                  colorMode.value === 'dark' ? 'text-white' : 'text-[#1a1a1a]'
-                ]"
-              >Studio</span>
+              <NuxtImg src="/img/main/logo.svg" alt="MC Studio" class="w-14 h-auto md:w-16 object-contain" />
             </NuxtLink>
 
             <!-- Desktop Links -->

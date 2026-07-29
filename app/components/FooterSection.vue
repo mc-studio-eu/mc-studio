@@ -13,9 +13,8 @@ const { t } = useI18n()
           
           <!-- Brand Column -->
           <div class="md:col-span-5">
-            <div class="flex items-center gap-2.5 mb-6">
-              <NuxtImg src="/img/main/logo.svg" alt="MC Studio Logo" class="h-9 w-auto" />
-              <span class="font-manrope text-lg font-semibold text-white tracking-tight">Studio</span>
+            <div class="flex items-center mb-6">
+              <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio Logo" class="w-[100px] h-auto" />
             </div>
             <p class="font-inter text-[15px] text-white/60 leading-relaxed max-w-[340px]">
               {{ t('footer.tagline') }}

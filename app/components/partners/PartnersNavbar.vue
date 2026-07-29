@@ -24,18 +24,17 @@ const partnerNavItems = [
 
 <template>
   <header
-    class="flex items-center justify-between gap-0 pt-6 px-4 md:gap-[100px] md:pt-12 md:px-5 w-full max-w-[900px] mx-auto"
+    class="flex items-center justify-between gap-0 pt-6 px-4 md:pt-12 md:px-5 lg:gap-12 w-full max-w-[900px] mx-auto"
   >
     <!-- Logo -->
-    <div class="flex items-center gap-2.5 shrink-0">
+    <div class="flex items-center shrink-0">
       <NuxtLink to="/" class="flex items-center">
         <NuxtImg
-          src="/img/main/logo.svg"
+          src="/img/logo/mc-studio.svg"
           alt="MC Studio"
-          class="w-9 h-[34px] md:w-[50px] md:h-12 object-contain"
+          class="w-[100px] h-auto md:w-[125px] object-contain"
         />
       </NuxtLink>
-      <span class="font-inter font-normal text-sm md:text-[18px] text-white">Studio</span>
     </div>
 
     <!-- Nav desktop -->
@@ -77,4 +76,3 @@ const partnerNavItems = [
     </div>
   </header>
 </template>
-
