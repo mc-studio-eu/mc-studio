@@ -181,10 +181,10 @@ const closeMenu = () => isMenuOpen.value = false
             <NuxtLink 
               to="/" 
               :class="[
-                'flex items-center rounded-lg py-1 px-2 md:py-1.5 md:px-3 shrink-0 bg-[#2a2a2a] hover:bg-[#333] transition-colors'
+                'flex items-center shrink-0'
               ]"
             >
-              <NuxtImg src="/img/main/logo.svg" alt="MC Studio" class="w-14 h-auto md:w-16 object-contain" />
+              <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-20 h-auto md:w-[88px] object-contain" />
             </NuxtLink>
 
             <!-- Desktop Links -->
