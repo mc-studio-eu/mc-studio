@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import gsap from 'gsap'
 
+const props = withDefaults(defineProps<{
+  floatingOnly?: boolean
+  alwaysFloating?: boolean
+}>(), {
+  floatingOnly: false,
+  alwaysFloating: false,
+})
+
 const isMenuOpen = ref(false)
 const isScrolled = ref(false)
 const { t, locale, setLocale } = useI18n()
@@ -30,6 +38,9 @@ const toggleColorMode = () => {
 }
 
 const isFooterVisible = ref(false)
+const showFloatingNavbar = computed(() =>
+  (props.alwaysFloating || isScrolled.value) && !isFooterVisible.value
+)
 
 // Refs pour les boutons CTA avec animation text slide
 const desktopCtaBtn = ref(null)
@@ -42,14 +53,16 @@ const mobileCtaWrapper2 = ref(null)
 // Refs pour le bouton initial de la navbar header
 const initialCtaBtn = ref(null)
 const initialCtaWrapper = ref(null)
-useTextSlideAnimation(initialCtaBtn, initialCtaWrapper)
+if (!props.floatingOnly) {
+  useTextSlideAnimation(initialCtaBtn, initialCtaWrapper)
+}
 
 // Animation text slide pour les CTAs - initialisée après que la navbar flottante apparaît
 let desktopAnimationSetup = false
 let mobileAnimationSetup = false
 
-watch(isScrolled, (scrolled) => {
-  if (scrolled) {
+watch(showFloatingNavbar, (isVisible) => {
+  if (isVisible) {
     nextTick(() => {
       // Setup desktop CTA animation
       if (!desktopAnimationSetup && desktopCtaBtn.value && desktopCtaWrapper1.value) {
@@ -80,7 +93,7 @@ watch(isScrolled, (scrolled) => {
       }
     })
   }
-})
+}, { immediate: true })
 
 onMounted(() => {
   const handleScroll = () => {
@@ -126,7 +139,7 @@ const closeMenu = () => isMenuOpen.value = false
 <template>
   <div>
     <!-- Header -->
-    <header class="flex items-center justify-between gap-0 pt-6 px-4 justify-center lg:gap-10 xl:gap-[70px] md:pt-12 md:px-5 w-full max-w-[1050px] mx-auto">
+    <header v-if="!props.floatingOnly" class="flex items-center justify-between gap-0 pt-6 px-4 justify-center lg:gap-10 xl:gap-[70px] md:pt-12 md:px-5 w-full max-w-[1050px] mx-auto">
     <!-- Logo -->
     <div class="flex items-center shrink-0">
       <NuxtLink to="/" class="flex items-center">
@@ -157,7 +170,7 @@ const closeMenu = () => isMenuOpen.value = false
 
   <!-- Floating Navbar -->
   <Transition enter-active-class="transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]" leave-active-class="transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]" enter-from-class="opacity-0 translate-y-24" leave-to-class="opacity-0 translate-y-24">
-    <nav v-if="isScrolled && !isFooterVisible" class="fixed bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 z-[1000] px-3 md:px-6 w-full pointer-events-none" :class="[isMenuOpen ? 'max-w-[340px]' : 'max-w-[860px]']">
+    <nav v-if="showFloatingNavbar" class="fixed bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 z-[1000] px-3 md:px-6 w-full pointer-events-none" :class="[isMenuOpen ? 'max-w-[340px]' : 'max-w-[860px]']">
       <div 
         :class="[
           'backdrop-blur-[20px] pointer-events-auto overflow-hidden',

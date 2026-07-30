@@ -325,6 +325,15 @@
     "title": "Nos <span class=\"text-gradient\">Projets</span>",
     "subtitle": "Une sélection de projets où design, code et stratégie se rencontrent.",
     "cta": "Voir le projet",
+    "show_more": "Voir plus de projets",
+    "more_tags": "{count} tags supplémentaires",
+    "filters": {
+      "aria_label": "Filtrer les projets par type",
+      "all": "Tous",
+      "branding": "Branding",
+      "landing_page": "Landing page",
+      "app": "SaaS / CRM / App"
+    },
     "items": {
       "amg_promotion": {
         "description": "AMG Promotion, c’est une entreprise spécialisée dans la création de produits promotionnels (textile, goodies, objets personnalisés…), qui accompagne des références reconnues comme Groupe SEB, ALTRAD ou encore la Police Nationale.",

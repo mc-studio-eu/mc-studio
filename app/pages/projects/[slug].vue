@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { findProjectBySlug, projects } from '../../data/projects'
 import type { LocalizedValue, Project } from '../../data/projects'
+import Navbar from '../../components/layouts/Navbar.vue'
 
 type LocaleKey = 'fr' | 'en'
 
@@ -193,6 +194,8 @@ useSeoMeta({
 
 <template>
   <main class="min-h-screen bg-[var(--bg-primary)] px-5 py-5 transition-colors duration-300 sm:px-6 sm:py-6">
+    <Navbar floating-only always-floating />
+
     <section class="mx-auto w-full">
       <article class="relative">
         <div class="relative z-10 px-[clamp(18px,5vw,72px)] py-[clamp(56px,8vw,96px)] max-sm:pt-[88px]">

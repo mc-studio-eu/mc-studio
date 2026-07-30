@@ -18,6 +18,8 @@ export interface ProjectActionItem {
   body: string
 }
 
+export type ProjectCategory = 'branding' | 'landing-page' | 'app'
+
 export interface Project {
   /** URL-friendly identifier: /projects/[slug] */
   slug: string
@@ -25,6 +27,8 @@ export interface Project {
   i18nKey: string
   /** Display name (kept in code, not translated) */
   title: string
+  /** Portfolio filters displayed on the landing page */
+  categories: ProjectCategory[]
   /** Main cover image used in landing carousel + detail hero */
   image: string
   /** External website url */
@@ -52,6 +56,7 @@ export const projects: Project[] = [
     slug: 'crm-ra-energy',
     i18nKey: 'crm_ra_energy',
     title: 'CRM R&A Energy',
+    categories: ['app'],
     image: '/img/project/crm-ra/crm-hero-mockup.png',
     externalLink: 'https://ra-energy.fr/',
     verified: true,
@@ -164,6 +169,7 @@ export const projects: Project[] = [
     slug: 'amg-promotion',
     i18nKey: 'amg_promotion',
     title: 'AMG Promotion',
+    categories: ['landing-page'],
     image: '/img/project/amgprom.png',
     externalLink: 'https://amgprom.com/',
     verified: true,
@@ -263,6 +269,7 @@ export const projects: Project[] = [
     slug: 'arises',
     i18nKey: 'arises',
     title: 'Arises',
+    categories: ['branding', 'landing-page', 'app'],
     image: '/img/project/arises-tablet.jpeg',
     externalLink: 'https://arises.app/',
     verified: true,
@@ -360,6 +367,7 @@ export const projects: Project[] = [
     slug: 'souji-nova',
     i18nKey: 'souji_nova',
     title: 'Souji Nova',
+    categories: ['landing-page'],
     image: '/img/project/souji-nova-desktop.png',
     externalLink: 'https://soujinova.fr/',
     verified: true,
@@ -460,6 +468,7 @@ export const projects: Project[] = [
     slug: 'ra-energy',
     i18nKey: 'ra_energy',
     title: 'R&A Energy',
+    categories: ['branding', 'landing-page'],
     image: '/img/project/ra-energy-.png',
     externalLink: 'https://ra-energy.fr/',
     verified: true,
@@ -562,6 +571,7 @@ export const projects: Project[] = [
     slug: 'fontaines-vtc',
     i18nKey: 'fontaines_vtc',
     title: 'Fontaines VTC',
+    categories: ['landing-page'],
     image: '/img/project/fontaines-vtc-dark.jpeg',
     externalLink: 'https://fontaines-vtc.fr/',
     verified: true,

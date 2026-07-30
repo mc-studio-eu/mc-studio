@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { projects as projectData } from '../../data/projects'
+import type { ProjectCategory } from '../../data/projects'
 
 const { t, tm, rt } = useI18n()
 const localePath = useLocalePath()
+
+type ProjectFilter = 'all' | ProjectCategory
 
 interface ProjectCard {
   id: number
@@ -10,19 +13,15 @@ interface ProjectCard {
   title: string
   description: string
   image: string
+  categories: ProjectCategory[]
   tags: string[]
   testimonial?: {
-    avis: string
+    review: string
     name: string
     job: string
     avatar: string
   }
 }
-
-// Text slide animation refs
-const projectCtaBtn = ref(null)
-const projectCtaWrapper = ref(null)
-useTextSlideAnimation(projectCtaBtn, projectCtaWrapper)
 
 const projects = computed<ProjectCard[]>(() =>
   projectData.map((project, index) => ({
@@ -31,10 +30,11 @@ const projects = computed<ProjectCard[]>(() =>
     title: project.title,
     description: t(`projects.items.${project.i18nKey}.description`),
     image: project.image,
+    categories: project.categories,
     tags: Object.values(tm(`projects.items.${project.i18nKey}.tags`) as Record<string, string> || {}).map(tag => rt(tag)),
     testimonial: project.testimonial
       ? {
-          avis: t(`projects.items.${project.i18nKey}.testimonial.review`),
+          review: t(`projects.items.${project.i18nKey}.testimonial.review`),
           name: project.testimonial.name,
           job: t(`projects.items.${project.i18nKey}.testimonial.job`),
           avatar: project.testimonial.avatar,
@@ -43,82 +43,124 @@ const projects = computed<ProjectCard[]>(() =>
   }))
 )
 
-const currentIndex = ref(0)
-const isPaused = ref(false)
-let autoScrollInterval: ReturnType<typeof setInterval> | null = null
+const filters: Array<{ value: ProjectFilter; labelKey: string }> = [
+  { value: 'all', labelKey: 'projects.filters.all' },
+  { value: 'branding', labelKey: 'projects.filters.branding' },
+  { value: 'landing-page', labelKey: 'projects.filters.landing_page' },
+  { value: 'app', labelKey: 'projects.filters.app' },
+]
 
-// Navigation
-const nextProject = () => {
-  currentIndex.value = (currentIndex.value + 1) % projects.value.length
-}
+const selectedFilter = ref<ProjectFilter>('all')
+const showAllProjects = ref(false)
 
-const prevProject = () => {
-  currentIndex.value = (currentIndex.value - 1 + projects.value.length) % projects.value.length
-}
+const filteredProjects = computed(() => {
+  const activeFilter = selectedFilter.value
+  const matchingProjects = activeFilter === 'all'
+    ? projects.value
+    : projects.value.filter(project =>
+        project.categories.includes(activeFilter)
+      )
 
-// Current project computed
-const currentProject = computed(() => projects.value[currentIndex.value])
+  return [...matchingProjects].sort((firstProject, secondProject) => {
+    if (activeFilter === 'all') {
+      const featuredProjectPriority =
+        Number(secondProject.slug === 'ra-energy') - Number(firstProject.slug === 'ra-energy')
 
-// Auto-scroll
-const startAutoScroll = () => {
-  if (autoScrollInterval) clearInterval(autoScrollInterval)
-  autoScrollInterval = setInterval(() => {
-    if (!isPaused.value) {
-      nextProject()
+      if (featuredProjectPriority !== 0) return featuredProjectPriority
     }
-  }, 5000)
-}
 
-const pauseAutoScroll = () => {
-  isPaused.value = true
-}
+    const testimonialPriority =
+      Number(Boolean(secondProject.testimonial)) - Number(Boolean(firstProject.testimonial))
 
-const resumeAutoScroll = () => {
-  isPaused.value = false
-}
+    if (testimonialPriority !== 0) return testimonialPriority
+    if (activeFilter !== 'all') return 0
 
-onMounted(() => {
-  startAutoScroll()
+    return (
+      Number(secondProject.categories.includes('landing-page')) -
+      Number(firstProject.categories.includes('landing-page'))
+    )
+  })
 })
 
-onUnmounted(() => {
-  if (autoScrollInterval) clearInterval(autoScrollInterval)
-})
+const visibleProjects = computed(() =>
+  showAllProjects.value
+    ? filteredProjects.value
+    : filteredProjects.value.slice(0, 4)
+)
+
+const hasMoreProjects = computed(() =>
+  !showAllProjects.value && filteredProjects.value.length > 4
+)
+
+const selectFilter = (filter: ProjectFilter) => {
+  selectedFilter.value = filter
+  showAllProjects.value = false
+}
 </script>
 
 <template>
 
-  <section id="projets" class="py-16 md:py-20 px-6 transition-colors duration-300 bg-[var(--bg-primary)]" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll">
-    <div class="max-w-[1000px] mx-auto">
+  <section id="projets" class="py-16 md:py-20 px-6 transition-colors duration-300 bg-[var(--bg-primary)]">
+    <div class="max-w-[1216px] mx-auto">
       <!-- Header -->
       <div class="text-center mb-10 md:mb-16">
         <h2 class="section-title font-manrope font-medium text-2xl sm:text-3xl md:text-[32px] mb-3 transition-colors duration-300 text-[var(--text-primary)]" v-html="$t('projects.title')">
         </h2>
         <p class="text-sm sm:text-base max-w-xl mx-auto leading-relaxed transition-colors duration-300 text-[var(--text-secondary)]" v-html="$t('projects.subtitle')">
         </p>
+
+        <!-- Project Filters -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mt-6" role="group" :aria-label="$t('projects.filters.aria_label')">
+          <button
+            v-for="filter in filters"
+            :key="filter.value"
+            type="button"
+            class="inline-flex min-h-9 items-center justify-center rounded-full border px-4 font-inter text-xs sm:text-sm font-medium transition-all duration-200"
+            :class="selectedFilter === filter.value
+              ? 'border-[var(--color-gold)] bg-[linear-gradient(110deg,#fff_0%,#f0bf6c_100%)] text-[#0f0f0f] shadow-[0_6px_20px_rgba(240,191,108,0.16)]'
+              : 'border-[var(--border-subtle)] bg-[#181818] text-[var(--text-secondary)] hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]'"
+            :aria-pressed="selectedFilter === filter.value"
+            @click="selectFilter(filter.value)"
+          >
+            {{ $t(filter.labelKey) }}
+          </button>
+        </div>
       </div>
 
-      <!-- Project Showcase -->
-      <div class="flex flex-col gap-6" v-if="currentProject">
-        <div class="flex flex-col md:flex-row md:items-start gap-8">
-          <!-- Project Image -->
-          <div class="shrink-0 w-full max-w-[510px] rounded-xl overflow-hidden">
-            <NuxtImg 
-              :src="currentProject.image" 
-              :alt="currentProject.title"
-              class="w-full h-[250px] sm:h-[400px] object-cover"
+      <!-- Project Cards -->
+      <TransitionGroup
+        name="project-grid"
+        tag="div"
+        class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6"
+      >
+        <article
+          v-for="project in visibleProjects"
+          :key="project.id"
+          class="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[#151515] transition-all duration-300 hover:border-[rgba(240,191,108,0.55)] hover:shadow-[0_18px_45px_rgba(0,0,0,0.28)]"
+        >
+          <NuxtLink
+            :to="localePath(`/projects/${project.slug}`)"
+            class="block overflow-hidden bg-[#0f0f0f]"
+            :aria-label="`${$t('projects.cta')} — ${project.title}`"
+          >
+            <NuxtImg
+              :src="project.image"
+              :alt="project.title"
+              class="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
             />
-          </div>
+          </NuxtLink>
 
-          <!-- Project Info -->
-          <div class="flex flex-col gap-4">
-            <h3 class="font-manrope text-2xl font-semibold transition-colors duration-300 text-[var(--text-primary)]">{{ currentProject.title }}</h3>
-            <p class="font-inter text-xs sm:text-sm leading-relaxed transition-colors duration-300 text-[var(--text-secondary)]">{{ currentProject.description }}</p>
+          <div class="flex grow flex-col p-5 sm:p-6">
+            <h3 class="font-manrope text-xl sm:text-2xl font-semibold text-[var(--text-primary)]">
+              {{ project.title }}
+            </h3>
+            <p class="project-card-description mt-3 font-inter text-sm leading-relaxed text-[var(--text-secondary)]">
+              {{ project.description }}
+            </p>
 
-            <!-- Tags -->
-            <div class="flex flex-wrap gap-2">
-              <UBadge 
-                v-for="tag in currentProject.tags" 
+            <div class="mt-4 flex flex-wrap gap-2">
+              <UBadge
+                v-for="tag in project.tags.slice(0, 3)"
                 :key="tag"
                 variant="outline"
                 class="font-inter bg-white text-black"
@@ -126,99 +168,85 @@ onUnmounted(() => {
               >
                 {{ tag }}
               </UBadge>
-            </div>
-
-            <!-- Call to Action -->
-            <!-- Call to Action -->
-            <NuxtLink
-              :to="localePath(`/projects/${currentProject.slug}`)"
-              custom
-              v-slot="{ href, navigate }"
-            >
-              <a
-                ref="projectCtaBtn"
-                :href="href"
-                class="w-36 flex items-center justify-center h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline"
-                @click="navigate"
+              <span
+                v-if="project.tags.length > 3"
+                class="inline-flex items-center rounded-md border border-[var(--border-subtle)] px-2 py-0.5 font-inter text-xs text-[var(--text-secondary)]"
+                :aria-label="$t('projects.more_tags', { count: project.tags.length - 3 })"
               >
-                <span class="text-slide-container h-[20px]">
-                  <span ref="projectCtaWrapper" class="text-slide-wrapper">
-                    <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('projects.cta') }}</span>
-                    <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('projects.cta') }}</span>
-                  </span>
-                </span>
-                <UIcon name="i-heroicons-arrow-right-20-solid" class="ml-1 w-5 h-5" />
-              </a>
-            </NuxtLink>
-
-            <!-- Testimonials -->
-            <div v-if="currentProject?.testimonial">
-              <div class="flex flex-col p-3 gap-3 rounded-xl text-white bg-[#232323]">
-
-                <p class="text-xs xl:whitespace-pre-line"> {{ currentProject?.testimonial.avis }}</p>
-
-                <div class="flex items-center gap-3">
-<!--                  <UAvatar :src="avisClient.avatar" size="xl"/>-->
-                  <div>
-                    <p class="absans xl:text-md text-sm font-semibold">{{ currentProject.testimonial.name }}</p>
-                    <p class="text-xs font-light">{{ currentProject.testimonial.job }}</p>
-                  </div>
-                </div>
-              </div>
+                +{{ project.tags.length - 3 }}
+              </span>
             </div>
 
-          </div>
-        </div>
-
-        <!-- Navigation -->
-        <div class="flex gap-8 mt-2.5 justify-start sm:flex-row flex-col">
-          <div class="flex gap-[18px]">
-            <button
-              class="flex items-center justify-center w-[44px] h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
-              @click="prevProject"
-              aria-label="Projet précédent"
+            <blockquote
+              v-if="project.testimonial"
+              class="mt-5 rounded-xl border border-[rgba(240,191,108,0.16)] bg-[#1d1d1d] p-4"
             >
-              <UIcon name="i-lucide-chevron-left" />
-            </button>
-            <button
-              class="flex items-center justify-center w-[44px] h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
-              @click="nextProject"
-              aria-label="Projet suivant"
-            >
-              <UIcon name="i-lucide-chevron-right" />
-            </button>
-          </div>
+              <p class="m-0 whitespace-pre-line font-inter text-xs leading-[1.65] text-[var(--text-primary)]">
+                « {{ project.testimonial.review }} »
+              </p>
 
-          <!-- Indicators -->
-          <div class="flex items-center gap-3">
-            <button
-              v-for="(project, index) in projects"
-              :key="project.id"
-              class="w-6 h-1 rounded bg-[var(--border-subtle)] border-none cursor-pointer p-0 transition-all duration-300 hover:bg-[var(--text-secondary)]"
-              :class="{ '!bg-[var(--color-gold)] !w-8': currentIndex === index }"
-              @click="currentIndex = index"
-              :aria-label="`Aller au projet ${index + 1}`"
-            />
+              <footer class="mt-4 flex items-center gap-3">
+                <NuxtImg
+                  :src="project.testimonial.avatar"
+                  :alt="project.testimonial.name"
+                  class="h-10 w-10 shrink-0 rounded-full bg-white object-cover"
+                />
+                <div class="min-w-0">
+                  <cite class="block truncate font-inter text-sm font-semibold not-italic text-[var(--text-primary)]">
+                    {{ project.testimonial.name }}
+                  </cite>
+                  <span class="block truncate font-inter text-xs text-[var(--text-secondary)]">
+                    {{ project.testimonial.job }}
+                  </span>
+                </div>
+              </footer>
+            </blockquote>
+
+            <div class="mt-auto pt-6">
+              <NuxtLink
+                :to="localePath(`/projects/${project.slug}`)"
+                class="inline-flex h-10 w-fit items-center justify-center rounded-lg bg-[linear-gradient(to_right,white_50%,#f0bf6c)] px-4 font-inter text-sm font-medium text-[#0f0f0f] no-underline shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105"
+              >
+                {{ $t('projects.cta') }}
+                <UIcon
+                  name="i-heroicons-arrow-right-20-solid"
+                  class="ml-1.5 h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5"
+                />
+              </NuxtLink>
+            </div>
           </div>
-        </div>
+        </article>
+      </TransitionGroup>
+
+      <div v-if="hasMoreProjects" class="mt-8 flex justify-center">
+        <button
+          type="button"
+          class="inline-flex min-h-11 items-center justify-center rounded-lg border border-[var(--border-subtle)] bg-[#181818] px-5 font-inter text-sm font-medium text-[var(--text-primary)] transition-colors duration-200 hover:border-[var(--color-gold)]"
+          @click="showAllProjects = true"
+        >
+          {{ $t('projects.show_more') }}
+        </button>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-.text-slide-container {
-  display: block;
-  position: relative;
+.project-card-description {
+  display: -webkit-box;
   overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
-.text-slide-wrapper {
-  display: flex;
-  flex-direction: column;
+.project-grid-enter-active,
+.project-grid-leave-active {
+  transition: opacity 200ms ease, transform 200ms ease;
 }
 
-.text-slide-text {
-  display: block;
+.project-grid-enter-from,
+.project-grid-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
 }
 </style>

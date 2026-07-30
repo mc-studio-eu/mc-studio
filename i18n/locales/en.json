@@ -325,6 +325,15 @@
     "title": "Our <span class=\"text-gradient\">Projects</span>",
     "subtitle": "A selection of projects where design, code and strategy meet.",
     "cta": "View project",
+    "show_more": "View more projects",
+    "more_tags": "{count} more tags",
+    "filters": {
+      "aria_label": "Filter projects by type",
+      "all": "All",
+      "branding": "Branding",
+      "landing_page": "Landing page",
+      "app": "SaaS / CRM / App"
+    },
     "items": {
       "amg_promotion": {
         "description": "AMG Promotion is a company specialized in creating promotional products (textiles, goodies, personalized items, and more), working with well-known brands and organizations such as Groupe SEB, ALTRAD, and the French National Police.",
