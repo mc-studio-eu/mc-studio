@@ -29,7 +29,7 @@ const { t } = useI18n()
           class="w-full max-w-full min-h-[700px] bg-transparent rounded-3xl overflow-hidden"
         >
           <iframe
-            src="https://cal.com/mc-studio/discutons-de-votre-projet?embed=true&theme=dark"
+            src="https://cal.com/mc-studio/appel-avec-mohamed-chettah?embed=true&theme=dark"
             style="width: 100%; height: 100%; min-height: 700px; border: none"
             :title="t('partners.cal.iframe_title')"
           ></iframe>
