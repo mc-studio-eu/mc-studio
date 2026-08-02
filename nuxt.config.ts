@@ -60,11 +60,9 @@ export default defineNuxtConfig({
     compilation: {
       strictMessage: false
     },
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      redirectOn: 'root',
-    }
+    // Always serve the default French locale on a visitor's first visit.
+    // Visitors can still switch to English explicitly from the language selector.
+    detectBrowserLanguage: false
   },
   gsap: {
     composables: true,

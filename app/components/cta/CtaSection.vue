@@ -16,8 +16,8 @@ const ctaSubtitle = computed(() => t('cta.subtitle'));
       <!-- CTA Image/Visual -->
       <div class="flex justify-center">
         <div class="w-full max-w-full min-h-[700px] bg-transparent rounded-3xl overflow-hidden">
-          <iframe 
-            src="https://cal.com/mc-studio/appel-avec-mohamed-chettah" 
+          <iframe
+            src="https://cal.com/mc-studio/discutons-de-votre-projet"
             style="width: 100%; height: 100%; min-height: 700px; border: none;"
             title="Réserver un appel découverte"
           ></iframe>
@@ -26,4 +26,3 @@ const ctaSubtitle = computed(() => t('cta.subtitle'));
     </div>
   </section>
 </template>
-
