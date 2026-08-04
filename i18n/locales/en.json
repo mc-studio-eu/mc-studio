@@ -503,7 +503,31 @@
   },
   "cta": {
     "title": "Tell us about <span class=\"text-gradient\">your Project</span>",
-    "subtitle": "Our mission: help entrepreneurs and companies transform an idea into a concrete product"
+    "subtitle": "Our mission: help entrepreneurs and companies transform an idea into a concrete product",
+    "form": {
+      "name": "Name",
+      "name_placeholder": "Your name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "company_placeholder": "Your company name",
+      "project_type": "Project type",
+      "project_placeholder": "Select an option",
+      "project_options": {
+        "product_design": "Product design",
+        "other": "Other"
+      },
+      "message": "Your project",
+      "message_placeholder": "Context, goals, ideal timeline, indicative budget…",
+      "submit": "Send my request",
+      "sending": "Sending…",
+      "privacy": "By sending this form, you agree that MC Studio may use this information solely to respond to your request.",
+      "success": "Thank you! Your request has been sent. We will get back to you shortly.",
+      "error": "Your message could not be sent. Please try again or email contact{'@'}mc-studio.eu."
+    },
+    "calendar": {
+      "iframe_title": "Book a discovery call with MC Studio"
+    }
   },
   "team": {
     "badge": "Our team",

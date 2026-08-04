@@ -6,6 +6,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
+    resendApiKey: '',
+    contactFrom: 'MC Studio <contact@mc-studio.eu>',
+    contactTo: 'contact@mc-studio.eu',
     public: {
       partnerPlatformUrl:
         process.env.NUXT_PUBLIC_PARTNER_PLATFORM_URL || 'https://app.mc-studio.eu'

@@ -503,7 +503,31 @@
   },
   "cta": {
     "title": "Parlez nous de <span class=\"text-gradient\">votre Projet</span>",
-    "subtitle": "Notre mission : aider les entrepreneurs et les entreprises à transformer une idée en produit concret"
+    "subtitle": "Notre mission : aider les entrepreneurs et les entreprises à transformer une idée en produit concret",
+    "form": {
+      "name": "Nom",
+      "name_placeholder": "Votre nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "company": "Entreprise",
+      "company_placeholder": "Nom de votre entreprise",
+      "project_type": "Type de projet",
+      "project_placeholder": "Sélectionnez une option",
+      "project_options": {
+        "product_design": "Design produit",
+        "other": "Autre"
+      },
+      "message": "Votre projet",
+      "message_placeholder": "Contexte, objectifs, délai idéal, budget indicatif…",
+      "submit": "Envoyer ma demande",
+      "sending": "Envoi en cours…",
+      "privacy": "En envoyant ce formulaire, vous acceptez que MC Studio utilise ces informations uniquement pour répondre à votre demande.",
+      "success": "Merci ! Votre demande a bien été envoyée. Nous revenons vers vous rapidement.",
+      "error": "L’envoi n’a pas abouti. Vous pouvez réessayer ou nous écrire à contact{'@'}mc-studio.eu."
+    },
+    "calendar": {
+      "iframe_title": "Réserver un appel découverte avec MC Studio"
+    }
   },
   "team": {
     "title": "L’équipe <span class=\"text-gradient\">MC Studio</span>",
