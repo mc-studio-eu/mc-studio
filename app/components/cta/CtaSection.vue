@@ -1,10 +1,13 @@
 <script setup lang="ts">
 const { t } = useI18n();
 const ctaSubtitle = computed(() => t('cta.subtitle'));
-const submitButton = ref<HTMLElement | null>(null)
-const submitTextWrapper = ref<HTMLElement | null>(null)
+const activeContactMethod = ref<'form' | 'calendar'>('form')
+const hasOpenedCalendar = ref(false)
 
-useTextSlideAnimation(submitButton, submitTextWrapper, { duration: 0.3 })
+const selectContactMethod = (method: 'form' | 'calendar') => {
+  activeContactMethod.value = method
+  if (method === 'calendar') hasOpenedCalendar.value = true
+}
 
 const form = reactive({
   name: '',
@@ -56,8 +59,43 @@ const submitContact = async () => {
         <p class="font-inter text-base text-[var(--text-secondary)] max-w-[842px] mx-auto transition-colors duration-300">{{ ctaSubtitle }}</p>
       </div>
 
-      <div class="flex flex-col gap-6">
-        <div class="contact-card rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6 sm:p-8">
+      <div class="contact-tabs" role="tablist" :aria-label="$t('cta.tabs.label')">
+        <button
+          id="contact-form-tab"
+          type="button"
+          role="tab"
+          class="contact-tab"
+          :class="{ 'contact-tab--active': activeContactMethod === 'form' }"
+          :aria-selected="activeContactMethod === 'form'"
+          aria-controls="contact-form-panel"
+          @click="selectContactMethod('form')"
+        >
+          <UIcon name="i-lucide-send" class="h-4 w-4" aria-hidden="true" />
+          <span>{{ $t('cta.tabs.form') }}</span>
+        </button>
+        <button
+          id="contact-calendar-tab"
+          type="button"
+          role="tab"
+          class="contact-tab"
+          :class="{ 'contact-tab--active': activeContactMethod === 'calendar' }"
+          :aria-selected="activeContactMethod === 'calendar'"
+          aria-controls="contact-calendar-panel"
+          @click="selectContactMethod('calendar')"
+        >
+          <UIcon name="i-lucide-calendar-days" class="h-4 w-4" aria-hidden="true" />
+          <span>{{ $t('cta.tabs.calendar') }}</span>
+        </button>
+      </div>
+
+      <div class="mb-16 sm:mb-24">
+        <div
+          v-show="activeContactMethod === 'form'"
+          id="contact-form-panel"
+          class="contact-card rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6 sm:p-8"
+          role="tabpanel"
+          aria-labelledby="contact-form-tab"
+        >
           <form class="space-y-4" @submit.prevent="submitContact">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label class="contact-field">
@@ -86,9 +124,13 @@ const submitContact = async () => {
               <select v-model="form.projectType" name="projectType">
                 <option value="">{{ $t('cta.form.project_placeholder') }}</option>
                 <option value="Branding">Branding</option>
-                <option value="Website">Website</option>
+                <option value="Landing page">{{ $t('cta.form.project_options.landing_page') }}</option>
+                <option value="Site internet">{{ $t('cta.form.project_options.website') }}</option>
+                <option value="CRM">CRM</option>
+                <option value="Application web">{{ $t('cta.form.project_options.web_app') }}</option>
+                <option value="Application mobile">{{ $t('cta.form.project_options.mobile_app') }}</option>
+                <option value="SaaS">SaaS</option>
                 <option value="Design produit">{{ $t('cta.form.project_options.product_design') }}</option>
-                <option value="MVP / SaaS">MVP / SaaS</option>
                 <option :value="$t('cta.form.project_options.other')">{{ $t('cta.form.project_options.other') }}</option>
               </select>
             </label>
@@ -103,20 +145,10 @@ const submitContact = async () => {
               <input v-model="form.website" type="text" name="website" tabindex="-1" autocomplete="off">
             </label>
 
-            <button ref="submitButton" class="cta-primary contact-submit group" type="submit" :disabled="isSubmitting">
-              <span class="text-slide-container h-5">
-                <span ref="submitTextWrapper" class="text-slide-wrapper">
-                  <span class="text-slide-text h-5 leading-5">{{ isSubmitting ? $t('cta.form.sending') : $t('cta.form.submit') }}</span>
-                  <span class="text-slide-text h-5 leading-5">{{ isSubmitting ? $t('cta.form.sending') : $t('cta.form.submit') }}</span>
-                </span>
-              </span>
-              <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+            <button class="contact-submit" type="submit" :disabled="isSubmitting">
+              <span>{{ isSubmitting ? $t('cta.form.sending') : $t('cta.form.submit') }}</span>
+              <span aria-hidden="true">→</span>
             </button>
-
-            <p class="font-inter text-xs text-[var(--text-muted)] leading-relaxed">
-              {{ $t('cta.form.privacy') }}
-            </p>
-
             <p v-if="formStatus === 'success'" class="form-feedback form-feedback--success" role="status" aria-live="polite">
               {{ $t('cta.form.success') }}
             </p>
@@ -126,7 +158,13 @@ const submitContact = async () => {
           </form>
         </div>
 
-        <div class="mb-16 sm:mb-24">
+        <div
+          v-if="hasOpenedCalendar"
+          v-show="activeContactMethod === 'calendar'"
+          id="contact-calendar-panel"
+          role="tabpanel"
+          aria-labelledby="contact-calendar-tab"
+        >
           <iframe
             class="block w-full min-h-[700px] border-0"
             src="https://cal.com/mc-studio/discutons-de-votre-projet?embed=true&theme=dark"
@@ -142,6 +180,51 @@ const submitContact = async () => {
 <style scoped>
 .contact-card {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.16);
+}
+
+.contact-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: fit-content;
+  margin: 0 auto 1.5rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.875rem;
+  background: var(--bg-secondary);
+}
+
+.contact-tab {
+  display: inline-flex;
+  min-height: 2.625rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border: 0;
+  border-radius: 0.675rem;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: Inter, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.contact-tab:hover:not(.contact-tab--active) {
+  color: var(--text-primary);
+}
+
+.contact-tab--active {
+  background: linear-gradient(270deg, #f0bf6c 0%, #fff 72%);
+  color: #0f0f0f;
+  box-shadow: 0 6px 18px rgba(11, 32, 103, 0.12);
+}
+
+.contact-tab:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
 }
 
 .contact-field {
@@ -194,25 +277,28 @@ const submitContact = async () => {
 
 .contact-submit {
   display: flex;
-  min-height: 2.75rem;
+  min-height: 3.125rem;
   width: fit-content;
+  min-width: 13.5rem;
   margin-left: auto;
-  padding: 0.625rem 1.25rem;
+  padding: 0 1.5rem;
   align-items: center;
   justify-content: center;
-  gap: 0.625rem;
+  gap: 0.75rem;
   border: 0;
-  border-radius: 0.75rem;
+  border-radius: 0.875rem;
+  background: linear-gradient(270deg, #f0bf6c 0%, #fff 72%);
   color: #0f0f0f;
   font-family: Inter, sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: filter 180ms ease, opacity 180ms ease;
+  transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
 }
 
 .contact-submit:hover:not(:disabled) {
   filter: brightness(1.04);
+  transform: translateY(-1px);
 }
 
 .contact-submit:focus-visible {
@@ -225,22 +311,6 @@ const submitContact = async () => {
   opacity: 0.65;
 }
 
-.text-slide-container {
-  display: block;
-  position: relative;
-  overflow: hidden;
-}
-
-.text-slide-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.text-slide-text {
-  display: block;
-  white-space: nowrap;
-}
-
 .form-feedback {
   border-radius: 0.75rem;
   padding: 0.75rem 0.875rem;
@@ -249,14 +319,15 @@ const submitContact = async () => {
   line-height: 1.5;
 }
 
-.form-feedback--success {
-  border: 1px solid rgba(74, 222, 128, 0.3);
-}
+@media (max-width: 639px) {
+  .contact-tabs {
+    width: 100%;
+  }
 
-.form-feedback--error {
-  border: 1px solid rgba(248, 113, 113, 0.3);
-  background: rgba(248, 113, 113, 0.08);
-  color: #fca5a5;
+  .contact-tab {
+    padding-inline: 0.75rem;
+    font-size: 0.8rem;
+  }
 }
 
 </style>

@@ -504,6 +504,11 @@
   "cta": {
     "title": "Parlez nous de <span class=\"text-gradient\">votre Projet</span>",
     "subtitle": "Notre mission : aider les entrepreneurs et les entreprises à transformer une idée en produit concret",
+    "tabs": {
+      "label": "Choisir une méthode de contact",
+      "form": "Envoyer un message",
+      "calendar": "Prendre rendez-vous"
+    },
     "form": {
       "name": "Nom",
       "name_placeholder": "Votre nom",
@@ -514,6 +519,10 @@
       "project_type": "Type de projet",
       "project_placeholder": "Sélectionnez une option",
       "project_options": {
+        "landing_page": "Landing page",
+        "website": "Site internet",
+        "web_app": "Application web",
+        "mobile_app": "Application mobile",
         "product_design": "Design produit",
         "other": "Autre"
       },
