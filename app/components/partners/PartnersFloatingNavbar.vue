@@ -95,7 +95,7 @@ onMounted(() => {
               'flex items-center shrink-0'
             ]"
           >
-            <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-20 h-auto md:w-[88px] object-contain" />
+            <BrandLogo alt="MC Studio" class="w-20 h-auto md:w-[88px] object-contain" />
           </NuxtLink>
 
           <!-- Desktop Links -->

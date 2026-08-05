@@ -198,14 +198,14 @@ onUnmounted(() => {
         <div class="flex gap-8 mt-2.5 justify-start sm:flex-row flex-col">
           <div class="flex gap-[18px]">
             <button
-              class="flex items-center justify-center w-[44px] h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+              class="flex items-center justify-center w-[44px] h-[42px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
               @click="prevProject"
               aria-label="Projet précédent"
             >
               <UIcon name="i-lucide-chevron-left" />
             </button>
             <button
-              class="flex items-center justify-center w-[44px] h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+              class="flex items-center justify-center w-[44px] h-[42px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
               @click="nextProject"
               aria-label="Projet suivant"
             >

@@ -71,7 +71,7 @@ defineProps<{
           <div
             v-for="fact in facts"
             :key="fact.label"
-            class="rounded-2xl border border-[var(--border-subtle)] bg-black/10 p-4"
+            class="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-4"
           >
             <p class="text-xs uppercase tracking-[0.14em] text-[var(--text-secondary)]">
               {{ fact.label }}

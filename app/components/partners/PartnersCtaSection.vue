@@ -44,7 +44,7 @@ const platformUrl = computed(() => String(config.public.partnerPlatformUrl || ''
 
         <div class="flex flex-col gap-4">
           <div
-            class="rounded-xl border border-[var(--border-subtle)] bg-black/40 backdrop-blur-xl px-4 py-4 flex items-center gap-3"
+            class="rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] shadow-[var(--card-shadow)] backdrop-blur-xl px-4 py-4 flex items-center gap-3"
           >
             <div
               class="w-[44px] h-[44px] rounded-lg bg-[linear-gradient(135deg,var(--color-gold)_0%,#e8a84c_100%)] flex items-center justify-center font-inter font-bold text-sm text-black shrink-0 relative overflow-hidden"
@@ -68,7 +68,7 @@ const platformUrl = computed(() => String(config.public.partnerPlatformUrl || ''
           </div>
 
           <div class="grid grid-cols-2 gap-3">
-            <div class="rounded-lg border border-[var(--border-subtle)] bg-black/30 px-3 py-3">
+            <div class="rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] px-3 py-3">
               <p class="font-inter text-[11px] text-[var(--text-secondary)]">
                 {{ t('partners.cta.commission_label') }}
               </p>
@@ -76,7 +76,7 @@ const platformUrl = computed(() => String(config.public.partnerPlatformUrl || ''
                 10&nbsp;%
               </p>
             </div>
-            <div class="rounded-lg border border-[var(--border-subtle)] bg-black/30 px-3 py-3">
+            <div class="rounded-lg border border-[var(--border-color)] bg-[var(--bg-card)] px-3 py-3">
               <p class="font-inter text-[11px] text-[var(--text-secondary)]">
                 {{ t('partners.cta.tracking_label') }}
               </p>

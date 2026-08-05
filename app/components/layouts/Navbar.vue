@@ -143,13 +143,13 @@ const closeMenu = () => isMenuOpen.value = false
     <!-- Logo -->
     <div class="flex items-center shrink-0">
       <NuxtLink to="/" class="flex items-center">
-        <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-[100px] h-auto md:w-[125px] object-contain" />
+        <BrandLogo alt="MC Studio" class="w-[100px] h-auto md:w-[125px] object-contain" />
       </NuxtLink>
     </div>
 
     <!-- Nav desktop -->
     <nav class="hidden lg:flex items-center gap-5 xl:gap-[26px]">
-      <NuxtLink v-for="item in navItems" :key="item.key" :to="`${localePath('/')}#${item.id}`" class="font-inter font-medium text-sm text-white no-underline transition-colors duration-200 hover:text-[#f0bf6c]">{{ t(`nav.${item.key}`) }}</NuxtLink>
+      <NuxtLink v-for="item in navItems" :key="item.key" :to="`${localePath('/')}#${item.id}`" class="font-inter font-medium text-sm text-[var(--text-primary)] no-underline transition-colors duration-200 hover:text-[var(--accent-gold)]">{{ t(`nav.${item.key}`) }}</NuxtLink>
     </nav>
 
     <!-- CTA Desktop -->
@@ -196,8 +196,7 @@ const closeMenu = () => isMenuOpen.value = false
               aria-label="MC Studio — Accueil"
               class="flex h-10 items-center justify-center shrink-0 pl-2 pr-1 md:pl-3 md:pr-2"
             >
-              <NuxtImg
-                src="/img/logo/mc-studio.svg"
+              <BrandLogo
                 alt="MC Studio"
                 class="block w-[82px] h-auto md:w-24 object-contain"
               />

@@ -102,9 +102,9 @@ onUnmounted(() => {
       </h2>
 
       <!-- Testimonial Card -->
-      <div class="w-full max-w-[460px] mx-auto p-6 bg-[#232323] border border-[var(--border-subtle)] rounded-2xl h-[300px] sm:h-[230px] flex flex-col transition-colors duration-300 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:shadow-none" v-if="currentTestimonial">
+      <div class="w-full max-w-[460px] mx-auto p-6 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl h-[300px] sm:h-[230px] flex flex-col transition-colors duration-300 shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:shadow-none" v-if="currentTestimonial">
         <div class="flex flex-col sm:gap-0 gap-4 justify-between h-full">
-          <p class="font-inter text-xs sm:text-sm leading-[1.7] text-white transition-colors duration-300">
+          <p class="font-inter text-xs sm:text-sm leading-[1.7] text-[var(--text-primary)] transition-colors duration-300">
             {{ currentTestimonial.content }}
           </p>
 
@@ -124,14 +124,14 @@ onUnmounted(() => {
       <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-8">
         <div class="flex gap-3">
           <button
-              class="flex items-center justify-center w-11 h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+              class="flex items-center justify-center w-11 h-[42px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
               @click="prevTestimonial"
               aria-label="Avis précédent"
           >
             <UIcon name="i-lucide-chevron-left" />
           </button>
           <button
-              class="flex items-center justify-center w-11 h-[42px] bg-[#232323] border border-[var(--border-subtle)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+              class="flex items-center justify-center w-11 h-[42px] bg-[var(--bg-card)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] cursor-pointer transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
               @click="nextTestimonial"
               aria-label="Avis suivant"
           >

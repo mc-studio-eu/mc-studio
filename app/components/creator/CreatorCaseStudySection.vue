@@ -21,7 +21,7 @@ const { t } = useI18n()
 
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-        <div v-for="(stat, key) in { followers: t('case_study.stats.followers.value'), users: t('case_study.stats.users.value'), conversion: t('case_study.stats.conversion.value') }" :key="key" class="text-center p-6 rounded-2xl bg-[#1a1a1a] border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+        <div v-for="(stat, key) in { followers: t('case_study.stats.followers.value'), users: t('case_study.stats.users.value'), conversion: t('case_study.stats.conversion.value') }" :key="key" class="text-center p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[var(--card-shadow)]">
           <p class="text-3xl sm:text-4xl font-manrope font-bold text-gradient mb-2">{{ stat }}</p>
           <p class="text-sm text-[var(--text-secondary)]">
             {{ key === 'followers' ? t('case_study.stats.followers.label') : key === 'users' ? t('case_study.stats.users.label') : t('case_study.stats.conversion.label') }}
@@ -30,7 +30,7 @@ const { t } = useI18n()
       </div>
 
       <!-- Quote -->
-      <div class="max-w-[700px] mx-auto p-6 sm:p-8 rounded-2xl bg-[#1a1a1a] border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+      <div class="max-w-[700px] mx-auto p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[var(--card-shadow)]">
         <p class="font-inter text-sm sm:text-base leading-relaxed text-white/90 italic mb-6">
           "{{ t('case_study.quote') }}"
         </p>

@@ -9,6 +9,9 @@ html {
 @theme {
   --color-black-light: #232323;
   --color-gold: #F0BF6C;
+  /* Deeper gold, readable as text/icons on the ivory light background */
+  --color-gold-deep: #B08326;
+  --color-ivory: #FFFDF7;
   --degrad-gold: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
   --color-grey: #5D5D5D;
   --color-black: #0F0F0F;
@@ -20,41 +23,53 @@ html {
 }
 
 :root {
-  --ui-primary: var(--color-gold);
+  /* #F0BF6C is too pale on ivory, so light mode drives Nuxt UI off the deep gold */
+  --ui-primary: var(--color-gold-deep);
   --ui-secondary: var(--color-grey);
   --ui-success: var(--color-black);
   --ui-info: var(--color-black);
   --ui-warning: var(--color-black);
   --ui-error: var(--color-black);
 
-  /* Theme colors - Default dark */
-  --bg-primary: #0F0F0F;
-  --bg-secondary: #151515;
-  --bg-card: #232323;
-  --text-primary: #FFFFFF;
-  --text-secondary: #a1a1a1;
-  --text-muted: #6b7280;
-  --border-color: rgba(240, 191, 108, 0.2);
-  --border-subtle: rgba(255, 255, 255, 0.1);
-  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  /* Theme colors - light ("doré clair") is the default, dark is opt-in */
+  --bg-primary: #FFFDF7;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-inverse: #101010;
+  --text-primary: #0F0F0F;
+  --text-secondary: #5A554B;
+  --text-muted: #8A8378;
+  --text-on-inverse: #FFFFFF;
+  --accent-gold: #B08326;
+  --border-color: rgba(176, 131, 38, 0.28);
+  --border-subtle: rgba(15, 15, 15, 0.08);
+  --gold-gradient: linear-gradient(270deg, #B08326 0%, #0F0F0F 62%);
+  --gold-glow: radial-gradient(50% 83% at 50% 0%, rgba(240, 206, 113, 0.32) 0%, rgba(255, 253, 247, 0) 64%, rgba(255, 253, 247, 0) 100%);
+  --card-shadow: 0 1px 2px rgba(15, 15, 15, 0.04), 0 8px 24px rgba(120, 90, 20, 0.06);
 }
 
 .light {
-  --bg-primary: #EEEEF4;
+  --ui-primary: var(--color-gold-deep);
+
+  --bg-primary: #FFFDF7;
   --bg-secondary: #FFFFFF;
   --bg-card: #FFFFFF;
-  --text-primary: #1a1a1a;
-  --text-secondary: #5D5D5D;
-  --text-muted: #6b7280;
-  --border-color: rgba(26, 26, 26, 0.1);
-  --border-subtle: rgba(26, 26, 26, 0.08);
-  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #1a1a1a 67.31%);
-
-  /* Override Tailwind's color variables */
-  --color-black-light: #f5f5f5;
-  --color-white: #1a1a1a;
-  --color-grey-light: #5D5D5D;
+  --bg-inverse: #101010;
+  --text-primary: #0F0F0F;
+  --text-secondary: #5A554B;
+  --text-muted: #8A8378;
+  --text-on-inverse: #FFFFFF;
+  --accent-gold: #B08326;
+  --border-color: rgba(176, 131, 38, 0.28);
+  --border-subtle: rgba(15, 15, 15, 0.08);
+  --gold-gradient: linear-gradient(270deg, #B08326 0%, #0F0F0F 62%);
+  --gold-glow: radial-gradient(50% 83% at 50% 0%, rgba(240, 206, 113, 0.32) 0%, rgba(255, 253, 247, 0) 64%, rgba(255, 253, 247, 0) 100%);
+  --card-shadow: 0 1px 2px rgba(15, 15, 15, 0.04), 0 8px 24px rgba(120, 90, 20, 0.06);
 }
+
+/* NOTE: light mode deliberately does NOT remap Tailwind's --color-white/--color-black-light.
+   Doing so silently inverts every `text-white` and `bg-white`, which broke white-on-dark
+   surfaces such as the footer and the floating navbar. Use the theme vars above instead. */
 
 .dark {
   --ui-primary: var(--color-gold);
@@ -67,12 +82,17 @@ html {
   --bg-primary: #0F0F0F;
   --bg-secondary: #151515;
   --bg-card: #232323;
+  --bg-inverse: #FFFFFF;
   --text-primary: #FFFFFF;
   --text-secondary: #a1a1a1;
   --text-muted: #6b7280;
+  --text-on-inverse: #0F0F0F;
+  --accent-gold: #F0BF6C;
   --border-color: rgba(240, 191, 108, 0.2);
   --border-subtle: rgba(255, 255, 255, 0.1);
   --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  --gold-glow: radial-gradient(50% 83% at 50% 0%, rgba(240, 191, 108, 0.18) 0%, rgba(15, 15, 15, 0) 64%, rgba(15, 15, 15, 0) 100%);
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
 
   --color-black-light: #232323;
   --color-white: #FFFFFF;
@@ -134,10 +154,29 @@ p {
 }
 
 .text-gradient {
-  background: linear-gradient(270deg, #f0bf6c 0%, white 67.308%);
+  background: var(--gold-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Warm ivory-to-gold halo used behind hero and feature sections */
+.gold-glow {
+  background-image: var(--gold-glow);
+}
+
+/* Hero backdrop. Light mode paints an ivory-to-gold wash in CSS; dark mode keeps the
+   bronze raster, which is layered on top of this by the hero components. */
+.hero-backdrop {
+  background-color: var(--bg-primary);
+  background-image:
+    radial-gradient(60% 90% at 50% 0%, rgba(240, 206, 113, 0.40) 0%, rgba(255, 253, 247, 0) 62%),
+    linear-gradient(180deg, #FFFDF7 0%, #FFF6E3 58%, #FFE7B4 100%);
+}
+
+.dark .hero-backdrop {
+  background-color: #0F0F0F;
+  background-image: none;
 }
 
 .cta-primary {
@@ -148,4 +187,19 @@ p {
           0px 9.736px 9.736px 0px rgba(11, 32, 103, 0.05),
           0px 1.391px 2.782px 0px rgba(11, 32, 103, 0.14),
           0px 36.247px 48.329px 0px rgba(0, 0, 0, 0.03);
+}
+
+/* In light mode the gold->white pill washes out on ivory, so the primary CTA
+   becomes a solid ink pill (clickway-style) and gold is kept for accents. */
+.light .cta-primary {
+  background: #0F0F0F;
+  color: #FFFFFF;
+  box-shadow:
+          0px 1px 2px 0px rgba(15, 15, 15, 0.16),
+          0px 8px 20px 0px rgba(120, 90, 20, 0.14),
+          0px 24px 48px 0px rgba(15, 15, 15, 0.06);
+}
+
+.light .cta-primary:hover {
+  background: #232323;
 }

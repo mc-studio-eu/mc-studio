@@ -326,7 +326,17 @@
     "subtitle": "Une sélection de projets où design, code et stratégie se rencontrent.",
     "cta": "Voir le projet",
     "show_more": "Voir plus de projets",
+    "all": "Voir tous les projets",
     "more_tags": "{count} tags supplémentaires",
+    "page": {
+      "title": "Tous nos <span class=\"text-gradient\">projets</span>",
+      "subtitle": "L'ensemble des sites, landing pages et applications conçus et développés par le studio.",
+      "meta_title": "Projets",
+      "meta_description": "Découvrez tous les projets réalisés par MC Studio : sites vitrines, landing pages, SaaS, CRM et applications sur mesure.",
+      "back": "Retour à l'accueil",
+      "count": "{count} projets",
+      "empty": "Aucun projet dans cette catégorie pour le moment."
+    },
     "filters": {
       "aria_label": "Filtrer les projets par type",
       "all": "Tous",
@@ -770,6 +780,638 @@
     "links": {
       "privacy": "Politique de confidentialité",
       "terms": "Conditions générales"
+    }
+  },
+  "landing_offer": {
+    "meta": {
+      "title": "Landing page sur mesure, livrée en 7 jours | MC Studio",
+      "description": "Une landing page premium pensée pour convertir : cadrage de l'offre, copywriting, design UI, intégration, SEO et mise en ligne. Prix fixe 1 290 €, retours illimités."
+    },
+    "nav": {
+      "why": "Pourquoi",
+      "included": "Inclus",
+      "work": "Réalisations",
+      "process": "Process",
+      "pricing": "Tarif",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "badge": "Offre landing page",
+      "title": "Une landing page qui vend votre offre, livrée en 7 jours.",
+      "subtitle": "Cadrage, copywriting, design premium et intégration sur mesure. Un prix fixe, des retours illimités jusqu'à validation, la mise en ligne comprise.",
+      "primary_main": "Réserver un appel",
+      "primary_sub": "Discussion gratuite",
+      "secondary": "Voir le tarif",
+      "facts": {
+        "delay": {
+          "label": "Livraison",
+          "value": "7 jours"
+        },
+        "price": {
+          "label": "Prix fixe",
+          "value": "1 290 €"
+        },
+        "revisions": {
+          "label": "Retours",
+          "value": "Illimités"
+        }
+      },
+      "note": "Studio indépendant · +5 ans d'expérience · Basé en France"
+    },
+    "problem": {
+      "title": "Votre page n'a pas un problème de <span class=\"text-gradient\">trafic</span>",
+      "subtitle": "Le plus souvent, ce qui bloque tient en quatre points : la clarté de l'offre, la structure de la page, la preuve et la mesure.",
+      "items": {
+        "0": {
+          "title": "On ne comprend pas ce que vous vendez",
+          "description": "Le visiteur doit deviner votre offre, votre différence et à qui vous vous adressez. En quelques secondes, il est reparti."
+        },
+        "1": {
+          "title": "La page est jolie, mais elle ne guide pas",
+          "description": "Sans hiérarchie ni parcours, toutes les sections se valent. Il n'y a pas de chemin évident vers le passage à l'action."
+        },
+        "2": {
+          "title": "Rien ne rassure",
+          "description": "Pas de preuve, pas de réponse aux objections, aucun cadre clair sur ce qu'il se passe après le clic."
+        },
+        "3": {
+          "title": "Personne ne mesure rien",
+          "description": "Sans tracking ni objectif de conversion, impossible de savoir ce qui fonctionne — et donc d'améliorer."
+        }
+      }
+    },
+    "benefits": {
+      "label": "Le résultat",
+      "title": "Ce que change une page <span class=\"text-gradient\">bien construite</span>",
+      "subtitle": "Une landing page n'est pas une plaquette. C'est un parcours qui amène une personne intéressée à vous contacter.",
+      "items": {
+        "0": {
+          "title": "Un message clair en 5 secondes",
+          "description": "Une promesse, une cible, une différence. Le visiteur sait immédiatement s'il est au bon endroit."
+        },
+        "1": {
+          "title": "Une image qui vous crédibilise",
+          "description": "Un design premium et cohérent qui vous fait passer pour ce que vous êtes déjà : sérieux."
+        },
+        "2": {
+          "title": "Des demandes qualifiées",
+          "description": "Un parcours pensé pour amener au formulaire ou à la prise de rendez-vous, sans friction."
+        },
+        "3": {
+          "title": "Rapide, sur mobile aussi",
+          "description": "Intégration soignée, performances et responsive vérifiés sur mobile, tablette et desktop."
+        },
+        "4": {
+          "title": "Mesurable dès le premier jour",
+          "description": "Analytics et suivi des conversions installés pour savoir ce qui marche et itérer ensuite."
+        }
+      }
+    },
+    "comparison": {
+      "title": "Agence, freelance, ou <span class=\"text-gradient\">MC Studio</span>",
+      "subtitle": "Trois façons de faire une landing page. Elles ne coûtent ni le même temps, ni le même prix.",
+      "columns": {
+        "criteria": "Critère",
+        "agency": "Agence classique",
+        "freelance": "Freelance",
+        "studio": "MC Studio"
+      },
+      "rows": {
+        "0": {
+          "label": "Délai",
+          "agency": "6 à 10 semaines",
+          "freelance": "Variable, souvent 3 à 6 semaines",
+          "studio": "7 jours"
+        },
+        "1": {
+          "label": "Budget",
+          "agency": "À partir de 5 000 €",
+          "freelance": "600 € à 2 000 €",
+          "studio": "1 290 €, prix fixe"
+        },
+        "2": {
+          "label": "Copywriting",
+          "agency": "Souvent en option",
+          "freelance": "Rarement inclus",
+          "studio": "Inclus : structure et messages"
+        },
+        "3": {
+          "label": "Design",
+          "agency": "Process long, plusieurs interlocuteurs",
+          "freelance": "Dépend du profil",
+          "studio": "Design UI sur mesure sur Figma"
+        },
+        "4": {
+          "label": "Intégration",
+          "agency": "Souvent sous-traitée",
+          "freelance": "Selon les compétences",
+          "studio": "Sur mesure ou no-code, au choix"
+        },
+        "5": {
+          "label": "Retours",
+          "agency": "Limités, facturés au-delà",
+          "freelance": "Variable",
+          "studio": "Illimités jusqu'à validation"
+        },
+        "6": {
+          "label": "Échanges",
+          "agency": "Réunions et comptes rendus",
+          "freelance": "Souvent flou",
+          "studio": "Canal WhatsApp direct + Notion"
+        }
+      }
+    },
+    "included": {
+      "title": "Tout ce qui est <span class=\"text-gradient\">inclus</span>",
+      "subtitle": "Une offre complète, du cadrage de votre offre jusqu'à la mise en ligne. Rien à ajouter en cours de route.",
+      "groups": {
+        "0": {
+          "title": "Stratégie & contenu",
+          "items": {
+            "0": "Analyse de l'offre, de la cible et des objections",
+            "1": "Étude des concurrents et des angles possibles",
+            "2": "Architecture de la page : sections et parcours",
+            "3": "Copywriting structurel : accroches, preuves, appels à l'action"
+          }
+        },
+        "1": {
+          "title": "Design",
+          "items": {
+            "0": "Direction artistique et identité visuelle appliquée",
+            "1": "Design UI premium sur Figma, desktop et mobile",
+            "2": "Animations et micro-interactions",
+            "3": "Retours illimités jusqu'à validation"
+          }
+        },
+        "2": {
+          "title": "Développement",
+          "items": {
+            "0": "Intégration front sur mesure ou no-code",
+            "1": "Responsive mobile, tablette et desktop",
+            "2": "Performances et bonnes pratiques techniques",
+            "3": "Formulaire de contact ou prise de rendez-vous"
+          }
+        },
+        "3": {
+          "title": "Lancement",
+          "items": {
+            "0": "SEO technique : balises, structure, vitesse",
+            "1": "Google Analytics et suivi des conversions",
+            "2": "Mise en ligne sur votre nom de domaine",
+            "3": "Vérification qualité sur tous les écrans"
+          }
+        }
+      }
+    },
+    "work": {
+      "title": "Des pages déjà <span class=\"text-gradient\">en ligne</span>",
+      "subtitle": "Quelques landing pages et sites conçus et développés par le studio.",
+      "cta": "Voir le projet",
+      "all": "Voir tous les projets"
+    },
+    "process": {
+      "title": "7 jours, <span class=\"text-gradient\">4 étapes</span>",
+      "subtitle": "Un déroulé cadré, sans réunion inutile. Vous validez à chaque étape.",
+      "note": "Le délai démarre à la validation du brief et à la réception de vos contenus.",
+      "steps": {
+        "0": {
+          "day": "Jour 0",
+          "title": "Appel de cadrage",
+          "description": "30 minutes pour comprendre votre offre, votre cible et votre objectif. Vous repartez avec le brief, le périmètre et le planning."
+        },
+        "1": {
+          "day": "Jours 1 – 2",
+          "title": "Structure & copywriting",
+          "description": "On écrit l'architecture de la page et les messages : accroche, bénéfices, preuves, objections, appels à l'action. Vous validez avant le design."
+        },
+        "2": {
+          "day": "Jours 3 – 5",
+          "title": "Design UI",
+          "description": "Maquettes haute fidélité sur Figma, desktop et mobile. On itère jusqu'à ce que la page vous ressemble vraiment."
+        },
+        "3": {
+          "day": "Jours 6 – 7",
+          "title": "Intégration & mise en ligne",
+          "description": "Intégration, responsive, SEO technique, tracking, vérification qualité sur tous les écrans, puis mise en ligne sur votre domaine."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Un prix fixe, <span class=\"text-gradient\">annoncé à l'avance</span>",
+      "subtitle": "Le périmètre est confirmé avant de démarrer. Pas de rallonge en cours de route.",
+      "badge": "Offre la plus demandée",
+      "price_note": "HT, forfait fixe",
+      "description": "Une page sur mesure pensée pour présenter votre offre et générer des demandes.",
+      "cta": "Créer ma landing page",
+      "secondary_cta": "Réserver un appel de cadrage",
+      "alternatives_title": "Un autre besoin ?",
+      "alternatives": {
+        "0": {
+          "title": "Site 5 pages",
+          "price": "2 390 €",
+          "description": "Un site vitrine complet pour présenter votre activité et vos services."
+        },
+        "1": {
+          "title": "Produit sur mesure",
+          "price": "Sur devis",
+          "description": "CRM, SaaS, application web ou mobile : périmètre étudié avec vous."
+        }
+      }
+    },
+    "guarantee": {
+      "title": "Sans risque de <span class=\"text-gradient\">votre côté</span>",
+      "subtitle": "Trois engagements simples, valables sur chaque projet.",
+      "items": {
+        "0": {
+          "title": "Retours illimités",
+          "description": "On itère sur le design et les contenus jusqu'à ce que la page soit validée par vous."
+        },
+        "1": {
+          "title": "Périmètre et prix fixés",
+          "description": "Le devis est arrêté avant le démarrage. Pas de surprise ni de ligne supplémentaire en cours de projet."
+        },
+        "2": {
+          "title": "Vous êtes propriétaire",
+          "description": "Fichiers sources, code, nom de domaine et accès : tout vous appartient à la livraison."
+        }
+      }
+    },
+    "faq": {
+      "title": "Questions <span class=\"text-gradient\">fréquentes</span>",
+      "subtitle": "Tout ce qu'on nous demande avant de démarrer une landing page.",
+      "items": {
+        "0": {
+          "question": "Je n'ai pas de textes ni de contenu, c'est bloquant ?",
+          "answer": "Non. Le copywriting structurel est inclus : on écrit l'accroche, les bénéfices, les preuves et les appels à l'action à partir de l'appel de cadrage. On vous demande seulement vos éléments factuels : offre, tarifs, références, photos si vous en avez."
+        },
+        "1": {
+          "question": "7 jours, vraiment ?",
+          "answer": "Oui, à condition que le brief soit validé et vos contenus reçus au démarrage. Le délai court à partir de là. Si vos retours prennent plus de temps, le planning se décale d'autant — on vous prévient toujours en amont."
+        },
+        "2": {
+          "question": "Sur quelle technologie la page est-elle construite ?",
+          "answer": "Deux options selon votre besoin. Du code sur mesure (Nuxt / Next.js) pour la performance et le sur-mesure, ou une solution no-code si vous voulez pouvoir modifier la page vous-même facilement. On en décide ensemble pendant l'appel de cadrage."
+        },
+        "3": {
+          "question": "Est-ce que je pourrai modifier la page moi-même ?",
+          "answer": "Oui. En no-code, vous éditez directement. En sur-mesure, on peut brancher un CMS pour les contenus que vous souhaitez gérer. C'est à préciser au cadrage, pour que ce soit prévu dès le design."
+        },
+        "4": {
+          "question": "L'hébergement et le nom de domaine sont-ils compris ?",
+          "answer": "La mise en ligne est comprise. L'hébergement et le nom de domaine restent à votre nom : vous en gardez la propriété et le contrôle. Les coûts sont faibles et on vous accompagne pour les mettre en place."
+        },
+        "5": {
+          "question": "Et le SEO ?",
+          "answer": "Le SEO technique est inclus : structure des balises, contenus hiérarchisés, vitesse, responsive, sitemap. Une stratégie de référencement complète (mots-clés, contenus, netlinking) est un travail continu qui se traite à part."
+        },
+        "6": {
+          "question": "Combien de retours puis-je demander ?",
+          "answer": "Autant que nécessaire jusqu'à validation de la page. En pratique, deux à trois séries de retours suffisent parce que la structure et les messages sont validés avant le design."
+        },
+        "7": {
+          "question": "Comment se passe le paiement ?",
+          "answer": "50 % au démarrage pour bloquer le créneau, 50 % à la livraison avant la mise en ligne. Facture et devis détaillés fournis, paiement par virement."
+        }
+      }
+    },
+    "final": {
+      "title": "Prêt à lancer votre landing page ?",
+      "subtitle": "Un appel de 20 minutes suffit pour cadrer votre offre et savoir si on est le bon partenaire.",
+      "primary": "Réserver un appel",
+      "secondary": "Écrire sur WhatsApp"
+    }
+  },
+  "crm_offer": {
+    "meta": {
+      "title": "CRM sur mesure pour votre équipe | MC Studio",
+      "description": "Un CRM développé sur mesure autour de vos process : cadrage, design, développement, reprise de données et mise en production. Devis fixe après cadrage, code et données à vous."
+    },
+    "nav": {
+      "why": "Pourquoi",
+      "included": "Inclus",
+      "work": "Réalisations",
+      "process": "Process",
+      "pricing": "Tarif",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "badge": "Offre CRM sur mesure",
+      "title": "Un CRM taillé pour votre métier, pas l'inverse.",
+      "subtitle": "On part de vos process réels : cadrage, modélisation, design d'interface, développement sur mesure et reprise de vos données. Un outil que votre équipe utilise vraiment, dont vous gardez le code.",
+      "primary_main": "Réserver un appel",
+      "primary_sub": "Cadrage gratuit",
+      "secondary": "Voir le déroulé",
+      "facts": {
+        "audit": {
+          "label": "Cadrage",
+          "value": "Offert"
+        },
+        "delay": {
+          "label": "V1 en production",
+          "value": "4 à 8 semaines"
+        },
+        "ownership": {
+          "label": "Code & données",
+          "value": "À vous"
+        }
+      },
+      "note": "Studio indépendant · +5 ans d'expérience · Basé en France"
+    },
+    "problem": {
+      "title": "Le problème n'est pas votre <span class=\"text-gradient\">équipe</span>",
+      "subtitle": "Quand un CRM n'est pas utilisé, c'est presque toujours pour l'une de ces quatre raisons.",
+      "items": {
+        "0": {
+          "title": "Vous payez pour 80 % de fonctions inutiles",
+          "description": "Un abonnement par utilisateur, par mois, pour un outil dont vos équipes n'utilisent qu'une poignée d'écrans. La facture monte avec l'effectif, pas avec la valeur."
+        },
+        "1": {
+          "title": "Votre métier ne rentre pas dans les cases",
+          "description": "Chantiers, tournées, dossiers, commissions, statuts maison : on finit par plier le process à l'outil, avec des champs détournés que personne ne remplit correctement."
+        },
+        "2": {
+          "title": "La vérité est encore dans des fichiers Excel",
+          "description": "Un tableur par personne, des versions qui divergent, des relances oubliées. Les données existent, mais elles ne sont ni fiables ni partagées."
+        },
+        "3": {
+          "title": "Personne ne sait où en est un dossier",
+          "description": "Il faut demander, chercher dans les mails, appeler. Sans vue commune et sans historique, le suivi repose sur la mémoire de chacun."
+        }
+      }
+    },
+    "benefits": {
+      "label": "Le résultat",
+      "title": "Ce que change un outil <span class=\"text-gradient\">fait pour vous</span>",
+      "subtitle": "Un CRM sur mesure n'est pas un logiciel de plus. C'est votre façon de travailler, mise à l'écran et partagée par toute l'équipe.",
+      "items": {
+        "0": {
+          "title": "Vos process, tels qu'ils sont",
+          "description": "Vos statuts, vos étapes, votre vocabulaire. L'outil suit votre organisation au lieu de vous imposer la sienne."
+        },
+        "1": {
+          "title": "Une seule source de vérité",
+          "description": "Clients, dossiers, documents et historique au même endroit, accessibles selon les rôles de chacun."
+        },
+        "2": {
+          "title": "Moins de saisie, plus de suivi",
+          "description": "Relances, rappels, documents et exports automatisés : le temps administratif repart vers le terrain."
+        },
+        "3": {
+          "title": "Utilisable sur le terrain",
+          "description": "Interface pensée mobile et tablette pour les équipes qui ne sont pas derrière un bureau."
+        },
+        "4": {
+          "title": "Un pilotage chiffré",
+          "description": "Tableaux de bord, volumes, délais et taux de conversion pour décider sur des chiffres plutôt qu'au ressenti."
+        }
+      }
+    },
+    "comparison": {
+      "title": "CRM du marché, no-code, ou <span class=\"text-gradient\">sur mesure</span>",
+      "subtitle": "Trois façons d'équiper une équipe. Elles n'ont ni le même coût dans le temps, ni la même durée de vie.",
+      "columns": {
+        "criteria": "Critère",
+        "saas": "CRM du marché",
+        "nocode": "No-code / tableur",
+        "studio": "MC Studio"
+      },
+      "rows": {
+        "0": {
+          "label": "Adéquation au métier",
+          "saas": "Vous adaptez le process à l'outil",
+          "nocode": "Correct au début, limité ensuite",
+          "studio": "Construit à partir de vos process"
+        },
+        "1": {
+          "label": "Coût dans le temps",
+          "saas": "Abonnement par utilisateur, à vie",
+          "nocode": "Faible au départ, grimpe avec le volume",
+          "studio": "Investissement unique, hébergement maîtrisé"
+        },
+        "2": {
+          "label": "Mise en place",
+          "saas": "Paramétrage long, souvent un intégrateur",
+          "nocode": "Rapide, mais bricolée avec le temps",
+          "studio": "Cadrage puis livraison par lots"
+        },
+        "3": {
+          "label": "Vos données",
+          "saas": "Chez l'éditeur, export limité",
+          "nocode": "Dispersées entre plusieurs outils",
+          "studio": "Base à vous, hébergement en Europe"
+        },
+        "4": {
+          "label": "Automatisations",
+          "saas": "Réservées aux forfaits supérieurs",
+          "nocode": "Quotas et limites d'exécution",
+          "studio": "Écrites pour vos cas réels"
+        },
+        "5": {
+          "label": "Évolutions",
+          "saas": "Vous attendez la roadmap de l'éditeur",
+          "nocode": "Vous refaites, vous ne capitalisez pas",
+          "studio": "Nouveaux modules quand vous en avez besoin"
+        },
+        "6": {
+          "label": "Échanges",
+          "saas": "Support par tickets",
+          "nocode": "Vous vous débrouillez",
+          "studio": "Canal WhatsApp direct + Notion"
+        }
+      }
+    },
+    "included": {
+      "title": "Tout ce qui est <span class=\"text-gradient\">inclus</span>",
+      "subtitle": "Du premier atelier jusqu'à la mise en production avec vos équipes. Le périmètre est écrit avant de démarrer.",
+      "groups": {
+        "0": {
+          "title": "Cadrage & process",
+          "items": {
+            "0": "Ateliers avec les personnes qui utiliseront l'outil",
+            "1": "Cartographie de vos process et de vos statuts",
+            "2": "Modèle de données : entités, rôles et permissions",
+            "3": "Périmètre de la V1 et planning écrits"
+          }
+        },
+        "1": {
+          "title": "Design & expérience",
+          "items": {
+            "0": "Maquettes Figma des écrans clés, desktop et mobile",
+            "1": "Parcours pensés pour la saisie rapide au quotidien",
+            "2": "Design system réutilisable pour les futurs modules",
+            "3": "Retours illimités jusqu'à validation des maquettes"
+          }
+        },
+        "2": {
+          "title": "Développement",
+          "items": {
+            "0": "Application web sur mesure, responsive mobile et tablette",
+            "1": "Authentification, rôles et droits par profil",
+            "2": "Automatisations : relances, notifications, documents",
+            "3": "Intégrations : mail, agenda, facturation, API existantes"
+          }
+        },
+        "3": {
+          "title": "Mise en production & suivi",
+          "items": {
+            "0": "Reprise et nettoyage de vos données existantes",
+            "1": "Hébergement en Europe, sauvegardes et RGPD",
+            "2": "Formation des équipes et documentation d'usage",
+            "3": "30 jours de corrections incluses après la mise en ligne"
+          }
+        }
+      }
+    },
+    "work": {
+      "title": "Des outils déjà <span class=\"text-gradient\">en production</span>",
+      "subtitle": "Quelques CRM et applications métier conçus et développés par le studio.",
+      "cta": "Voir le projet",
+      "all": "Voir tous les projets"
+    },
+    "process": {
+      "title": "4 étapes, <span class=\"text-gradient\">livrées par lots</span>",
+      "subtitle": "Vous voyez l'outil tourner très tôt, puis à chaque lot. Pas d'effet tunnel.",
+      "note": "Le périmètre exact et le planning sont arrêtés à l'issue du cadrage, avant tout engagement.",
+      "steps": {
+        "0": {
+          "day": "Semaine 0",
+          "title": "Audit & cadrage",
+          "description": "On passe en revue vos process, vos outils actuels et vos irritants avec les personnes concernées. Vous repartez avec le modèle de données, le périmètre de la V1, le planning et le devis."
+        },
+        "1": {
+          "day": "Semaines 1 – 2",
+          "title": "Modélisation & maquettes",
+          "description": "Écrans clés maquettés sur Figma, parcours de saisie validés avec les futurs utilisateurs. On corrige sur la maquette, pas sur le code."
+        },
+        "2": {
+          "day": "Semaines 3 – 6",
+          "title": "Développement par lots",
+          "description": "Chaque lot est livré sur un environnement de test : vous cliquez dedans, vous commentez, on ajuste avant de passer au suivant."
+        },
+        "3": {
+          "day": "Semaines 7 – 8",
+          "title": "Reprise des données & mise en production",
+          "description": "Import de vos données existantes, réglages des droits, formation des équipes, mise en ligne et 30 jours de corrections incluses."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Un devis fixe, <span class=\"text-gradient\">après le cadrage</span>",
+      "subtitle": "Un CRM sur mesure ne se vend pas au forfait avant d'avoir vu vos process. On chiffre après l'audit, avec un périmètre écrit — et le prix ne bouge plus.",
+      "badge": "Sur mesure",
+      "plan_title": "CRM sur mesure",
+      "price_note": "Devis fixe après cadrage",
+      "note": "Le devis est établi après le cadrage, hors taxes. Le périmètre est confirmé par écrit avant le démarrage.",
+      "description": "Une application métier construite autour de votre organisation, de vos rôles et de vos données.",
+      "delay_value": "4 à 8 semaines",
+      "cta": "Demander un devis",
+      "secondary_cta": "Réserver un appel de cadrage",
+      "features": {
+        "0": "Ateliers de cadrage et cartographie des process",
+        "1": "Modèle de données, rôles et permissions",
+        "2": "Design UI sur mesure sur Figma",
+        "3": "Application web responsive, mobile et tablette",
+        "4": "Automatisations et notifications",
+        "5": "Intégrations avec vos outils existants",
+        "6": "Reprise de vos données existantes",
+        "7": "Hébergement en Europe et sauvegardes",
+        "8": "Formation des équipes et documentation",
+        "9": "30 jours de corrections après mise en ligne"
+      },
+      "factors_title": "Ce qui fait varier le prix",
+      "factors": {
+        "0": {
+          "title": "Le nombre de modules",
+          "description": "Prospection, planning, interventions, facturation : chaque brique ajoute du périmètre."
+        },
+        "1": {
+          "title": "Les intégrations",
+          "description": "Se brancher sur un logiciel de facturation, une API métier ou une téléphonie demande du travail spécifique."
+        },
+        "2": {
+          "title": "Les rôles et les droits",
+          "description": "Plus il y a de profils avec des vues et des permissions différentes, plus la logique est fine."
+        },
+        "3": {
+          "title": "La reprise de données",
+          "description": "L'état de vos fichiers actuels détermine le travail de nettoyage et d'import."
+        }
+      },
+      "alternatives_title": "Un autre besoin ?",
+      "alternatives": {
+        "0": {
+          "title": "Landing page",
+          "price": "1 290 €",
+          "description": "Une page sur mesure pensée pour présenter votre offre et générer des demandes."
+        },
+        "1": {
+          "title": "Site 5 pages",
+          "price": "2 390 €",
+          "description": "Un site vitrine complet pour présenter votre activité et vos services."
+        }
+      }
+    },
+    "guarantee": {
+      "title": "Sans risque de <span class=\"text-gradient\">votre côté</span>",
+      "subtitle": "Trois engagements simples, valables sur chaque projet.",
+      "items": {
+        "0": {
+          "title": "Périmètre écrit avant devis",
+          "description": "Le cadrage donne un document clair : ce qui est dans la V1, ce qui attend la suite, et à quel prix. Le devis est arrêté avant le démarrage."
+        },
+        "1": {
+          "title": "Livré par lots, jamais en tunnel",
+          "description": "Vous testez chaque lot sur un environnement dédié. Les écarts se voient en cours de route, pas à la livraison."
+        },
+        "2": {
+          "title": "Vous êtes propriétaire",
+          "description": "Code source, base de données, hébergement et accès : tout est à votre nom. Vous pouvez reprendre le projet avec qui vous voulez."
+        }
+      }
+    },
+    "faq": {
+      "title": "Questions <span class=\"text-gradient\">fréquentes</span>",
+      "subtitle": "Tout ce qu'on nous demande avant de démarrer un CRM sur mesure.",
+      "items": {
+        "0": {
+          "question": "Combien coûte un CRM sur mesure ?",
+          "answer": "Le prix dépend du nombre de modules, des intégrations et de la complexité des droits. C'est pour ça qu'on ne donne pas de forfait avant l'audit. Le cadrage est offert et débouche sur un devis fixe : vous savez exactement ce que vous payez avant de vous engager."
+        },
+        "1": {
+          "question": "Pourquoi payer un développement plutôt qu'un abonnement ?",
+          "answer": "Un abonnement par utilisateur coûte de plus en plus cher à mesure que l'équipe grandit, et vous ne possédez rien. Un outil sur mesure est un investissement unique : au-delà d'un certain effectif ou d'un certain niveau de spécificité métier, il devient plus rentable et il vous appartient."
+        },
+        "2": {
+          "question": "Combien de temps avant d'avoir une version utilisable ?",
+          "answer": "En général 4 à 8 semaines pour une V1 en production, selon le périmètre. Vous voyez l'outil tourner bien avant : chaque lot est livré sur un environnement de test au fil du développement."
+        },
+        "3": {
+          "question": "Peut-on récupérer nos données actuelles ?",
+          "answer": "Oui. Excel, Google Sheets, export d'un ancien CRM : on analyse vos fichiers, on nettoie les doublons et on importe. La qualité des fichiers de départ détermine la charge de travail, c'est une des choses qu'on regarde pendant le cadrage."
+        },
+        "4": {
+          "question": "Où sont hébergées les données ?",
+          "answer": "Sur un hébergement en Europe, avec sauvegardes automatiques et conformité RGPD. La base est à votre nom : vous gardez la propriété et l'accès complet à vos données."
+        },
+        "5": {
+          "question": "Peut-on le connecter à nos outils existants ?",
+          "answer": "Oui, dans la mesure où ils exposent une API : facturation, comptabilité, mail, agenda, signature électronique, téléphonie. On liste les connexions nécessaires au cadrage pour les intégrer au devis."
+        },
+        "6": {
+          "question": "Et une fois livré, qui fait évoluer l'outil ?",
+          "answer": "30 jours de corrections sont inclus après la mise en ligne. Ensuite, deux options : des évolutions à la demande, chiffrées au cas par cas, ou un forfait mensuel de maintenance et d'améliorations continues."
+        },
+        "7": {
+          "question": "Est-ce que ça marche sur mobile ?",
+          "answer": "Oui. L'application est responsive et pensée pour les équipes terrain dès les maquettes. Si l'usage le justifie vraiment (mode hors ligne, notifications natives, photo), on peut aussi étudier une application mobile dédiée."
+        }
+      }
+    },
+    "final": {
+      "title": "Prêt à sortir vos process d'Excel ?",
+      "subtitle": "Un appel de 30 minutes suffit pour comprendre votre organisation et vous dire si un outil sur mesure a du sens chez vous.",
+      "primary": "Réserver un appel",
+      "secondary": "Écrire sur WhatsApp"
     }
   }
 }

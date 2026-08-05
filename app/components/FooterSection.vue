@@ -14,7 +14,7 @@ const { t } = useI18n()
           <!-- Brand Column -->
           <div class="md:col-span-5">
             <div class="flex items-center mb-6">
-              <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio Logo" class="w-[100px] h-auto" />
+              <BrandLogo on-dark alt="MC Studio Logo" class="w-[100px] h-auto" />
             </div>
             <p class="font-inter text-[15px] text-white/60 leading-relaxed max-w-[340px]">
               {{ t('footer.tagline') }}
@@ -56,7 +56,7 @@ const { t } = useI18n()
       <!-- Bottom Bar -->
       <div class="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p class="font-inter text-xs text-white/40">&copy; {{ new Date().getFullYear() }} {{ t('footer.copyright') }}</p>
-        <div class="flex items-center gap-6">
+        <div class="footer-legal flex items-center gap-6">
           <NuxtLink :to="localePath('/privacy')" class="font-inter text-xs text-white/40 hover:text-white/70 transition-colors no-underline">{{ $t('legal.links.privacy') }}</NuxtLink>
           <NuxtLink :to="localePath('/terms')" class="font-inter text-xs text-white/40 hover:text-white/70 transition-colors no-underline">{{ $t('legal.links.terms') }}</NuxtLink>
         </div>
@@ -64,3 +64,23 @@ const { t } = useI18n()
     </div>
   </footer>
 </template>
+
+<style scoped>
+/* The footer sits on ink in both themes. Some anchors here fall back to the UA link
+   colour instead of picking up their text-white utility, so pin the palette directly. */
+footer :deep(a) {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+footer :deep(a:hover) {
+  color: #ffffff;
+}
+
+footer :deep(.footer-legal a) {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+footer :deep(.footer-legal a:hover) {
+  color: rgba(255, 255, 255, 0.7);
+}
+</style>

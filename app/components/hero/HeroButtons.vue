@@ -44,7 +44,7 @@ useTextSlideAnimation(secondaryBtn, secondaryWrapper)
       ref="secondaryBtn"
       href="https://api.whatsapp.com/send/?phone=%2B33781724683&text&type=phone_number&app_absent=0" 
       target="_blank" 
-      class="secondary-btn group flex items-center justify-center gap-2.5 px-5 py-2.5 rounded-xl font-medium text-sm text-[#f0eadb] cursor-pointer transition-all duration-300 no-underline"
+      class="secondary-btn group flex items-center justify-center gap-2.5 px-5 py-2.5 rounded-xl font-medium text-sm text-[var(--text-primary)] bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[var(--card-shadow)] cursor-pointer transition-all duration-300 no-underline hover:brightness-95"
     >
       <span class="text-slide-container h-[20px]">
         <span ref="secondaryWrapper" class="text-slide-wrapper">

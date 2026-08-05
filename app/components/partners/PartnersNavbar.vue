@@ -29,8 +29,7 @@ const partnerNavItems = [
     <!-- Logo -->
     <div class="flex items-center shrink-0">
       <NuxtLink to="/" class="flex items-center">
-        <NuxtImg
-          src="/img/logo/mc-studio.svg"
+        <BrandLogo
           alt="MC Studio"
           class="w-[100px] h-auto md:w-[125px] object-contain"
         />
@@ -43,7 +42,7 @@ const partnerNavItems = [
         v-for="item in partnerNavItems"
         :key="item.label"
         :href="item.href"
-        class="font-inter font-medium text-sm text-white no-underline transition-colors duration-200 hover:text-[#f0bf6c]"
+        class="font-inter font-medium text-sm text-[var(--text-primary)] no-underline transition-colors duration-200 hover:text-[var(--accent-gold)]"
       >
         {{ item.label }}
       </a>

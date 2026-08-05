@@ -311,7 +311,7 @@ useSeoMeta({
             v-if="projectTestimonial"
             class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
           >
-            <div class="flex w-full flex-col gap-6 rounded-2xl border border-[var(--border-subtle)] bg-[#232323] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-colors duration-300 dark:shadow-none">
+            <div class="flex w-full flex-col gap-6 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-colors duration-300 dark:shadow-none">
               <p class="m-0 whitespace-pre-line font-inter text-xs leading-[1.7] text-white transition-colors duration-300 sm:text-sm">
                 {{ projectTestimonial.review }}
               </p>

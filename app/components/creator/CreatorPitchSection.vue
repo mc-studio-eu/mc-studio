@@ -19,7 +19,7 @@ const blocks = computed(() => {
 
       <!-- Blocks -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-        <div v-for="(block, index) in blocks" :key="index" class="p-6 sm:p-8 rounded-2xl bg-[#1a1a1a] border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-[#f0bf6c]/30">
+        <div v-for="(block, index) in blocks" :key="index" class="p-6 sm:p-8 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[var(--card-shadow)] transition-all duration-300 hover:border-[#f0bf6c]/30">
           <div class="w-10 h-10 rounded-xl bg-[#f0bf6c]/10 flex items-center justify-center mb-5">
             <span class="text-[#f0bf6c] font-manrope font-bold text-lg">{{ index + 1 }}</span>
           </div>

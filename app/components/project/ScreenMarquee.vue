@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const screenProject = [
+const defaultScreens = [
   '/img/project/alertes-infos.png',
   '/img/project/arises-saas.png',
   '/img/project/hero-raenergy.png',
@@ -10,6 +10,13 @@ const screenProject = [
   '/img/project/arises-login.png',
   '/img/project/arises-before-after.png',
 ]
+
+// Offer pages pass their own set so the marquee shows work matching the offer.
+// The default lives in the fallback rather than in `withDefaults`, which cannot
+// reference a variable declared inside `<script setup>`.
+const props = defineProps<{ screens?: string[] }>()
+
+const screenProject = computed(() => props.screens ?? defaultScreens)
 </script>
 
 <template>

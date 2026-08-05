@@ -1,4 +1,9 @@
 <script setup lang="ts">
+// Offer pages preselect their own project type so visitors don't re-pick it
+const props = withDefaults(defineProps<{ defaultProjectType?: string }>(), {
+  defaultProjectType: ''
+})
+
 const { t } = useI18n();
 const ctaSubtitle = computed(() => t('cta.subtitle'));
 const activeContactMethod = ref<'form' | 'calendar'>('form')
@@ -14,7 +19,7 @@ const form = reactive({
   email: '',
   phone: '',
   company: '',
-  projectType: '',
+  projectType: props.defaultProjectType,
   message: '',
   website: ''
 })
@@ -38,7 +43,7 @@ const submitContact = async () => {
       email: '',
       phone: '',
       company: '',
-      projectType: '',
+      projectType: props.defaultProjectType,
       message: '',
       website: ''
     })

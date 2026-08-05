@@ -326,7 +326,17 @@
     "subtitle": "A selection of projects where design, code and strategy meet.",
     "cta": "View project",
     "show_more": "View more projects",
+    "all": "View all projects",
     "more_tags": "{count} more tags",
+    "page": {
+      "title": "All our <span class=\"text-gradient\">projects</span>",
+      "subtitle": "Every website, landing page and application designed and built by the studio.",
+      "meta_title": "Projects",
+      "meta_description": "Browse all the projects delivered by MC Studio: websites, landing pages, SaaS, CRMs and custom applications.",
+      "back": "Back to home",
+      "count": "{count} projects",
+      "empty": "No project in this category yet."
+    },
     "filters": {
       "aria_label": "Filter projects by type",
       "all": "All",
@@ -770,6 +780,638 @@
     "links": {
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
+    }
+  },
+  "landing_offer": {
+    "meta": {
+      "title": "Custom landing page, delivered in 7 days | MC Studio",
+      "description": "A premium landing page built to convert: offer framing, copywriting, UI design, front-end build, SEO and launch. Fixed price €1,290, unlimited revisions."
+    },
+    "nav": {
+      "why": "Why",
+      "included": "Included",
+      "work": "Work",
+      "process": "Process",
+      "pricing": "Pricing",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "badge": "Landing page offer",
+      "title": "A landing page that sells your offer, delivered in 7 days.",
+      "subtitle": "Framing, copywriting, premium design and a custom build. One fixed price, unlimited revisions until you sign off, launch included.",
+      "primary_main": "Book a call",
+      "primary_sub": "Free discussion",
+      "secondary": "See pricing",
+      "facts": {
+        "delay": {
+          "label": "Delivery",
+          "value": "7 days"
+        },
+        "price": {
+          "label": "Fixed price",
+          "value": "€1,290"
+        },
+        "revisions": {
+          "label": "Revisions",
+          "value": "Unlimited"
+        }
+      },
+      "note": "Independent studio · 5+ years of experience · Based in France"
+    },
+    "problem": {
+      "title": "Your page doesn't have a <span class=\"text-gradient\">traffic</span> problem",
+      "subtitle": "Most of the time it comes down to four things: how clear the offer is, how the page is structured, the proof, and the measurement.",
+      "items": {
+        "0": {
+          "title": "Nobody understands what you sell",
+          "description": "Visitors have to guess your offer, your edge and who it's for. A few seconds later, they're gone."
+        },
+        "1": {
+          "title": "The page looks good but leads nowhere",
+          "description": "With no hierarchy and no journey, every section weighs the same. There is no obvious path to taking action."
+        },
+        "2": {
+          "title": "Nothing reassures",
+          "description": "No proof, no answers to objections, no clear picture of what happens after the click."
+        },
+        "3": {
+          "title": "Nothing is measured",
+          "description": "Without tracking or a conversion goal, there is no way to know what works — and therefore no way to improve."
+        }
+      }
+    },
+    "benefits": {
+      "label": "The outcome",
+      "title": "What a <span class=\"text-gradient\">well-built page</span> changes",
+      "subtitle": "A landing page isn't a brochure. It's a journey that takes an interested person all the way to contacting you.",
+      "items": {
+        "0": {
+          "title": "A clear message in 5 seconds",
+          "description": "One promise, one audience, one difference. Visitors instantly know whether they're in the right place."
+        },
+        "1": {
+          "title": "A look that earns trust",
+          "description": "Premium, consistent design that makes you look like what you already are: serious."
+        },
+        "2": {
+          "title": "Qualified enquiries",
+          "description": "A journey designed to lead to the form or the booking link, with no friction."
+        },
+        "3": {
+          "title": "Fast, on mobile too",
+          "description": "Careful build, performance and responsiveness checked on mobile, tablet and desktop."
+        },
+        "4": {
+          "title": "Measurable from day one",
+          "description": "Analytics and conversion tracking installed so you know what works and can iterate afterwards."
+        }
+      }
+    },
+    "comparison": {
+      "title": "Agency, freelancer, or <span class=\"text-gradient\">MC Studio</span>",
+      "subtitle": "Three ways to get a landing page. They don't cost the same time or the same money.",
+      "columns": {
+        "criteria": "Criteria",
+        "agency": "Traditional agency",
+        "freelance": "Freelancer",
+        "studio": "MC Studio"
+      },
+      "rows": {
+        "0": {
+          "label": "Timeline",
+          "agency": "6 to 10 weeks",
+          "freelance": "Varies, often 3 to 6 weeks",
+          "studio": "7 days"
+        },
+        "1": {
+          "label": "Budget",
+          "agency": "From €5,000",
+          "freelance": "€600 to €2,000",
+          "studio": "€1,290, fixed price"
+        },
+        "2": {
+          "label": "Copywriting",
+          "agency": "Usually an add-on",
+          "freelance": "Rarely included",
+          "studio": "Included: structure and messaging"
+        },
+        "3": {
+          "label": "Design",
+          "agency": "Long process, many stakeholders",
+          "freelance": "Depends on the profile",
+          "studio": "Custom UI design in Figma"
+        },
+        "4": {
+          "label": "Build",
+          "agency": "Often subcontracted",
+          "freelance": "Depends on their skills",
+          "studio": "Custom code or no-code, your call"
+        },
+        "5": {
+          "label": "Revisions",
+          "agency": "Capped, billed beyond that",
+          "freelance": "Varies",
+          "studio": "Unlimited until sign-off"
+        },
+        "6": {
+          "label": "Communication",
+          "agency": "Meetings and status reports",
+          "freelance": "Often unclear",
+          "studio": "Direct WhatsApp channel + Notion"
+        }
+      }
+    },
+    "included": {
+      "title": "Everything that's <span class=\"text-gradient\">included</span>",
+      "subtitle": "One complete offer, from framing your proposition to going live. Nothing to add along the way.",
+      "groups": {
+        "0": {
+          "title": "Strategy & content",
+          "items": {
+            "0": "Analysis of the offer, the audience and the objections",
+            "1": "Competitor review and possible angles",
+            "2": "Page architecture: sections and journey",
+            "3": "Structural copywriting: hooks, proof, calls to action"
+          }
+        },
+        "1": {
+          "title": "Design",
+          "items": {
+            "0": "Art direction and visual identity applied",
+            "1": "Premium UI design in Figma, desktop and mobile",
+            "2": "Animations and micro-interactions",
+            "3": "Unlimited revisions until sign-off"
+          }
+        },
+        "2": {
+          "title": "Development",
+          "items": {
+            "0": "Custom front-end build or no-code",
+            "1": "Responsive on mobile, tablet and desktop",
+            "2": "Performance and technical best practices",
+            "3": "Contact form or booking link"
+          }
+        },
+        "3": {
+          "title": "Launch",
+          "items": {
+            "0": "Technical SEO: tags, structure, speed",
+            "1": "Google Analytics and conversion tracking",
+            "2": "Launch on your own domain name",
+            "3": "Quality check across every screen size"
+          }
+        }
+      }
+    },
+    "work": {
+      "title": "Pages already <span class=\"text-gradient\">live</span>",
+      "subtitle": "A few landing pages and websites designed and built by the studio.",
+      "cta": "View project",
+      "all": "See all projects"
+    },
+    "process": {
+      "title": "7 days, <span class=\"text-gradient\">4 steps</span>",
+      "subtitle": "A tight process with no pointless meetings. You sign off at every step.",
+      "note": "The clock starts once the brief is approved and your content has been received.",
+      "steps": {
+        "0": {
+          "day": "Day 0",
+          "title": "Framing call",
+          "description": "30 minutes to understand your offer, your audience and your goal. You leave with the brief, the scope and the schedule."
+        },
+        "1": {
+          "day": "Days 1 – 2",
+          "title": "Structure & copywriting",
+          "description": "We write the page architecture and the messaging: hook, benefits, proof, objections, calls to action. You approve it before any design work."
+        },
+        "2": {
+          "day": "Days 3 – 5",
+          "title": "UI design",
+          "description": "High-fidelity mockups in Figma, desktop and mobile. We iterate until the page really looks like you."
+        },
+        "3": {
+          "day": "Days 6 – 7",
+          "title": "Build & launch",
+          "description": "Front-end build, responsive, technical SEO, tracking, quality check on every screen, then launch on your domain."
+        }
+      }
+    },
+    "pricing": {
+      "title": "A fixed price, <span class=\"text-gradient\">agreed upfront</span>",
+      "subtitle": "The scope is confirmed before we start. No add-ons halfway through.",
+      "badge": "Most requested offer",
+      "price_note": "excl. VAT, fixed package",
+      "description": "A custom page designed to present your offer and generate enquiries.",
+      "cta": "Build my landing page",
+      "secondary_cta": "Book a framing call",
+      "alternatives_title": "Something else in mind?",
+      "alternatives": {
+        "0": {
+          "title": "5-page website",
+          "price": "€2,390",
+          "description": "A complete website to present your business and your services."
+        },
+        "1": {
+          "title": "Custom product",
+          "price": "On quote",
+          "description": "CRM, SaaS, web or mobile app: scope defined together."
+        }
+      }
+    },
+    "guarantee": {
+      "title": "No risk on <span class=\"text-gradient\">your side</span>",
+      "subtitle": "Three simple commitments, on every project.",
+      "items": {
+        "0": {
+          "title": "Unlimited revisions",
+          "description": "We iterate on design and content until the page is signed off by you."
+        },
+        "1": {
+          "title": "Fixed scope and price",
+          "description": "The quote is locked before we start. No surprises and no extra lines mid-project."
+        },
+        "2": {
+          "title": "You own everything",
+          "description": "Source files, code, domain name and access: it's all yours on delivery."
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently asked <span class=\"text-gradient\">questions</span>",
+      "subtitle": "Everything people ask us before starting a landing page.",
+      "items": {
+        "0": {
+          "question": "I have no copy or content — is that a blocker?",
+          "answer": "No. Structural copywriting is included: we write the hook, the benefits, the proof and the calls to action based on the framing call. All we need from you are the facts: your offer, pricing, references and photos if you have any."
+        },
+        "1": {
+          "question": "7 days, really?",
+          "answer": "Yes, provided the brief is approved and your content is received at kick-off. The clock starts there. If your feedback takes longer, the schedule shifts accordingly — and we always tell you upfront."
+        },
+        "2": {
+          "question": "What is the page built with?",
+          "answer": "Two options depending on your needs. Custom code (Nuxt / Next.js) for performance and full control, or a no-code solution if you want to edit the page yourself easily. We decide together during the framing call."
+        },
+        "3": {
+          "question": "Will I be able to edit the page myself?",
+          "answer": "Yes. With no-code you edit directly. With custom code we can plug in a CMS for the content you want to manage. Just flag it during framing so it's planned from the design stage."
+        },
+        "4": {
+          "question": "Are hosting and the domain name included?",
+          "answer": "Launch is included. Hosting and the domain name stay in your name, so you keep ownership and control. Costs are low and we help you set them up."
+        },
+        "5": {
+          "question": "What about SEO?",
+          "answer": "Technical SEO is included: tag structure, content hierarchy, speed, responsiveness, sitemap. A full search strategy (keywords, content, backlinks) is ongoing work and is handled separately."
+        },
+        "6": {
+          "question": "How many rounds of feedback do I get?",
+          "answer": "As many as needed until the page is signed off. In practice two or three rounds are enough, because the structure and messaging are approved before the design starts."
+        },
+        "7": {
+          "question": "How does payment work?",
+          "answer": "50% at kick-off to secure the slot, 50% on delivery before launch. Detailed quote and invoice provided, payment by bank transfer."
+        }
+      }
+    },
+    "final": {
+      "title": "Ready to launch your landing page?",
+      "subtitle": "A 20-minute call is enough to frame your offer and find out whether we're the right partner.",
+      "primary": "Book a call",
+      "secondary": "Message on WhatsApp"
+    }
+  },
+  "crm_offer": {
+    "meta": {
+      "title": "Custom CRM built around your team | MC Studio",
+      "description": "A CRM developed around your actual processes: framing, design, development, data migration and go-live. Fixed quote after framing, code and data stay yours."
+    },
+    "nav": {
+      "why": "Why",
+      "included": "Included",
+      "work": "Work",
+      "process": "Process",
+      "pricing": "Pricing",
+      "faq": "FAQ"
+    },
+    "hero": {
+      "badge": "Custom CRM offer",
+      "title": "A CRM shaped around your business, not the other way around.",
+      "subtitle": "We start from how you actually work: framing, data modelling, interface design, custom development and migration of your existing data. A tool your team really uses — and whose code you own.",
+      "primary_main": "Book a call",
+      "primary_sub": "Free framing session",
+      "secondary": "See how it works",
+      "facts": {
+        "audit": {
+          "label": "Framing",
+          "value": "Free"
+        },
+        "delay": {
+          "label": "V1 in production",
+          "value": "4 to 8 weeks"
+        },
+        "ownership": {
+          "label": "Code & data",
+          "value": "Yours"
+        }
+      },
+      "note": "Independent studio · 5+ years of experience · Based in France"
+    },
+    "problem": {
+      "title": "The problem isn't your <span class=\"text-gradient\">team</span>",
+      "subtitle": "When a CRM goes unused, it almost always comes down to one of these four things.",
+      "items": {
+        "0": {
+          "title": "You pay for 80% of features nobody opens",
+          "description": "A per-user, per-month subscription for a tool your team only uses a handful of screens of. The bill grows with headcount, not with value."
+        },
+        "1": {
+          "title": "Your work doesn't fit the boxes",
+          "description": "Job sites, routes, case files, commissions, in-house statuses: you end up bending the process to the tool, with repurposed fields nobody fills in properly."
+        },
+        "2": {
+          "title": "The real data still lives in spreadsheets",
+          "description": "One file per person, versions that drift apart, follow-ups forgotten. The data exists, but it is neither reliable nor shared."
+        },
+        "3": {
+          "title": "Nobody knows where a file stands",
+          "description": "You have to ask, dig through emails, call someone. With no shared view and no history, tracking depends on everyone's memory."
+        }
+      }
+    },
+    "benefits": {
+      "label": "The outcome",
+      "title": "What a tool <span class=\"text-gradient\">built for you</span> changes",
+      "subtitle": "A custom CRM isn't one more piece of software. It's the way you work, put on screen and shared across the team.",
+      "items": {
+        "0": {
+          "title": "Your processes, exactly as they are",
+          "description": "Your statuses, your steps, your vocabulary. The tool follows your organisation instead of imposing its own."
+        },
+        "1": {
+          "title": "A single source of truth",
+          "description": "Clients, files, documents and history in one place, accessible according to each person's role."
+        },
+        "2": {
+          "title": "Less data entry, better follow-up",
+          "description": "Reminders, notifications, documents and exports automated: admin time goes back to the field."
+        },
+        "3": {
+          "title": "Usable in the field",
+          "description": "An interface designed for mobile and tablet, for teams that don't sit behind a desk."
+        },
+        "4": {
+          "title": "Decisions backed by numbers",
+          "description": "Dashboards, volumes, lead times and conversion rates, so you decide on figures rather than gut feel."
+        }
+      }
+    },
+    "comparison": {
+      "title": "Off-the-shelf CRM, no-code, or <span class=\"text-gradient\">custom</span>",
+      "subtitle": "Three ways to equip a team. They don't cost the same over time, and they don't last the same.",
+      "columns": {
+        "criteria": "Criteria",
+        "saas": "Off-the-shelf CRM",
+        "nocode": "No-code / spreadsheet",
+        "studio": "MC Studio"
+      },
+      "rows": {
+        "0": {
+          "label": "Fit with your business",
+          "saas": "You adapt the process to the tool",
+          "nocode": "Fine at first, limiting later",
+          "studio": "Built from your own processes"
+        },
+        "1": {
+          "label": "Cost over time",
+          "saas": "Per-user subscription, forever",
+          "nocode": "Cheap at first, climbs with volume",
+          "studio": "One-off investment, hosting under control"
+        },
+        "2": {
+          "label": "Setup",
+          "saas": "Long configuration, often an integrator",
+          "nocode": "Fast, but patched together over time",
+          "studio": "Framing, then delivery in batches"
+        },
+        "3": {
+          "label": "Your data",
+          "saas": "On the vendor's side, limited export",
+          "nocode": "Scattered across several tools",
+          "studio": "Your own database, hosted in Europe"
+        },
+        "4": {
+          "label": "Automations",
+          "saas": "Reserved for higher plans",
+          "nocode": "Quotas and execution limits",
+          "studio": "Written for your real cases"
+        },
+        "5": {
+          "label": "Evolution",
+          "saas": "You wait for the vendor's roadmap",
+          "nocode": "You rebuild instead of building on",
+          "studio": "New modules whenever you need them"
+        },
+        "6": {
+          "label": "Communication",
+          "saas": "Ticket-based support",
+          "nocode": "You're on your own",
+          "studio": "Direct WhatsApp channel + Notion"
+        }
+      }
+    },
+    "included": {
+      "title": "Everything that's <span class=\"text-gradient\">included</span>",
+      "subtitle": "From the first workshop to go-live with your teams. The scope is written down before anything starts.",
+      "groups": {
+        "0": {
+          "title": "Framing & processes",
+          "items": {
+            "0": "Workshops with the people who will use the tool",
+            "1": "Mapping of your processes and statuses",
+            "2": "Data model: entities, roles and permissions",
+            "3": "V1 scope and schedule, in writing"
+          }
+        },
+        "1": {
+          "title": "Design & experience",
+          "items": {
+            "0": "Figma mockups of the key screens, desktop and mobile",
+            "1": "Flows designed for fast day-to-day data entry",
+            "2": "A design system reusable for future modules",
+            "3": "Unlimited revisions until the mockups are signed off"
+          }
+        },
+        "2": {
+          "title": "Development",
+          "items": {
+            "0": "Custom web app, responsive on mobile and tablet",
+            "1": "Authentication, roles and per-profile permissions",
+            "2": "Automations: reminders, notifications, documents",
+            "3": "Integrations: email, calendar, invoicing, existing APIs"
+          }
+        },
+        "3": {
+          "title": "Go-live & support",
+          "items": {
+            "0": "Migration and clean-up of your existing data",
+            "1": "Hosting in Europe, backups and GDPR compliance",
+            "2": "Team training and usage documentation",
+            "3": "30 days of fixes included after go-live"
+          }
+        }
+      }
+    },
+    "work": {
+      "title": "Tools already <span class=\"text-gradient\">in production</span>",
+      "subtitle": "A few CRMs and business apps designed and developed by the studio.",
+      "cta": "View project",
+      "all": "View all projects"
+    },
+    "process": {
+      "title": "4 steps, <span class=\"text-gradient\">delivered in batches</span>",
+      "subtitle": "You see the tool running early, then at every batch. No tunnel effect.",
+      "note": "The exact scope and schedule are settled at the end of the framing phase, before any commitment.",
+      "steps": {
+        "0": {
+          "day": "Week 0",
+          "title": "Audit & framing",
+          "description": "We go through your processes, your current tools and your pain points with the people involved. You leave with the data model, the V1 scope, the schedule and the quote."
+        },
+        "1": {
+          "day": "Weeks 1 – 2",
+          "title": "Modelling & mockups",
+          "description": "Key screens mocked up in Figma, entry flows validated with the future users. We fix things on the mockup, not in the code."
+        },
+        "2": {
+          "day": "Weeks 3 – 6",
+          "title": "Development in batches",
+          "description": "Every batch ships to a test environment: you click through it, you comment, we adjust before moving to the next one."
+        },
+        "3": {
+          "day": "Weeks 7 – 8",
+          "title": "Data migration & go-live",
+          "description": "Import of your existing data, permission settings, team training, launch, and 30 days of fixes included."
+        }
+      }
+    },
+    "pricing": {
+      "title": "A fixed quote, <span class=\"text-gradient\">after the framing</span>",
+      "subtitle": "A custom CRM can't be priced as a package before seeing your processes. We quote after the audit, with a written scope — and the price doesn't move after that.",
+      "badge": "Custom built",
+      "plan_title": "Custom CRM",
+      "price_note": "Fixed quote after framing",
+      "note": "The quote is issued after the framing phase, excluding tax. The scope is confirmed in writing before anything starts.",
+      "description": "A business application built around your organisation, your roles and your data.",
+      "delay_value": "4 to 8 weeks",
+      "cta": "Request a quote",
+      "secondary_cta": "Book a framing call",
+      "features": {
+        "0": "Framing workshops and process mapping",
+        "1": "Data model, roles and permissions",
+        "2": "Custom UI design in Figma",
+        "3": "Responsive web app, mobile and tablet",
+        "4": "Automations and notifications",
+        "5": "Integrations with your existing tools",
+        "6": "Migration of your existing data",
+        "7": "Hosting in Europe and backups",
+        "8": "Team training and documentation",
+        "9": "30 days of fixes after go-live"
+      },
+      "factors_title": "What makes the price vary",
+      "factors": {
+        "0": {
+          "title": "The number of modules",
+          "description": "Prospecting, scheduling, field jobs, invoicing: every block adds scope."
+        },
+        "1": {
+          "title": "The integrations",
+          "description": "Plugging into invoicing software, a business API or a phone system takes dedicated work."
+        },
+        "2": {
+          "title": "Roles and permissions",
+          "description": "The more profiles with different views and rights, the finer the logic has to be."
+        },
+        "3": {
+          "title": "Data migration",
+          "description": "The state of your current files determines how much cleaning and importing is needed."
+        }
+      },
+      "alternatives_title": "A different need?",
+      "alternatives": {
+        "0": {
+          "title": "Landing page",
+          "price": "€1,290",
+          "description": "A custom page built to present your offer and generate enquiries."
+        },
+        "1": {
+          "title": "5-page website",
+          "price": "€2,390",
+          "description": "A complete showcase site to present your business and your services."
+        }
+      }
+    },
+    "guarantee": {
+      "title": "No risk on <span class=\"text-gradient\">your side</span>",
+      "subtitle": "Three simple commitments, on every project.",
+      "items": {
+        "0": {
+          "title": "Scope written before the quote",
+          "description": "The framing phase produces a clear document: what's in the V1, what comes later, and at what price. The quote is settled before anything starts."
+        },
+        "1": {
+          "title": "Delivered in batches, never in a tunnel",
+          "description": "You test every batch on a dedicated environment. Gaps show up along the way, not on delivery day."
+        },
+        "2": {
+          "title": "You own everything",
+          "description": "Source code, database, hosting and access are all in your name. You can take the project to anyone you want."
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently asked <span class=\"text-gradient\">questions</span>",
+      "subtitle": "Everything people ask before starting a custom CRM.",
+      "items": {
+        "0": {
+          "question": "How much does a custom CRM cost?",
+          "answer": "The price depends on the number of modules, the integrations and how complex permissions are. That's why we don't quote a package before the audit. The framing session is free and leads to a fixed quote: you know exactly what you're paying before committing."
+        },
+        "1": {
+          "question": "Why pay for development rather than a subscription?",
+          "answer": "A per-user subscription costs more and more as the team grows, and you own nothing. A custom tool is a one-off investment: past a certain headcount or a certain level of business specificity, it becomes cheaper — and it belongs to you."
+        },
+        "2": {
+          "question": "How long before we have something usable?",
+          "answer": "Usually 4 to 8 weeks for a V1 in production, depending on scope. You see the tool running well before that: every batch ships to a test environment as development goes."
+        },
+        "3": {
+          "question": "Can we bring our current data over?",
+          "answer": "Yes. Excel, Google Sheets, an export from an old CRM: we analyse your files, clean up duplicates and import. The quality of the source files drives the workload, which is one of the things we look at during framing."
+        },
+        "4": {
+          "question": "Where is the data hosted?",
+          "answer": "On hosting located in Europe, with automatic backups and GDPR compliance. The database is in your name: you keep ownership and full access to your data."
+        },
+        "5": {
+          "question": "Can it connect to our existing tools?",
+          "answer": "Yes, as long as they expose an API: invoicing, accounting, email, calendar, e-signature, telephony. We list the required connections during framing so they're part of the quote."
+        },
+        "6": {
+          "question": "Once it's delivered, who keeps it evolving?",
+          "answer": "30 days of fixes are included after go-live. After that, two options: changes on demand, quoted case by case, or a monthly retainer covering maintenance and continuous improvements."
+        },
+        "7": {
+          "question": "Does it work on mobile?",
+          "answer": "Yes. The app is responsive and designed for field teams from the mockups onwards. If the usage really calls for it (offline mode, native notifications, photos), we can also look into a dedicated mobile app."
+        }
+      }
+    },
+    "final": {
+      "title": "Ready to get your processes out of spreadsheets?",
+      "subtitle": "A 30-minute call is enough to understand how you work and tell you whether a custom tool makes sense for you.",
+      "primary": "Book a call",
+      "secondary": "Message on WhatsApp"
     }
   }
 }

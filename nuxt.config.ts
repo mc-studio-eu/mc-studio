@@ -49,7 +49,10 @@ export default defineNuxtConfig({
     fallback: 'light',
     classSuffix: '',
     storage: 'localStorage',
-    storageKey: 'nuxt-color-mode',
+    // The site used to force dark mode into 'nuxt-color-mode' on every load, so returning
+    // visitors carry a stored 'dark' they never chose. Reading from a new key retires that
+    // value and lets everyone land on the light default; the toggle persists under this key.
+    storageKey: 'mc-color-mode',
   },
   i18n: {
     locales: [

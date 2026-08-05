@@ -118,13 +118,13 @@ const closeMenu = () => isMenuOpen.value = false
     <!-- Logo -->
     <div class="flex items-center shrink-0">
       <NuxtLink to="/" class="flex items-center">
-        <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-[100px] h-auto md:w-[125px] object-contain" />
+        <BrandLogo alt="MC Studio" class="w-[100px] h-auto md:w-[125px] object-contain" />
       </NuxtLink>
     </div>
 
     <!-- Nav desktop -->
     <nav class="hidden lg:flex items-center gap-[26px]">
-      <a v-for="item in navItems" :key="item.key" :href="`#${item.id}`" class="font-inter font-medium text-sm text-white no-underline transition-colors duration-200 hover:text-[#f0bf6c]">{{ t(`nav.${item.key}`) }}</a>
+      <a v-for="item in navItems" :key="item.key" :href="`#${item.id}`" class="font-inter font-medium text-sm text-[var(--text-primary)] no-underline transition-colors duration-200 hover:text-[var(--accent-gold)]">{{ t(`nav.${item.key}`) }}</a>
     </nav>
 
     <!-- CTA Desktop -->
@@ -168,7 +168,7 @@ const closeMenu = () => isMenuOpen.value = false
                 'flex items-center shrink-0'
               ]"
             >
-              <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-20 h-auto md:w-[88px] object-contain" />
+              <BrandLogo alt="MC Studio" class="w-20 h-auto md:w-[88px] object-contain" />
             </NuxtLink>
 
             <!-- Desktop Links -->
