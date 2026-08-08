@@ -19,8 +19,8 @@
     "copyright": "MC Studio. Tous droits réservés."
   },
   "hero": {
-    "title": "Design & Développement pour<br class=\"hidden xs:inline\"> lancer vite, et bien.",
-    "subtitle": "Nous vous accompagnons du concept au lancement.",
+    "title": "Le partenaire design & développement des entreprises ambitieuses.",
+    "subtitle": "Nous accompagnons startups et entreprises dans la création de leur identité, site web et application, de l'idée jusqu'au lancement.",
     "cta": {
       "book": "Réserver un appel",
       "whatsapp": "Discuter sur WhatsApp"
@@ -31,6 +31,9 @@
       ],
       "location": [
         "France"
+      ],
+      "projects": [
+        "+20 projets livrés"
       ],
       "rotating_services": [
         "World Class"
@@ -326,6 +329,14 @@
     "subtitle": "Une sélection de projets où design, code et stratégie se rencontrent.",
     "cta": "Voir le projet",
     "show_more": "Voir plus de projets",
+    "all": {
+      "meta_title": "Tous nos projets",
+      "title": "Tous nos <span class=\"text-gradient\">projets</span>",
+      "subtitle": "L'ensemble de nos réalisations : branding, landing pages et applications sur mesure.",
+      "back": "Retour à l'accueil",
+      "count": "{count} projet affiché | {count} projets affichés",
+      "empty": "Aucun projet ne correspond à ce filtre pour le moment."
+    },
     "more_tags": "{count} tags supplémentaires",
     "filters": {
       "aria_label": "Filtrer les projets par type",
@@ -418,6 +429,18 @@
           "review": "MC studio m’a accompagné dans mon projet digital, entreprise très sérieuse professionnelle je la recommande !",
           "job": "Dirigeant Fontaines VTC"
         }
+      },
+      "mc_studio_creator": {
+        "description": "MC Studio Creator, c’est notre verticale dédiée aux créateurs de contenu : on leur conçoit des applications sur mesure pour leur communauté.\nOn a construit la marque de A à Z : branding complet (logo, couleurs, typographies) et site web de la verticale.",
+        "tags": [
+          "Branding",
+          "Logo",
+          "Landing Page",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Créateurs de contenu"
+        ]
       }
     }
   },

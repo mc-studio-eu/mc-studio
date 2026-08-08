@@ -19,7 +19,7 @@ import ScrollingMarquee from "./ScrollingMarquee.vue"
     />
     
     <!-- Content Container -->
-    <div class="relative z-10 flex flex-col items-center h-full px-4 sm:px-6 pb-0 sm:pb-16 md:pb-10">
+    <div class="relative z-10 flex flex-col items-center h-full px-4 sm:px-6 pb-14 sm:pb-24 md:pb-20 lg:pb-24">
       <Navbar />
       <GoogleBadge />
       <HeroContent />

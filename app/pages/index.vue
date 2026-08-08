@@ -8,17 +8,23 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
   <main class="main-container min-h-screen p-6 transition-colors duration-300">
     <!-- Hero Section -->
     <HeroSection />
-    
+
     <!-- Main Content with Border Frame -->
     <div class="relative mx-auto max-w-[1440px]">
       <!-- Left Border Line -->
       <div class="border-line absolute left-0 xl:left-[50px] top-0 bottom-0 w-px"></div>
+
       
       <!-- Right Border Line -->
       <div class="border-line absolute right-0 xl:right-[50px] top-0 bottom-0 w-px"></div>
       
       <!-- Projects Section -->
       <div class="section-separator"></div>
+
+      <ScreenMarquee reverse class="mb-10" />
+
+      <div class="section-separator mt-10"></div>
+
       <ProjectSection id="projets" />
 
       <div class="section-separator"></div>

@@ -193,15 +193,23 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="min-h-screen bg-[var(--bg-primary)] px-5 py-5 transition-colors duration-300 sm:px-6 sm:py-6">
+  <main class="main-container min-h-screen px-5 py-5 transition-colors duration-300 sm:px-6 sm:py-6">
     <Navbar floating-only always-floating />
 
-    <section class="mx-auto w-full">
+    <!-- Main Content with Border Frame -->
+    <div class="relative mx-auto max-w-[1440px]">
+      <!-- Left Border Line -->
+      <div class="border-line absolute left-0 xl:left-[50px] top-0 bottom-0 w-px"></div>
+
+      <!-- Right Border Line -->
+      <div class="border-line absolute right-0 xl:right-[50px] top-0 bottom-0 w-px"></div>
+
+      <section class="mx-auto w-full">
       <article class="relative">
         <div class="relative z-10 px-[clamp(18px,5vw,72px)] py-[clamp(56px,8vw,96px)] max-sm:pt-[88px]">
           <NuxtLink
             :to="backToProjectsLink"
-            class="absolute left-[clamp(16px,2.4vw,32px)] top-[clamp(16px,2.4vw,32px)] inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-white/[0.03] text-[var(--text-secondary)] no-underline backdrop-blur transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
+            class="absolute left-[clamp(18px,5vw,72px)] top-[clamp(16px,2.4vw,32px)] inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-white/[0.03] text-[var(--text-secondary)] no-underline backdrop-blur transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
             :aria-label="labels.back"
           >
             <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
@@ -342,14 +350,58 @@ useSeoMeta({
           </section>
         </div>
       </article>
-    </section>
+      </section>
 
-    <FooterSection class="mt-16" />
+      <div class="section-separator mb-10 mt-10"></div>
+    </div>
+
+    <FooterSection />
     <ScrollToTop />
   </main>
 </template>
 
 <style scoped>
+/* Main container */
+.main-container {
+  background-color: var(--bg-primary);
+}
+
+/* Border lines */
+.border-line {
+  background: linear-gradient(to bottom, var(--border-color) 0%, var(--border-color) 50%, transparent 100%);
+}
+
+:global(.dark) .border-line {
+  background: linear-gradient(to bottom, rgba(240, 191, 108, 0.4) 0%, rgba(240, 191, 108, 0.2) 50%, transparent 100%);
+}
+
+:global(.light) .border-line {
+  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.15) 0%, rgba(26, 26, 26, 0.08) 50%, transparent 100%);
+}
+
+/* Section separator line */
+.section-separator {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-color) 20%, var(--border-color) 80%, transparent 100%);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: calc(100% - 146px);
+}
+
+:global(.dark) .section-separator {
+  background: linear-gradient(90deg, transparent 0%, rgba(240, 191, 108, 0.25) 20%, rgba(240, 191, 108, 0.25) 80%, transparent 100%);
+}
+
+:global(.light) .section-separator {
+  background: linear-gradient(90deg, transparent 0%, rgba(26, 26, 26, 0.12) 20%, rgba(26, 26, 26, 0.12) 80%, transparent 100%);
+}
+
+@media (max-width: 1024px) {
+  .section-separator {
+    max-width: 100%;
+  }
+}
+
 .case-study-title {
   overflow-wrap: anywhere;
   font-size: clamp(30px, 3.6vw, 52px);

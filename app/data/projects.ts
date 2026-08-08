@@ -568,6 +568,106 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: 'mc-studio-creator',
+    i18nKey: 'mc_studio_creator',
+    title: 'MC Studio Creator',
+    categories: ['branding', 'landing-page'],
+    image: '/img/project/mc-studio-creator/cover.png',
+    externalLink: 'https://mc-studio.eu',
+    verified: true,
+    screenshots: {
+      desktop: [
+        '/img/project/mc-studio-creator/cover.png',
+        '/img/project/mc-studio-creator/website-dark.png',
+        '/img/project/mc-studio-creator/logo-wordmark.png',
+        '/img/project/mc-studio-creator/typography.png',
+      ],
+      mobile: [
+        '/img/project/mc-studio-creator/sign-logo.png',
+        '/img/project/mc-studio-creator/billboard-logo.png',
+      ],
+    },
+    summary: {
+      fr: "MC Studio Creator est notre verticale dédiée aux créateurs de contenu. Nous avons construit la marque et le site de A à Z : identité visuelle, direction artistique et landing page pensée pour les créateurs qui veulent une application sur mesure pour leur communauté.",
+      en: 'MC Studio Creator is our vertical dedicated to content creators. We built the brand and the website end to end: visual identity, art direction and a landing page designed for creators who want a custom app for their community.',
+    },
+    aboutCompany: {
+      fr: "MC Studio Creator est la branche de MC Studio consacrée aux créateurs de contenu. Nous leur concevons des applications sur mesure destinées à leur communauté : un espace qui leur appartient vraiment, plutôt qu'une audience qui dépend uniquement des réseaux sociaux.",
+      en: 'MC Studio Creator is the MC Studio branch dedicated to content creators. We build them custom apps for their community: a space they truly own, instead of an audience that depends only on social platforms.',
+    },
+    industry: {
+      fr: 'Créateurs de contenu',
+      en: 'Content creators',
+    },
+    companySize: '1 - 10',
+    supportBullets: {
+      fr: [
+        'Une marque propre à la verticale créateurs',
+        'Un discours qui parle aux créateurs',
+        'Une landing pensée pour la prise de contact',
+      ],
+      en: [
+        'A brand of its own for the creator vertical',
+        'Messaging that speaks to creators',
+        'A landing page built for lead capture',
+      ],
+    },
+    context: {
+      fr: "Les créateurs de contenu n'ont pas les mêmes attentes que nos clients B2B classiques : ils raisonnent en communauté, en univers de marque et en produit, et ce qu'on leur livre n'est pas un site mais une application sur mesure. Parler de la même façon aux deux publics diluait le message, il fallait donc une verticale avec son propre positionnement et sa propre identité.",
+      en: "Content creators do not have the same expectations as our classic B2B clients: they think in terms of community, brand universe and product, and what we deliver to them is not a website but a custom app. Speaking to both audiences the same way diluted the message, so the vertical needed its own positioning and identity.",
+    },
+    solution: {
+      fr: "Nous avons créé le branding complet de la verticale : logo, système de couleurs violet, typographies Helvetica et Inter, textures et déclinaisons. Nous avons ensuite développé la landing page dédiée, avec un discours centré sur les créateurs de contenu et l'application sur mesure que l'on construit pour leur communauté.",
+      en: 'We created the full branding for the vertical: logo, purple color system, Helvetica and Inter typography, textures and applications. We then built the dedicated landing page, with messaging centered on content creators and the custom app we build for their community.',
+    },
+    challenges: {
+      fr: [
+        'Créer une identité distincte sans casser la marque MC Studio',
+        "Adresser les créateurs de contenu avec leurs propres codes",
+        "Rendre concrète l'idée d'une application sur mesure pour une communauté",
+      ],
+      en: [
+        'Create a distinct identity without breaking the MC Studio brand',
+        'Address content creators with their own codes',
+        'Make the idea of a custom app for a community feel concrete',
+      ],
+    },
+    objectives: {
+      fr: [
+        'Poser une verticale claire dédiée aux créateurs de contenu',
+        "Expliquer la valeur d'une application sur mesure pour leur communauté",
+        'Générer des demandes qualifiées de créateurs',
+      ],
+      en: [
+        'Establish a clear vertical dedicated to content creators',
+        'Explain the value of a custom app for their community',
+        'Generate qualified requests from creators',
+      ],
+    },
+    actions: {
+      fr: [
+        {
+          title: 'Branding de la verticale',
+          body: "Création du logo, du système chromatique violet, des typographies (Helvetica / Inter) et des déclinaisons de marque, du signalétique aux visuels de communication.",
+        },
+        {
+          title: 'Landing page créateurs',
+          body: "Conception et développement d'une landing dédiée : promesse claire dès le premier écran, cas d'usage d'applications créateurs, preuves et parcours orienté prise de rendez-vous.",
+        },
+      ],
+      en: [
+        {
+          title: 'Vertical branding',
+          body: 'Logo, purple color system, typography (Helvetica / Inter) and brand applications were created, from signage to communication visuals.',
+        },
+        {
+          title: 'Creator landing page',
+          body: 'A dedicated landing page was designed and built: a clear promise on the first screen, creator app use cases, proof points and a journey focused on booking calls.',
+        },
+      ],
+    },
+  },
+  {
     slug: 'fontaines-vtc',
     i18nKey: 'fontaines_vtc',
     title: 'Fontaines VTC',

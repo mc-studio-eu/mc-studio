@@ -19,8 +19,8 @@
     "copyright": "MC Studio. All rights reserved."
   },
   "hero": {
-    "title": "Design & Development to<br class=\"hidden xs:inline\"> launch fast, and well.",
-    "subtitle": "We support from concept to launch.",
+    "title": "The design & development partner for ambitious companies.",
+    "subtitle": "We help startups and companies create their brand identity, website and app, from idea to launch.",
     "cta": {
       "book": "Book a call",
       "whatsapp": "Chat on WhatsApp"
@@ -31,6 +31,9 @@
       ],
       "location": [
         "France"
+      ],
+      "projects": [
+        "20+ projects delivered"
       ],
       "rotating_services": [
         "World Class"
@@ -326,6 +329,14 @@
     "subtitle": "A selection of projects where design, code and strategy meet.",
     "cta": "View project",
     "show_more": "View more projects",
+    "all": {
+      "meta_title": "All our projects",
+      "title": "All our <span class=\"text-gradient\">projects</span>",
+      "subtitle": "Every project we shipped: branding, landing pages and custom applications.",
+      "back": "Back to home",
+      "count": "{count} project shown | {count} projects shown",
+      "empty": "No project matches this filter yet."
+    },
     "more_tags": "{count} more tags",
     "filters": {
       "aria_label": "Filter projects by type",
@@ -418,6 +429,18 @@
           "review": "MC Studio accompanied me in my digital project, very serious professional company I recommend it!",
           "job": "Manager Fontaines VTC"
         }
+      },
+      "mc_studio_creator": {
+        "description": "MC Studio Creator is our vertical dedicated to content creators: we build them custom apps for their community.\nWe built the brand end to end: full branding (logo, colors, typography) and the vertical's website.",
+        "tags": [
+          "Branding",
+          "Logo",
+          "Landing Page",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Content creators"
+        ]
       }
     }
   },

@@ -9,10 +9,10 @@ const rotatingStats = computed(() => {
   return Object.values(stats || {}).map(s => rt(s))
 })
 
-// Get locations from i18n
-const locationNames = computed(() => {
-  const locs = tm('hero.badges.location')
-  return Object.values(locs || {}).map(l => rt(l))
+// Get projects count from i18n
+const projectNames = computed(() => {
+  const projects = tm('hero.badges.projects')
+  return Object.values(projects || {}).map(p => rt(p))
 })
 
 // Get rotating services from i18n
@@ -21,12 +21,8 @@ const rotatingServices = computed(() => {
   return Object.values(services || {}).map(s => rt(s))
 })
 
-const locations = computed(() => [
-  { city: locationNames.value[0] || 'Lyon', flag: 'france' }
-])
-
 const currentStat = computed(() => rotatingStats.value[0] || '')
-const currentLocation = computed(() => locations.value[0])
+const currentProject = computed(() => projectNames.value[0] || '')
 const currentService = computed(() => rotatingServices.value[0] || '')
 </script>
 
@@ -54,14 +50,15 @@ const currentService = computed(() => rotatingServices.value[0] || '')
       </span>
     </div>
 
-    <!-- Location -->
+    <!-- Projects -->
     <div class="flex items-center justify-center gap-2 text-white/80">
-      <svg class="shrink-0 w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
-        <circle cx="12" cy="10" r="2.5"/>
+      <svg class="shrink-0 w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2 2 7l10 5 10-5-10-5Z"/>
+        <path d="m2 17 10 5 10-5"/>
+        <path d="m2 12 10 5 10-5"/>
       </svg>
       <span class="font-medium text-xs sm:text-sm md:text-base whitespace-nowrap">
-        {{ currentLocation.city }}
+        {{ currentProject }}
       </span>
     </div>
   </div>
