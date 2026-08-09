@@ -334,7 +334,6 @@
       "title": "All our <span class=\"text-gradient\">projects</span>",
       "subtitle": "Every project we shipped: branding, landing pages and custom applications.",
       "back": "Back to home",
-      "count": "{count} project shown | {count} projects shown",
       "empty": "No project matches this filter yet."
     },
     "more_tags": "{count} more tags",

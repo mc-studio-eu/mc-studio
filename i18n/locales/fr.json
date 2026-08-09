@@ -334,7 +334,6 @@
       "title": "Tous nos <span class=\"text-gradient\">projets</span>",
       "subtitle": "L'ensemble de nos réalisations : branding, landing pages et applications sur mesure.",
       "back": "Retour à l'accueil",
-      "count": "{count} projet affiché | {count} projets affichés",
       "empty": "Aucun projet ne correspond à ce filtre pour le moment."
     },
     "more_tags": "{count} tags supplémentaires",

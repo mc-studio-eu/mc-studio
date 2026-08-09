@@ -57,10 +57,10 @@ useSeoMeta({
       <section class="mx-auto w-full max-w-[1216px] px-4 pb-8 pt-[clamp(72px,10vw,120px)] sm:px-8">
       <NuxtLink
         :to="localePath('/')"
-        class="inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-white/[0.03] px-4 py-2 font-inter text-xs font-medium text-[var(--text-secondary)] no-underline backdrop-blur transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)] sm:text-sm"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-white/[0.03] text-[var(--text-secondary)] no-underline backdrop-blur transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
+        :aria-label="$t('projects.all.back')"
       >
         <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
-        {{ $t('projects.all.back') }}
       </NuxtLink>
 
       <div class="mt-8 text-center md:mt-12">
@@ -91,10 +91,6 @@ useSeoMeta({
             {{ $t(filter.labelKey) }}
           </button>
         </div>
-
-        <p class="mt-4 font-inter text-xs text-[var(--text-secondary)]">
-          {{ $t('projects.all.count', filteredProjects.length) }}
-        </p>
       </div>
 
       <TransitionGroup
