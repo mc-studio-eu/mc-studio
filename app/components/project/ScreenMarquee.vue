@@ -12,7 +12,6 @@ const screenProject = [
   '/img/project/ra-energy.jpeg',
   '/img/project/souji-nova.jpeg',
   '/img/project/mc-studio-creator/billboard-logo.png',
-  '/img/project/clinique-des-marques.png',
   '/img/project/arises-tablet.jpeg',
   '/img/project/ra-energy-v2.png',
   '/img/project/mc-studio-creator/sign-logo.png',
