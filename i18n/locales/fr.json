@@ -61,7 +61,7 @@
   },
   "services": {
     "title": "Nos <span class=\"text-gradient\">offres</span>",
-    "subtitle": "Faites appel à nous quand votre idée, votre produit, votre site ou votre marque doit devenir plus net, plus clair et prêt pour la suite.",
+    "subtitle": "Faites appel à nous quand votre idée, votre produit ou votre site doit devenir plus net, plus clair et prêt pour la suite.",
     "accordion": {
       "branding": {
         "title": "Branding",
@@ -249,7 +249,7 @@
   "pricing": {
     "aria_label": "Tarifs et formules",
     "title": "Des forfaits clairs, <span class=\"text-gradient\">sans surprise</span>",
-    "subtitle": "Trois offres avec un périmètre et un prix fixes. Pour les produits plus complexes, nous construisons un devis adapté à votre besoin.",
+    "subtitle": "Deux offres avec un périmètre et un prix fixes. Pour les produits plus complexes, nous construisons un devis adapté à votre besoin.",
     "popular": "Le plus choisi",
     "included": "Ce qui est inclus",
     "delay_label": "Livraison :",
@@ -314,10 +314,11 @@
       }
     },
     "custom": {
-      "title": "Prestation sur mesure",
+      "title": "Applications (SaaS, web, mobile)",
       "description": "CRM, SaaS et applications web ou mobiles sont étudiés selon les fonctionnalités, les intégrations et le niveau d’accompagnement nécessaires.",
       "price": "Sur devis",
       "cta": "Parler du projet",
+      "scope_label": "Périmètre sur mesure",
       "services": {
         "0": "CRM",
         "1": "SaaS",
@@ -334,7 +335,7 @@
     "all": {
       "meta_title": "Tous nos projets",
       "title": "Tous nos <span class=\"text-gradient\">projets</span>",
-      "subtitle": "L'ensemble de nos réalisations : branding, landing pages et applications sur mesure.",
+      "subtitle": "L'ensemble de nos réalisations : landing pages, sites internet et applications sur mesure.",
       "back": "Retour à l'accueil",
       "empty": "Aucun projet ne correspond à ce filtre pour le moment."
     },

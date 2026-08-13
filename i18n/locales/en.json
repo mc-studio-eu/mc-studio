@@ -61,7 +61,7 @@
   },
   "services": {
     "title": "Our <span class=\"text-gradient\">offers</span>",
-    "subtitle": "Bring us in when your idea, product, website, or brand needs to feel sharper, clearer, and ready for what comes next.",
+    "subtitle": "Bring us in when your idea, product or website needs to feel sharper, clearer and ready for what comes next.",
     "accordion": {
       "branding": {
         "title": "Branding",
@@ -249,7 +249,7 @@
   "pricing": {
     "aria_label": "Pricing and packages",
     "title": "Clear packages, <span class=\"text-gradient\">no surprises</span>",
-    "subtitle": "Three offers with a fixed scope and price. For more complex products, we prepare a quote tailored to your requirements.",
+    "subtitle": "Two offers with a fixed scope and price. For more complex products, we prepare a quote tailored to your requirements.",
     "popular": "Most popular",
     "included": "What is included",
     "delay_label": "Delivery:",
@@ -314,10 +314,11 @@
       }
     },
     "custom": {
-      "title": "Custom service",
+      "title": "Applications (SaaS, web, mobile)",
       "description": "CRM, SaaS, web and mobile applications are scoped according to the required features, integrations and level of support.",
       "price": "Custom quote",
       "cta": "Discuss the project",
+      "scope_label": "Custom scope",
       "services": {
         "0": "CRM",
         "1": "SaaS",
@@ -334,7 +335,7 @@
     "all": {
       "meta_title": "All our projects",
       "title": "All our <span class=\"text-gradient\">projects</span>",
-      "subtitle": "Every project we shipped: branding, landing pages and custom applications.",
+      "subtitle": "Every project we shipped: landing pages, websites and custom applications.",
       "back": "Back to home",
       "empty": "No project matches this filter yet."
     },

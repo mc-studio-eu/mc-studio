@@ -21,7 +21,6 @@ export interface ProjectCard {
 
 export const projectFilters: Array<{ value: ProjectFilter; labelKey: string }> = [
   { value: 'all', labelKey: 'projects.filters.all' },
-  { value: 'branding', labelKey: 'projects.filters.branding' },
   { value: 'landing-page', labelKey: 'projects.filters.landing_page' },
   { value: 'app', labelKey: 'projects.filters.app' },
 ]

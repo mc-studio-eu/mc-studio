@@ -4,7 +4,6 @@ import { computed, ref } from 'vue'
 const { t, tm, rt } = useI18n()
 
 const accordionItems = [
-  { key: 'branding', image: '/img/project/ra-branding.png' },
   { key: 'website', image: '/img/project/souji-nova-desktop.png' },
   { key: 'product_design', image: '/img/project/arises-figma.png' },
   { key: 'product', image: '/img/project/crm-ra/crm-hero-mockup.png' },

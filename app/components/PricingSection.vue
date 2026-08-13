@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 const { t, tm, rt } = useI18n()
 
-const planKeys = ['branding', 'landing', 'showcase'] as const
+const planKeys = ['landing', 'showcase'] as const
 
 const plans = computed(() =>
   planKeys.map((key) => ({
@@ -97,32 +97,47 @@ const customServices = computed(() =>
             </ul>
           </div>
         </article>
-      </div>
 
-      <article class="pricing-custom">
-        <div class="pricing-custom__content">
-          <h3 class="pricing-custom__title">{{ $t('pricing.custom.title') }}</h3>
-          <p class="pricing-custom__description">{{ $t('pricing.custom.description') }}</p>
-          <div class="pricing-custom__services">
-            <span v-for="service in customServices" :key="service">{{ service }}</span>
-          </div>
-        </div>
+        <article class="pricing-card">
+          <div class="pricing-card__content">
+            <div>
+              <div class="pricing-card__header">
+                <h3 class="pricing-card__title">{{ $t('pricing.custom.title') }}</h3>
+              </div>
+              <div class="pricing-card__price-row">
+                <span class="pricing-card__price">{{ $t('pricing.custom.price') }}</span>
+              </div>
+              <p class="pricing-card__description">{{ $t('pricing.custom.description') }}</p>
+              <div class="pricing-card__delivery">
+                <UIcon name="i-lucide-layers-3" class="h-4 w-4" aria-hidden="true" />
+                <span>{{ $t('pricing.custom.scope_label') }}</span>
+              </div>
+            </div>
 
-        <div class="pricing-custom__action">
-          <div>
-            <span class="pricing-custom__price">{{ $t('pricing.custom.price') }}</span>
-          </div>
-          <a href="#contact" class="pricing-card__cta">
-            <span class="pricing-cta__text-container">
-              <span class="pricing-cta__text-wrapper">
-                <span class="pricing-cta__text">{{ $t('pricing.custom.cta') }}</span>
-                <span class="pricing-cta__text" aria-hidden="true">{{ $t('pricing.custom.cta') }}</span>
+            <a href="#contact" class="pricing-card__cta">
+              <span class="pricing-cta__text-container">
+                <span class="pricing-cta__text-wrapper">
+                  <span class="pricing-cta__text">{{ $t('pricing.custom.cta') }}</span>
+                  <span class="pricing-cta__text" aria-hidden="true">{{ $t('pricing.custom.cta') }}</span>
+                </span>
               </span>
-            </span>
-            <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" aria-hidden="true" />
-          </a>
-        </div>
-      </article>
+              <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" aria-hidden="true" />
+            </a>
+
+            <div class="pricing-card__divider" />
+
+            <p class="pricing-card__included">{{ $t('pricing.included') }}</p>
+            <ul class="pricing-card__features">
+              <li v-for="service in customServices" :key="service">
+                <span class="pricing-card__check">
+                  <UIcon name="i-lucide-check" class="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
+                <span>{{ service }}</span>
+              </li>
+            </ul>
+          </div>
+        </article>
+      </div>
 
       <div class="pricing-note">
         <UIcon name="i-lucide-shield-check" class="h-4 w-4" aria-hidden="true" />
@@ -371,80 +386,6 @@ const customServices = computed(() =>
   color: #f0bf6c;
 }
 
-.pricing-custom {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
-  align-items: center;
-  gap: 48px;
-  margin-top: 18px;
-  padding: 34px 36px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 28px;
-  background:
-    radial-gradient(760px 260px at 10% 40%, rgba(240, 191, 108, 0.08), transparent 55%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent 42%),
-    color-mix(in srgb, var(--bg-secondary) 72%, transparent);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 8px 30px rgba(0, 0, 0, 0.24);
-}
-
-.pricing-custom__content {
-  min-width: 0;
-}
-
-.pricing-custom__title {
-  color: var(--text-primary);
-  font-family: 'Manrope', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.pricing-custom__description {
-  max-width: 680px;
-  margin-top: 10px;
-  color: var(--text-secondary);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  line-height: 1.65;
-}
-
-.pricing-custom__services {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.pricing-custom__services span {
-  padding: 6px 10px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--bg-primary) 58%, transparent);
-  color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-}
-
-.pricing-custom__action {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 2px;
-}
-
-.pricing-custom__price {
-  color: var(--text-primary);
-  font-family: 'Manrope', sans-serif;
-  font-size: 34px;
-  font-weight: 500;
-  letter-spacing: -0.04em;
-}
-
-.pricing-custom__action .pricing-card__cta {
-  margin-top: 18px;
-}
-
 .pricing-note {
   display: flex;
   align-items: center;
@@ -468,13 +409,6 @@ const customServices = computed(() =>
     min-height: 0;
   }
 
-  .pricing-custom {
-    grid-template-columns: 1fr;
-    max-width: 620px;
-    gap: 24px;
-    margin-right: auto;
-    margin-left: auto;
-  }
 }
 
 @media (max-width: 640px) {
@@ -488,14 +422,6 @@ const customServices = computed(() =>
 
   .pricing-card__price {
     font-size: 38px;
-  }
-
-  .pricing-custom {
-    padding: 26px 22px 28px;
-  }
-
-  .pricing-custom__price {
-    font-size: 30px;
   }
 
 }
