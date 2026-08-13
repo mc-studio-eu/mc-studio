@@ -469,6 +469,15 @@
     "intro_label": "The Independent Studio",
     "intro_text": "At MC Studio we have a taste for well-done work, we iterate fast <br> while paying particular attention <br> to delivered work",
     "title": "What <span class=\"text-gradient\">our clients</span> say",
+    "google_label": "Google reviews",
+    "google_rating_value": "5.0",
+    "google_rating_label": "Rated 5 out of 5 on Google",
+    "google_trust_text": "5 client stories to discover",
+    "google_review": "Google review",
+    "five_stars": "5 stars out of 5",
+    "previous": "Previous review",
+    "next": "Next review",
+    "go_to_review": "Go to review {number}",
     "items": {
       "amg_promotion": {
         "content": "Creating our website was a success!\nWe truly recommend MC studio!\nEfficient work and a very good understanding of our expectations.",

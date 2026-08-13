@@ -469,6 +469,15 @@
     "intro_label": "Le studio Indépendant",
     "intro_text": "Chez MC Studio on a le goût du travail bien fait, on itère vite <br> tout en ayant une attention particulière <br> au travail delivré",
     "title": "Ce qu'en disent <span class=\"text-gradient\">nos clients</span>",
+    "google_label": "Avis Google",
+    "google_rating_value": "5,0",
+    "google_rating_label": "Noté 5 sur 5 sur Google",
+    "google_trust_text": "5 témoignages clients à découvrir",
+    "google_review": "Avis Google",
+    "five_stars": "5 étoiles sur 5",
+    "previous": "Avis précédent",
+    "next": "Avis suivant",
+    "go_to_review": "Aller à l'avis {number}",
     "items": {
       "amg_promotion": {
         "content": "La création de notre site est une réussite !\nNous recommandons vraiment MC studio !\nEfficacité et très bonne compréhension de nos attentes.",
