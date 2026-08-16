@@ -9,7 +9,7 @@ html {
 @theme {
   --color-black-light: #232323;
   --color-gold: #F0BF6C;
-  --degrad-gold: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  --degrad-gold: #FFFFFF;
   --color-grey: #5D5D5D;
   --color-black: #0F0F0F;
   --color-white: #FFFFFF;
@@ -28,15 +28,24 @@ html {
   --ui-error: var(--color-black);
 
   /* Theme colors - Default dark */
-  --bg-primary: #0F0F0F;
-  --bg-secondary: #151515;
-  --bg-card: #232323;
+  --bg-primary: #02060C;
+  --bg-secondary: #09111C;
+  --bg-card: #F5F5F5;
   --text-primary: #FFFFFF;
-  --text-secondary: #a1a1a1;
-  --text-muted: #6b7280;
-  --border-color: rgba(240, 191, 108, 0.2);
-  --border-subtle: rgba(255, 255, 255, 0.1);
-  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  --text-secondary: rgba(255, 255, 255, 0.64);
+  --text-muted: rgba(255, 255, 255, 0.42);
+  --border-color: rgba(255, 255, 255, 0.16);
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --gold-gradient: #FFFFFF;
+
+  --color-whiteout: #FFFFFF;
+  --color-haze: #F5F5F5;
+  --color-ink: #1B1B1B;
+  --color-black-void: #000000;
+  --color-twilight-blue: #D7A950;
+  --color-signal-blue: #F0BF6C;
+  --font-control: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-control-display: 'Host Grotesk', Inter, system-ui, sans-serif;
 }
 
 .light {
@@ -48,7 +57,7 @@ html {
   --text-muted: #6b7280;
   --border-color: rgba(26, 26, 26, 0.1);
   --border-subtle: rgba(26, 26, 26, 0.08);
-  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #1a1a1a 67.31%);
+  --gold-gradient: #1a1a1a;
 
   /* Override Tailwind's color variables */
   --color-black-light: #f5f5f5;
@@ -64,15 +73,15 @@ html {
   --ui-warning: var(--color-black);
   --ui-error: var(--color-black);
 
-  --bg-primary: #0F0F0F;
-  --bg-secondary: #151515;
-  --bg-card: #232323;
+  --bg-primary: #02060C;
+  --bg-secondary: #09111C;
+  --bg-card: #F5F5F5;
   --text-primary: #FFFFFF;
-  --text-secondary: #a1a1a1;
-  --text-muted: #6b7280;
-  --border-color: rgba(240, 191, 108, 0.2);
-  --border-subtle: rgba(255, 255, 255, 0.1);
-  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  --text-secondary: rgba(255, 255, 255, 0.64);
+  --text-muted: rgba(255, 255, 255, 0.42);
+  --border-color: rgba(255, 255, 255, 0.16);
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --gold-gradient: #FFFFFF;
 
   --color-black-light: #232323;
   --color-white: #FFFFFF;
@@ -83,6 +92,8 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  margin: 0;
+  font-family: var(--font-control);
   transition: background-color 0.4s ease, color 0.3s ease;
 }
 
@@ -108,12 +119,8 @@ body {
 }
 
 h1 {
-  font-family: "Manrope", sans-serif;
-  background: var(--gold-gradient);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  font-family: var(--font-control-display);
+  color: var(--text-primary);
 }
 
 p {
@@ -134,18 +141,193 @@ p {
 }
 
 .text-gradient {
-  background: linear-gradient(270deg, #f0bf6c 0%, white 67.308%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: none;
+  color: #f0bf6c;
+  -webkit-text-fill-color: currentColor;
 }
 
 .cta-primary {
-  background: linear-gradient(270deg, #f0bf6c 0%, white 67.308%);
-  border: none;
-  box-shadow:
-          0px 4px 4px 0px rgba(0, 0, 0, 0.25),
-          0px 9.736px 9.736px 0px rgba(11, 32, 103, 0.05),
-          0px 1.391px 2.782px 0px rgba(11, 32, 103, 0.14),
-          0px 36.247px 48.329px 0px rgba(0, 0, 0, 0.03);
+  background: #f0bf6c;
+  border: 1px solid #f0bf6c;
+  box-shadow: none;
+}
+
+/* Air-inspired homepage language: photographic scale, flat surfaces, no elevation. */
+.air-shell section:not(.air-hero):not(.air-statement):not(.air-intro) {
+  background: var(--bg-primary) !important;
+}
+
+.air-shell .section-title {
+  max-width: 820px;
+  margin-right: auto;
+  margin-left: auto;
+  color: #fff !important;
+  font-family: var(--font-control-display) !important;
+  font-size: clamp(36px, 5vw, 68px) !important;
+  font-weight: 500 !important;
+  letter-spacing: -.045em;
+  line-height: .98 !important;
+  text-wrap: balance;
+}
+
+.air-shell section > div {
+  max-width: 1150px;
+}
+
+.air-shell #projets,
+.air-shell #services,
+.air-shell #equipe,
+.air-shell #process,
+.air-shell #avis,
+.air-shell #tarifs,
+.air-shell #faq,
+.air-shell #contact {
+  padding-top: 112px !important;
+  padding-bottom: 112px !important;
+}
+
+.air-shell #projets article {
+  border: 0 !important;
+  border-radius: 12px !important;
+  background: var(--color-haze) !important;
+  box-shadow: none !important;
+}
+
+.air-shell #projets article > a {
+  margin: 8px;
+  border-radius: 11px;
+}
+
+.air-shell #projets article h3,
+.air-shell #projets article cite,
+.air-shell #projets article blockquote p {
+  color: var(--color-ink) !important;
+}
+
+.air-shell #projets article .project-card-description,
+.air-shell #projets article footer span {
+  color: rgba(27,27,27,.64) !important;
+}
+
+.air-shell #projets article blockquote {
+  border: 1px solid rgba(27,27,27,.1) !important;
+  border-radius: 11px !important;
+  background: #fff !important;
+}
+
+.air-shell #projets article [class*="bg-[linear-gradient"] {
+  border: 1px solid #d7a950 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.air-shell #projets button,
+.air-shell #projets > div > div > a {
+  box-shadow: none !important;
+}
+
+.air-shell #projets button[aria-pressed="true"] {
+  border-color: #f0bf6c !important;
+  background: #f0bf6c !important;
+  color: #1b1b1b !important;
+}
+
+.air-shell #services .offer-row { border-color: rgba(255,255,255,.16) !important; }
+.air-shell #services .offer-number { color: rgba(240,191,108,.72) !important; font-family: var(--font-control); font-size: 13px; }
+.air-shell #services .offer-row-title { font-family: var(--font-control-display); font-weight: 500; letter-spacing: -.035em; }
+.air-shell #services .offer-row-header:hover .offer-row-title { color: #f0bf6c !important; }
+.air-shell #services .offer-toggle-bar { height: 1px; background: #fff !important; }
+.air-shell #services .offer-visual { border-radius: 11px; background: #f5f5f5; }
+
+.air-shell .team-card,
+.air-shell .pricing-card,
+.air-shell .contact-card {
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.air-shell .team-card {
+  border: 1px solid rgba(255,255,255,.14) !important;
+  background: #09111c !important;
+}
+
+.air-shell [class*="shadow-"] {
+  box-shadow: none !important;
+}
+
+.air-shell #avis [class*="bg-[linear-gradient"],
+.air-shell #process [class*="bg-gradient"] {
+  background: #09111c !important;
+}
+
+.air-shell #avis [class*="f0bf6c"],
+.air-shell #process [class*="f0bf6c"] {
+  border-color: rgba(240,191,108,.32) !important;
+  background-color: transparent !important;
+  color: #f0bf6c !important;
+}
+
+.air-shell .pricing-card {
+  border: 0 !important;
+  background: var(--color-haze) !important;
+}
+
+.air-shell .pricing-card__title,
+.air-shell .pricing-card__price,
+.air-shell .pricing-card__features,
+.air-shell .pricing-card__delivery strong {
+  color: var(--color-ink) !important;
+}
+
+.air-shell .pricing-card__description,
+.air-shell .pricing-card__delivery,
+.air-shell .pricing-card__included {
+  color: rgba(27,27,27,.62) !important;
+}
+
+.air-shell .pricing-card__cta {
+  border: 1px solid var(--color-ink) !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--color-ink) !important;
+  box-shadow: none !important;
+}
+
+.air-shell .pricing-card__divider { background: rgba(27,27,27,.12) !important; }
+.air-shell .pricing-popular { border-color: #d7a950 !important; background: #f0bf6c !important; color: var(--color-ink) !important; }
+
+.air-shell #contact .contact-card {
+  border: 0 !important;
+  background: var(--color-haze) !important;
+}
+
+.air-shell #contact .contact-tabs { border-radius: 8px; box-shadow: none; }
+.air-shell #contact .contact-tab--active { background: #f0bf6c !important; color: #1b1b1b !important; box-shadow: none !important; }
+.air-shell #contact .contact-field { color: rgba(27,27,27,.64) !important; }
+.air-shell #contact .contact-field input,
+.air-shell #contact .contact-field select,
+.air-shell #contact .contact-field textarea {
+  border: 1px solid rgba(27,27,27,.12) !important;
+  border-radius: 4px !important;
+  background: #fff !important;
+  color: var(--color-ink) !important;
+  box-shadow: none !important;
+}
+.air-shell #contact .contact-submit { border: 1px solid #1b1b1b !important; border-radius: 8px !important; background: #f0bf6c !important; color: #1b1b1b !important; box-shadow: none !important; }
+
+.air-shell footer { border-top: 1px solid rgba(255,255,255,.16); background: #000 !important; }
+
+@media (max-width: 720px) {
+  .air-shell #projets,
+  .air-shell #services,
+  .air-shell #equipe,
+  .air-shell #process,
+  .air-shell #avis,
+  .air-shell #tarifs,
+  .air-shell #faq,
+  .air-shell #contact {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
 }
