@@ -11,7 +11,7 @@ import ScrollingMarquee from "./ScrollingMarquee.vue"
     <!-- Background Image -->
     <NuxtImg
       src="/img/main/background.svg"
-      alt="Hero background" 
+      alt="Hero background"
       format="svg"
       preload
       class="absolute inset-0 w-full h-full object-cover object-center rounded-lg"

@@ -64,7 +64,7 @@ const partnerNavItems = [
         :href="platformUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="flex items-center justify-center w-full px-6 h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline"
+        class="site-cta flex items-center justify-center px-6 bg-[var(--gold-cta-gradient)] border-none rounded-xl font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_10px_28px_rgba(166,111,24,0.18)] transition-all duration-200 hover:brightness-105 no-underline"
       >
         <span class="text-slide-container h-[20px]">
           <span ref="initialCtaWrapper" class="text-slide-wrapper">

@@ -29,7 +29,7 @@ const currentService = computed(() => rotatingServices.value[0] || '')
 <template>
   <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 sm:gap-x-9 md:gap-x-12 lg:gap-x-16 mt-6 sm:mt-8 md:mt-10 lg:mt-12 px-2 sm:px-4 w-full">
     <!-- Stat -->
-    <div class="flex items-center justify-center gap-2 text-white/80">
+    <div class="flex items-center justify-center gap-2 text-[var(--text-secondary)]">
       <svg class="shrink-0 w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
         <polyline points="22 4 12 14.01 9 11.01"/>
@@ -40,7 +40,7 @@ const currentService = computed(() => rotatingServices.value[0] || '')
     </div>
 
     <!-- Service -->
-    <div class="flex items-center justify-center gap-2 text-white/80">
+    <div class="flex items-center justify-center gap-2 text-[var(--text-secondary)]">
       <svg class="shrink-0 w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
         <polyline points="22 4 12 14.01 9 11.01"/>
@@ -51,7 +51,7 @@ const currentService = computed(() => rotatingServices.value[0] || '')
     </div>
 
     <!-- Projects -->
-    <div class="flex items-center justify-center gap-2 text-white/80">
+    <div class="flex items-center justify-center gap-2 text-[var(--text-secondary)]">
       <svg class="shrink-0 w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 2 2 7l10 5 10-5-10-5Z"/>
         <path d="m2 17 10 5 10-5"/>

@@ -9,6 +9,9 @@ html {
 @theme {
   --color-black-light: #232323;
   --color-gold: #F0BF6C;
+  --color-gold-readable: #A66F18;
+  --color-gold-deep: #855611;
+  --color-gold-soft: #FAEED7;
   --degrad-gold: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
   --color-grey: #5D5D5D;
   --color-black: #0F0F0F;
@@ -27,32 +30,41 @@ html {
   --ui-warning: var(--color-black);
   --ui-error: var(--color-black);
 
-  /* Theme colors - Default dark */
-  --bg-primary: #0F0F0F;
-  --bg-secondary: #151515;
-  --bg-card: #232323;
-  --text-primary: #FFFFFF;
-  --text-secondary: #a1a1a1;
-  --text-muted: #6b7280;
-  --border-color: rgba(240, 191, 108, 0.2);
-  --border-subtle: rgba(255, 255, 255, 0.1);
-  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  /* Warm white theme */
+  --bg-primary: #FCFBF8;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-soft: #F7F3EB;
+  --text-primary: #171612;
+  --text-secondary: #625E55;
+  --text-muted: #767066;
+  --border-color: rgba(166, 111, 24, 0.2);
+  --border-subtle: #E8E0D3;
+  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #A66F18 67.31%);
+  --gold-gradient-on-dark: linear-gradient(270deg, #F0BF6C 0%, #FFFFFF 67.31%);
+  --gold-cta-gradient: linear-gradient(to right, #FFFFFF 50%, #F0BF6C 100%);
+  --site-cta-width: 200px;
+  --site-cta-height: 56px;
+  --shadow-soft: 0 18px 55px rgba(88, 67, 33, 0.09);
 }
 
 .light {
-  --bg-primary: #EEEEF4;
+  --bg-primary: #FCFBF8;
   --bg-secondary: #FFFFFF;
   --bg-card: #FFFFFF;
-  --text-primary: #1a1a1a;
-  --text-secondary: #5D5D5D;
-  --text-muted: #6b7280;
-  --border-color: rgba(26, 26, 26, 0.1);
-  --border-subtle: rgba(26, 26, 26, 0.08);
-  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #1a1a1a 67.31%);
+  --bg-soft: #F7F3EB;
+  --text-primary: #171612;
+  --text-secondary: #625E55;
+  --text-muted: #767066;
+  --border-color: rgba(166, 111, 24, 0.2);
+  --border-subtle: #E8E0D3;
+  --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #A66F18 67.31%);
+  --gold-gradient-on-dark: linear-gradient(270deg, #F0BF6C 0%, #FFFFFF 67.31%);
+  --gold-cta-gradient: linear-gradient(to right, #FFFFFF 50%, #F0BF6C 100%);
+  --shadow-soft: 0 18px 55px rgba(88, 67, 33, 0.09);
 
   /* Override Tailwind's color variables */
   --color-black-light: #f5f5f5;
-  --color-white: #1a1a1a;
   --color-grey-light: #5D5D5D;
 }
 
@@ -73,6 +85,8 @@ html {
   --border-color: rgba(240, 191, 108, 0.2);
   --border-subtle: rgba(255, 255, 255, 0.1);
   --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  --gold-gradient-on-dark: linear-gradient(270deg, #F0BF6C 0%, #FFF 67.31%);
+  --gold-cta-gradient: linear-gradient(to right, #FFFFFF 50%, #F0BF6C 100%);
 
   --color-black-light: #232323;
   --color-white: #FFFFFF;
@@ -134,18 +148,28 @@ p {
 }
 
 .text-gradient {
-  background: linear-gradient(270deg, #f0bf6c 0%, white 67.308%);
+  background: var(--gold-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .cta-primary {
-  background: linear-gradient(270deg, #f0bf6c 0%, white 67.308%);
+  background: var(--gold-cta-gradient);
   border: none;
   box-shadow:
-          0px 4px 4px 0px rgba(0, 0, 0, 0.25),
-          0px 9.736px 9.736px 0px rgba(11, 32, 103, 0.05),
-          0px 1.391px 2.782px 0px rgba(11, 32, 103, 0.14),
-          0px 36.247px 48.329px 0px rgba(0, 0, 0, 0.03);
+          0 1px 0 rgba(255, 255, 255, 0.45) inset,
+          0 10px 28px rgba(166, 111, 24, 0.18);
+}
+
+/* Shared dimensions for primary action buttons. Compact UI controls keep their own sizing. */
+.site-cta,
+.cta-primary,
+.secondary-btn {
+  width: var(--site-cta-width);
+  max-width: 100%;
+  height: var(--site-cta-height);
+  min-height: var(--site-cta-height);
+  box-sizing: border-box;
+  flex-shrink: 0;
 }

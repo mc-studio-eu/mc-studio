@@ -183,7 +183,7 @@ const titleWithBreaks = (key: string) => {
   overflow: hidden;
   position: relative;
   min-height: 420px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-soft);
 }
 
 .team-card__inner {
@@ -210,8 +210,8 @@ const titleWithBreaks = (key: string) => {
   position: absolute;
   inset: 0;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 18px 46px rgba(0, 0, 0, 0.35);
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 18px 46px rgba(88, 67, 33, 0.08);
   pointer-events: none;
 }
 

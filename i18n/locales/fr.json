@@ -12,6 +12,8 @@
     "team": "Équipe"
   },
   "footer": {
+    "ask_ai_title": "Demandez à l’IA ce qu’elle sait de MC Studio",
+    "ask_ai_aria": "Interroger {provider} à propos de MC Studio",
     "tagline": "Branding, design et développement pour lancer des applications utiles, élégantes et prêtes à grandir.",
     "navigation_title": "Navigation",
     "socials_title": "Réseaux",
@@ -76,7 +78,7 @@
         }
       },
       "website": {
-        "title": "Website",
+        "title": "Landing Page / Site web",
         "description": "Des sites pensés pour convertir, pas seulement pour faire joli. Landing pages, sites vitrines et sites sur mesure, avec un design premium, un copywriting clair et une exécution rapide.",
         "items": {
           "0": "Landing pages",
@@ -334,17 +336,23 @@
     "show_more": "Voir plus de projets",
     "all": {
       "meta_title": "Tous nos projets",
+      "heading": "Tous nos projets",
       "title": "Tous nos <span class=\"text-gradient\">projets</span>",
       "subtitle": "L'ensemble de nos réalisations : landing pages, sites internet et applications sur mesure.",
       "back": "Retour à l'accueil",
       "empty": "Aucun projet ne correspond à ce filtre pour le moment."
+    },
+    "view": {
+      "aria_label": "Modifier l’affichage des projets",
+      "grid": "Afficher en grille",
+      "list": "Afficher en liste"
     },
     "more_tags": "{count} tags supplémentaires",
     "filters": {
       "aria_label": "Filtrer les projets par type",
       "all": "Tous",
       "branding": "Branding",
-      "landing_page": "Landing page",
+      "landing_page": "Landing page / Site web",
       "app": "SaaS / CRM / App"
     },
     "items": {

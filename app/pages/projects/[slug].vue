@@ -1,32 +1,63 @@
 <script setup lang="ts">
 import { findProjectBySlug, projects } from '../../data/projects'
-import type { LocalizedValue, Project } from '../../data/projects'
+import type { LocalizedValue, Project, ProjectCategory } from '../../data/projects'
 import Navbar from '../../components/layouts/Navbar.vue'
 
 type LocaleKey = 'fr' | 'en'
+type GalleryRow = {
+  layout: 'wide' | 'split'
+  images: string[]
+}
 
 const PAGE_LABELS = {
   fr: {
     back: 'Retour aux projets',
-    summaryTitle: 'Résumé',
-    aboutTitle: 'À propos',
-    visitWebsite: 'Visiter le site',
-    bookCall: 'Réserver un appel',
-    contextTitle: 'Contexte & enjeux',
-    objectivesTitle: 'Objectifs',
-    resultsTitle: 'Résultats',
+    overview: 'Le projet',
+    industry: 'Secteur',
+    services: 'Services',
+    team: 'Équipe',
+    visitWebsite: 'Voir le site',
+    bookCall: 'Parler de votre projet',
+    context: 'Contexte',
+    objectives: 'Objectifs',
+    response: 'Notre réponse',
+    execution: 'Ce que nous avons réalisé',
+    testimonial: 'Le mot du client',
+    moreProjects: 'Plus de projets',
+    allProjects: 'Tous les projets',
+    viewProject: 'Voir le projet',
   },
   en: {
     back: 'Back to projects',
-    summaryTitle: 'Summary',
-    aboutTitle: 'About',
+    overview: 'The project',
+    industry: 'Industry',
+    services: 'Services',
+    team: 'Team',
     visitWebsite: 'Visit website',
-    bookCall: 'Book a call',
-    contextTitle: 'Context & challenges',
-    objectivesTitle: 'Objectives',
-    resultsTitle: 'Results',
+    bookCall: 'Discuss your project',
+    context: 'Context',
+    objectives: 'Objectives',
+    response: 'Our response',
+    execution: 'What we delivered',
+    testimonial: 'Client words',
+    moreProjects: 'More projects',
+    allProjects: 'All projects',
+    viewProject: 'View project',
   },
 } satisfies Record<LocaleKey, Record<string, string>>
+
+const CATEGORY_LABELS: Record<LocaleKey, Record<ProjectCategory, string>> = {
+  fr: {
+    branding: 'Identité de marque',
+    'landing-page': 'Site web',
+    app: 'Produit digital',
+  },
+  en: {
+    branding: 'Brand identity',
+    'landing-page': 'Website',
+    app: 'Digital product',
+  },
+}
 
 function getLocalizedValue<T>(value: LocalizedValue<T>, localeKey: LocaleKey): T {
   return value[localeKey]
@@ -69,90 +100,34 @@ const localizedProject = computed(() => {
 const backToProjectsLink = computed(() => localePath('/#projets'))
 const contactLink = computed(() => localePath({ path: '/', hash: '#contact' }))
 
-const bookCallBtn = ref(null)
-const bookCallWrapper1 = ref(null)
-const bookCallWrapper2 = ref(null)
+const services = computed(() =>
+  localizedProject.value.categories.map((category) => CATEGORY_LABELS[currentLocale.value][category]),
+)
 
-useTextSlideAnimation(bookCallBtn, [bookCallWrapper1, bookCallWrapper2])
+const galleryRows = computed<GalleryRow[]>(() => {
+  const heroImage = localizedProject.value.image
+  const desktopImages = [...new Set(localizedProject.value.screenshots.desktop)]
+    .filter((image) => image && image !== heroImage)
+  const mobileImages = [...new Set(localizedProject.value.screenshots.mobile)]
+    .filter((image) => image && image !== heroImage && !desktopImages.includes(image))
+  const rows: GalleryRow[] = []
 
-const splitTextIntoParagraphs = (text: string) => {
-  const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map((sentence) => sentence.trim()) ?? [text]
-  const paragraphs: string[] = []
-  let current = ''
-
-  for (const sentence of sentences) {
-    const next = current ? `${current} ${sentence}` : sentence
-
-    if (current && next.length > 220) {
-      paragraphs.push(current)
-      current = sentence
-    } else {
-      current = next
-    }
-  }
-
-  if (current) {
-    paragraphs.push(current)
-  }
-
-  return paragraphs
-}
-
-const projectImages = computed(() => {
-  const images = [
-    localizedProject.value.image,
-    ...localizedProject.value.screenshots.desktop,
-    ...localizedProject.value.screenshots.mobile,
-  ]
-
-  return [...new Set(images)].filter(Boolean)
-})
-
-type CaseStudyBlock =
-  | { type: 'image'; key: string; src: string; alt: string }
-  | { type: 'text'; key: string; title: string; body: string }
-
-const caseStudyFlow = computed<CaseStudyBlock[]>(() => {
-  const textSections = [
-    { title: labels.value.contextTitle, body: localizedProject.value.context },
-    { title: labels.value.objectivesTitle, body: localizedProject.value.objectives.join(' ') },
-    { title: labels.value.resultsTitle, body: localizedProject.value.solution },
-  ]
-
-  const blocks: CaseStudyBlock[] = []
-
-  textSections.forEach((section, index) => {
-    const image = projectImages.value[index]
-
-    if (image) {
-      blocks.push({
-        type: 'image',
-        key: `image-${index}`,
-        src: image,
-        alt: `${localizedProject.value.title} - ${section.title}`,
-      })
-    }
-
-    blocks.push({
-      type: 'text',
-      key: `text-${index}`,
-      title: section.title,
-      body: section.body,
-    })
+  desktopImages.forEach((image) => {
+    rows.push({ layout: 'wide', images: [image] })
   })
 
-  const closingImage = projectImages.value[textSections.length]
-
-  if (closingImage) {
-    blocks.push({
-      type: 'image',
-      key: 'image-closing',
-      src: closingImage,
-      alt: localizedProject.value.title,
+  while (mobileImages.length) {
+    rows.push({
+      layout: mobileImages.length > 1 ? 'split' : 'wide',
+      images: mobileImages.splice(0, 2),
     })
   }
 
-  return blocks
+  if (!rows.length) {
+    rows.push({ layout: 'wide', images: [heroImage] })
+  }
+
+  return rows
 })
 
 const projectTestimonial = computed(() => {
@@ -170,190 +145,207 @@ const projectTestimonial = computed(() => {
   }
 })
 
-const nextProject = computed(() => {
+const moreProjects = computed(() => {
   const currentIndex = projects.findIndex((item) => item.slug === localizedProject.value.slug)
+  const availableProjects = projects.length - 1
 
-  if (currentIndex < 0) {
-    return undefined
-  }
+  return Array.from({ length: Math.min(3, availableProjects) }, (_, index) => {
+    const nextProject = projects[(currentIndex + index + 1) % projects.length]
 
-  return projects[(currentIndex + 1) % projects.length]
+    return {
+      ...nextProject,
+      industry: getLocalizedValue(nextProject.industry, currentLocale.value),
+      link: localePath(`/projects/${nextProject.slug}`),
+    }
+  })
 })
-
-const nextProjectLink = computed(() =>
-  nextProject.value ? localePath(`/projects/${nextProject.value.slug}`) : localePath('/#projets')
-)
 
 useSeoMeta({
   title: `${localizedProject.value.title} | MC Studio`,
   description: localizedProject.value.summary,
   ogTitle: `${localizedProject.value.title} | MC Studio`,
   ogDescription: localizedProject.value.summary,
+  ogImage: localizedProject.value.image,
 })
 </script>
 
 <template>
-  <main class="main-container min-h-screen px-5 py-5 transition-colors duration-300 sm:px-6 sm:py-6">
+  <main class="case-study-page">
     <Navbar floating-only always-floating />
 
-    <!-- Main Content with Border Frame -->
-    <div class="relative mx-auto max-w-[1440px]">
-      <!-- Left Border Line -->
-      <div class="border-line absolute left-0 xl:left-[50px] top-0 bottom-0 w-px"></div>
+    <article>
+      <header class="case-hero">
+        <NuxtImg
+          :src="localizedProject.image"
+          :alt="localizedProject.title"
+          class="case-hero__image"
+          preload
+        />
+        <div class="case-hero__veil" />
 
-      <!-- Right Border Line -->
-      <div class="border-line absolute right-0 xl:right-[50px] top-0 bottom-0 w-px"></div>
+        <NuxtLink
+          :to="backToProjectsLink"
+          class="case-hero__back"
+          :aria-label="labels.back"
+        >
+          <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
+          <span>{{ labels.back }}</span>
+        </NuxtLink>
 
-      <section class="mx-auto w-full">
-      <article class="relative">
-        <div class="relative z-10 px-[clamp(18px,5vw,72px)] py-[clamp(56px,8vw,96px)] max-sm:pt-[88px]">
-          <NuxtLink
-            :to="backToProjectsLink"
-            class="absolute left-[clamp(18px,5vw,72px)] top-[clamp(16px,2.4vw,32px)] inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-white/[0.03] text-[var(--text-secondary)] no-underline backdrop-blur transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
-            :aria-label="labels.back"
-          >
-            <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
-          </NuxtLink>
-
-          <section class="mx-auto w-full max-w-[760px]">
-            <h1 class="case-study-title m-0 text-center text-balance font-manrope font-medium tracking-normal">
-              {{ localizedProject.title }}
-            </h1>
-
-            <div class="mt-[clamp(34px,5vw,48px)] h-px w-full bg-[var(--border-subtle)]" />
-
-            <div class="grid grid-cols-2 gap-[clamp(34px,8vw,88px)] pt-[clamp(44px,7vw,72px)] max-md:grid-cols-1 max-md:gap-10">
-              <div>
-                <h2 class="case-study-heading">{{ labels.summaryTitle }}</h2>
-                <div class="case-study-copy">
-                  <p
-                    v-for="paragraph in splitTextIntoParagraphs(localizedProject.summary)"
-                    :key="paragraph"
-                  >
-                    {{ paragraph }}
-                  </p>
-                </div>
-
-                <div class="mt-7 flex flex-wrap items-center gap-x-3 gap-y-3 sm:flex-nowrap">
-                  <NuxtLink
-                    ref="bookCallBtn"
-                    :to="contactLink"
-                    class="cta-primary flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-3 py-2 text-[15px] font-medium text-[#0f0f0f] no-underline backdrop-blur-md transition-all duration-200"
-                  >
-                    <NuxtImg
-                      src="/img/main/founder.jpeg"
-                      alt="MC Studio"
-                      class="h-9 w-9 shrink-0 scale-[1.18] rounded-xl object-cover object-[center_18%] shadow-[0_8px_16px_rgba(15,15,15,0.16)] ring-1 ring-black/10 md:h-10 md:w-10"
-                    />
-                    <div class="flex shrink-0 flex-col items-start gap-px">
-                      <span class="text-slide-container h-[18px]">
-                        <span ref="bookCallWrapper1" class="text-slide-wrapper">
-                          <span class="text-slide-text h-[18px] whitespace-nowrap font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
-                          <span class="text-slide-text h-[18px] whitespace-nowrap font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
-                        </span>
-                      </span>
-                      <span class="text-slide-container h-[12px]">
-                        <span ref="bookCallWrapper2" class="text-slide-wrapper">
-                          <span class="text-slide-text h-[12px] whitespace-nowrap font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
-                          <span class="text-slide-text h-[12px] whitespace-nowrap font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
-                        </span>
-                      </span>
-                    </div>
-                  </NuxtLink>
-
-                  <a
-                    :href="localizedProject.externalLink"
-                    target="_blank"
-                    rel="noreferrer"
-                    class="inline-flex shrink-0 items-center justify-center gap-2 self-stretch whitespace-nowrap rounded-xl border border-[var(--border-subtle)] bg-white/[0.03] px-5 text-center text-sm font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)]"
-                  >
-                    <span>{{ labels.visitWebsite }}</span>
-                    <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
-                  </a>
-                </div>
-              </div>
-
-              <div>
-                <h2 class="case-study-heading">{{ labels.aboutTitle }}</h2>
-                <div class="case-study-copy">
-                  <p
-                    v-for="paragraph in splitTextIntoParagraphs(localizedProject.aboutCompany)"
-                    :key="paragraph"
-                  >
-                    {{ paragraph }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <template v-for="block in caseStudyFlow" :key="block.key">
-            <section
-              v-if="block.type === 'image'"
-              class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
-            >
-              <NuxtImg
-                :src="block.src"
-                :alt="block.alt"
-                class="mx-auto block w-full rounded-lg border border-[var(--border-subtle)] bg-[#0f0f0f]"
-              />
-            </section>
-
-            <section
-              v-else
-              class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
-            >
-              <h2 class="case-study-heading">{{ block.title }}</h2>
-              <div class="case-study-copy">
-                <p
-                  v-for="paragraph in splitTextIntoParagraphs(block.body)"
-                  :key="paragraph"
-                >
-                  {{ paragraph }}
-                </p>
-              </div>
-            </section>
-          </template>
-
-          <section
-            v-if="projectTestimonial"
-            class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
-          >
-            <div class="flex w-full flex-col gap-6 rounded-2xl border border-[var(--border-subtle)] bg-[#232323] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-colors duration-300 dark:shadow-none">
-              <p class="m-0 whitespace-pre-line font-inter text-xs leading-[1.7] text-white transition-colors duration-300 sm:text-sm">
-                {{ projectTestimonial.review }}
-              </p>
-
-              <div class="flex items-center gap-3">
-                <NuxtImg
-                  :src="projectTestimonial.avatar"
-                  :alt="projectTestimonial.name"
-                  class="h-11 w-11 shrink-0 rounded-full bg-gradient-to-br from-[var(--color-gold)] to-[#e8a84c] object-cover"
-                />
-                <div class="flex flex-col gap-[2px]">
-                  <span class="font-inter text-sm font-semibold text-[var(--text-primary)] transition-colors duration-300">{{ projectTestimonial.name }}</span>
-                  <span class="font-inter text-xs text-[var(--text-secondary)] transition-colors duration-300">{{ projectTestimonial.job }}</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section
-            v-if="nextProject"
-            class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
-          >
-            <ProjectDetailNextProject
-              :title="nextProject.title"
-              :link="nextProjectLink"
-              :cta-label="t('projects.cta')"
-            />
-          </section>
+        <div class="case-hero__caption">
+          <p class="case-kicker">{{ services[0] }}</p>
+          <h1 class="case-hero__title">{{ localizedProject.title }}</h1>
         </div>
-      </article>
+
+        <a
+          :href="localizedProject.externalLink"
+          target="_blank"
+          rel="noreferrer"
+          class="case-hero__website"
+        >
+          {{ labels.visitWebsite }}
+          <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
+        </a>
+      </header>
+
+      <section class="case-intro case-shell">
+        <div class="case-intro__story">
+          <p class="case-section-label">{{ labels.overview }}</p>
+          <div class="case-intro__copy">
+            <p>{{ localizedProject.summary }}</p>
+            <p>{{ localizedProject.aboutCompany }}</p>
+            <p>{{ localizedProject.context }}</p>
+          </div>
+        </div>
+
+        <dl class="case-facts">
+          <div>
+            <dt>{{ labels.industry }}</dt>
+            <dd>{{ localizedProject.industry }}</dd>
+          </div>
+          <div>
+            <dt>{{ labels.services }}</dt>
+            <dd>{{ services.join(' · ') }}</dd>
+          </div>
+          <div>
+            <dt>{{ labels.team }}</dt>
+            <dd>{{ localizedProject.companySize }}</dd>
+          </div>
+        </dl>
       </section>
 
-      <div class="section-separator mb-10 mt-10"></div>
-    </div>
+      <section class="case-strategy case-shell">
+        <article>
+          <p class="case-section-label">01 — {{ labels.objectives }}</p>
+          <ul class="case-editorial-list">
+            <li v-for="objective in localizedProject.objectives" :key="objective">
+              {{ objective }}
+            </li>
+          </ul>
+        </article>
+
+        <article>
+          <p class="case-section-label">02 — {{ labels.response }}</p>
+          <p class="case-strategy__lead">{{ localizedProject.solution }}</p>
+        </article>
+      </section>
+
+      <section v-if="galleryRows.length" class="case-gallery case-shell">
+        <div
+          v-for="(row, rowIndex) in galleryRows"
+          :key="`${row.layout}-${rowIndex}`"
+          class="case-gallery__row"
+          :class="`case-gallery__row--${row.layout}`"
+        >
+          <figure
+            v-for="(image, imageIndex) in row.images"
+            :key="image"
+            class="case-media"
+          >
+            <NuxtImg
+              :src="image"
+              :alt="`${localizedProject.title} — ${rowIndex + imageIndex + 1}`"
+              class="case-media__image"
+              loading="lazy"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section class="case-execution case-shell">
+        <div class="case-execution__heading">
+          <p class="case-section-label">03 — {{ labels.execution }}</p>
+          <h2>{{ localizedProject.title }}</h2>
+        </div>
+
+        <ol class="case-actions">
+          <li v-for="(action, index) in localizedProject.actions" :key="action.title">
+            <span>{{ String(index + 1).padStart(2, '0') }}</span>
+            <h3>{{ action.title }}</h3>
+            <p>{{ action.body }}</p>
+          </li>
+        </ol>
+      </section>
+
+      <section v-if="projectTestimonial" class="case-quote case-shell">
+        <p class="case-section-label">{{ labels.testimonial }}</p>
+        <blockquote>“{{ projectTestimonial.review }}”</blockquote>
+        <div class="case-quote__person">
+          <NuxtImg
+            :src="projectTestimonial.avatar"
+            :alt="projectTestimonial.name"
+            class="h-11 w-11 rounded-full object-cover"
+          />
+          <p>
+            <strong>{{ projectTestimonial.name }}</strong>
+            <span>{{ projectTestimonial.job }}</span>
+          </p>
+        </div>
+      </section>
+
+      <section class="case-contact case-shell">
+        <p>{{ currentLocale === 'fr' ? 'Un projet en tête ?' : 'Have a project in mind?' }}</p>
+        <NuxtLink :to="contactLink" class="site-cta">
+          {{ labels.bookCall }}
+          <UIcon name="i-lucide-arrow-up-right" class="h-5 w-5" />
+        </NuxtLink>
+      </section>
+
+      <section class="case-more">
+        <div class="case-shell case-more__heading">
+          <h2>{{ labels.moreProjects }}</h2>
+          <NuxtLink :to="backToProjectsLink">{{ labels.allProjects }}</NuxtLink>
+        </div>
+
+        <div class="case-shell case-more__grid">
+          <NuxtLink
+            v-for="relatedProject in moreProjects"
+            :key="relatedProject.slug"
+            :to="relatedProject.link"
+            class="case-project-card"
+          >
+            <div class="case-project-card__media">
+              <NuxtImg
+                :src="relatedProject.image"
+                :alt="relatedProject.title"
+                class="case-project-card__image"
+                loading="lazy"
+              />
+            </div>
+            <div class="case-project-card__meta">
+              <div>
+                <p>{{ relatedProject.industry }}</p>
+                <h3>{{ relatedProject.title }}</h3>
+              </div>
+              <span>
+                {{ labels.viewProject }}
+                <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
+              </span>
+            </div>
+          </NuxtLink>
+        </div>
+      </section>
+    </article>
 
     <FooterSection />
     <ScrollToTop />
@@ -361,94 +353,591 @@ useSeoMeta({
 </template>
 
 <style scoped>
-/* Main container */
-.main-container {
-  background-color: var(--bg-primary);
+.case-study-page {
+  min-height: 100vh;
+  overflow: clip;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-/* Border lines */
-.border-line {
-  background: linear-gradient(to bottom, var(--border-color) 0%, var(--border-color) 50%, transparent 100%);
+.case-shell {
+  width: min(100% - 40px, 1240px);
+  margin-inline: auto;
 }
 
-:global(.dark) .border-line {
-  background: linear-gradient(to bottom, rgba(240, 191, 108, 0.4) 0%, rgba(240, 191, 108, 0.2) 50%, transparent 100%);
+.case-hero {
+  position: relative;
+  width: calc(100% - 48px);
+  min-height: max(650px, calc(100svh - 48px));
+  margin: 24px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-soft);
+  color: white;
+  box-shadow: var(--shadow-soft);
 }
 
-:global(.light) .border-line {
-  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.15) 0%, rgba(26, 26, 26, 0.08) 50%, transparent 100%);
+.case-hero__image,
+.case-hero__veil {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-/* Section separator line */
-.section-separator {
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--border-color) 20%, var(--border-color) 80%, transparent 100%);
-  margin-left: auto;
-  margin-right: auto;
-  max-width: calc(100% - 146px);
+.case-hero__image {
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-:global(.dark) .section-separator {
-  background: linear-gradient(90deg, transparent 0%, rgba(240, 191, 108, 0.25) 20%, rgba(240, 191, 108, 0.25) 80%, transparent 100%);
+.case-hero:hover .case-hero__image {
+  transform: scale(1.018);
 }
 
-:global(.light) .section-separator {
-  background: linear-gradient(90deg, transparent 0%, rgba(26, 26, 26, 0.12) 20%, rgba(26, 26, 26, 0.12) 80%, transparent 100%);
+.case-hero__veil {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 34%),
+    linear-gradient(0deg, rgba(23, 22, 18, 0.68) 0%, transparent 45%),
+    linear-gradient(120deg, rgba(166, 111, 24, 0.12), transparent 46%);
 }
 
-@media (max-width: 1024px) {
-  .section-separator {
-    max-width: 100%;
-  }
+.case-hero__back,
+.case-hero__website {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  text-decoration: none;
 }
 
-.case-study-title {
-  overflow-wrap: anywhere;
-  font-size: clamp(30px, 3.6vw, 52px);
-  line-height: 1.08;
+.case-hero__back {
+  top: 26px;
+  left: clamp(20px, 3vw, 48px);
 }
 
-.case-study-heading {
-  margin: 0 0 14px;
-  font-family: Manrope, sans-serif;
-  font-size: clamp(23px, 3vw, 32px);
-  font-weight: 500;
-  line-height: 1.12;
-  text-wrap: balance;
-  background: var(--gold-gradient);
+.case-hero__website {
+  right: clamp(20px, 3vw, 48px);
+  bottom: clamp(104px, 9vw, 132px);
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.case-hero__caption {
+  position: absolute;
+  z-index: 2;
+  left: clamp(20px, 3vw, 48px);
+  right: clamp(20px, 3vw, 48px);
+  bottom: clamp(104px, 9vw, 132px);
+}
+
+.case-kicker,
+.case-section-label {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.case-kicker {
+  margin-bottom: 9px;
+  color: #f7d99e;
+}
+
+.case-hero__title {
+  max-width: 12ch;
+  margin: 0;
+  color: transparent;
+  background: var(--gold-gradient-on-dark);
   background-clip: text;
   -webkit-background-clip: text;
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(52px, 8.4vw, 124px);
+  font-weight: 500;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
   -webkit-text-fill-color: transparent;
-  color: transparent;
 }
 
-.case-study-copy {
-  color: var(--text-secondary);
-  font-size: clamp(15px, 1.6vw, 16px);
-  line-height: 1.6;
+.case-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.85fr);
+  gap: clamp(64px, 10vw, 150px);
+  padding-block: clamp(88px, 11vw, 160px);
 }
 
-.case-study-copy p {
+.case-section-label {
+  color: var(--color-gold-readable);
+}
+
+.case-intro__story {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 32px;
+}
+
+.case-intro__copy {
+  max-width: 670px;
+}
+
+.case-intro__copy p,
+.case-strategy__lead {
   margin: 0;
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(21px, 2vw, 30px);
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
 }
 
-.case-study-copy p + p {
+.case-intro__copy p + p {
   margin-top: 1.15em;
 }
 
-.text-slide-container {
-  display: block;
-  position: relative;
+.case-facts {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.case-facts > div {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 24px;
+  padding-block: 18px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.case-facts dt,
+.case-facts dd {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.case-facts dt {
+  color: var(--text-secondary);
+}
+
+.case-strategy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(48px, 9vw, 130px);
+  padding-bottom: clamp(88px, 11vw, 150px);
+}
+
+.case-strategy article {
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.case-editorial-list {
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.case-editorial-list li {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  gap: 16px;
+  padding-block: 15px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: Inter, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.case-editorial-list li::before {
+  content: '↳';
+  color: var(--color-gold-readable);
+}
+
+.case-strategy__lead {
+  margin-top: 32px;
+}
+
+.case-gallery {
+  display: grid;
+  gap: clamp(12px, 1.5vw, 22px);
+}
+
+.case-gallery__row {
+  display: grid;
+  gap: clamp(12px, 1.5vw, 22px);
+}
+
+.case-gallery__row--split {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.case-media {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  margin: 0;
   overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-soft);
+  box-shadow: var(--shadow-soft);
 }
 
-.text-slide-wrapper {
+.case-gallery__row--wide .case-media {
+  aspect-ratio: 16 / 9.7;
+}
+
+.case-gallery__row--split .case-media {
+  aspect-ratio: 9 / 16;
+}
+
+.case-media__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.case-media:hover .case-media__image {
+  transform: scale(1.012);
+}
+
+.case-execution {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(48px, 10vw, 150px);
+  padding-block: clamp(100px, 12vw, 170px);
+}
+
+.case-execution__heading h2,
+.case-more__heading h2 {
+  margin: 22px 0 0;
+  color: var(--text-primary);
+  background: none;
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+.case-actions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.case-actions li {
+  display: grid;
+  grid-template-columns: 48px minmax(150px, 0.7fr) minmax(0, 1fr);
+  gap: 24px;
+  padding-block: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.case-actions span,
+.case-actions h3,
+.case-actions p {
+  margin: 0;
+  font-family: Inter, sans-serif;
+}
+
+.case-actions span {
+  color: var(--color-gold-readable);
+  font-size: 12px;
+}
+
+.case-actions h3 {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.case-actions p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.case-quote {
+  padding-block: clamp(70px, 9vw, 120px);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.case-quote blockquote {
+  max-width: 950px;
+  margin: 42px 0 38px;
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(32px, 4.6vw, 66px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.case-quote__person {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
-.text-slide-text {
+.case-quote__person p {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.case-quote__person span {
+  color: var(--text-secondary);
+}
+
+.case-contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 36px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.case-contact p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.case-contact a,
+.case-more__heading a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--color-gold-deep);
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.case-contact a {
+  justify-content: center;
+  border: 1px solid var(--color-gold-readable);
+  border-radius: 12px;
+  background: var(--gold-cta-gradient);
+  color: #171612;
+}
+
+.case-more {
+  padding-block: clamp(88px, 11vw, 150px);
+  border-top: 1px solid var(--border-subtle);
+  background:
+    radial-gradient(circle at 12% 16%, rgba(240, 191, 108, 0.16), transparent 28%),
+    var(--bg-soft);
+  color: var(--text-primary);
+}
+
+.case-more__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.case-more__heading h2 {
+  margin: 0;
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+.case-more__heading a {
+  color: var(--color-gold-deep);
+}
+
+.case-more__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2vw, 30px);
+  margin-top: clamp(48px, 6vw, 80px);
+}
+
+.case-project-card {
   display: block;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  text-decoration: none;
+  box-shadow: var(--shadow-soft);
 }
 
+.case-project-card__media {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+
+.case-project-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.case-project-card:hover .case-project-card__image {
+  transform: scale(1.035);
+}
+
+.case-project-card__meta {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+}
+
+.case-project-card__meta p,
+.case-project-card__meta h3 {
+  margin: 0;
+}
+
+.case-project-card__meta p {
+  color: var(--color-gold-readable);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.case-project-card__meta h3 {
+  margin-top: 6px;
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(22px, 2vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.case-project-card__meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .case-intro,
+  .case-strategy,
+  .case-execution {
+    grid-template-columns: 1fr;
+  }
+
+  .case-intro {
+    gap: 64px;
+  }
+
+  .case-execution {
+    gap: 52px;
+  }
+
+  .case-more__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .case-project-card:last-child {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .case-shell {
+    width: min(100% - 24px, 1240px);
+  }
+
+  .case-hero {
+    width: calc(100% - 24px);
+    min-height: calc(100svh - 24px);
+    margin: 12px;
+    border-radius: 14px;
+  }
+
+  .case-hero__back {
+    top: 18px;
+  }
+
+  .case-hero__back span,
+  .case-hero__website {
+    font-size: 11px;
+  }
+
+  .case-hero__caption {
+    bottom: 132px;
+  }
+
+  .case-hero__website {
+    left: 20px;
+    right: auto;
+    bottom: 86px;
+  }
+
+  .case-intro__story {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .case-gallery__row--split {
+    grid-template-columns: 1fr;
+  }
+
+  .case-gallery__row--split .case-media {
+    aspect-ratio: 9 / 16;
+  }
+
+  .case-actions li {
+    grid-template-columns: 34px 1fr;
+    gap: 14px;
+  }
+
+  .case-actions p {
+    grid-column: 2;
+  }
+
+  .case-contact,
+  .case-more__heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .case-more__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .case-project-card:last-child {
+    display: block;
+  }
+
+  .case-project-card__meta > span {
+    font-size: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-hero__image,
+  .case-media__image,
+  .case-project-card__image {
+    transition: none;
+  }
+}
 </style>

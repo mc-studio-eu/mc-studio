@@ -6,7 +6,7 @@ const keywords = computed(() => Object.values(tm('hero.marquee') as Record<strin
 <template>
   <div class="absolute bottom-0 left-0 right-0 overflow-hidden py-2.5 z-0">
     <div class="marquee flex gap-8 w-max">
-      <span v-for="(word, index) in [...keywords, ...keywords]" :key="index" class="font-medium text-sm sm:text-base text-white whitespace-nowrap">
+      <span v-for="(word, index) in [...keywords, ...keywords]" :key="index" class="font-medium text-sm sm:text-base text-[var(--text-primary)] whitespace-nowrap">
         {{ word }}
       </span>
     </div>
@@ -27,4 +27,3 @@ const keywords = computed(() => Object.values(tm('hero.marquee') as Record<strin
   }
 }
 </style>
-

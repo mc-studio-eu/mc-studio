@@ -53,7 +53,7 @@ onUnmounted(() => {
             >
               <!-- Visual 1: Discovery Call (Calendar) -->
               <div v-if="activeStep === 1" key="step1" class="absolute inset-0 flex items-center justify-center">
-                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-white/5 bg-[#1c1c1c]">
+                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-[var(--shadow-soft)] overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-card)]">
                     <NuxtImg 
                       src="/img/process/step1_calendar.png" 
                       alt="Discovery Call Calendar" 
@@ -65,7 +65,7 @@ onUnmounted(() => {
               <!-- Visual 2: Proposal (Document) -->
               <!-- Visual 2: Proposal (Document) -->
               <div v-if="activeStep === 2" key="step2" class="absolute inset-0 flex items-center justify-center">
-                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-white/5 bg-[#1c1c1c]">
+                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-[var(--shadow-soft)] overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-card)]">
                     <NuxtImg 
                       src="/img/process/step2_proposal.png" 
                       alt="Proposal Document" 
@@ -76,7 +76,7 @@ onUnmounted(() => {
 
               <!-- Visual 3: Kickoff (Dashboard) -->
               <div v-if="activeStep === 3" key="step3" class="absolute inset-0 flex items-center justify-center">
-                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-2xl overflow-hidden border border-white/5 bg-[#1c1c1c]">
+                 <div class="w-auto h-auto max-w-full max-h-full rounded-2xl shadow-[var(--shadow-soft)] overflow-hidden border border-[var(--border-subtle)] bg-[var(--bg-card)]">
                     <NuxtImg 
                       src="/img/process/step3_kickoff.png" 
                       alt="Project Kickoff Dashboard" 
@@ -121,7 +121,7 @@ onUnmounted(() => {
               <div class="pl-8 py-2 w-full transition-all duration-300" :class="activeStep === step ? 'opacity-100 translate-x-2' : 'opacity-50 hover:opacity-80'">
                 <h3 
                   class="font-manrope text-xl font-semibold mb-2 transition-colors duration-300"
-                  :class="activeStep === step ? 'text-[var(--color-gold)]' : 'text-[var(--text-primary)]'"
+                  :class="activeStep === step ? 'text-[var(--color-gold-readable)]' : 'text-[var(--text-primary)]'"
                 >
                   {{ $t(`process.steps.${step}.title`) }}
                 </h3>
@@ -138,4 +138,3 @@ onUnmounted(() => {
     </div>
   </section>
 </template>
-

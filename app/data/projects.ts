@@ -548,21 +548,29 @@ export const projects: Project[] = [
       fr: [
         {
           title: 'Branding & interface',
-          body: "Refonte de l'identité visuelle de la page pour gagner en clarté, en qualité perçue et en professionnalisme.",
+          body: "Refonte complète de l'identité visuelle pour une image plus premium, lisible et crédible auprès d'un public B2B exigeant.",
         },
         {
           title: 'Copywriting & structure',
-          body: 'Simplification du discours et meilleure hiérarchie des sections pour soutenir la conversion.',
+          body: "Discours clarifié et sections réordonnées pour expliquer l'offre rapidement, rassurer le visiteur et guider vers la prise de contact.",
+        },
+        {
+          title: 'Design & développement',
+          body: 'Conception et développement de la landing page : sections explicatives, parcours clair et formulaire de contact pour convertir plus facilement.',
         },
       ],
       en: [
         {
           title: 'Branding & interface',
-          body: 'The page visual identity was redesigned to increase clarity, perceived quality and professionalism.',
+          body: 'A full visual identity redesign for a more premium, readable and credible look tailored to demanding B2B audiences.',
         },
         {
           title: 'Copywriting & structure',
-          body: 'Messaging was simplified and sections were reorganized to support conversion.',
+          body: 'Messaging was clarified and sections reordered to explain the offer quickly, reassure visitors and guide them toward contact.',
+        },
+        {
+          title: 'Design & development',
+          body: 'Design and development of the landing page: explanatory sections, a clear journey and a contact form to make conversion smoother.',
         },
       ],
     },

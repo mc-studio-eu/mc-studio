@@ -71,7 +71,7 @@ const founder = computed(() => ({
           </p>
 
           <a ref="faqWhatsappBtn" href="https://api.whatsapp.com/send/?phone=%2B33781724683&text&type=phone_number&app_absent=0" target="_blank"
-            class="mt-2 w-fit px-4 py-2 rounded-md font-medium text-sm cursor-pointer bg-[#232323] text-white hover:bg-transparent transition-colors duration-200 no-underline inline-block"
+            class="site-cta mt-2 inline-flex items-center justify-center px-4 py-2 rounded-xl font-medium text-sm cursor-pointer bg-[var(--gold-cta-gradient)] text-[#171612] transition-all duration-200 no-underline hover:brightness-105"
           >
             <span class="text-slide-container h-[20px]">
               <span ref="faqWhatsappWrapper" class="text-slide-wrapper">

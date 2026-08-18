@@ -346,6 +346,8 @@
         }
     },
     "footer": {
+        "ask_ai_title": "Demandez à l’IA ce qu’elle sait de MC Studio",
+        "ask_ai_aria": "Interroger {provider} à propos de MC Studio",
         "tagline": "Branding, design et développement pour lancer des applications utiles, élégantes et prêtes à grandir.",
         "navigation_title": "Navigation",
         "socials_title": "Réseaux",

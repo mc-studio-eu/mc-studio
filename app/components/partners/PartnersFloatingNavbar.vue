@@ -150,7 +150,7 @@ onMounted(() => {
             :href="platformUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="hidden md:flex items-center gap-2 border-none rounded-lg py-1 pr-3 pl-1 md:py-1.5 md:pr-4 md:pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] font-inter font-medium text-sm text-[#0f0f0f] backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] hover:brightness-105 no-underline"
+            class="site-cta hidden md:flex items-center gap-2 border-none rounded-xl py-1 pr-3 pl-1 md:py-1.5 md:pr-4 md:pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02] bg-[var(--gold-cta-gradient)] font-inter font-medium text-sm text-[#0f0f0f] backdrop-blur-[12px] shadow-[0_10px_28px_rgba(166,111,24,0.18)] hover:brightness-105 no-underline"
           >
             <NuxtImg
               src="/img/main/founder.jpeg"
@@ -281,7 +281,7 @@ onMounted(() => {
                 :href="platformUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-2 border-none rounded-lg py-1.5 pr-4 pl-1.5 cursor-pointer bg-[linear-gradient(to_right,white_50%,#f0bf6c)] font-inter font-medium text-sm text-[#0f0f0f] backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] hover:brightness-105 transition-all duration-200"
+                class="site-cta flex items-center gap-2 border-none rounded-xl py-1.5 pr-4 pl-1.5 cursor-pointer bg-[var(--gold-cta-gradient)] font-inter font-medium text-sm text-[#0f0f0f] backdrop-blur-[12px] shadow-[0_10px_28px_rgba(166,111,24,0.18)] hover:brightness-105 transition-all duration-200"
               >
                 <NuxtImg
                   src="/img/main/founder.jpeg"

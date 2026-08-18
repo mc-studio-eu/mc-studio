@@ -106,11 +106,11 @@ function toggleOffer(index: number) {
 <style scoped>
 /* ─── Accordion row ─── */
 .offer-row {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .offer-row:last-child {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 /* ─── Row header ─── */
@@ -164,11 +164,11 @@ function toggleOffer(index: number) {
 }
 
 .offer-row-header:hover .offer-row-title {
-  color: #F0BF6C;
+  color: var(--color-gold-readable);
 }
 
 .offer-row-header:hover .offer-number {
-  color: #F0BF6C;
+  color: var(--color-gold-readable);
 }
 
 /* ─── Toggle (+/−) ─── */
@@ -186,7 +186,7 @@ function toggleOffer(index: number) {
   width: 100%;
   height: 2px;
   margin-top: -1px;
-  background: #F0BF6C;
+  background: var(--color-gold-readable);
   border-radius: 2px;
   transition: transform 0.3s ease;
 }
@@ -214,8 +214,9 @@ function toggleOffer(index: number) {
 .offer-visual {
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #161616;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-soft);
+  box-shadow: var(--shadow-soft);
 }
 
 /* ─── Section labels ─── */
@@ -225,7 +226,7 @@ function toggleOffer(index: number) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(240, 191, 108, 0.7);
+  color: var(--color-gold-readable);
   margin-bottom: 12px;
 }
 
