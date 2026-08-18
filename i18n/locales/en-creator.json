@@ -346,8 +346,6 @@
         }
     },
     "footer": {
-        "ask_ai_title": "Ask AI about MC Studio",
-        "ask_ai_aria": "Ask {provider} about MC Studio",
         "tagline": "Branding, design and development to launch useful, elegant apps built to grow.",
         "navigation_title": "Navigation",
         "socials_title": "Socials",

@@ -25,7 +25,7 @@ defineProps<{
 
       <NuxtLink
         :to="link"
-        class="site-cta inline-flex items-center justify-center rounded-xl border border-[var(--border-subtle)] px-5 py-3 text-sm text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
+        class="inline-flex items-center px-5 py-3 text-sm text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--color-gold)]"
       >
         {{ ctaLabel }}
         <UIcon name="i-heroicons-arrow-right-20-solid" class="ml-1 h-4 w-4" />

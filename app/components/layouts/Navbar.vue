@@ -52,10 +52,9 @@ const mobileCtaWrapper2 = ref(null)
 
 // Refs pour le bouton initial de la navbar header
 const initialCtaBtn = ref(null)
-const initialCtaWrapper1 = ref(null)
-const initialCtaWrapper2 = ref(null)
+const initialCtaWrapper = ref(null)
 if (!props.floatingOnly) {
-  useTextSlideAnimation(initialCtaBtn, [initialCtaWrapper1, initialCtaWrapper2])
+  useTextSlideAnimation(initialCtaBtn, initialCtaWrapper)
 }
 
 // Animation text slide pour les CTAs - initialisée après que la navbar flottante apparaît
@@ -144,33 +143,25 @@ const closeMenu = () => isMenuOpen.value = false
     <!-- Logo -->
     <div class="flex items-center shrink-0">
       <NuxtLink to="/" class="flex items-center">
-        <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="brand-logo w-[100px] h-auto md:w-[125px] object-contain" />
+        <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio" class="w-[100px] h-auto md:w-[125px] object-contain" />
       </NuxtLink>
     </div>
 
     <!-- Nav desktop -->
     <nav class="hidden lg:flex items-center gap-5 xl:gap-[26px]">
-      <NuxtLink v-for="item in navItems" :key="item.key" :to="`${localePath('/')}#${item.id}`" class="font-inter font-medium text-sm text-[var(--text-primary)] no-underline transition-colors duration-200 hover:text-[var(--color-gold-readable)]">{{ t(`nav.${item.key}`) }}</NuxtLink>
+      <NuxtLink v-for="item in navItems" :key="item.key" :to="`${localePath('/')}#${item.id}`" class="font-inter font-medium text-sm text-white no-underline transition-colors duration-200 hover:text-[#f0bf6c]">{{ t(`nav.${item.key}`) }}</NuxtLink>
     </nav>
 
     <!-- CTA Desktop -->
     <div class="hidden lg:flex items-center gap-[11px] shrink-0">
-      <USelect v-model="language" :items="languages" class="flex items-center justify-center w-[70px] h-[30px] bg-white/80 rounded-lg border border-[var(--border-subtle)] font-inter font-medium text-xs text-[var(--text-primary)] cursor-pointer backdrop-blur-[12px] shadow-[0_8px_24px_rgba(88,67,33,0.08)] transition-all duration-200 hover:bg-white" />
-      <a ref="initialCtaBtn" :href="`${localePath('/')}#contact`" class="cta-primary flex items-center justify-center rounded-xl px-3 py-2 font-medium text-[#171612] cursor-pointer backdrop-blur-md transition-all duration-200 hover:brightness-105 no-underline">
-        <div class="flex flex-col items-start gap-px">
-          <span class="text-slide-container h-[18px]">
-            <span ref="initialCtaWrapper1" class="text-slide-wrapper">
-              <span class="text-slide-text h-[18px] leading-[18px] font-inter text-sm font-semibold">{{ t('nav.book_call') }}</span>
-              <span class="text-slide-text h-[18px] leading-[18px] font-inter text-sm font-semibold">{{ t('nav.book_call') }}</span>
-            </span>
+      <USelect v-model="language" :items="languages" class="flex items-center justify-center w-[70px] h-[30px] bg-[#010201] rounded-lg font-inter font-medium text-xs text-[#f0eadb] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:bg-[#1a1a1a]" />
+      <a ref="initialCtaBtn" :href="`${localePath('/')}#contact`" class="flex items-center justify-center w-[164px] h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline">
+        <span class="text-slide-container h-[20px]">
+          <span ref="initialCtaWrapper" class="text-slide-wrapper">
+            <span class="text-slide-text h-[20px] leading-[20px]">{{ t('nav.book_call') }}</span>
+            <span class="text-slide-text h-[20px] leading-[20px]">{{ t('nav.book_call') }}</span>
           </span>
-          <span class="text-slide-container h-[12px]">
-            <span ref="initialCtaWrapper2" class="text-slide-wrapper">
-              <span class="text-slide-text h-[12px] leading-[12px] font-inter text-[9px] font-normal">{{ t('nav.free_call') }}</span>
-              <span class="text-slide-text h-[12px] leading-[12px] font-inter text-[9px] font-normal">{{ t('nav.free_call') }}</span>
-            </span>
-          </span>
-        </div>
+        </span>
       </a>
     </div>
 
@@ -208,7 +199,7 @@ const closeMenu = () => isMenuOpen.value = false
               <NuxtImg
                 src="/img/logo/mc-studio.svg"
                 alt="MC Studio"
-                class="brand-logo block w-[82px] h-auto md:w-24 object-contain"
+                class="block w-[82px] h-auto md:w-24 object-contain"
               />
             </NuxtLink>
 
@@ -275,21 +266,22 @@ const closeMenu = () => isMenuOpen.value = false
               ref="desktopCtaBtn"
               :to="`${localePath('/')}#contact`"
               :class="[
-                'cta-primary hidden lg:flex items-center justify-center gap-2.5 rounded-xl px-3 py-2 font-medium text-[#171612] cursor-pointer backdrop-blur-md transition-all duration-200 no-underline hover:brightness-105'
+                'hidden lg:flex items-center gap-2 border-none rounded-xl py-1.5 pr-3.5 pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
+                colorMode.value === 'dark' ? 'flex items-center justify-center bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
               ]"
             >
-              <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-9 h-9 md:w-10 md:h-10 rounded-xl object-cover object-[center_18%] scale-[1.18] shrink-0 ring-1 ring-black/10 shadow-[0_8px_16px_rgba(15,15,15,0.16)]" />
+              <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-8 h-8 md:w-9 md:h-9 rounded-xl object-cover object-[center_18%] scale-[1.18] shrink-0 ring-1 ring-black/10 shadow-[0_8px_16px_rgba(15,15,15,0.12)]" />
               <div class="flex flex-col items-start gap-px">
-                <span class="text-slide-container h-[18px]">
+                <span class="text-slide-container h-[14px]">
                   <span ref="desktopCtaWrapper1" class="text-slide-wrapper">
-                    <span class="text-slide-text h-[18px] leading-[18px] font-inter text-sm font-semibold">{{ t('nav.book_call') }}</span>
-                    <span class="text-slide-text h-[18px] leading-[18px] font-inter text-sm font-semibold">{{ t('nav.book_call') }}</span>
+                    <span :class="['text-slide-text h-[14px] leading-[14px] font-inter font-semibold text-[11px] md:text-xs', colorMode.value === 'dark' ? 'text-[#1a1a1a]' : 'text-white']">{{ t('nav.book_call') }}</span>
+                    <span :class="['text-slide-text h-[14px] leading-[14px] font-inter font-semibold text-[11px] md:text-xs', colorMode.value === 'dark' ? 'text-[#1a1a1a]' : 'text-white']">{{ t('nav.book_call') }}</span>
                   </span>
                 </span>
-                <span class="text-slide-container h-[12px]">
+                <span class="text-slide-container h-[11px]">
                   <span ref="desktopCtaWrapper2" class="text-slide-wrapper">
-                    <span class="text-slide-text h-[12px] leading-[12px] font-inter text-[9px] font-normal">{{ t('nav.free_call') }}</span>
-                    <span class="text-slide-text h-[12px] leading-[12px] font-inter text-[9px] font-normal">{{ t('nav.free_call') }}</span>
+                    <span :class="['text-slide-text h-[11px] leading-[11px] font-inter font-normal text-[9px]', colorMode.value === 'dark' ? 'text-[#1a1a1a]/60' : 'text-white/60']">{{ t('nav.free_call') }}</span>
+                    <span :class="['text-slide-text h-[11px] leading-[11px] font-inter font-normal text-[9px]', colorMode.value === 'dark' ? 'text-[#1a1a1a]/60' : 'text-white/60']">{{ t('nav.free_call') }}</span>
                   </span>
                 </span>
               </div>
@@ -363,21 +355,22 @@ const closeMenu = () => isMenuOpen.value = false
                   ref="mobileCtaBtn"
                   :to="`${localePath('/')}#contact`"
                   :class="[
-                    'cta-primary flex items-center justify-center gap-2.5 rounded-xl px-3 py-2 font-medium text-[#171612] cursor-pointer backdrop-blur-md transition-all duration-200 no-underline hover:brightness-105'
+                    'flex items-center gap-2 border-none rounded-xl py-1.5 pr-3 pl-1.5 cursor-pointer transition-all bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105',
+                    colorMode.value === 'dark' ? 'bg-white hover:bg-gray-100' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
                   ]"
                 >
-                  <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-9 h-9 rounded-xl object-cover object-[center_18%] scale-[1.18] shrink-0 ring-1 ring-black/10 shadow-[0_8px_16px_rgba(15,15,15,0.16)]" />
+                  <NuxtImg src="/img/main/founder.jpeg" alt="MC Studio" class="w-8 h-8 rounded-xl object-cover object-[center_18%] scale-[1.18] shrink-0 ring-1 ring-black/10 shadow-[0_8px_16px_rgba(15,15,15,0.12)]" />
                   <div class="flex flex-col items-start gap-px">
-                    <span class="text-slide-container h-[18px]">
+                    <span class="text-slide-container h-[14px]">
                       <span ref="mobileCtaWrapper1" class="text-slide-wrapper">
-                        <span class="text-slide-text h-[18px] leading-[18px] font-inter text-sm font-semibold">{{ t('nav.book_call') }}</span>
-                        <span class="text-slide-text h-[18px] leading-[18px] font-inter text-sm font-semibold">{{ t('nav.book_call') }}</span>
+                        <span :class="['text-slide-text h-[14px] leading-[14px] font-inter font-semibold text-xs', colorMode.value === 'dark' ? 'text-[#1a1a1a]' : 'text-white']">{{ t('nav.book_call') }}</span>
+                        <span :class="['text-slide-text h-[14px] leading-[14px] font-inter font-semibold text-xs', colorMode.value === 'dark' ? 'text-[#1a1a1a]' : 'text-white']">{{ t('nav.book_call') }}</span>
                       </span>
                     </span>
-                    <span class="text-slide-container h-[12px]">
+                    <span class="text-slide-container h-[11px]">
                       <span ref="mobileCtaWrapper2" class="text-slide-wrapper">
-                        <span class="text-slide-text h-[12px] leading-[12px] font-inter text-[9px] font-normal">{{ t('nav.free_call') }}</span>
-                        <span class="text-slide-text h-[12px] leading-[12px] font-inter text-[9px] font-normal">{{ t('nav.free_call') }}</span>
+                        <span :class="['text-slide-text h-[11px] leading-[11px] font-inter font-normal text-[9px]', colorMode.value === 'dark' ? 'text-[#1a1a1a]/60' : 'text-white/60']">{{ t('nav.free_call') }}</span>
+                        <span :class="['text-slide-text h-[11px] leading-[11px] font-inter font-normal text-[9px]', colorMode.value === 'dark' ? 'text-[#1a1a1a]/60' : 'text-white/60']">{{ t('nav.free_call') }}</span>
                       </span>
                     </span>
                   </div>
@@ -393,10 +386,6 @@ const closeMenu = () => isMenuOpen.value = false
 </template>
 
 <style scoped>
-.brand-logo {
-  filter: invert(1);
-}
-
 .text-slide-container {
   display: block;
   position: relative;

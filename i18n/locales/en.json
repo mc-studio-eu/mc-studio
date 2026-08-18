@@ -12,8 +12,6 @@
     "team": "Team"
   },
   "footer": {
-    "ask_ai_title": "Ask AI about MC Studio",
-    "ask_ai_aria": "Ask {provider} about MC Studio",
     "tagline": "Branding, design and development to launch useful, elegant apps built to grow.",
     "navigation_title": "Navigation",
     "socials_title": "Socials",
@@ -336,23 +334,17 @@
     "show_more": "View more projects",
     "all": {
       "meta_title": "All our projects",
-      "heading": "All our projects",
       "title": "All our <span class=\"text-gradient\">projects</span>",
       "subtitle": "Every project we shipped: landing pages, websites and custom applications.",
       "back": "Back to home",
       "empty": "No project matches this filter yet."
-    },
-    "view": {
-      "aria_label": "Change the projects layout",
-      "grid": "Show as a grid",
-      "list": "Show as a list"
     },
     "more_tags": "{count} more tags",
     "filters": {
       "aria_label": "Filter projects by type",
       "all": "All",
       "branding": "Branding",
-      "landing_page": "Landing page / Website",
+      "landing_page": "Landing page",
       "app": "SaaS / CRM / App"
     },
     "items": {

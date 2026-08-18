@@ -33,7 +33,7 @@ const hasMoreProjects = computed(() => filteredProjects.value.length > 4)
             class="inline-flex min-h-9 items-center justify-center rounded-full border px-4 font-inter text-xs sm:text-sm font-medium transition-all duration-200"
             :class="selectedFilter === filter.value
               ? 'border-[var(--color-gold)] bg-[linear-gradient(110deg,#fff_0%,#f0bf6c_100%)] text-[#0f0f0f] shadow-[0_6px_20px_rgba(240,191,108,0.16)]'
-              : 'border-[var(--border-subtle)] bg-[var(--bg-card)] text-[var(--text-secondary)] hover:border-[#d5b36f] hover:text-[var(--text-primary)]'"
+              : 'border-[var(--border-subtle)] bg-[#181818] text-[var(--text-secondary)]'"
             :aria-pressed="selectedFilter === filter.value"
             @click="selectedFilter = filter.value"
           >
@@ -58,7 +58,7 @@ const hasMoreProjects = computed(() => filteredProjects.value.length > 4)
       <div v-if="hasMoreProjects" class="mt-8 flex justify-center">
         <NuxtLink
           :to="localePath('/projects')"
-          class="site-cta inline-flex items-center justify-center rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] px-5 font-inter text-sm font-medium text-[var(--text-primary)] shadow-[0_10px_30px_rgba(88,67,33,0.07)] no-underline transition-colors hover:border-[#d5b36f]"
+          class="inline-flex min-h-11 items-center justify-center rounded-lg border border-[var(--border-subtle)] bg-[#181818] px-5 font-inter text-sm font-medium text-[var(--text-primary)] no-underline "
         >
           {{ $t('projects.show_more') }}
           <UIcon name="i-lucide-arrow-right" class="ml-2 h-4 w-4" />

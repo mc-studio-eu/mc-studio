@@ -129,7 +129,7 @@ const closeMenu = () => isMenuOpen.value = false
 
     <!-- CTA Desktop -->
     <div class="hidden lg:flex items-center gap-[11px] shrink-0">
-      <a ref="initialCtaBtn" href="#contact" class="site-cta flex items-center justify-center bg-[var(--gold-cta-gradient)] border-none rounded-xl font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_10px_28px_rgba(166,111,24,0.18)] transition-all duration-200 hover:brightness-105 no-underline">
+      <a ref="initialCtaBtn" href="#contact" class="flex items-center justify-center w-[164px] h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline">
         <span class="text-slide-container h-[20px]">
           <span ref="initialCtaWrapper" class="text-slide-wrapper">
             <span class="text-slide-text h-[20px] leading-[20px]">{{ t('nav.book_call') }}</span>
@@ -212,7 +212,7 @@ const closeMenu = () => isMenuOpen.value = false
               ref="desktopCtaBtn"
               href="#contact"
               :class="[
-                'site-cta hidden md:flex items-center gap-2 border-none rounded-xl py-1 pr-3 pl-1 md:py-1.5 md:pr-4 md:pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
+                'hidden md:flex items-center gap-2 border-none rounded-lg py-1 pr-3 pl-1 md:py-1.5 md:pr-4 md:pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
                 colorMode.value === 'dark' ? 'flex items-center justify-center bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
               ]"
             >
@@ -275,7 +275,7 @@ const closeMenu = () => isMenuOpen.value = false
                   ref="mobileCtaBtn"
                   href="#contact"
                   :class="[
-                    'site-cta flex items-center gap-2 border-none rounded-xl py-1.5 pr-4 pl-1.5 cursor-pointer transition-all bg-[var(--gold-cta-gradient)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_10px_28px_rgba(166,111,24,0.18)] transition-all duration-200 hover:brightness-105',
+                    'flex items-center gap-2 border-none rounded-lg py-1.5 pr-4 pl-1.5 cursor-pointer transition-all bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105',
                     colorMode.value === 'dark' ? 'bg-white hover:bg-gray-100' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
                   ]"
                 >

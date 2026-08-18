@@ -177,20 +177,20 @@ const customServices = computed(() =>
   border: 1px solid var(--border-subtle);
   border-radius: 28px;
   background:
-    radial-gradient(700px 220px at 18% 0%, rgba(240, 191, 108, 0.14), transparent 54%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.88), transparent 34%),
-    var(--bg-card);
+    radial-gradient(700px 220px at 18% 0%, rgba(240, 191, 108, 0.07), transparent 54%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent 34%),
+    color-mix(in srgb, var(--bg-secondary) 72%, transparent);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 18px 55px rgba(88, 67, 33, 0.09);
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 30px rgba(0, 0, 0, 0.24);
 }
 
 .pricing-card--featured {
   border-color: var(--border-subtle);
   background:
-    radial-gradient(700px 250px at 50% 0%, rgba(240, 191, 108, 0.22), transparent 54%),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.9), transparent 36%),
-    var(--bg-card);
+    radial-gradient(700px 250px at 50% 0%, rgba(240, 191, 108, 0.11), transparent 54%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent 36%),
+    color-mix(in srgb, var(--bg-secondary) 76%, transparent);
 }
 
 .pricing-popular {
@@ -201,7 +201,7 @@ const customServices = computed(() =>
   border: 1px solid rgba(240, 191, 108, 0.22);
   border-radius: 999px;
   background: rgba(240, 191, 108, 0.09);
-  color: var(--color-gold-readable);
+  color: #f0bf6c;
   font-family: 'Inter', sans-serif;
   font-size: 9px;
   font-weight: 700;
@@ -274,7 +274,7 @@ const customServices = computed(() =>
 }
 
 .pricing-card__delivery :deep(svg) {
-  color: var(--color-gold-readable);
+  color: #f0bf6c;
 }
 
 .pricing-card__delivery strong {
@@ -287,22 +287,20 @@ const customServices = computed(() =>
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: min(100%, var(--site-cta-width));
-  height: var(--site-cta-height);
-  min-height: var(--site-cta-height);
-  margin-inline: auto;
+  width: 100%;
+  min-height: 42px;
   margin-top: 26px;
   border: none;
-  border-radius: 12px;
-  background: var(--gold-cta-gradient);
+  border-radius: 8px;
+  background: linear-gradient(to right, #ffffff 50%, #f0bf6c);
   color: #0f0f0f;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.45) inset,
-    0 10px 28px rgba(166, 111, 24, 0.18);
+    0 4px 4px rgba(0, 0, 0, 0.2),
+    0 10px 10px rgba(11, 32, 103, 0.05);
   transition: filter 0.2s ease;
 }
 
@@ -334,7 +332,7 @@ const customServices = computed(() =>
 }
 
 .pricing-card__cta--featured {
-  background: var(--gold-cta-gradient);
+  background: linear-gradient(to right, #ffffff 50%, #f0bf6c);
 }
 
 .pricing-card__cta--featured:hover {
@@ -385,7 +383,7 @@ const customServices = computed(() =>
   border-radius: 999px;
   background: color-mix(in srgb, var(--bg-primary) 58%, transparent);
   border: 1px solid rgba(240, 191, 108, 0.16);
-  color: var(--color-gold-readable);
+  color: #f0bf6c;
 }
 
 .pricing-note {

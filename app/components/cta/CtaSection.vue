@@ -167,7 +167,7 @@ const submitContact = async () => {
         >
           <iframe
             class="block w-full min-h-[700px] border-0"
-            src="https://cal.com/mc-studio/discutons-de-votre-projet?embed=true&theme=light"
+            src="https://cal.com/mc-studio/discutons-de-votre-projet?embed=true&theme=dark"
             loading="lazy"
             :title="$t('cta.calendar.iframe_title')"
           ></iframe>
@@ -179,7 +179,7 @@ const submitContact = async () => {
 
 <style scoped>
 .contact-card {
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.16);
 }
 
 .contact-tabs {
@@ -217,7 +217,7 @@ const submitContact = async () => {
 }
 
 .contact-tab--active {
-  background: var(--gold-cta-gradient);
+  background: linear-gradient(270deg, #f0bf6c 0%, #fff 72%);
   color: #0f0f0f;
   box-shadow: 0 6px 18px rgba(11, 32, 103, 0.12);
 }
@@ -277,9 +277,9 @@ const submitContact = async () => {
 
 .contact-submit {
   display: flex;
-  width: min(100%, var(--site-cta-width));
-  height: var(--site-cta-height);
-  min-height: var(--site-cta-height);
+  min-height: 3.125rem;
+  width: fit-content;
+  min-width: 13.5rem;
   margin-left: auto;
   padding: 0 1.5rem;
   align-items: center;
@@ -287,7 +287,7 @@ const submitContact = async () => {
   gap: 0.75rem;
   border: 0;
   border-radius: 0.875rem;
-  background: var(--gold-cta-gradient);
+  background: linear-gradient(270deg, #f0bf6c 0%, #fff 72%);
   color: #0f0f0f;
   font-family: Inter, sans-serif;
   font-size: 0.9rem;

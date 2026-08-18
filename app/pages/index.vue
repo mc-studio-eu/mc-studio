@@ -106,7 +106,7 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
 }
 
 :global(.light) .border-line {
-  background: linear-gradient(to bottom, rgba(166, 111, 24, 0.24) 0%, rgba(166, 111, 24, 0.1) 50%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.15) 0%, rgba(26, 26, 26, 0.08) 50%, transparent 100%);
 }
 
 /* Section separator line */
@@ -124,7 +124,7 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
 }
 
 :global(.light) .section-separator {
-  background: linear-gradient(90deg, transparent 0%, rgba(166, 111, 24, 0.2) 20%, rgba(166, 111, 24, 0.2) 80%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(26, 26, 26, 0.12) 20%, rgba(26, 26, 26, 0.12) 80%, transparent 100%);
 }
 
 @media (max-width: 1024px) {
