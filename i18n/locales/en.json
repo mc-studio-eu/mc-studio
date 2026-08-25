@@ -27,6 +27,9 @@
       "book": "Book a call",
       "whatsapp": "Chat on WhatsApp"
     },
+    "clients": {
+      "aria_label": "Clients supported by MC Studio"
+    },
     "badges": {
       "rotating_stats": [
         "+5 years experience"
@@ -332,6 +335,10 @@
     "subtitle": "A selection of projects where design, code and strategy meet.",
     "cta": "View project",
     "show_more": "View more projects",
+    "showcase": {
+      "aria_label": "Featured projects",
+      "open_project": "View the {project} project"
+    },
     "all": {
       "meta_title": "All our projects",
       "title": "All our <span class=\"text-gradient\">projects</span>",
@@ -348,6 +355,28 @@
       "app": "SaaS / CRM / App"
     },
     "items": {
+      "personal": {
+        "description": "Personal is an AI SaaS that helps creators find what works in their niche and turn it into content rooted in their own life and voice.\nWe designed the brand, landing page and complete product experience.",
+        "tags": [
+          "AI SaaS",
+          "Branding",
+          "Product Design",
+          "UI/UX",
+          "Development",
+          "Content creators"
+        ]
+      },
+      "shika_consulting": {
+        "description": "Shika Consulting is an accounting and statutory audit firm dedicated to nonprofits.\nWe designed and built a complete, educational and reassuring website that clarifies the offer and makes booking a call easier.",
+        "tags": [
+          "Website",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Development",
+          "Accounting"
+        ]
+      },
       "amg_promotion": {
         "description": "AMG Promotion is a company specialized in creating promotional products (textiles, goodies, personalized items, and more), working with well-known brands and organizations such as Groupe SEB, ALTRAD, and the French National Police.",
         "tags": [

@@ -35,7 +35,7 @@ export interface Project {
   externalLink: string
   /** Whether the project has a verified-website style badge on the external link */
   verified?: boolean
-  /** Optional testimonial — text/job come from i18n */
+  /** Optional testimonial; text/job come from i18n */
   testimonial?: ProjectTestimonial
   /** Screenshots shown on the detail page (desktop / mobile toggle) */
   screenshots: ProjectScreenshots
@@ -52,6 +52,216 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    slug: 'personal',
+    i18nKey: 'personal',
+    title: 'Personal',
+    categories: ['branding', 'landing-page', 'app'],
+    image: '/img/project/personal/homepage.webp',
+    externalLink: 'https://usepersonal.app/',
+    verified: true,
+    screenshots: {
+      desktop: [
+        '/img/project/personal/homepage.webp',
+        '/img/project/personal/login.webp',
+        '/img/project/personal/feed.webp',
+        '/img/project/personal/closing.webp',
+      ],
+      mobile: [],
+    },
+    summary: {
+      fr: "Personal est un SaaS conçu pour aider les créateurs à trouver des idées qui fonctionnent dans leur niche et à les transformer en contenus fidèles à leur histoire, leur voix et leur rythme. Nous avons construit la marque, le site et l'expérience produit de bout en bout.",
+      en: 'Personal is a SaaS designed to help creators find ideas that work in their niche and turn them into content rooted in their story, voice and rhythm. We built the brand, website and product experience end to end.',
+    },
+    aboutCompany: {
+      fr: "Personal s'adresse aux créateurs qui veulent publier régulièrement sans devenir une machine à contenu. Le produit analyse les formats performants, les relie aux moments vécus par le créateur et prépare des brouillons qu'il reste toujours libre de modifier et de publier.",
+      en: 'Personal is made for creators who want to publish consistently without becoming content machines. The product analyzes high-performing formats, connects them to moments from the creator\'s life and prepares drafts they always remain free to edit and publish.',
+    },
+    industry: {
+      fr: 'SaaS IA pour créateurs',
+      en: 'AI SaaS for creators',
+    },
+    companySize: '1 - 10',
+    supportBullets: {
+      fr: [
+        'Une marque forte et immédiatement reconnaissable',
+        'Un parcours complet de la découverte au brouillon',
+        "L'IA au service de la voix du créateur",
+      ],
+      en: [
+        'A strong and immediately recognizable brand',
+        'A complete journey from discovery to draft',
+        "AI serving the creator's own voice",
+      ],
+    },
+    context: {
+      fr: "Les outils de génération de contenu produisent souvent des textes génériques et déconnectés de la personne qui les publie. Personal devait prendre le contre-pied de cette logique : partir de ce qui fonctionne réellement, préserver la singularité du créateur et lui faire gagner du temps sans jamais publier à sa place.",
+      en: 'Content generation tools often produce generic copy disconnected from the person publishing it. Personal had to take the opposite approach: start from what actually works, preserve the creator\'s individuality and save time without ever posting on their behalf.',
+    },
+    solution: {
+      fr: "Nous avons conçu une plateforme bilingue qui réunit veille, inspiration et création. Le feed fait remonter des contenus performants dans la niche du créateur, permet de les enregistrer puis de les remixer à partir de ses propres moments. Le produit accompagne ensuite la création d'une légende, d'un carrousel ou d'un Reel, jusqu'au brouillon prêt à reprendre.",
+      en: 'We designed a bilingual platform that brings research, inspiration and creation together. The feed surfaces high-performing content in the creator\'s niche, lets them save it and remix it using their own moments. The product then guides the creation of a caption, carousel or Reel through to a draft ready to refine.',
+    },
+    challenges: {
+      fr: [
+        "Se distinguer des générateurs de contenu IA génériques",
+        "Rendre une mécanique complexe évidente dès les premières minutes",
+        "Créer une expérience éditoriale cohérente entre marketing et produit",
+      ],
+      en: [
+        'Stand apart from generic AI content generators',
+        'Make a complex workflow obvious within the first few minutes',
+        'Create one editorial experience across marketing and product',
+      ],
+    },
+    objectives: {
+      fr: [
+        "Donner aux créateurs des idées pertinentes chaque semaine",
+        "Transformer leur vécu en contenus qui leur ressemblent",
+        "Réduire le temps entre l'inspiration et le brouillon final",
+      ],
+      en: [
+        'Give creators relevant ideas every week',
+        'Turn their lived experience into content that sounds like them',
+        'Reduce the time from inspiration to final draft',
+      ],
+    },
+    actions: {
+      fr: [
+        {
+          title: 'Branding & direction artistique',
+          body: "Création d'une identité contrastée et éditoriale : symbole signature, typographie expressive, palette ivoire, noir et corail, et système visuel capable de vivre du site au produit.",
+        },
+        {
+          title: 'Produit & expérience',
+          body: "Conception des parcours clés : onboarding, feed personnalisé, favoris, moments personnels, remix et génération de brouillons en plusieurs formats.",
+        },
+        {
+          title: 'Développement SaaS',
+          body: "Développement de l'application bilingue, de l'authentification et de la landing animée, avec une interface responsive pensée pour accompagner les créateurs de la découverte à la production.",
+        },
+      ],
+      en: [
+        {
+          title: 'Branding & art direction',
+          body: 'A contrasting editorial identity: signature symbol, expressive typography, ivory, black and coral palette, and a visual system designed to extend from website to product.',
+        },
+        {
+          title: 'Product & experience',
+          body: 'Design of the core journeys: onboarding, personalized feed, saved posts, personal moments, remixing and draft generation across several formats.',
+        },
+        {
+          title: 'SaaS development',
+          body: 'Development of the bilingual app, authentication and animated landing page, with a responsive interface guiding creators from discovery to production.',
+        },
+      ],
+    },
+  },
+  {
+    slug: 'shika-consulting',
+    i18nKey: 'shika_consulting',
+    title: 'Shika Consulting',
+    categories: ['landing-page'],
+    image: '/img/project/shika-consulting/homepage.webp',
+    externalLink: 'https://shika-consulting.fr/',
+    verified: true,
+    screenshots: {
+      desktop: [
+        '/img/project/shika-consulting/homepage.webp',
+        '/img/project/shika-consulting/associations.webp',
+        '/img/project/shika-consulting/process.webp',
+        '/img/project/shika-consulting/testimonials.webp',
+      ],
+      mobile: [],
+    },
+    summary: {
+      fr: "Shika Consulting nous a confié la conception et le développement de son nouveau site pour affirmer son positionnement de cabinet d'expertise comptable dédié aux associations et transformer une offre technique en parcours clair et rassurant.",
+      en: 'Shika Consulting asked us to design and build its new website to establish its positioning as an accounting firm dedicated to nonprofits and turn a technical offer into a clear, reassuring journey.',
+    },
+    aboutCompany: {
+      fr: "Shika Consulting est un cabinet d'expertise comptable et de commissariat aux comptes spécialisé dans le secteur associatif. Il accompagne partout en France les associations sur leurs enjeux comptables, financiers, juridiques et organisationnels.",
+      en: 'Shika Consulting is an accounting and statutory audit firm specialized in the nonprofit sector. It supports associations across France with their accounting, financial, legal and organizational challenges.',
+    },
+    industry: {
+      fr: 'Expertise comptable associative',
+      en: 'Nonprofit accounting',
+    },
+    companySize: '1 - 10',
+    supportBullets: {
+      fr: [
+        'Positionnement spécialisé immédiatement lisible',
+        'Offre complexe rendue simple et pédagogique',
+        'Parcours orienté estimation et prise de rendez-vous',
+      ],
+      en: [
+        'Specialist positioning made immediately clear',
+        'A complex offer made simple and educational',
+        'A journey focused on estimates and call booking',
+      ],
+    },
+    context: {
+      fr: "L'expertise de Shika couvre des sujets précis comme la comptabilité, l'audit, le conseil et le juridique, avec des spécificités propres aux associations. Le site devait rendre ce positionnement évident dès le premier écran, expliquer les enjeux sans jargon et installer la confiance nécessaire pour choisir un cabinet comptable.",
+      en: "Shika's expertise covers accounting, audit, consulting and legal matters, each with requirements specific to nonprofits. The website had to make this positioning obvious from the first screen, explain the challenges without jargon and build the trust needed to choose an accounting firm.",
+    },
+    solution: {
+      fr: "Nous avons conçu et développé un site complet au langage visuel chaleureux et expert. La navigation structure les contenus par profil d'association et par service, les blocs pédagogiques rendent les obligations concrètes, tandis que les preuves, témoignages, tarifs et appels à l'action accompagnent progressivement vers l'estimation du budget ou la prise de rendez-vous.",
+      en: 'We designed and built a complete website with a warm yet expert visual language. Navigation organizes content by nonprofit profile and service, educational sections make obligations tangible, while proof points, testimonials, pricing and calls to action progressively guide visitors toward a budget estimate or a booked call.',
+    },
+    challenges: {
+      fr: [
+        "Rendre accessible une expertise comptable très spécialisée",
+        "Parler à des associations aux profils et niveaux de maturité variés",
+        "Concilier sérieux institutionnel, pédagogie et proximité humaine",
+      ],
+      en: [
+        'Make highly specialized accounting expertise accessible',
+        'Address nonprofits with varied profiles and maturity levels',
+        'Balance institutional credibility, education and human proximity',
+      ],
+    },
+    objectives: {
+      fr: [
+        "Affirmer la spécialisation de Shika auprès des associations",
+        "Clarifier l'offre et les situations prises en charge",
+        "Créer un parcours de conversion fluide vers le rendez-vous",
+      ],
+      en: [
+        "Establish Shika's specialization in the nonprofit sector",
+        'Clarify the offer and the situations it covers',
+        'Create a smooth conversion journey toward booking a call',
+      ],
+    },
+    actions: {
+      fr: [
+        {
+          title: 'Architecture & copywriting',
+          body: "Organisation d'un site multi-page autour des associations, des services et des besoins concrets, avec un discours simple qui valorise l'expertise sans alourdir la lecture.",
+        },
+        {
+          title: 'Direction artistique & UI',
+          body: "Création d'un univers chaleureux et distinctif autour du bleu nuit, du beige et de l'orange, enrichi d'illustrations pédagogiques, de chiffres clés et de témoignages.",
+        },
+        {
+          title: 'Développement & contenu',
+          body: "Développement d'une expérience responsive rapide et animée, avec une structure éditoriale qui permet de faire vivre les pages services, associations et contenus du cabinet.",
+        },
+      ],
+      en: [
+        {
+          title: 'Architecture & copywriting',
+          body: 'A multi-page website organized around nonprofit profiles, services and concrete needs, with simple messaging that showcases expertise without weighing down the reading experience.',
+        },
+        {
+          title: 'Art direction & UI',
+          body: 'A warm and distinctive visual universe built around navy, beige and orange, enriched with educational illustrations, key figures and testimonials.',
+        },
+        {
+          title: 'Development & content',
+          body: 'A fast, responsive and animated experience, with an editorial structure designed to support service pages, nonprofit profiles and the firm\'s content over time.',
+        },
+      ],
+    },
+  },
   {
     slug: 'crm-ra-energy',
     i18nKey: 'crm_ra_energy',

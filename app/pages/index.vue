@@ -21,10 +21,6 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
       <!-- Projects Section -->
       <div class="section-separator"></div>
 
-      <ScreenMarquee reverse class="mb-10" />
-
-      <div class="section-separator mt-10"></div>
-
       <ProjectSection id="projets" />
 
       <div class="section-separator"></div>

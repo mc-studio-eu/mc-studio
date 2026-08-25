@@ -27,6 +27,9 @@
       "book": "Réserver un appel",
       "whatsapp": "Discuter sur WhatsApp"
     },
+    "clients": {
+      "aria_label": "Clients accompagnés par MC Studio"
+    },
     "badges": {
       "rotating_stats": [
         "+5 ans d'expériences"
@@ -76,7 +79,7 @@
         }
       },
       "website": {
-        "title": "Landing Page / Site web",
+        "title": "Site web",
         "description": "Des sites pensés pour convertir, pas seulement pour faire joli. Landing pages, sites vitrines et sites sur mesure, avec un design premium, un copywriting clair et une exécution rapide.",
         "items": {
           "0": "Landing pages",
@@ -332,6 +335,10 @@
     "subtitle": "Une sélection de projets où design, code et stratégie se rencontrent.",
     "cta": "Voir le projet",
     "show_more": "Voir plus de projets",
+    "showcase": {
+      "aria_label": "Sélection de projets",
+      "open_project": "Voir le projet {project}"
+    },
     "all": {
       "meta_title": "Tous nos projets",
       "title": "Tous nos <span class=\"text-gradient\">projets</span>",
@@ -348,6 +355,28 @@
       "app": "SaaS / CRM / App"
     },
     "items": {
+      "personal": {
+        "description": "Personal est un SaaS IA qui aide les créateurs à trouver ce qui fonctionne dans leur niche et à le transformer en contenus fidèles à leur vécu et à leur voix.\nNous avons conçu la marque, la landing page et l’expérience produit complète.",
+        "tags": [
+          "SaaS IA",
+          "Branding",
+          "Product Design",
+          "UI/UX",
+          "Développement",
+          "Créateurs de contenu"
+        ]
+      },
+      "shika_consulting": {
+        "description": "Shika Consulting est un cabinet d’expertise comptable et de commissariat aux comptes dédié aux associations.\nNous avons conçu et développé un site complet, pédagogique et rassurant, pensé pour clarifier l’offre et faciliter la prise de rendez-vous.",
+        "tags": [
+          "Site internet",
+          "Design",
+          "UI/UX",
+          "Copywriting",
+          "Développement",
+          "Expertise comptable"
+        ]
+      },
       "amg_promotion": {
         "description": "AMG Promotion, c’est une entreprise spécialisée dans la création de produits promotionnels (textile, goodies, objets personnalisés…), qui accompagne des références reconnues comme Groupe SEB, ALTRAD ou encore la Police Nationale.",
         "tags": [

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const { t } = useI18n();
 const ctaSubtitle = computed(() => t('cta.subtitle'));
-const activeContactMethod = ref<'form' | 'calendar'>('form')
-const hasOpenedCalendar = ref(false)
+const activeContactMethod = ref<'form' | 'calendar'>('calendar')
+const hasOpenedCalendar = ref(true)
 
 const selectContactMethod = (method: 'form' | 'calendar') => {
   activeContactMethod.value = method
@@ -61,19 +61,6 @@ const submitContact = async () => {
 
       <div class="contact-tabs" role="tablist" :aria-label="$t('cta.tabs.label')">
         <button
-          id="contact-form-tab"
-          type="button"
-          role="tab"
-          class="contact-tab"
-          :class="{ 'contact-tab--active': activeContactMethod === 'form' }"
-          :aria-selected="activeContactMethod === 'form'"
-          aria-controls="contact-form-panel"
-          @click="selectContactMethod('form')"
-        >
-          <UIcon name="i-lucide-send" class="h-4 w-4" aria-hidden="true" />
-          <span>{{ $t('cta.tabs.form') }}</span>
-        </button>
-        <button
           id="contact-calendar-tab"
           type="button"
           role="tab"
@@ -85,6 +72,19 @@ const submitContact = async () => {
         >
           <UIcon name="i-lucide-calendar-days" class="h-4 w-4" aria-hidden="true" />
           <span>{{ $t('cta.tabs.calendar') }}</span>
+        </button>
+        <button
+          id="contact-form-tab"
+          type="button"
+          role="tab"
+          class="contact-tab"
+          :class="{ 'contact-tab--active': activeContactMethod === 'form' }"
+          :aria-selected="activeContactMethod === 'form'"
+          aria-controls="contact-form-panel"
+          @click="selectContactMethod('form')"
+        >
+          <UIcon name="i-lucide-send" class="h-4 w-4" aria-hidden="true" />
+          <span>{{ $t('cta.tabs.form') }}</span>
         </button>
       </div>
 
