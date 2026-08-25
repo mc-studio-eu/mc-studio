@@ -2,7 +2,7 @@
 interface ClientLogo {
   name: string
   src: string
-  kind: 'ra' | 'amg' | 'souji' | 'arises' | 'fontaines'
+  kind: 'ra' | 'amg' | 'souji' | 'arises' | 'fontaines' | 'personal' | 'shika'
 }
 
 const clients: ClientLogo[] = [
@@ -11,6 +11,8 @@ const clients: ClientLogo[] = [
   { name: 'Souji Nova', src: '/img/clients/souji-nova.png', kind: 'souji' },
   { name: 'Arises', src: '/img/clients/arises.svg', kind: 'arises' },
   { name: 'Fontaines VTC', src: '/img/clients/fontaines-vtc.svg', kind: 'fontaines' },
+  { name: 'Personal', src: '/img/clients/personal.svg', kind: 'personal' },
+  { name: 'Shika Consulting', src: '/img/clients/shika-consulting.webp', kind: 'shika' },
 ]
 
 const activeOffset = ref(0)
@@ -58,7 +60,7 @@ onBeforeUnmount(() => {
           >
             <img
               :src="visibleClients[slotIndex - 1].src"
-              :alt="visibleClients[slotIndex - 1].kind === 'fontaines' ? visibleClients[slotIndex - 1].name : ''"
+              :alt="['fontaines', 'shika'].includes(visibleClients[slotIndex - 1].kind) ? visibleClients[slotIndex - 1].name : ''"
               class="client-logo-image shrink-0 object-contain"
               width="120"
               height="48"
@@ -66,7 +68,7 @@ onBeforeUnmount(() => {
               decoding="async"
             >
             <span
-              v-if="visibleClients[slotIndex - 1].kind !== 'fontaines'"
+              v-if="!['fontaines', 'shika'].includes(visibleClients[slotIndex - 1].kind)"
               class="client-logo-name"
             >
               {{ visibleClients[slotIndex - 1].name }}
@@ -80,7 +82,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .client-logo {
-  gap: 0.4rem;
+  gap: 0.35rem;
   padding-inline: 0.2rem;
   backface-visibility: hidden;
   will-change: transform, opacity;
@@ -97,8 +99,8 @@ onBeforeUnmount(() => {
   overflow: hidden;
   color: white;
   font-family: Inter, sans-serif;
-  font-size: clamp(0.52rem, 1.05vw, 0.72rem);
-  font-weight: 520;
+  font-size: clamp(0.56rem, 1.08vw, 0.76rem);
+  font-weight: 560;
   line-height: 1;
   letter-spacing: -0.025em;
   text-overflow: ellipsis;
@@ -111,11 +113,13 @@ onBeforeUnmount(() => {
 }
 
 .client-logo--ra .client-logo-image,
-.client-logo--fontaines .client-logo-image {
+.client-logo--fontaines .client-logo-image,
+.client-logo--shika .client-logo-image {
   filter: brightness(0) invert(1);
 }
 
-.client-logo--amg .client-logo-image {
+.client-logo--amg .client-logo-image,
+.client-logo--personal .client-logo-image {
   filter: grayscale(1) invert(1);
 }
 
@@ -129,22 +133,22 @@ onBeforeUnmount(() => {
 
 .client-logo--ra .client-logo-image,
 .client-logo--arises .client-logo-image {
-  max-height: 30px;
-  max-width: 34px;
-}
-
-.client-logo--amg .client-logo-image {
-  max-height: 30px;
+  max-height: 27px;
   max-width: 30px;
 }
 
+.client-logo--amg .client-logo-image {
+  max-height: 26px;
+  max-width: 26px;
+}
+
 .client-logo--souji .client-logo-image {
-  max-height: 38px;
-  max-width: 44px;
+  max-height: 34px;
+  max-width: 39px;
 }
 
 .client-logo--amg .client-logo-name {
-  font-size: clamp(0.48rem, 0.95vw, 0.66rem);
+  font-size: clamp(0.52rem, 1vw, 0.7rem);
 }
 
 .client-logo--souji .client-logo-name {
@@ -155,7 +159,17 @@ onBeforeUnmount(() => {
 .client-logo--fontaines .client-logo-image {
   max-height: 34px;
   max-width: 112px;
-  transform: scale(2.45);
+  transform: scale(2.2);
+}
+
+.client-logo--personal .client-logo-image {
+  max-height: 26px;
+  max-width: 26px;
+}
+
+.client-logo--shika .client-logo-image {
+  max-height: 25px;
+  max-width: 54px;
 }
 
 .client-logo-roll-enter-active,
