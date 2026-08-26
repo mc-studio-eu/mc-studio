@@ -40,15 +40,9 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
 
       <div class="section-separator"></div>
 
-      <!-- Process Section -->
+      <!-- Team Section -->
       <TeamSection />
 
-      <div class="section-separator"></div>
-
-      <ProcessSection id="process" />
-       
-      <div class="section-separator"></div>  
-      
       <div class="section-separator"></div>
       
       <!-- Testimonials Section -->
