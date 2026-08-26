@@ -125,14 +125,6 @@ onUnmounted(() => {
 
         <div class="relative flex h-full flex-1 flex-col justify-between gap-7">
           <div>
-            <div class="mb-5 flex items-center justify-end">
-              <div class="flex items-center gap-0.5 text-[#f0bf6c]" :aria-label="$t('testimonials.five_stars')">
-                <svg v-for="star in 5" :key="star" class="h-3.5 w-3.5 sm:h-4 sm:w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="m12 2.2 2.95 5.98 6.6.96-4.77 4.65 1.12 6.57L12 17.26l-5.9 3.1 1.12-6.57-4.77-4.65 6.6-.96L12 2.2Z"/>
-                </svg>
-              </div>
-            </div>
-
           <!-- Quote -->
             <p class="whitespace-pre-line font-inter text-base leading-[1.75] text-white/90 transition-colors duration-300 sm:text-lg">
               {{ currentTestimonial.content }}

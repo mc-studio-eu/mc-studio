@@ -19,7 +19,7 @@
     "copyright": "MC Studio. All rights reserved."
   },
   "hero": {
-    "availability": "3 spots left in August",
+    "availability": "3 spots left in {month}",
     "reviews": "Rated 5/5 on Google",
     "title": "The design & development partner for ambitious companies.",
     "subtitle": "We help startups and companies create their brand identity, website and app, from idea to launch.",
@@ -334,7 +334,7 @@
     "title": "Our <span class=\"text-gradient\">Projects</span>",
     "subtitle": "A selection of projects where design, code and strategy meet.",
     "cta": "View project",
-    "show_more": "View more projects",
+    "show_more": "View all projects",
     "showcase": {
       "aria_label": "Featured projects",
       "open_project": "View the {project} project"
@@ -360,6 +360,17 @@
         "tags": [
           "AI SaaS",
           "Branding",
+          "Product Design",
+          "UI/UX",
+          "Development",
+          "Content creators"
+        ]
+      },
+      "maison_awl": {
+        "description": "Maison AWL is a platform connecting individuals with everyday service providers.\nWe designed and built the application and launched it to a community of 180,000 followers.",
+        "tags": [
+          "Web application",
+          "Marketplace",
           "Product Design",
           "UI/UX",
           "Development",

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Maison AWL — écran de connexion</title>
+  <desc id="desc">Aperçu de la plateforme Maison AWL avec son univers éditorial et son interface de connexion.</desc>
+  <defs>
+    <linearGradient id="overlay" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#655a52" stop-opacity=".68"/>
+      <stop offset="1" stop-color="#8b7d72" stop-opacity=".34"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="28" stdDeviation="38" flood-color="#332d28" flood-opacity=".22"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#eeeae5"/>
+  <g filter="url(#shadow)">
+    <rect x="100" y="70" width="1400" height="860" rx="30" fill="#fff"/>
+    <clipPath id="frame">
+      <rect x="100" y="70" width="1400" height="860" rx="30"/>
+    </clipPath>
+    <g clip-path="url(#frame)">
+      <image href="/img/project/maison-awl/login-background.webp" x="100" y="70" width="700" height="860" preserveAspectRatio="xMidYMid slice"/>
+      <rect x="100" y="70" width="700" height="860" fill="url(#overlay)"/>
+      <image href="/img/project/maison-awl/logo-black.png" x="158" y="132" width="86" height="65"/>
+
+      <text x="160" y="850" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="15" letter-spacing="2.6">© 2026 MAISON AWL</text>
+      <text x="650" y="850" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="15" text-anchor="end">made by MC Studio</text>
+
+      <rect x="800" y="70" width="700" height="860" fill="#fff"/>
+      <g transform="translate(930 222)" font-family="Montserrat, Arial, sans-serif">
+        <text x="0" y="0" fill="#1c1917" font-family="Georgia, serif" font-size="46">Bon retour</text>
+        <text x="0" y="40" fill="#78716c" font-size="18">Entrez vos coordonnées pour accéder à votre espace.</text>
+
+        <rect x="0" y="92" width="440" height="52" rx="10" fill="#f5f5f4"/>
+        <rect x="4" y="96" width="216" height="44" rx="8" fill="#fff" stroke="#e7e5e4"/>
+        <text x="112" y="125" fill="#292524" font-size="15" font-weight="600" text-anchor="middle">Se connecter</text>
+        <text x="330" y="125" fill="#78716c" font-size="15" font-weight="500" text-anchor="middle">S'inscrire</text>
+
+        <text x="0" y="198" fill="#44403c" font-size="15" font-weight="600">Adresse email</text>
+        <rect x="0" y="214" width="440" height="54" rx="8" fill="#fff" stroke="#d6d3d1"/>
+        <text x="17" y="248" fill="#a8a29e" font-size="15">alex.morgan@example.com</text>
+
+        <text x="0" y="316" fill="#44403c" font-size="15" font-weight="600">Mot de passe</text>
+        <text x="440" y="316" fill="#78716c" font-size="13" text-anchor="end">Mot de passe oublié ?</text>
+        <rect x="0" y="332" width="440" height="54" rx="8" fill="#fff" stroke="#d6d3d1"/>
+        <text x="17" y="367" fill="#a8a29e" font-size="19" letter-spacing="4">••••••••</text>
+
+        <rect x="0" y="420" width="440" height="54" rx="8" fill="#9c8f85"/>
+        <text x="220" y="454" fill="#fff" font-size="15" font-weight="600" text-anchor="middle">Se connecter</text>
+
+        <line x1="0" y1="522" x2="150" y2="522" stroke="#e7e5e4"/>
+        <text x="220" y="527" fill="#78716c" font-size="14" text-anchor="middle">Ou continuer avec</text>
+        <line x1="290" y1="522" x2="440" y2="522" stroke="#e7e5e4"/>
+
+        <rect x="0" y="562" width="440" height="54" rx="8" fill="#fff" stroke="#d6d3d1"/>
+        <circle cx="178" cy="589" r="10" fill="none" stroke="#9c8f85" stroke-width="4"/>
+        <text x="230" y="595" fill="#44403c" font-size="15" font-weight="600" text-anchor="middle">Google</text>
+      </g>
+    </g>
+  </g>
+</svg>

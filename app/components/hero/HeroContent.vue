@@ -1,6 +1,17 @@
 <script setup>
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import gsap from 'gsap'
+
+const { locale, t } = useI18n()
+
+const availability = computed(() => {
+  const month = new Intl.DateTimeFormat(locale.value, {
+    month: 'long',
+    timeZone: 'Europe/Paris'
+  }).format(new Date())
+
+  return t('hero.availability', { month })
+})
 
 onMounted(() => {
   // Animation blur reveal pour le titre
@@ -48,7 +59,7 @@ onMounted(() => {
           <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f0bf6c] opacity-60 motion-reduce:animate-none"></span>
           <span class="relative inline-flex h-2.5 w-2.5 rounded-full border-2 border-[#f8d699] bg-[#f0bf6c]"></span>
         </span>
-        <span>{{ $t('hero.availability') }}</span>
+        <span>{{ availability }}</span>
       </div>
 
       <div class="inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.06] px-3.5 py-2 text-white/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-2.5">

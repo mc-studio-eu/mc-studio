@@ -4,7 +4,6 @@ import HeroContent from "./HeroContent.vue"
 import HeroButtons from "./HeroButtons.vue"
 import TrustBadges from "./TrustBadges.vue"
 import ScrollingMarquee from "./ScrollingMarquee.vue"
-import ClientLogoCarousel from "./ClientLogoCarousel.vue"
 </script>
 
 <template>
@@ -23,7 +22,6 @@ import ClientLogoCarousel from "./ClientLogoCarousel.vue"
       <Navbar />
       <HeroContent />
       <HeroButtons />
-      <ClientLogoCarousel />
       <TrustBadges />
     </div>
 

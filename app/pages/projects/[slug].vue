@@ -72,8 +72,11 @@ const contactLink = computed(() => localePath({ path: '/', hash: '#contact' }))
 const bookCallBtn = ref(null)
 const bookCallWrapper1 = ref(null)
 const bookCallWrapper2 = ref(null)
+const visitWebsiteBtn = ref(null)
+const visitWebsiteWrapper = ref(null)
 
 useTextSlideAnimation(bookCallBtn, [bookCallWrapper1, bookCallWrapper2])
+useTextSlideAnimation(visitWebsiteBtn, visitWebsiteWrapper)
 
 const splitTextIntoParagraphs = (text: string) => {
   const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map((sentence) => sentence.trim()) ?? [text]
@@ -262,12 +265,18 @@ useSeoMeta({
                   </NuxtLink>
 
                   <a
+                    ref="visitWebsiteBtn"
                     :href="localizedProject.externalLink"
                     target="_blank"
                     rel="noreferrer"
-                    class="inline-flex shrink-0 items-center justify-center gap-2 self-stretch whitespace-nowrap rounded-xl border border-[var(--border-subtle)] bg-white/[0.03] px-5 text-center text-sm font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--color-gold)]"
+                    class="inline-flex shrink-0 items-center justify-center gap-2 self-stretch whitespace-nowrap rounded-xl border border-[var(--border-subtle)] bg-white/[0.03] px-5 text-center text-sm font-medium text-[var(--text-primary)] no-underline"
                   >
-                    <span>{{ labels.visitWebsite }}</span>
+                    <span class="text-slide-container h-5">
+                      <span ref="visitWebsiteWrapper" class="text-slide-wrapper">
+                        <span class="text-slide-text h-5 leading-5">{{ labels.visitWebsite }}</span>
+                        <span class="text-slide-text h-5 leading-5" aria-hidden="true">{{ labels.visitWebsite }}</span>
+                      </span>
+                    </span>
                     <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
                   </a>
                 </div>

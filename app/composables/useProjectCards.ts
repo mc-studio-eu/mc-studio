@@ -26,8 +26,8 @@ export const projectFilters: Array<{ value: ProjectFilter; labelKey: string }> =
 ]
 
 /**
- * Localized project cards + the ordering rules shared by the landing section
- * and the full portfolio page.
+ * Localized project cards shared by the landing section and portfolio page.
+ * The newest case studies come first, then projects keep their data-file order.
  */
 export function useProjectCards() {
   const { t, tm, rt } = useI18n()
@@ -58,23 +58,12 @@ export function useProjectCards() {
       : projects.value.filter(project => project.categories.includes(activeFilter))
 
     return [...matchingProjects].sort((firstProject, secondProject) => {
-      if (activeFilter === 'all') {
-        const featuredProjectPriority =
-          Number(secondProject.slug === 'ra-energy') - Number(firstProject.slug === 'ra-energy')
+      const latestCaseStudyPriority =
+        Number(secondProject.slug === 'maison-awl') - Number(firstProject.slug === 'maison-awl')
 
-        if (featuredProjectPriority !== 0) return featuredProjectPriority
-      }
+      if (latestCaseStudyPriority !== 0) return latestCaseStudyPriority
 
-      const testimonialPriority =
-        Number(Boolean(secondProject.testimonial)) - Number(Boolean(firstProject.testimonial))
-
-      if (testimonialPriority !== 0) return testimonialPriority
-      if (activeFilter !== 'all') return 0
-
-      return (
-        Number(secondProject.categories.includes('landing-page')) -
-        Number(firstProject.categories.includes('landing-page'))
-      )
+      return firstProject.id - secondProject.id
     })
   }
 

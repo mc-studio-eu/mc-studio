@@ -1,38 +1,12 @@
 <script setup lang="ts">
-import { projectFilters, useProjectCards } from '../../composables/useProjectCards'
-import type { ProjectFilter } from '../../composables/useProjectCards'
+import { useProjectCards } from '../../composables/useProjectCards'
 import Navbar from '../../components/layouts/Navbar.vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
-const route = useRoute()
-const router = useRouter()
 const { filterProjects } = useProjectCards()
 
-const filters = projectFilters
-
-const isProjectFilter = (value: unknown): value is ProjectFilter =>
-  filters.some(filter => filter.value === value)
-
-const initialFilter = computed<ProjectFilter>(() => {
-  const queryFilter = route.query.filter
-  return isProjectFilter(queryFilter) ? queryFilter : 'all'
-})
-
-const selectedFilter = ref<ProjectFilter>(initialFilter.value)
-
-const filteredProjects = computed(() => filterProjects(selectedFilter.value))
-
-const selectFilter = (filter: ProjectFilter) => {
-  selectedFilter.value = filter
-  router.replace({
-    query: filter === 'all' ? {} : { filter },
-  })
-}
-
-watch(initialFilter, (filter) => {
-  selectedFilter.value = filter
-})
+const filteredProjects = computed(() => filterProjects('all'))
 
 useSeoMeta({
   title: `${t('projects.all.meta_title')} | MC Studio`,
@@ -72,25 +46,6 @@ useSeoMeta({
           {{ $t('projects.all.subtitle') }}
         </p>
 
-        <div
-          class="mt-6 flex flex-wrap items-center justify-center gap-2"
-          role="group"
-          :aria-label="$t('projects.filters.aria_label')"
-        >
-          <button
-            v-for="filter in filters"
-            :key="filter.value"
-            type="button"
-            class="inline-flex min-h-9 items-center justify-center rounded-full border px-4 font-inter text-xs sm:text-sm font-medium transition-all duration-200"
-            :class="selectedFilter === filter.value
-              ? 'border-[var(--color-gold)] bg-[linear-gradient(110deg,#fff_0%,#f0bf6c_100%)] text-[#0f0f0f] shadow-[0_6px_20px_rgba(240,191,108,0.16)]'
-              : 'border-[var(--border-subtle)] bg-[#181818] text-[var(--text-secondary)] hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]'"
-            :aria-pressed="selectedFilter === filter.value"
-            @click="selectFilter(filter.value)"
-          >
-            {{ $t(filter.labelKey) }}
-          </button>
-        </div>
       </div>
 
       <TransitionGroup

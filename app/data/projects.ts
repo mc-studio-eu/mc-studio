@@ -57,12 +57,12 @@ export const projects: Project[] = [
     i18nKey: 'personal',
     title: 'Personal',
     categories: ['branding', 'landing-page', 'app'],
-    image: '/img/project/personal/homepage.webp',
+    image: '/img/project/personal/hero.png',
     externalLink: 'https://usepersonal.app/',
     verified: true,
     screenshots: {
       desktop: [
-        '/img/project/personal/homepage.webp',
+        '/img/project/personal/hero.png',
         '/img/project/personal/login.webp',
         '/img/project/personal/feed.webp',
         '/img/project/personal/closing.webp',
@@ -153,6 +153,109 @@ export const projects: Project[] = [
         {
           title: 'SaaS development',
           body: 'Development of the bilingual app, authentication and animated landing page, with a responsive interface guiding creators from discovery to production.',
+        },
+      ],
+    },
+  },
+  {
+    slug: 'maison-awl',
+    i18nKey: 'maison_awl',
+    title: 'Maison AWL',
+    categories: ['app'],
+    image: '/img/project/maison-awl/desktop-mockup.png',
+    externalLink: 'https://app.maisonawl.com/',
+    verified: true,
+    screenshots: {
+      desktop: [],
+      mobile: [
+        '/img/project/maison-awl/mobile-mockup.png',
+        '/img/project/maison-awl/instagram-profile.png',
+      ],
+    },
+    summary: {
+      fr: "Maison AWL est une plateforme de mise en relation entre particuliers et prestataires de services du quotidien. Nous avons accompagné sa conception et son développement jusqu'au lancement auprès d'une communauté de 180 000 abonnés.",
+      en: 'Maison AWL is a platform connecting individuals with everyday service providers. We supported its design and development through launch to a community of 180,000 followers.',
+    },
+    aboutCompany: {
+      fr: "Maison AWL facilite l'accès à des services comme le home organizing ou le batch cooking. La plateforme transforme l'expertise et la communauté de la créatrice en un produit numérique concret, utile aux particuliers comme aux professionnels référencés.",
+      en: "Maison AWL makes services such as home organizing and batch cooking easier to access. The platform turns the creator's expertise and community into a tangible digital product that serves both individuals and listed professionals.",
+    },
+    industry: {
+      fr: 'Marketplace de services',
+      en: 'Service marketplace',
+    },
+    companySize: '1 - 10',
+    supportBullets: {
+      fr: [
+        'Une communauté transformée en produit propriétaire',
+        'Un parcours clair pour particuliers et prestataires',
+        'Une base produit prête à faire grandir la communauté',
+      ],
+      en: [
+        'A community turned into an owned product',
+        'A clear journey for customers and providers',
+        'A product foundation ready to grow with the community',
+      ],
+    },
+    context: {
+      fr: "Maison AWL disposait déjà d'une audience engagée de 180 000 abonnés autour de l'organisation et du quotidien. L'enjeu était de convertir cette distribution en un produit qui lui appartient, tout en construisant une expérience crédible et simple pour les deux côtés de la marketplace.",
+      en: 'Maison AWL already had an engaged audience of 180,000 followers around home organization and everyday living. The challenge was to turn that distribution into an owned product while building a credible, simple experience for both sides of the marketplace.',
+    },
+    solution: {
+      fr: "Nous avons cadré, conçu et développé la plateforme sur mesure : identité produit, parcours d'inscription, espaces adaptés aux utilisateurs et prestataires, puis mise en ligne. Ce socle permet à Maison AWL de faire grandir sa communauté dans un espace qui lui appartient.",
+      en: 'We framed, designed and built the custom platform: product identity, signup journey, dedicated spaces for users and providers, then launch. This foundation gives Maison AWL an owned space where its community can grow.',
+    },
+    challenges: {
+      fr: [
+        "Transformer une audience sociale en utilisateurs d'un produit propriétaire",
+        'Rendre une marketplace biface simple dès la première visite',
+        'Installer la confiance entre particuliers et prestataires',
+      ],
+      en: [
+        'Turn a social audience into users of an owned product',
+        'Make a two-sided marketplace simple from the first visit',
+        'Build trust between individuals and service providers',
+      ],
+    },
+    objectives: {
+      fr: [
+        "Créer un actif numérique indépendant des réseaux sociaux",
+        "Fluidifier l'inscription et la mise en relation",
+        'Activer rapidement la communauté existante',
+      ],
+      en: [
+        'Create a digital asset independent from social platforms',
+        'Streamline signup and service matching',
+        'Activate the existing community quickly',
+      ],
+    },
+    actions: {
+      fr: [
+        {
+          title: 'Cadrage produit',
+          body: "Définition des parcours, des rôles et des priorités pour transformer l'idée en marketplace claire et exploitable.",
+        },
+        {
+          title: 'UX/UI & identité produit',
+          body: "Conception d'une expérience sobre et premium, cohérente avec l'univers Maison AWL et accessible aux deux publics de la plateforme.",
+        },
+        {
+          title: 'Développement & lancement',
+          body: "Développement de la plateforme, de l'authentification et des espaces utilisateurs, puis accompagnement de la mise en ligne auprès de la communauté.",
+        },
+      ],
+      en: [
+        {
+          title: 'Product framing',
+          body: 'Definition of journeys, roles and priorities to turn the idea into a clear, viable marketplace.',
+        },
+        {
+          title: 'UX/UI & product identity',
+          body: 'A refined, premium experience aligned with Maison AWL and accessible to both platform audiences.',
+        },
+        {
+          title: 'Development & launch',
+          body: 'Development of the platform, authentication and user spaces, followed by launch support for the community.',
         },
       ],
     },
