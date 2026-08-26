@@ -12,7 +12,11 @@ const projectCursor = reactive({ x: 0, y: 0, visible: false })
 
 useTextSlideAnimation(showMoreBtn, showMoreWrapper)
 
-const filteredProjects = computed(() => filterProjects('all'))
+const excludedFromShowcase = new Set(['crm-ra-energy'])
+
+const filteredProjects = computed(() =>
+  filterProjects('all').filter((project) => !excludedFromShowcase.has(project.slug))
+)
 const loadedProjects = reactive(new Set<string>())
 
 let autoplayTimer: ReturnType<typeof setInterval> | undefined
