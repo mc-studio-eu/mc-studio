@@ -122,7 +122,7 @@ onBeforeUnmount(() => {
         <div class="project-glow project-glow-one absolute -z-10" />
         <div class="project-glow project-glow-two absolute -z-10" />
 
-        <div class="relative min-h-[460px] p-3 sm:min-h-[660px] sm:p-5 lg:min-h-[820px] lg:p-6">
+        <div class="relative aspect-[3/2] p-3 sm:p-5 lg:p-6">
           <NuxtLink
             v-for="(project, index) in filteredProjects"
             :key="project.slug"
