@@ -8,6 +8,7 @@ const activeIndex = ref(0)
 const isPaused = ref(false)
 const showMoreBtn = ref(null)
 const showMoreWrapper = ref(null)
+const projectSection = ref<HTMLElement | null>(null)
 const projectCursor = reactive({ x: 0, y: 0, visible: false })
 
 useTextSlideAnimation(showMoreBtn, showMoreWrapper)
@@ -28,6 +29,21 @@ const goToProject = (index: number) => {
 
 const markProjectAsLoaded = (slug: string) => {
   loadedProjects.add(slug)
+}
+
+const isProjectLoaded = (slug: string) => {
+  if (loadedProjects.has(slug)) return true
+
+  const image = projectSection.value?.querySelector<HTMLImageElement>(
+    `img[data-project-slug="${slug}"]`
+  )
+
+  if (!image?.complete || image.naturalWidth === 0) return false
+
+  // Cached images may already be complete when this component is mounted again,
+  // so their load event is not guaranteed to repopulate loadedProjects.
+  loadedProjects.add(slug)
+  return true
 }
 
 const updateProjectCursor = (event: PointerEvent) => {
@@ -58,7 +74,7 @@ const showNextProject = () => {
     const nextIndex = (activeIndex.value + offset) % projectCount
     const nextProject = filteredProjects.value[nextIndex]
 
-    if (nextProject && loadedProjects.has(nextProject.slug)) {
+    if (nextProject && isProjectLoaded(nextProject.slug)) {
       goToProject(nextIndex)
       return
     }
@@ -78,6 +94,7 @@ onBeforeUnmount(() => {
 
 <template>
   <section
+    ref="projectSection"
     id="projets"
     class="overflow-hidden bg-[var(--bg-primary)] px-4 py-16 transition-colors duration-300 sm:px-6 md:py-20"
   >
@@ -139,6 +156,7 @@ onBeforeUnmount(() => {
             <NuxtImg
               :src="project.image"
               :alt="project.title"
+              :data-project-slug="project.slug"
               width="1600"
               height="1000"
               loading="eager"
