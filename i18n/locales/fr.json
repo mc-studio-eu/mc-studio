@@ -584,12 +584,21 @@
       "calendar": "Prendre rendez-vous"
     },
     "form": {
+      "audience": "Vous êtes",
+      "audience_options": {
+        "business": "Entreprise",
+        "business_hint": "Site, plateforme ou application métier",
+        "creator": "Créateur",
+        "creator_hint": "Application ou expérience pour votre communauté"
+      },
       "name": "Nom",
       "name_placeholder": "Votre nom",
       "email": "Email",
       "phone": "Téléphone",
       "company": "Entreprise",
       "company_placeholder": "Nom de votre entreprise",
+      "creator_name": "Nom ou pseudo",
+      "creator_name_placeholder": "Votre nom de créateur",
       "project_type": "Type de projet",
       "project_placeholder": "Sélectionnez une option",
       "project_options": {
@@ -598,10 +607,16 @@
         "web_app": "Application web",
         "mobile_app": "Application mobile",
         "product_design": "Design produit",
+        "creator_app": "Application pour communauté",
+        "creator_landing_page": "Landing page créateur",
+        "creator_branding": "Branding créateur",
+        "creator_product_design": "Design produit créateur",
         "other": "Autre"
       },
       "message": "Votre projet",
       "message_placeholder": "Contexte, objectifs, délai idéal, budget indicatif…",
+      "message_placeholder_business": "Contexte, objectifs, délai idéal, budget indicatif…",
+      "message_placeholder_creator": "Parlez-nous de votre univers, de votre communauté et de l’application que vous imaginez…",
       "submit": "Envoyer ma demande",
       "sending": "Envoi en cours…",
       "privacy": "En envoyant ce formulaire, vous acceptez que MC Studio utilise ces informations uniquement pour répondre à votre demande.",

@@ -1,4 +1,5 @@
 interface ContactPayload {
+  audience?: unknown
   name?: unknown
   email?: unknown
   phone?: unknown
@@ -62,13 +63,14 @@ export default defineEventHandler(async (event) => {
   }
 
   const name = cleanText(body.name, 100)
+  const audience = cleanText(body.audience, 20)
   const email = cleanText(body.email, 160).toLowerCase()
   const phone = cleanText(body.phone, 40)
   const company = cleanText(body.company, 120)
   const projectType = cleanText(body.projectType, 80)
   const message = cleanText(body.message, 4000)
 
-  if (name.length < 2 || !EMAIL_PATTERN.test(email) || message.length < 20) {
+  if (!['business', 'creator'].includes(audience) || name.length < 2 || !EMAIL_PATTERN.test(email) || message.length < 20) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Invalid contact form'
@@ -91,6 +93,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const safe = {
+    audience: escapeHtml(audience === 'creator' ? 'Créateur' : 'Entreprise'),
     name: escapeHtml(name),
     email: escapeHtml(email),
     phone: escapeHtml(phone || 'Non renseigné'),
@@ -112,6 +115,7 @@ export default defineEventHandler(async (event) => {
         reply_to: email,
         subject: `Nouveau projet — ${name}`,
         text: [
+          `Profil : ${audience === 'creator' ? 'Créateur' : 'Entreprise'}`,
           `Nom : ${name}`,
           `Email : ${email}`,
           `Téléphone : ${phone || 'Non renseigné'}`,
@@ -128,6 +132,7 @@ export default defineEventHandler(async (event) => {
               <h1 style="margin:8px 0 0;color:#fff;font-size:24px">Nouvelle demande de contact</h1>
             </div>
             <div style="border:1px solid #e7e7e7;border-top:0;padding:28px;border-radius:0 0 16px 16px">
+              <p><strong>Profil :</strong> ${safe.audience}</p>
               <p><strong>Nom :</strong> ${safe.name}</p>
               <p><strong>Email :</strong> <a href="mailto:${safe.email}">${safe.email}</a></p>
               <p><strong>Téléphone :</strong> ${safe.phone}</p>

@@ -584,12 +584,21 @@
       "calendar": "Book a call"
     },
     "form": {
+      "audience": "You are",
+      "audience_options": {
+        "business": "Business",
+        "business_hint": "Website, platform or business application",
+        "creator": "Creator",
+        "creator_hint": "An application or experience for your community"
+      },
       "name": "Name",
       "name_placeholder": "Your name",
       "email": "Email",
       "phone": "Phone",
       "company": "Company",
       "company_placeholder": "Your company name",
+      "creator_name": "Name or handle",
+      "creator_name_placeholder": "Your creator name",
       "project_type": "Project type",
       "project_placeholder": "Select an option",
       "project_options": {
@@ -598,10 +607,16 @@
         "web_app": "Web application",
         "mobile_app": "Mobile application",
         "product_design": "Product design",
+        "creator_app": "Community application",
+        "creator_landing_page": "Creator landing page",
+        "creator_branding": "Creator branding",
+        "creator_product_design": "Creator product design",
         "other": "Other"
       },
       "message": "Your project",
       "message_placeholder": "Context, goals, ideal timeline, indicative budget…",
+      "message_placeholder_business": "Context, goals, ideal timeline, indicative budget…",
+      "message_placeholder_creator": "Tell us about your universe, your community and the application you imagine…",
       "submit": "Send my request",
       "sending": "Sending…",
       "privacy": "By sending this form, you agree that MC Studio may use this information solely to respond to your request.",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n();
-const activeContactMethod = ref<'form' | 'calendar'>('calendar')
-const hasOpenedCalendar = ref(true)
+const activeContactMethod = ref<'form' | 'calendar'>('form')
+const hasOpenedCalendar = ref(false)
 
 const selectContactMethod = (method: 'form' | 'calendar') => {
   activeContactMethod.value = method
@@ -9,6 +9,7 @@ const selectContactMethod = (method: 'form' | 'calendar') => {
 }
 
 const form = reactive({
+  audience: '',
   name: '',
   email: '',
   phone: '',
@@ -16,6 +17,17 @@ const form = reactive({
   projectType: '',
   message: '',
   website: ''
+})
+
+const companyLabel = computed(() => form.audience === 'creator' ? t('cta.form.creator_name') : t('cta.form.company'))
+const companyPlaceholder = computed(() => form.audience === 'creator' ? t('cta.form.creator_name_placeholder') : t('cta.form.company_placeholder'))
+const messagePlaceholder = computed(() => form.audience === 'creator' ? t('cta.form.message_placeholder_creator') : t('cta.form.message_placeholder_business'))
+
+watch(() => form.audience, (audience, previousAudience) => {
+  if (previousAudience && audience !== previousAudience) {
+    form.company = ''
+    form.projectType = ''
+  }
 })
 
 const isSubmitting = ref(false)
@@ -33,6 +45,7 @@ const submitContact = async () => {
 
     formStatus.value = 'success'
     Object.assign(form, {
+      audience: '',
       name: '',
       email: '',
       phone: '',
@@ -95,6 +108,26 @@ const submitContact = async () => {
           aria-labelledby="contact-form-tab"
         >
           <form class="space-y-4" @submit.prevent="submitContact">
+            <fieldset class="contact-field contact-audience-field">
+              <legend>{{ $t('cta.form.audience') }} *</legend>
+              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <label class="contact-audience" :class="{ 'contact-audience--active': form.audience === 'business' }">
+                  <input v-model="form.audience" type="radio" name="audience" value="business" required>
+                  <span class="contact-audience__copy">
+                    <strong>{{ $t('cta.form.audience_options.business') }}</strong>
+                    <small>{{ $t('cta.form.audience_options.business_hint') }}</small>
+                  </span>
+                </label>
+                <label class="contact-audience" :class="{ 'contact-audience--active': form.audience === 'creator' }">
+                  <input v-model="form.audience" type="radio" name="audience" value="creator" required>
+                  <span class="contact-audience__copy">
+                    <strong>{{ $t('cta.form.audience_options.creator') }}</strong>
+                    <small>{{ $t('cta.form.audience_options.creator_hint') }}</small>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label class="contact-field">
                 <span>{{ $t('cta.form.name') }} *</span>
@@ -112,8 +145,8 @@ const submitContact = async () => {
                 <input v-model="form.phone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="+33 6 00 00 00 00">
               </label>
               <label class="contact-field">
-                <span>{{ $t('cta.form.company') }}</span>
-                <input v-model="form.company" type="text" name="company" autocomplete="organization" maxlength="120" :placeholder="$t('cta.form.company_placeholder')">
+                <span>{{ companyLabel }}<template v-if="form.audience === 'business'"> *</template></span>
+                <input v-model="form.company" type="text" name="company" autocomplete="organization" maxlength="120" :required="form.audience === 'business'" :placeholder="companyPlaceholder">
               </label>
             </div>
 
@@ -121,21 +154,29 @@ const submitContact = async () => {
               <span>{{ $t('cta.form.project_type') }}</span>
               <select v-model="form.projectType" name="projectType">
                 <option value="">{{ $t('cta.form.project_placeholder') }}</option>
-                <option value="Branding">Branding</option>
-                <option value="Landing page">{{ $t('cta.form.project_options.landing_page') }}</option>
-                <option value="Site internet">{{ $t('cta.form.project_options.website') }}</option>
-                <option value="CRM">CRM</option>
-                <option value="Application web">{{ $t('cta.form.project_options.web_app') }}</option>
-                <option value="Application mobile">{{ $t('cta.form.project_options.mobile_app') }}</option>
-                <option value="SaaS">SaaS</option>
-                <option value="Design produit">{{ $t('cta.form.project_options.product_design') }}</option>
+                <template v-if="form.audience === 'creator'">
+                  <option value="Application communauté">{{ $t('cta.form.project_options.creator_app') }}</option>
+                  <option value="Landing page créateur">{{ $t('cta.form.project_options.creator_landing_page') }}</option>
+                  <option value="Branding créateur">{{ $t('cta.form.project_options.creator_branding') }}</option>
+                  <option value="Design produit créateur">{{ $t('cta.form.project_options.creator_product_design') }}</option>
+                </template>
+                <template v-else>
+                  <option value="Branding">Branding</option>
+                  <option value="Landing page">{{ $t('cta.form.project_options.landing_page') }}</option>
+                  <option value="Site internet">{{ $t('cta.form.project_options.website') }}</option>
+                  <option value="CRM">CRM</option>
+                  <option value="Application web">{{ $t('cta.form.project_options.web_app') }}</option>
+                  <option value="Application mobile">{{ $t('cta.form.project_options.mobile_app') }}</option>
+                  <option value="SaaS">SaaS</option>
+                  <option value="Design produit">{{ $t('cta.form.project_options.product_design') }}</option>
+                </template>
                 <option :value="$t('cta.form.project_options.other')">{{ $t('cta.form.project_options.other') }}</option>
               </select>
             </label>
 
             <label class="contact-field">
               <span>{{ $t('cta.form.message') }} *</span>
-              <textarea v-model="form.message" name="message" required minlength="20" maxlength="4000" rows="6" :placeholder="$t('cta.form.message_placeholder')"></textarea>
+              <textarea v-model="form.message" name="message" required minlength="20" maxlength="4000" rows="6" :placeholder="messagePlaceholder"></textarea>
             </label>
 
             <label class="sr-only" aria-hidden="true">
@@ -247,6 +288,56 @@ const submitContact = async () => {
   font-size: 0.875rem;
   outline: none;
   transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.contact-audience-field {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-audience-field legend {
+  margin-bottom: 0.5rem;
+}
+
+.contact-audience {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.875rem;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.contact-audience input {
+  accent-color: var(--color-gold);
+  flex: 0 0 auto;
+}
+
+.contact-audience--active {
+  border-color: rgba(240, 191, 108, 0.75);
+  background: rgba(240, 191, 108, 0.08);
+  color: var(--text-primary);
+}
+
+.contact-audience__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.contact-audience__copy strong {
+  font-size: 0.875rem;
+}
+
+.contact-audience__copy small {
+  color: var(--text-muted);
+  font-size: 0.75rem;
 }
 
 .contact-field input,
