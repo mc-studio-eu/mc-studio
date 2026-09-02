@@ -1,8 +1,20 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import gsap from 'gsap'
 
-const { locale, t } = useI18n()
+const { locale, rt, t, tm } = useI18n()
+
+const currentWordIndex = ref(0)
+let wordRotationTimer
+
+const rotatingWords = computed(() => {
+  const words = tm('hero.rotating_words')
+
+  return Array.isArray(words) ? words.map(word => rt(word)) : []
+})
+
+const currentWord = computed(() => rotatingWords.value[currentWordIndex.value] ?? '')
+const wordPlaceholder = computed(() => rotatingWords.value[0] ?? currentWord.value)
 
 const availability = computed(() => {
   const month = new Intl.DateTimeFormat(locale.value, {
@@ -14,6 +26,8 @@ const availability = computed(() => {
 })
 
 onMounted(() => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
   // Animation blur reveal pour le titre
   gsap.fromTo(".hero-title", 
     { 
@@ -46,6 +60,16 @@ onMounted(() => {
       ease: "power2.out"
     }
   )
+
+  if (!prefersReducedMotion && rotatingWords.value.length > 1) {
+    wordRotationTimer = window.setInterval(() => {
+      currentWordIndex.value = (currentWordIndex.value + 1) % rotatingWords.value.length
+    }, 2600)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (wordRotationTimer) window.clearInterval(wordRotationTimer)
 })
 </script>
 
@@ -82,7 +106,16 @@ onMounted(() => {
     </div>
 
     <!-- Title -->
-    <h1 class="hero-title text-balance font-manrope font-medium leading-[1.15] sm:leading-[1.2] md:leading-tight max-w-[320px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[920px] text-transparent bg-clip-text bg-[linear-gradient(270deg,#f0bf6c_0%,white_67.308%)] text-[clamp(1.25rem,6vw,1.5rem)] min-[480px]:text-[clamp(1.5rem,5vw,1.75rem)] sm:text-[clamp(2rem,4.5vw,2.25rem)] md:text-[clamp(2.25rem,4vw,2.625rem)] lg:text-[2.625rem] xl:text-[3rem] opacity-0" style="filter: blur(20px); transform: translateY(20px)" v-html="$t('hero.title')">
+    <h1 class="hero-title text-balance font-manrope font-medium leading-[1.15] sm:leading-[1.2] md:leading-tight max-w-[320px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[920px] text-transparent bg-clip-text bg-[linear-gradient(270deg,#f0bf6c_0%,white_67.308%)] text-[clamp(1.25rem,6vw,1.5rem)] min-[480px]:text-[clamp(1.5rem,5vw,1.75rem)] sm:text-[clamp(2rem,4.5vw,2.25rem)] md:text-[clamp(2.25rem,4vw,2.625rem)] lg:text-[2.625rem] xl:text-[3rem] opacity-0" style="filter: blur(20px); transform: translateY(20px)">
+      <span class="sr-only">{{ $t('hero.title') }}</span>
+      <span aria-hidden="true">
+        {{ $t('hero.title_prefix') }}&nbsp;<span class="hero-word-rotator">
+          <span class="hero-word-placeholder">{{ wordPlaceholder }}</span>
+          <Transition name="hero-word">
+            <span :key="currentWord" class="hero-word">{{ currentWord }}</span>
+          </Transition>
+        </span>
+      </span>
     </h1>
     
     <!-- Subtitle -->
@@ -94,6 +127,45 @@ onMounted(() => {
 <style scoped>
 .hero-availability-badge {
   animation: availability-reveal 0.7s 0.15s both cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-word-rotator {
+  display: inline-grid;
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.hero-word-placeholder,
+.hero-word {
+  grid-area: 1 / 1;
+}
+
+.hero-word-placeholder {
+  visibility: hidden;
+}
+
+.hero-word {
+  display: block;
+}
+
+.hero-word-enter-active,
+.hero-word-leave-active {
+  transition:
+    opacity 450ms ease,
+    filter 450ms ease,
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-word-enter-from {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(0.65em);
+}
+
+.hero-word-leave-to {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(-0.65em);
 }
 
 @keyframes availability-reveal {
@@ -111,6 +183,11 @@ onMounted(() => {
 @media (prefers-reduced-motion: reduce) {
   .hero-availability-badge {
     animation: none;
+  }
+
+  .hero-word-enter-active,
+  .hero-word-leave-active {
+    transition: none;
   }
 }
 </style>

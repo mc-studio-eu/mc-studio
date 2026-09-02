@@ -21,8 +21,14 @@
   "hero": {
     "availability": "3 places restantes en {month}",
     "reviews": "Noté 5/5 sur Google",
-    "title": "Le partenaire design & développement des entreprises ambitieuses.",
-    "subtitle": "Nous accompagnons startups et entreprises dans la création de leur identité, site web et application, de l'idée jusqu'au lancement.",
+    "title": "Le partenaire digital des entreprises",
+    "title_prefix": "Le partenaire digital des",
+    "rotating_words": [
+      "entreprises",
+      "créateurs",
+      "startups"
+    ],
+    "subtitle": "Stratégie, design et développement réunis pour donner vie à vos ambitions.",
     "cta": {
       "book": "Réserver un appel",
       "whatsapp": "Discuter sur WhatsApp"
@@ -594,7 +600,10 @@
       "name": "Nom",
       "name_placeholder": "Votre nom",
       "email": "Email",
+      "email_placeholder": "vous{'@'}entreprise.fr",
       "phone": "Téléphone",
+      "social": "Réseau social principal",
+      "social_placeholder": "Lien vers votre profil",
       "company": "Entreprise",
       "company_placeholder": "Nom de votre entreprise",
       "creator_name": "Nom ou pseudo",

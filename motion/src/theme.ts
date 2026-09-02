@@ -2,7 +2,16 @@
  * Design tokens mirrored from the MC Studio website (app/assets/css/main.css)
  * so the reel stays visually consistent with the brand.
  */
+/**
+ * Le film est éditorial et clair : papier gris, encre noire, l'or en accent.
+ * Les valeurs sombres restent disponibles pour les plans plein cadre.
+ */
 export const colors = {
+  paper: '#E8E8E8',
+  paperDeep: '#DEDEDE',
+  ink: '#141414',
+  inkSoft: '#9C9C9C',
+  inkGhost: '#D2D2D2',
   black: '#0F0F0F',
   blackDeep: '#080808',
   blackLight: '#232323',

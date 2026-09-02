@@ -14,6 +14,7 @@ const form = reactive({
   email: '',
   phone: '',
   company: '',
+  social: '',
   projectType: '',
   message: '',
   website: ''
@@ -22,10 +23,13 @@ const form = reactive({
 const companyLabel = computed(() => form.audience === 'creator' ? t('cta.form.creator_name') : t('cta.form.company'))
 const companyPlaceholder = computed(() => form.audience === 'creator' ? t('cta.form.creator_name_placeholder') : t('cta.form.company_placeholder'))
 const messagePlaceholder = computed(() => form.audience === 'creator' ? t('cta.form.message_placeholder_creator') : t('cta.form.message_placeholder_business'))
+const nameLabel = computed(() => form.audience === 'creator' ? t('cta.form.creator_name') : t('cta.form.name'))
+const namePlaceholder = computed(() => form.audience === 'creator' ? t('cta.form.creator_name_placeholder') : t('cta.form.name_placeholder'))
 
 watch(() => form.audience, (audience, previousAudience) => {
   if (previousAudience && audience !== previousAudience) {
     form.company = ''
+    form.social = ''
     form.projectType = ''
   }
 })
@@ -50,6 +54,7 @@ const submitContact = async () => {
       email: '',
       phone: '',
       company: '',
+      social: '',
       projectType: '',
       message: '',
       website: ''
@@ -63,7 +68,14 @@ const submitContact = async () => {
 </script>
 
 <template>
-  <section id="contact" class="py-20 px-6 bg-[var(--bg-primary)] transition-colors duration-300">
+  <section
+    id="contact"
+    class="contact-section px-6 py-20 transition-colors duration-300"
+    :class="{
+      'contact-section--business': form.audience === 'business',
+      'contact-section--creator': form.audience === 'creator'
+    }"
+  >
     <div class="max-w-[1216px] mx-auto">
       <!-- Header -->
       <div class="text-center mb-10 md:mb-12">
@@ -103,7 +115,7 @@ const submitContact = async () => {
         <div
           v-show="activeContactMethod === 'form'"
           id="contact-form-panel"
-          class="contact-card rounded-3xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)] p-6 sm:p-8"
+          class="contact-card rounded-3xl border p-6 sm:p-8"
           role="tabpanel"
           aria-labelledby="contact-form-tab"
         >
@@ -113,54 +125,56 @@ const submitContact = async () => {
               <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label class="contact-audience" :class="{ 'contact-audience--active': form.audience === 'business' }">
                   <input v-model="form.audience" type="radio" name="audience" value="business" required>
+                  <span class="contact-audience__radio" aria-hidden="true" />
                   <span class="contact-audience__copy">
                     <strong>{{ $t('cta.form.audience_options.business') }}</strong>
                     <small>{{ $t('cta.form.audience_options.business_hint') }}</small>
                   </span>
+                  <span class="contact-audience__arrow" aria-hidden="true">↗</span>
                 </label>
                 <label class="contact-audience" :class="{ 'contact-audience--active': form.audience === 'creator' }">
                   <input v-model="form.audience" type="radio" name="audience" value="creator" required>
+                  <span class="contact-audience__radio" aria-hidden="true" />
                   <span class="contact-audience__copy">
                     <strong>{{ $t('cta.form.audience_options.creator') }}</strong>
                     <small>{{ $t('cta.form.audience_options.creator_hint') }}</small>
                   </span>
+                  <span class="contact-audience__arrow" aria-hidden="true">↗</span>
                 </label>
               </div>
             </fieldset>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <label class="contact-field">
-                <span>{{ $t('cta.form.name') }} *</span>
-                <input v-model="form.name" type="text" name="name" autocomplete="name" required minlength="2" maxlength="100" :placeholder="$t('cta.form.name_placeholder')">
-              </label>
-              <label class="contact-field">
-                <span>{{ $t('cta.form.email') }} *</span>
-                <input v-model="form.email" type="email" name="email" autocomplete="email" required maxlength="160" placeholder="vous@entreprise.fr">
-              </label>
-            </div>
+            <div v-if="form.audience" class="contact-form-fields space-y-4">
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label class="contact-field">
+                  <span>{{ nameLabel }} *</span>
+                  <input v-model="form.name" type="text" name="name" autocomplete="name" required minlength="2" maxlength="100" :placeholder="namePlaceholder">
+                </label>
+                <label class="contact-field">
+                  <span>{{ $t('cta.form.email') }} *</span>
+                  <input v-model="form.email" type="email" name="email" autocomplete="email" required maxlength="160" :placeholder="$t('cta.form.email_placeholder')">
+                </label>
+              </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <label class="contact-field">
-                <span>{{ $t('cta.form.phone') }}</span>
-                <input v-model="form.phone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="+33 6 00 00 00 00">
-              </label>
-              <label class="contact-field">
-                <span>{{ companyLabel }}<template v-if="form.audience === 'business'"> *</template></span>
-                <input v-model="form.company" type="text" name="company" autocomplete="organization" maxlength="120" :required="form.audience === 'business'" :placeholder="companyPlaceholder">
-              </label>
-            </div>
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label class="contact-field">
+                  <span>{{ $t('cta.form.phone') }}<template v-if="form.audience === 'creator'"> *</template></span>
+                  <input v-model="form.phone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="+33 6 00 00 00 00" :required="form.audience === 'creator'">
+                </label>
+                <label v-if="form.audience === 'business'" class="contact-field">
+                  <span>{{ companyLabel }} *</span>
+                  <input v-model="form.company" type="text" name="company" autocomplete="organization" maxlength="120" required :placeholder="companyPlaceholder">
+                </label>
+                <label v-else class="contact-field">
+                  <span>{{ $t('cta.form.social') }} *</span>
+                  <input v-model="form.social" type="url" name="social" autocomplete="url" maxlength="300" required :placeholder="$t('cta.form.social_placeholder')">
+                </label>
+              </div>
 
-            <label class="contact-field">
-              <span>{{ $t('cta.form.project_type') }}</span>
-              <select v-model="form.projectType" name="projectType">
-                <option value="">{{ $t('cta.form.project_placeholder') }}</option>
-                <template v-if="form.audience === 'creator'">
-                  <option value="Application communauté">{{ $t('cta.form.project_options.creator_app') }}</option>
-                  <option value="Landing page créateur">{{ $t('cta.form.project_options.creator_landing_page') }}</option>
-                  <option value="Branding créateur">{{ $t('cta.form.project_options.creator_branding') }}</option>
-                  <option value="Design produit créateur">{{ $t('cta.form.project_options.creator_product_design') }}</option>
-                </template>
-                <template v-else>
+              <label v-if="form.audience === 'business'" class="contact-field">
+                <span>{{ $t('cta.form.project_type') }}</span>
+                <select v-model="form.projectType" name="projectType">
+                  <option value="">{{ $t('cta.form.project_placeholder') }}</option>
                   <option value="Branding">Branding</option>
                   <option value="Landing page">{{ $t('cta.form.project_options.landing_page') }}</option>
                   <option value="Site internet">{{ $t('cta.form.project_options.website') }}</option>
@@ -169,15 +183,15 @@ const submitContact = async () => {
                   <option value="Application mobile">{{ $t('cta.form.project_options.mobile_app') }}</option>
                   <option value="SaaS">SaaS</option>
                   <option value="Design produit">{{ $t('cta.form.project_options.product_design') }}</option>
-                </template>
-                <option :value="$t('cta.form.project_options.other')">{{ $t('cta.form.project_options.other') }}</option>
-              </select>
-            </label>
+                  <option :value="$t('cta.form.project_options.other')">{{ $t('cta.form.project_options.other') }}</option>
+                </select>
+              </label>
 
-            <label class="contact-field">
-              <span>{{ $t('cta.form.message') }} *</span>
-              <textarea v-model="form.message" name="message" required minlength="20" maxlength="4000" rows="6" :placeholder="messagePlaceholder"></textarea>
-            </label>
+              <label class="contact-field">
+                <span>{{ $t('cta.form.message') }} *</span>
+                <textarea v-model="form.message" name="message" required minlength="20" maxlength="4000" rows="6" :placeholder="messagePlaceholder"></textarea>
+              </label>
+            </div>
 
             <label class="sr-only" aria-hidden="true">
               Website
@@ -217,8 +231,31 @@ const submitContact = async () => {
 </template>
 
 <style scoped>
+.contact-section {
+  --contact-surface: #171717;
+  --contact-field: #0f0f0f;
+  --contact-label: rgba(255, 255, 255, 0.68);
+  --contact-muted: #6f7b91;
+  --contact-border: rgba(255, 255, 255, 0.12);
+  --contact-accent: #f0bf6c;
+  --contact-accent-soft: rgba(240, 191, 108, 0.1);
+  background: #0f0f0f;
+}
+
+.contact-section--creator {
+  --contact-surface: #ffffff;
+  --contact-field: #ffffff;
+  --contact-label: #1f1834;
+  --contact-muted: #8d8998;
+  --contact-border: rgba(31, 24, 52, 0.12);
+  --contact-accent: #9568ed;
+  --contact-accent-soft: rgba(149, 104, 237, 0.1);
+}
+
 .contact-card {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.16);
+  border-color: var(--contact-border) !important;
+  background: var(--contact-surface) !important;
 }
 
 .contact-tabs {
@@ -256,9 +293,9 @@ const submitContact = async () => {
 }
 
 .contact-tab--active {
-  background: linear-gradient(270deg, #f0bf6c 0%, #fff 72%);
+  background: linear-gradient(270deg, var(--contact-accent) 0%, #fff 72%);
   color: #0f0f0f;
-  box-shadow: 0 6px 18px rgba(11, 32, 103, 0.12);
+  box-shadow: 0 6px 18px var(--contact-accent-soft);
 }
 
 .contact-tab:focus-visible {
@@ -271,7 +308,7 @@ const submitContact = async () => {
   flex-direction: column;
   gap: 0.5rem;
   font-family: Inter, sans-serif;
-  color: var(--text-secondary);
+  color: var(--contact-label);
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -280,10 +317,10 @@ const submitContact = async () => {
 .contact-field select,
 .contact-field textarea {
   width: 100%;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--contact-border);
   border-radius: 0.875rem;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: var(--contact-field);
+  color: var(--contact-label);
   font-family: Inter, sans-serif;
   font-size: 0.875rem;
   outline: none;
@@ -301,28 +338,59 @@ const submitContact = async () => {
 }
 
 .contact-audience {
+  position: relative;
   display: flex;
-  min-height: 4.5rem;
+  min-height: 7rem;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border: 1px solid var(--border-subtle);
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--contact-border);
   border-radius: 0.875rem;
-  background: var(--bg-primary);
-  color: var(--text-secondary);
+  background: var(--contact-field);
+  color: var(--contact-label);
   cursor: pointer;
-  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
 .contact-audience input {
-  accent-color: var(--color-gold);
-  flex: 0 0 auto;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0;
 }
 
 .contact-audience--active {
-  border-color: rgba(240, 191, 108, 0.75);
-  background: rgba(240, 191, 108, 0.08);
-  color: var(--text-primary);
+  border-color: var(--contact-accent);
+  background: var(--contact-accent-soft);
+  color: var(--contact-label);
+  box-shadow: 0 0 0 3px var(--contact-accent-soft);
+}
+
+.contact-audience__radio {
+  display: grid;
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+
+.contact-audience--active .contact-audience__radio {
+  border-color: var(--contact-accent);
+  opacity: 1;
+}
+
+.contact-audience--active .contact-audience__radio::after {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--contact-accent);
+  content: '';
 }
 
 .contact-audience__copy {
@@ -336,8 +404,16 @@ const submitContact = async () => {
 }
 
 .contact-audience__copy small {
-  color: var(--text-muted);
+  color: var(--contact-muted);
   font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.contact-audience__arrow {
+  margin-left: auto;
+  align-self: flex-start;
+  color: var(--contact-accent);
+  font-size: 1.2rem;
 }
 
 .contact-field input,
@@ -354,14 +430,14 @@ const submitContact = async () => {
 
 .contact-field input::placeholder,
 .contact-field textarea::placeholder {
-  color: var(--text-muted);
+  color: var(--contact-muted);
 }
 
 .contact-field input:focus,
 .contact-field select:focus,
 .contact-field textarea:focus {
-  border-color: rgba(240, 191, 108, 0.75);
-  box-shadow: 0 0 0 3px rgba(240, 191, 108, 0.12);
+  border-color: var(--contact-accent);
+  box-shadow: 0 0 0 3px var(--contact-accent-soft);
 }
 
 .contact-submit {
@@ -376,13 +452,18 @@ const submitContact = async () => {
   gap: 0.75rem;
   border: 0;
   border-radius: 0.875rem;
-  background: linear-gradient(270deg, #f0bf6c 0%, #fff 72%);
+  background: linear-gradient(270deg, var(--contact-accent) 0%, #fff 72%);
   color: #0f0f0f;
   font-family: Inter, sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
+}
+
+.contact-section--creator .contact-submit {
+  background: var(--contact-accent);
+  color: #fff;
 }
 
 .contact-submit:hover:not(:disabled) {

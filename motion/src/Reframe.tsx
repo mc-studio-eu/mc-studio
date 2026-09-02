@@ -22,7 +22,7 @@ export const Reframe: React.FC<{
   const coverScale = Math.max(canvasWidth / STAGE.width, canvasHeight / STAGE.height)
 
   return (
-    <AbsoluteFill style={{ background: colors.blackDeep, overflow: 'hidden' }}>
+    <AbsoluteFill style={{ background: colors.paper, overflow: 'hidden' }}>
       {/* Blurred copy of the film fills the letterbox instead of dead space */}
       <AbsoluteFill style={{ overflow: 'hidden' }}>
         <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -32,7 +32,7 @@ export const Reframe: React.FC<{
               height: STAGE.height,
               transform: `scale(${coverScale})`,
               transformOrigin: 'center center',
-              filter: 'blur(70px) saturate(1.5) brightness(0.85)',
+              filter: 'blur(80px) saturate(1.1) brightness(1.02)',
             }}
           >
             <StageProvider value={STAGE}>
@@ -40,7 +40,7 @@ export const Reframe: React.FC<{
             </StageProvider>
           </div>
         </AbsoluteFill>
-        <AbsoluteFill style={{ background: 'rgba(8,8,8,0.38)' }} />
+        <AbsoluteFill style={{ background: 'rgba(232,232,232,0.45)' }} />
       </AbsoluteFill>
 
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -53,7 +53,7 @@ export const Reframe: React.FC<{
             position: 'relative',
             overflow: 'hidden',
             borderRadius: showBands ? 24 / scale : 0,
-            boxShadow: '0 40px 120px rgba(0,0,0,0.75)',
+            boxShadow: '0 40px 100px rgba(0,0,0,0.18)',
           }}
         >
           <StageProvider value={STAGE}>
@@ -80,17 +80,17 @@ export const Reframe: React.FC<{
               textAlign: 'center',
             }}
           >
-            <Logo width={canvasWidth * 0.44} fill={colors.white} />
+            <Logo width={canvasWidth * 0.44} fill={colors.ink} />
             <div
               style={{
                 fontFamily: fonts.body,
                 fontSize: canvasWidth * 0.026,
                 letterSpacing: '0.26em',
                 textTransform: 'uppercase',
-                color: colors.gold,
+                color: colors.inkSoft,
               }}
             >
-              Branding · Design · Développement
+              Business · Creator
             </div>
           </div>
 
@@ -112,8 +112,8 @@ export const Reframe: React.FC<{
               style={{
                 padding: `${canvasWidth * 0.018}px ${canvasWidth * 0.05}px`,
                 borderRadius: 999,
-                background: colors.gold,
-                color: colors.black,
+                background: colors.ink,
+                color: colors.white,
                 fontFamily: fonts.body,
                 fontWeight: 600,
                 fontSize: canvasWidth * 0.028,
@@ -126,10 +126,10 @@ export const Reframe: React.FC<{
                 fontFamily: fonts.body,
                 fontSize: canvasWidth * 0.022,
                 letterSpacing: '0.24em',
-                color: `${colors.white}77`,
+                color: colors.inkSoft,
               }}
             >
-              BUSINESS.MC-STUDIO.EU
+              MC-STUDIO.EU
             </div>
           </div>
         </>

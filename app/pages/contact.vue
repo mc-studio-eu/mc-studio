@@ -44,9 +44,4 @@ useSeoMeta({
   background: var(--bg-secondary);
 }
 
-.contact-page :deep(.contact-tab--active) {
-  background: #ffffff;
-  color: #0f0f0f;
-  box-shadow: none;
-}
 </style>

@@ -20,53 +20,58 @@ npm run render:square    # 1080×1080 → out/mc-studio-reel-square.mp4
 npm run render:vertical  # 1080×1920 → out/mc-studio-reel-vertical.mp4
 ```
 
-## Storyboard (43 s — 1285 frames @ 30 fps)
+## Storyboard (55 s — 1650 frames @ 30 fps)
 
-Le film raconte une histoire, il n'énumère pas des compétences : les gens →
-ce qu'ils apportent → ce qu'ils demandent vraiment → ce qu'on livre → la
-preuve → l'invitation.
+Le film est éditorial et work-first : le travail occupe l'image, la typo se
+contente de nommer. Il pose surtout le nouveau positionnement — un studio,
+deux voies.
 
 | # | Scène | Frames | Intention |
 |---|-------|--------|-----------|
-| 01 | `Opening` | 0–165 | Quatre vrais clients en collage de portraits. « Derrière chaque marque, il y a quelqu'un. » |
-| 02 | `Tension` | 165–375 | Leurs problématiques réelles flottent en cartes autour de la phrase « Personne ne vient nous voir pour un site. » |
-| 03 | `Turn` | 375–501 | Le basculement : « On vient nous voir pour être choisi. » / « Le reste, c'est notre métier. » |
-| 04 | `Showcase` | 501–845 | Personal, CRM R&A Energy, Arises, Shika en mockup navigateur + second écran |
-| 05 | `Wall` | 845–985 | Les 10 réalisations volent en grille, la caméra recule |
-| 06 | `Testimonial` | 985–1125 | Le portrait de Yazid et son avis Google, cité mot pour mot |
-| 07 | `Outro` | 1125–1285 | Carton clair : « Pour les gens qui construisent. » + wordmark, CTA, business.mc-studio.eu |
+| 01 | `Open` | 0–110 | Wordmark en filigrane géant + « Un studio de design et de développement. » |
+| 02 | `TwoWays` | 110–330 | Le positionnement : **Business** et **Creator** côte à côte, chacun avec sa capture, sa promesse et sa preuve |
+| 03 | `Trust` | 330–470 | Les logos clients défilent, celui du centre est saisi dans une pastille blanche |
+| 04 | `LaneTitle` Business | 470–560 | Carton de chapitre : le nom de la voie et sa promesse |
+| 05 | `Reel` Business | 560–966 | 7 captures plein cadre, pastille de discipline en bas à droite |
+| 06 | `LaneTitle` Creator | 966–1056 | Même carton, en or |
+| 07 | `Reel` Creator | 1056–1346 | 5 captures : communauté, app créateur, design produit, branding |
+| 08 | `Numbers` | 1346–1504 | 20+ projets · 180 000 followers · 5/5, chiffre géant sur intitulé fantôme |
+| 09 | `Close` | 1504–1650 | Wordmark, les deux voies nommées, et l'unique adresse : mc-studio.eu |
 
-## Le fond ne s'arrête jamais
+## Une seule adresse
 
-`ColorField` interpole entre deux palettes sur toute la durée d'une scène, et
-les scènes s'enchaînent dans l'ordre du voyage lumineux :
+Les deux voies sont nommées tout au long du film, mais le studio n'affiche
+qu'une adresse, au carton final : `mc-studio.eu`. Aucun sous-domaine n'apparaît
+nulle part.
 
-`ember → amber → rose → night → warm → glow → dawn`
+## La pastille de discipline
 
-Le film part donc du noir chaud et finit dans la lumière. Les palettes sont
-dans `src/palette.ts` : changer une couleur suffit à réaccorder tout le film.
+Pendant les deux reels, une pastille blanche reste ancrée en bas à droite :
+elle nomme la discipline (Branding, Site web, Design produit, Développement,
+App créateur, Communauté) et le client. C'est elle qui donne au reel sa
+lisibilité — le travail parle, la pastille classe.
 
-## Rien d'inventé
+## Direction artistique
 
-`src/story.ts` ne contient que du réel : les portraits et rôles des clients,
-leurs problématiques telles que documentées dans `app/data/projects.ts`
-(`challenges`), et l'avis Google publié dans `i18n/locales/fr.json`. Aucune
-phrase n'est mise dans la bouche de quelqu'un.
+Éditorial clair, repris de la version light du site :
+
+- Papier `#E8E8E8`, encre `#141414`, gris fantôme `#D2D2D2`
+- L'or `#F0BF6C` réservé à la voie Creator, jamais décoratif
+- Host Grotesk en display, Inter en UI
 
 ## Structure
 
 ```
 src/
-  Video.tsx        # montage : edit list + HUD + flashs de coupe
+  Video.tsx        # montage : la liste des plans et leurs durées
   Reframe.tsx      # crops sociaux (1:1, 9:16) avec fond flouté
   Root.tsx         # les 3 compositions
   projects.ts      # portfolio du reel, calqué sur app/data/projects.ts
   theme.ts         # tokens de marque
-  palette.ts       # le voyage colorimétrique du film
-  story.ts         # les personnes et leurs mots (tous réels)
+  shots.ts         # l'ordre des plans, leur discipline et leur voie
   stage.tsx        # dimensions de scène (16:9) partagées entre les crops
-  components/      # Logo, Text, Frames (navigateur/mobile), ColorField, Transitions
-  scenes/          # Opening, Tension, Turn, Showcase, Wall, Testimonial, Outro
+  components/      # Logo, Text, Editorial (Paper, FullBleed, DisciplinePill, Statement)
+  scenes/          # Open, TwoWays, Trust, LaneTitle, Reel, Numbers, Close
 ```
 
 `public/` est un lien symbolique vers le `public/` du site Nuxt : les captures
@@ -79,5 +84,6 @@ Ajouter une entrée dans `src/projects.ts` (les mêmes champs que
 `Wall` ; pour lui donner une scène complète, ajouter son slug à `featured` et
 allonger `TIMELINE.showcase` de 86 frames dans `src/Video.tsx`.
 
-Un projet phare sans capture mobile peut fournir `secondary` : une seconde
-capture desktop s'affiche alors en carte décalée à la place du mobile.
+Pour ajouter un plan au reel, ajouter une entrée dans `src/shots.ts` avec sa
+voie (`business` ou `creator`), sa discipline et son cadrage. La durée du reel
+suit automatiquement — chaque plan dure 58 frames.

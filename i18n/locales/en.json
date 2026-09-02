@@ -21,8 +21,14 @@
   "hero": {
     "availability": "3 spots left in {month}",
     "reviews": "Rated 5/5 on Google",
-    "title": "The design & development partner for ambitious companies.",
-    "subtitle": "We help startups and companies create their brand identity, website and app, from idea to launch.",
+    "title": "The digital partner for businesses",
+    "title_prefix": "The digital partner for",
+    "rotating_words": [
+      "businesses",
+      "creators",
+      "startups"
+    ],
+    "subtitle": "Strategy, design and development brought together to bring your ambitions to life.",
     "cta": {
       "book": "Book a call",
       "whatsapp": "Chat on WhatsApp"
@@ -594,7 +600,10 @@
       "name": "Name",
       "name_placeholder": "Your name",
       "email": "Email",
+      "email_placeholder": "you{'@'}company.com",
       "phone": "Phone",
+      "social": "Main social media",
+      "social_placeholder": "Link to your profile",
       "company": "Company",
       "company_placeholder": "Your company name",
       "creator_name": "Name or handle",

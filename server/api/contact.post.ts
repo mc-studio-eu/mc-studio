@@ -4,6 +4,7 @@ interface ContactPayload {
   email?: unknown
   phone?: unknown
   company?: unknown
+  social?: unknown
   projectType?: unknown
   message?: unknown
   website?: unknown
@@ -67,6 +68,7 @@ export default defineEventHandler(async (event) => {
   const email = cleanText(body.email, 160).toLowerCase()
   const phone = cleanText(body.phone, 40)
   const company = cleanText(body.company, 120)
+  const social = cleanText(body.social, 300)
   const projectType = cleanText(body.projectType, 80)
   const message = cleanText(body.message, 4000)
 
@@ -98,6 +100,7 @@ export default defineEventHandler(async (event) => {
     email: escapeHtml(email),
     phone: escapeHtml(phone || 'Non renseigné'),
     company: escapeHtml(company || 'Non renseignée'),
+    social: escapeHtml(social || 'Non renseigné'),
     projectType: escapeHtml(projectType || 'Non renseigné'),
     message: escapeHtml(message).replace(/\n/g, '<br>')
   }
@@ -120,6 +123,7 @@ export default defineEventHandler(async (event) => {
           `Email : ${email}`,
           `Téléphone : ${phone || 'Non renseigné'}`,
           `Entreprise : ${company || 'Non renseignée'}`,
+          `Réseau social : ${social || 'Non renseigné'}`,
           `Type de projet : ${projectType || 'Non renseigné'}`,
           '',
           'Message :',
@@ -137,6 +141,7 @@ export default defineEventHandler(async (event) => {
               <p><strong>Email :</strong> <a href="mailto:${safe.email}">${safe.email}</a></p>
               <p><strong>Téléphone :</strong> ${safe.phone}</p>
               <p><strong>Entreprise :</strong> ${safe.company}</p>
+              <p><strong>Réseau social :</strong> ${safe.social}</p>
               <p><strong>Type de projet :</strong> ${safe.projectType}</p>
               <div style="margin-top:24px;padding-top:20px;border-top:1px solid #e7e7e7">
                 <strong>Message</strong>
