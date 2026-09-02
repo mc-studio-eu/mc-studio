@@ -155,7 +155,7 @@ const closeMenu = () => isMenuOpen.value = false
     <!-- CTA Desktop -->
     <div class="hidden lg:flex items-center gap-[11px] shrink-0">
       <USelect v-model="language" :items="languages" class="flex items-center justify-center w-[70px] h-[30px] bg-[#010201] rounded-lg font-inter font-medium text-xs text-[#f0eadb] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:bg-[#1a1a1a]" />
-      <a ref="initialCtaBtn" :href="`${localePath('/')}#contact`" class="flex items-center justify-center w-[164px] h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline">
+      <a ref="initialCtaBtn" :href="localePath('/contact')" class="flex items-center justify-center w-[164px] h-[30px] bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none rounded-lg font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105 no-underline">
         <span class="text-slide-container h-[20px]">
           <span ref="initialCtaWrapper" class="text-slide-wrapper">
             <span class="text-slide-text h-[20px] leading-[20px]">{{ t('nav.book_call') }}</span>
@@ -264,7 +264,7 @@ const closeMenu = () => isMenuOpen.value = false
             <!-- Desktop CTA -->
             <NuxtLink 
               ref="desktopCtaBtn"
-              :to="`${localePath('/')}#contact`"
+              :to="localePath('/contact')"
               :class="[
                 'hidden lg:flex items-center gap-2 border-none rounded-xl py-1.5 pr-3.5 pl-1.5 cursor-pointer transition-all duration-200 shrink-0 hover:scale-[1.02]',
                 colorMode.value === 'dark' ? 'flex items-center justify-center bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'
@@ -353,7 +353,7 @@ const closeMenu = () => isMenuOpen.value = false
                 <!-- CTA Button -->
                 <NuxtLink 
                   ref="mobileCtaBtn"
-                  :to="`${localePath('/')}#contact`"
+                  :to="localePath('/contact')"
                   :class="[
                     'flex items-center gap-2 border-none rounded-xl py-1.5 pr-3 pl-1.5 cursor-pointer transition-all bg-[linear-gradient(to_right,white_50%,#f0bf6c)] border-none font-inter font-medium text-sm text-[#0f0f0f] cursor-pointer backdrop-blur-[12px] shadow-[0_4px_4px_rgba(0,0,0,0.25),0_10px_10px_rgba(11,32,103,0.05)] transition-all duration-200 hover:brightness-105',
                     colorMode.value === 'dark' ? 'bg-white hover:bg-gray-100' : 'bg-[#1a1a1a] hover:bg-[#2a2a2a]'

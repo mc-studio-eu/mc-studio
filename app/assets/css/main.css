@@ -50,10 +50,6 @@ html {
   --border-subtle: rgba(26, 26, 26, 0.08);
   --gold-gradient: linear-gradient(270deg, #F0BF6C 0%, #1a1a1a 67.31%);
 
-  /* Override Tailwind's color variables */
-  --color-black-light: #f5f5f5;
-  --color-white: #1a1a1a;
-  --color-grey-light: #5D5D5D;
 }
 
 .dark {

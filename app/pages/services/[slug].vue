@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { findOfferBySlug, offers } from '../../data/offers'
-import Navbar from '../../components/layouts/Navbar.vue'
 import OfferDetailSidebar from '../../components/services/detail/OfferDetailSidebar.vue'
 import OfferDetailListSection from '../../components/services/detail/OfferDetailListSection.vue'
 import OfferDetailDeliverablesSection from '../../components/services/detail/OfferDetailDeliverablesSection.vue'
@@ -41,7 +40,7 @@ const { locale, t, tm, rt } = useI18n()
 const currentLocale = computed<LocaleKey>(() => (locale.value === 'en' ? 'en' : 'fr'))
 const labels = computed(() => PAGE_LABELS[currentLocale.value])
 const backToServicesLink = computed(() => localePath({ path: '/', hash: '#services' }))
-const contactLink = computed(() => localePath({ path: '/', hash: '#contact' }))
+const contactLink = computed(() => localePath('/contact'))
 const offer = computed(() => findOfferBySlug(route.params.slug as string))
 
 if (!offer.value) {
@@ -124,10 +123,10 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="min-h-screen bg-[var(--bg-primary)] px-6 py-6 transition-colors duration-300">
-    <Navbar />
+  <main class="min-h-screen bg-[var(--bg-primary)] transition-colors duration-300">
+    <StudioNavbar tone="dark" />
 
-    <div class="mx-auto max-w-[1360px]">
+    <div class="mx-auto max-w-[1360px] px-6 pb-6">
       <NuxtLink
         :to="backToServicesLink"
         class="mb-8 inline-flex items-center gap-2 px-4 py-2 text-sm text-[var(--text-secondary)] no-underline transition-all duration-200 hover:text-[var(--text-primary)]"

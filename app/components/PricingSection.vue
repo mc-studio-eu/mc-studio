@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 const { t, tm, rt } = useI18n()
+const localePath = useLocalePath()
 
 const planKeys = ['landing', 'showcase'] as const
 
@@ -70,8 +71,8 @@ const customServices = computed(() =>
               </div>
             </div>
 
-            <a
-              href="#contact"
+            <NuxtLink
+              :to="localePath('/contact')"
               class="pricing-card__cta"
               :class="{ 'pricing-card__cta--featured': plan.featured }"
             >
@@ -82,7 +83,7 @@ const customServices = computed(() =>
                 </span>
               </span>
               <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" aria-hidden="true" />
-            </a>
+            </NuxtLink>
 
             <div class="pricing-card__divider" />
 
@@ -114,7 +115,7 @@ const customServices = computed(() =>
               </div>
             </div>
 
-            <a href="#contact" class="pricing-card__cta">
+            <NuxtLink :to="localePath('/contact')" class="pricing-card__cta">
               <span class="pricing-cta__text-container">
                 <span class="pricing-cta__text-wrapper">
                   <span class="pricing-cta__text">{{ $t('pricing.custom.cta') }}</span>
@@ -122,7 +123,7 @@ const customServices = computed(() =>
                 </span>
               </span>
               <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" aria-hidden="true" />
-            </a>
+            </NuxtLink>
 
             <div class="pricing-card__divider" />
 

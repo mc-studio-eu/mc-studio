@@ -1,0 +1,168 @@
+{
+  "languageSwitcher": {
+    "label": "Changer de langue",
+    "fr": "Français",
+    "en": "Anglais"
+  },
+  "common": {
+    "back": "Retour",
+    "backHome": "Retour à l'accueil",
+    "backPortfolio": "Retour au portfolio",
+    "bookCall": "Apply",
+    "bookCallShort": "Apply",
+    "seePortfolio": "Voir le portfolio",
+    "seeProject": "Voir le projet",
+    "view": "Voir",
+    "launchSeptember": "Lancement début septembre"
+  },
+  "nav": {
+    "label": "Navigation principale",
+    "portfolio": "Portfolio",
+    "appointment": "Apply"
+  },
+  "home": {
+    "seo": {
+      "title": "MC Studio — Logiciels pour créateurs",
+      "description": "MC Studio accompagne les créateurs qui veulent aller plus loin que le contenu en construisant l'application qui prolonge leur univers.",
+      "ogTitle": "MC Studio Creator — On monétise votre audience",
+      "ogDescription": "Construisons l'application qui prolonge votre univers."
+    },
+    "hero": {
+      "line1Prefix": "On",
+      "line1Mark": "construit",
+      "line1Suffix": "les applications",
+      "line2Prefix": "des",
+      "line2Mark": "créateurs",
+      "subtitleLine1": "On accompagne les créateurs en construisant une application qui prolonge leur",
+      "subtitleLine2": "univers, apporte plus de valeur à leur communauté et leur crée une nouvelle",
+      "subtitleLine3": "source de revenus.",
+      "legacyLine1Prefix": "Votre audience",
+      "legacyLine1Mark": "est déjà là.",
+      "legacyLine2Prefix": "Créons l'",
+      "legacyLine2Mark": "application",
+      "legacyLine2Suffix": "qui va avec.",
+      "legacySubtitleLine1": "On accompagne les créateurs qui veulent aller plus loin que le contenu,",
+      "legacySubtitleLine2": "en construisant l'application qui prolonge leur univers."
+    },
+    "socialProof": {
+      "tagline": "Votre communauté vous suit déjà. Créons l'application qui la rassemble.",
+      "listLabel": "Plateformes sur lesquelles votre communauté vous suit"
+    },
+    "manifesto": {
+      "line1": "Les créateurs ont déjà l'avantage le plus difficile à construire : la distribution.",
+      "line2": "Votre audience vous connaît, vous écoute et vous fait confiance.",
+      "line3Lead": "Elle partage",
+      "line3Rest": "vos centres d'intérêt, vos codes et votre univers.",
+      "line4": "La suite logique n'est pas seulement de publier plus de contenu.",
+      "line5": "C'est de créer un produit qui donne plus de valeur à votre communauté."
+    },
+    "process": {
+      "eyebrow": "Comment on fonctionne ?",
+      "label": "Notre méthode en cinq étapes",
+      "steps": [
+        {
+          "title": "01 - Analyse",
+          "description": "On commence par comprendre votre audience, votre univers et les signaux déjà présents dans votre contenu.",
+          "tags": ["Statistiques", "Analytics", "Followers", "Vertical", "Taux d'engagement"]
+        },
+        {
+          "title": "02 - Validation",
+          "description": "Avant de développer, on valide l'intérêt réel auprès de votre communauté.",
+          "tags": ["Concept", "Communication", "Communauté", "Waitlist", "Itération"]
+        },
+        {
+          "title": "03 - Développement",
+          "description": "On transforme le concept validé en première version claire, utilisable et lançable.",
+          "tags": ["Branding", "Design (UX/UI)", "Développement", "Tests", "MVP"]
+        },
+        {
+          "title": "04 - Lancement",
+          "description": "On lance le produit avec une offre simple et une stratégie d'acquisition adaptée à votre audience.",
+          "tags": ["Teaser", "Analytics", "Followers", "Vertical", "Taux d'engagement"]
+        },
+        {
+          "title": "05 - Croissance",
+          "description": "Après le lancement, on améliore le produit à partir de la traction réelle et on market encore plus.",
+          "tags": ["Marketing", "Ads", "UGC", "Evolutions", "Feedback"]
+        }
+      ]
+    },
+    "audience": {
+      "titleLine1": "Pour les créateurs",
+      "titleLine2": "qui ont déjà une communauté.",
+      "cards": {
+        "product": "Un produit qui prolonge votre univers",
+        "revenue": "Une source de revenus qui vous appartient",
+        "launch": "Un lancement pensé pour votre audience",
+        "growth": "Un suivi et des évolutions après le lancement"
+      }
+    },
+    "partnership": {
+      "title": "Modalités",
+      "intro": "Vous gagnez, on gagne. Il n'y a aucun frais à avancer : notre collaboration repose sur la réussite du produit, pas sur la facturation d'une prestation.",
+      "visualAlt": "Deux formes complémentaires représentant notre partenariat",
+      "workText": "Nous prenons en charge la stratégie, le design et le développement de l'application, du premier concept jusqu'à la croissance : lancement, funnels de vente, marketing et optimisation continue.",
+      "modelText": "En échange, nous prenons une participation au projet et une part des revenus générés. Les modalités sont définies ensemble avant de commencer.",
+      "eligibilityText": "Ce fonctionnement est réservé aux créateurs qui ont déjà construit une communauté engagée de plus de 150 000 abonnés."
+    },
+    "cta": {
+      "titleLine1": "Votre communauté vous suit déjà.",
+      "titleLine2": "Créons l'application qui la rassemble.",
+      "reactions": ["Ça me parle", "On y va !", "J'en suis", "Je suis intéressé", "Hâte de voir ça"]
+    }
+  },
+  "footer": {
+    "tagline": "Branding, design et développement pour lancer des applications utiles, élégantes et prêtes à grandir.",
+    "navigation": "Navigation",
+    "socials": "Réseaux",
+    "contact": "Contact",
+    "links": {
+      "services": "Services",
+      "projects": "Projets",
+      "team": "Équipe",
+      "contact": "Contact",
+      "whatsapp": "WhatsApp"
+    },
+    "copyright": "© {year} MC Studio. Tous droits réservés.",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions générales"
+  },
+  "portfolio": {
+    "seo": {
+      "title": "Portfolio — MC Studio Creator",
+      "description": "Les applications et expériences digitales créées pour les créateurs accompagnés par MC Studio."
+    },
+    "title": "Portfolio",
+    "listLabel": "Études de cas",
+    "viewProjectLabel": "Voir {title}"
+  },
+  "call": {
+    "seo": {
+      "title": "Parlons de votre projet — MC Studio Creator",
+      "description": "Présentez-nous votre audience et votre idée d'application. MC Studio vous répond sous 48 heures."
+    },
+    "eyebrow": "Votre projet",
+    "title": "Parlons de votre application",
+    "intro": "Parlez-nous de votre audience et de votre idée. Nous étudions chaque projet et vous répondons sous 48 heures.",
+    "form": {
+      "name": "Nom complet",
+      "namePlaceholder": "Votre nom",
+      "email": "Adresse e-mail",
+      "emailPlaceholder": "vous{'@'}exemple.com",
+      "social": "Réseau social principal",
+      "socialPlaceholder": "Lien vers votre profil",
+      "message": "Message",
+      "messagePlaceholder": "Parlez-nous de votre projet…",
+      "submit": "Envoyer ma candidature",
+      "sending": "Envoi en cours…",
+      "successTitle": "Merci pour votre message !",
+      "successText": "Votre projet a bien été envoyé. Nous revenons vers vous sous 48 heures.",
+      "backHome": "Retour à l'accueil",
+      "error": "Une erreur est survenue. Réessayez ou écrivez-nous directement à"
+    }
+  },
+  "caseStudy": {
+    "notFound": "Étude de cas introuvable",
+    "deliverables": "Livrables"
+  }
+}

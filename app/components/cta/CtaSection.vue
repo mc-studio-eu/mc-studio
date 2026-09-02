@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const { t } = useI18n();
-const ctaSubtitle = computed(() => t('cta.subtitle'));
 const activeContactMethod = ref<'form' | 'calendar'>('calendar')
 const hasOpenedCalendar = ref(true)
 
@@ -56,7 +55,6 @@ const submitContact = async () => {
       <!-- Header -->
       <div class="text-center mb-10 md:mb-12">
         <h2 class="section-title font-manrope text-2xl sm:text-3xl md:text-[32px] font-semibold text-[var(--text-primary)] mb-4 transition-colors duration-300" v-html="$t('cta.title')"></h2>
-        <p class="font-inter text-base text-[var(--text-secondary)] max-w-[842px] mx-auto transition-colors duration-300">{{ ctaSubtitle }}</p>
       </div>
 
       <div class="contact-tabs" role="tablist" :aria-label="$t('cta.tabs.label')">

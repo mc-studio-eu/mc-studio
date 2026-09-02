@@ -1,12 +1,17 @@
 // Force dark mode on client side
 export default defineNuxtPlugin(() => {
-    // Force dark mode in localStorage
-    if (import.meta.client) {
-        localStorage.setItem('nuxt-color-mode', 'dark')
+    if (!import.meta.client) return
 
-        // Ensure the html element has dark class
-        document.documentElement.classList.remove('light')
-        document.documentElement.classList.add('dark')
-        document.documentElement.setAttribute('data-color-mode', 'dark')
+    const applyMode = (path: string) => {
+        const isCreatorWorld = path.includes('/creators')
+        const mode = isCreatorWorld ? 'light' : 'dark'
+        localStorage.setItem('nuxt-color-mode', mode)
+        document.documentElement.classList.remove('light', 'dark')
+        document.documentElement.classList.add(mode)
+        document.documentElement.setAttribute('data-color-mode', mode)
     }
+
+    const router = useRouter()
+    applyMode(router.currentRoute.value.path)
+    router.afterEach((to) => applyMode(to.path))
 })

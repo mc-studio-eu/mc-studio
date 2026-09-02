@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const { t } = useI18n();
-const ctaSubtitle = computed(() => t('cta.subtitle'));
 </script>
 
 <template>
@@ -8,8 +7,7 @@ const ctaSubtitle = computed(() => t('cta.subtitle'));
     <div class="max-w-[1216px] mx-auto">
       <!-- Header -->
       <div class="text-center md:mb-0 mb-10">
-        <h2 class="section-title font-manrope text-2xl sm:text-3xl md:text-[32px] font-semibold text-[var(--text-primary)] mb-4 transition-colors duration-300" v-html="t('cta.title')"></h2>
-        <p class="font-inter text-base text-[var(--text-secondary)] max-w-[842px] mx-auto transition-colors duration-300">{{ ctaSubtitle }}</p>
+          <h2 class="section-title contact-page__title font-manrope text-2xl sm:text-3xl md:text-[32px] font-semibold text-[var(--text-primary)] mb-4 transition-colors duration-300" v-html="t('cta.title')"></h2>
       </div>
 
       <!-- CTA with Cal.com -->

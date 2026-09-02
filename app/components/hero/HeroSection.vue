@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Navbar from "../layouts/Navbar.vue"
 import HeroContent from "./HeroContent.vue"
 import HeroButtons from "./HeroButtons.vue"
 import TrustBadges from "./TrustBadges.vue"
@@ -19,7 +18,6 @@ import ScrollingMarquee from "./ScrollingMarquee.vue"
     
     <!-- Content Container -->
     <div class="relative z-10 flex flex-col items-center h-full px-4 sm:px-6 pb-14 sm:pb-24 md:pb-20 lg:pb-24">
-      <Navbar />
       <HeroContent />
       <HeroButtons />
       <TrustBadges />

@@ -830,6 +830,45 @@
     "title": "MC Studio - The Design & Development Studio",
     "description": "Design & Development to launch fast and right. Branding, landing page and apps: we support entrepreneurs and companies from concept to launch."
   },
+  "globalHome": {
+    "seo": {
+      "title": "MC Studio — Digital Product Studio",
+      "description": "MC Studio turns ambitious ideas into digital products for businesses and creators."
+    },
+    "hero": {
+      "title": "We build ambitious digital\nproducts.",
+      "subtitle": "One studio to design, build and launch digital experiences that move businesses and creators forward."
+    },
+    "worlds": {
+      "title": "Two worlds. One studio.",
+      "caption": "Choose your playground.",
+      "business": {
+        "label": "For Businesses",
+        "title": "Products that move businesses forward.",
+        "body": "Websites, platforms, SaaS and business applications designed around your real challenges."
+      },
+      "creators": {
+        "label": "Content Creators",
+        "title": "Products that expand creator universes.",
+        "body": "Useful, desirable applications designed around your audience and your business model."
+      }
+    },
+    "expertise": {
+      "title": "From idea to launched product.",
+      "items": {
+        "strategy": "Product strategy",
+        "design": "UX/UI & branding",
+        "development": "Web development",
+        "saas": "SaaS & applications",
+        "ai": "Artificial intelligence",
+        "launch": "Launch & growth"
+      }
+    },
+    "projects": {
+      "title": "Products in motion.",
+      "link": "See all projects"
+    }
+  },
   "legal": {
     "privacy": {
       "title": "Privacy <span class=\"text-gradient\">Policy</span>",

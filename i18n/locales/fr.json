@@ -830,6 +830,45 @@
     "title": "MC Studio - Le Studio de Design & Développement",
     "description": "Design & Développement pour lancer vite, et bien. Branding, landing page et apps : nous vous accompagnons du concept au lancement."
   },
+  "globalHome": {
+    "seo": {
+      "title": "MC Studio — Digital Product Studio",
+      "description": "MC Studio transforme les idées ambitieuses en produits digitaux pour les entreprises et les créateurs."
+    },
+    "hero": {
+      "title": "Nous créons des produits\ndigitaux ambitieux.",
+      "subtitle": "Un même studio pour designer, développer et lancer des expériences digitales qui font avancer les entreprises et les créateurs."
+    },
+    "worlds": {
+      "title": "Deux univers. Un seul studio.",
+      "caption": "Choisissez votre terrain de jeu.",
+      "business": {
+        "label": "Entreprises",
+        "title": "Des produits qui font grandir les entreprises.",
+        "body": "Sites web, plateformes, SaaS et applications métier conçus autour de vos enjeux réels."
+      },
+      "creators": {
+        "label": "Créateurs de contenu",
+        "title": "Des produits qui prolongent les univers créateurs.",
+        "body": "Des applications utiles, désirables et pensées autour de votre audience et de votre modèle."
+      }
+    },
+    "expertise": {
+      "title": "De l'idée au produit lancé.",
+      "items": {
+        "strategy": "Stratégie produit",
+        "design": "UX/UI & branding",
+        "development": "Développement web",
+        "saas": "SaaS & applications",
+        "ai": "Intelligence artificielle",
+        "launch": "Lancement & croissance"
+      }
+    },
+    "projects": {
+      "title": "Des produits en mouvement.",
+      "link": "Voir tous les projets"
+    }
+  },
   "legal": {
     "privacy": {
       "title": "Politique de <span class=\"text-gradient\">Confidentialité</span>",

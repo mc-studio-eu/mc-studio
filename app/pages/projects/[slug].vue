@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { findProjectBySlug, projects } from '../../data/projects'
 import type { LocalizedValue, Project } from '../../data/projects'
-import Navbar from '../../components/layouts/Navbar.vue'
 
 type LocaleKey = 'fr' | 'en'
 
@@ -66,17 +65,8 @@ const localizedProject = computed(() => {
   }
 })
 
-const backToProjectsLink = computed(() => localePath('/#projets'))
-const contactLink = computed(() => localePath({ path: '/', hash: '#contact' }))
-
-const bookCallBtn = ref(null)
-const bookCallWrapper1 = ref(null)
-const bookCallWrapper2 = ref(null)
-const visitWebsiteBtn = ref(null)
-const visitWebsiteWrapper = ref(null)
-
-useTextSlideAnimation(bookCallBtn, [bookCallWrapper1, bookCallWrapper2])
-useTextSlideAnimation(visitWebsiteBtn, visitWebsiteWrapper)
+const backToProjectsLink = computed(() => localePath('/projects'))
+const contactLink = computed(() => localePath('/contact'))
 
 const splitTextIntoParagraphs = (text: string) => {
   const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map((sentence) => sentence.trim()) ?? [text]
@@ -184,7 +174,7 @@ const nextProject = computed(() => {
 })
 
 const nextProjectLink = computed(() =>
-  nextProject.value ? localePath(`/projects/${nextProject.value.slug}`) : localePath('/#projets')
+  nextProject.value ? localePath(`/projects/${nextProject.value.slug}`) : localePath('/projects')
 )
 
 useSeoMeta({
@@ -196,36 +186,31 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="main-container min-h-screen px-5 py-5 transition-colors duration-300 sm:px-6 sm:py-6">
-    <Navbar floating-only always-floating />
+  <main class="project-detail-page min-h-screen bg-[#0f0f0f] text-white">
+    <StudioNavbar tone="dark" />
 
     <!-- Main Content with Border Frame -->
-    <div class="relative mx-auto max-w-[1440px]">
-      <!-- Left Border Line -->
-      <div class="border-line absolute left-0 xl:left-[50px] top-0 bottom-0 w-px"></div>
-
-      <!-- Right Border Line -->
-      <div class="border-line absolute right-0 xl:right-[50px] top-0 bottom-0 w-px"></div>
-
+    <div class="mx-auto w-[min(1240px,calc(100%-48px))] pb-24 sm:pb-36">
       <section class="mx-auto w-full">
       <article class="relative">
-        <div class="relative z-10 px-[clamp(18px,5vw,72px)] py-[clamp(56px,8vw,96px)] max-sm:pt-[88px]">
+        <div class="relative z-10 py-[clamp(34px,6vw,72px)]">
           <NuxtLink
             :to="backToProjectsLink"
-            class="absolute left-[clamp(18px,5vw,72px)] top-[clamp(16px,2.4vw,32px)] inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-white/[0.03] text-[var(--text-secondary)] no-underline backdrop-blur transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
+            class="inline-flex items-center gap-2 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
             :aria-label="labels.back"
           >
             <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
+            <span>{{ labels.back }}</span>
           </NuxtLink>
 
-          <section class="mx-auto w-full max-w-[760px]">
-            <h1 class="case-study-title m-0 text-center text-balance font-manrope font-medium tracking-normal">
+          <section class="mx-auto w-full max-w-[1100px]">
+            <h1 class="case-study-title m-0 mt-14 max-w-[900px] text-balance font-manrope font-medium tracking-[-0.07em] text-white sm:mt-20">
               {{ localizedProject.title }}
             </h1>
 
-            <div class="mt-[clamp(34px,5vw,48px)] h-px w-full bg-[var(--border-subtle)]" />
+            <div class="mt-8 h-px w-full bg-white/15 sm:mt-12" />
 
-            <div class="grid grid-cols-2 gap-[clamp(34px,8vw,88px)] pt-[clamp(44px,7vw,72px)] max-md:grid-cols-1 max-md:gap-10">
+            <div class="grid grid-cols-2 gap-[clamp(34px,8vw,88px)] pt-[clamp(34px,5vw,56px)] max-md:grid-cols-1 max-md:gap-10">
               <div>
                 <h2 class="case-study-heading">{{ labels.summaryTitle }}</h2>
                 <div class="case-study-copy">
@@ -237,46 +222,22 @@ useSeoMeta({
                   </p>
                 </div>
 
-                <div class="mt-7 flex flex-wrap items-center gap-x-3 gap-y-3 sm:flex-nowrap">
+                <div class="mt-7 flex flex-wrap items-center gap-3">
                   <NuxtLink
-                    ref="bookCallBtn"
                     :to="contactLink"
-                    class="cta-primary flex cursor-pointer items-center justify-center gap-2.5 rounded-xl px-3 py-2 text-[15px] font-medium text-[#0f0f0f] no-underline backdrop-blur-md transition-all duration-200"
+                    class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0f0f0f] no-underline transition-transform duration-200 hover:-translate-y-0.5"
                   >
-                    <NuxtImg
-                      src="/img/main/founder.jpeg"
-                      alt="MC Studio"
-                      class="h-9 w-9 shrink-0 scale-[1.18] rounded-xl object-cover object-[center_18%] shadow-[0_8px_16px_rgba(15,15,15,0.16)] ring-1 ring-black/10 md:h-10 md:w-10"
-                    />
-                    <div class="flex shrink-0 flex-col items-start gap-px">
-                      <span class="text-slide-container h-[18px]">
-                        <span ref="bookCallWrapper1" class="text-slide-wrapper">
-                          <span class="text-slide-text h-[18px] whitespace-nowrap font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
-                          <span class="text-slide-text h-[18px] whitespace-nowrap font-inter text-sm font-semibold leading-[18px]">{{ t('hero.cta.book') }}</span>
-                        </span>
-                      </span>
-                      <span class="text-slide-container h-[12px]">
-                        <span ref="bookCallWrapper2" class="text-slide-wrapper">
-                          <span class="text-slide-text h-[12px] whitespace-nowrap font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
-                          <span class="text-slide-text h-[12px] whitespace-nowrap font-inter text-[9px] font-normal leading-[12px]">{{ t('nav.free_call') }}</span>
-                        </span>
-                      </span>
-                    </div>
+                    <span>{{ labels.bookCall }}</span>
+                    <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
                   </NuxtLink>
 
                   <a
-                    ref="visitWebsiteBtn"
                     :href="localizedProject.externalLink"
                     target="_blank"
                     rel="noreferrer"
-                    class="inline-flex shrink-0 items-center justify-center gap-2 self-stretch whitespace-nowrap rounded-xl border border-[var(--border-subtle)] bg-white/[0.03] px-5 text-center text-sm font-medium text-[var(--text-primary)] no-underline"
+                    class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white/75 no-underline transition-colors duration-200 hover:border-white/50 hover:text-white"
                   >
-                    <span class="text-slide-container h-5">
-                      <span ref="visitWebsiteWrapper" class="text-slide-wrapper">
-                        <span class="text-slide-text h-5 leading-5">{{ labels.visitWebsite }}</span>
-                        <span class="text-slide-text h-5 leading-5" aria-hidden="true">{{ labels.visitWebsite }}</span>
-                      </span>
-                    </span>
+                    <span>{{ labels.visitWebsite }}</span>
                     <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
                   </a>
                 </div>
@@ -304,7 +265,7 @@ useSeoMeta({
               <NuxtImg
                 :src="block.src"
                 :alt="block.alt"
-                class="mx-auto block w-full rounded-lg border border-[var(--border-subtle)] bg-[#0f0f0f]"
+                class="mx-auto block w-full rounded-2xl border border-white/10 bg-white/[0.03]"
               />
             </section>
 
@@ -328,8 +289,8 @@ useSeoMeta({
             v-if="projectTestimonial"
             class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
           >
-            <div class="flex w-full flex-col gap-6 rounded-2xl border border-[var(--border-subtle)] bg-[#232323] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-colors duration-300 dark:shadow-none">
-              <p class="m-0 whitespace-pre-line font-inter text-xs leading-[1.7] text-white transition-colors duration-300 sm:text-sm">
+            <div class="flex w-full flex-col gap-6 border-l-2 border-white/30 py-1 pl-6 sm:pl-8">
+              <p class="m-0 whitespace-pre-line font-inter text-base leading-[1.7] text-white/80 transition-colors duration-300 sm:text-lg">
                 {{ projectTestimonial.review }}
               </p>
 
@@ -337,11 +298,11 @@ useSeoMeta({
                 <NuxtImg
                   :src="projectTestimonial.avatar"
                   :alt="projectTestimonial.name"
-                  class="h-11 w-11 shrink-0 rounded-full bg-gradient-to-br from-[var(--color-gold)] to-[#e8a84c] object-cover"
+                  class="h-11 w-11 shrink-0 rounded-full bg-white/10 object-cover"
                 />
                 <div class="flex flex-col gap-[2px]">
-                  <span class="font-inter text-sm font-semibold text-[var(--text-primary)] transition-colors duration-300">{{ projectTestimonial.name }}</span>
-                  <span class="font-inter text-xs text-[var(--text-secondary)] transition-colors duration-300">{{ projectTestimonial.job }}</span>
+                  <span class="font-inter text-sm font-semibold text-white transition-colors duration-300">{{ projectTestimonial.name }}</span>
+                  <span class="font-inter text-xs text-white/50 transition-colors duration-300">{{ projectTestimonial.job }}</span>
                 </div>
               </div>
             </div>
@@ -361,7 +322,6 @@ useSeoMeta({
       </article>
       </section>
 
-      <div class="section-separator mb-10 mt-10"></div>
     </div>
 
     <FooterSection />
@@ -370,69 +330,24 @@ useSeoMeta({
 </template>
 
 <style scoped>
-/* Main container */
-.main-container {
-  background-color: var(--bg-primary);
-}
-
-/* Border lines */
-.border-line {
-  background: linear-gradient(to bottom, var(--border-color) 0%, var(--border-color) 50%, transparent 100%);
-}
-
-:global(.dark) .border-line {
-  background: linear-gradient(to bottom, rgba(240, 191, 108, 0.4) 0%, rgba(240, 191, 108, 0.2) 50%, transparent 100%);
-}
-
-:global(.light) .border-line {
-  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.15) 0%, rgba(26, 26, 26, 0.08) 50%, transparent 100%);
-}
-
-/* Section separator line */
-.section-separator {
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--border-color) 20%, var(--border-color) 80%, transparent 100%);
-  margin-left: auto;
-  margin-right: auto;
-  max-width: calc(100% - 146px);
-}
-
-:global(.dark) .section-separator {
-  background: linear-gradient(90deg, transparent 0%, rgba(240, 191, 108, 0.25) 20%, rgba(240, 191, 108, 0.25) 80%, transparent 100%);
-}
-
-:global(.light) .section-separator {
-  background: linear-gradient(90deg, transparent 0%, rgba(26, 26, 26, 0.12) 20%, rgba(26, 26, 26, 0.12) 80%, transparent 100%);
-}
-
-@media (max-width: 1024px) {
-  .section-separator {
-    max-width: 100%;
-  }
-}
-
 .case-study-title {
   overflow-wrap: anywhere;
-  font-size: clamp(30px, 3.6vw, 52px);
-  line-height: 1.08;
+  font-size: clamp(3.5rem, 8vw, 8.5rem);
+  line-height: 0.92;
 }
 
 .case-study-heading {
   margin: 0 0 14px;
   font-family: Manrope, sans-serif;
-  font-size: clamp(23px, 3vw, 32px);
+  font-size: clamp(1.7rem, 3vw, 3rem);
   font-weight: 500;
   line-height: 1.12;
   text-wrap: balance;
-  background: var(--gold-gradient);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: white;
 }
 
 .case-study-copy {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.62);
   font-size: clamp(15px, 1.6vw, 16px);
   line-height: 1.6;
 }
@@ -445,19 +360,10 @@ useSeoMeta({
   margin-top: 1.15em;
 }
 
-.text-slide-container {
-  display: block;
-  position: relative;
-  overflow: hidden;
-}
-
-.text-slide-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.text-slide-text {
-  display: block;
+@media (max-width: 640px) {
+  .case-study-title {
+    font-size: clamp(3.2rem, 16vw, 5.4rem);
+  }
 }
 
 </style>

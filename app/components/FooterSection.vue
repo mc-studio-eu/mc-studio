@@ -25,10 +25,10 @@ const { t } = useI18n()
           <div class="md:col-span-3">
             <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.navigation_title') }}</h4>
             <nav class="flex flex-col gap-3">
-              <NuxtLink :to="`${localePath('/')}#services`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.services') }}</NuxtLink>
-              <NuxtLink :to="`${localePath('/')}#projets`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.projects') }}</NuxtLink>
-              <NuxtLink :to="`${localePath('/')}#equipe`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.team') }}</NuxtLink>
-              <NuxtLink :to="`${localePath('/')}#contact`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.contact') }}</NuxtLink>
+              <NuxtLink :to="localePath('/business')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Business</NuxtLink>
+              <NuxtLink :to="localePath('/creators')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Creators</NuxtLink>
+              <NuxtLink :to="localePath('/projects')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Projects</NuxtLink>
+              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Contact</NuxtLink>
             </nav>
           </div>
 
@@ -47,7 +47,7 @@ const { t } = useI18n()
             <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.contact_title') }}</h4>
             <nav class="flex flex-col gap-3">
               <a href="https://api.whatsapp.com/send/?phone=%2B33781724683" target="_blank" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">WhatsApp</a>
-              <NuxtLink :to="`${localePath('/')}#contact`" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.book_call') }}</NuxtLink>
+              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.book_call') }}</NuxtLink>
             </nav>
           </div>
         </div>

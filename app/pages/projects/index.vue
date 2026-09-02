@@ -1,12 +1,26 @@
 <script setup lang="ts">
 import { useProjectCards } from '../../composables/useProjectCards'
-import Navbar from '../../components/layouts/Navbar.vue'
 
-const { t } = useI18n()
+const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const { filterProjects } = useProjectCards()
 
-const filteredProjects = computed(() => filterProjects('all'))
+const activeFilter = ref<'all' | 'business' | 'creator'>('all')
+const creatorSlugs = new Set(['personal', 'maison-awl'])
+
+const filters = computed(() => [
+  { key: 'all' as const, label: locale.value === 'fr' ? 'Tous' : 'All' },
+  { key: 'business' as const, label: 'Business' },
+  { key: 'creator' as const, label: 'Creators' }
+])
+
+const filteredProjects = computed(() => filterProjects('all').filter((project) => {
+  if (activeFilter.value === 'all') return true
+  const isCreator = creatorSlugs.has(project.slug)
+  return activeFilter.value === 'creator' ? isCreator : !isCreator
+}))
+
+const projectKind = (slug: string) => creatorSlugs.has(slug) ? 'Creator' : 'Business'
 
 useSeoMeta({
   title: `${t('projects.all.meta_title')} | MC Studio`,
@@ -17,120 +31,173 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="main-container min-h-screen px-5 py-5 transition-colors duration-300 sm:px-6 sm:py-6">
-    <Navbar floating-only always-floating />
+  <main class="projects-page min-h-screen bg-[#0f0f0f] text-white">
+    <StudioNavbar tone="dark" />
 
-    <!-- Main Content with Border Frame -->
-    <div class="relative mx-auto max-w-[1440px]">
-      <!-- Left Border Line -->
-      <div class="border-line absolute left-0 xl:left-[50px] top-0 bottom-0 w-px"></div>
-
-      <!-- Right Border Line -->
-      <div class="border-line absolute right-0 xl:right-[50px] top-0 bottom-0 w-px"></div>
-
-      <section class="mx-auto w-full max-w-[1216px] px-4 pb-8 pt-[clamp(72px,10vw,120px)] sm:px-8">
-      <NuxtLink
-        :to="localePath('/')"
-        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-white/[0.03] text-[var(--text-secondary)] no-underline backdrop-blur transition-all duration-200 hover:border-[var(--color-gold)] hover:text-[var(--text-primary)]"
-        :aria-label="$t('projects.all.back')"
-      >
-        <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
-      </NuxtLink>
-
-      <div class="mt-8 text-center md:mt-12">
-        <h1
-          class="font-manrope text-3xl font-medium leading-[1.1] text-[var(--text-primary)] transition-colors duration-300 sm:text-4xl md:text-[44px]"
-          v-html="$t('projects.all.title')"
-        />
-        <p class="mx-auto mt-4 max-w-xl font-inter text-sm leading-relaxed text-[var(--text-secondary)] transition-colors duration-300 sm:text-base">
-          {{ $t('projects.all.subtitle') }}
+    <section class="projects-page__intro mx-auto w-[min(1240px,calc(100%-48px))] pb-20 pt-[clamp(80px,12vw,150px)] sm:pb-28">
+      <div class="max-w-[820px]">
+        <h1 class="font-manrope text-[clamp(3.4rem,8vw,7.8rem)] font-medium leading-[0.92] tracking-[-0.075em] text-white">
+          {{ t('globalHome.projects.title') }}
+        </h1>
+        <p class="mt-8 max-w-[560px] text-balance font-inter text-base leading-7 text-white/60 sm:text-lg">
+          {{ t('projects.all.subtitle') }}
         </p>
-
       </div>
 
-      <TransitionGroup
-        name="project-grid"
-        tag="div"
-        class="mt-10 grid grid-cols-1 gap-5 md:mt-14 md:grid-cols-2 md:gap-6"
-      >
-        <ProjectCard
+      <div class="mt-12 flex flex-wrap gap-2 border-t border-white/10 pt-4" role="tablist" :aria-label="locale === 'fr' ? 'Filtrer les projets' : 'Filter projects'">
+        <button
+          v-for="filter in filters"
+          :key="filter.key"
+          type="button"
+          role="tab"
+          :aria-selected="activeFilter === filter.key"
+          class="project-filter"
+          :class="{ 'project-filter--active': activeFilter === filter.key }"
+          @click="activeFilter = filter.key"
+        >
+          {{ filter.label }}
+        </button>
+      </div>
+    </section>
+
+    <section class="projects-page__work mx-auto w-[min(1240px,calc(100%-48px))] pb-28 sm:pb-40" aria-labelledby="projects-grid-title">
+      <h2 id="projects-grid-title" class="sr-only">{{ t('globalHome.projects.title') }}</h2>
+
+      <TransitionGroup name="project-grid" tag="div" class="grid gap-x-5 gap-y-14 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-20">
+        <NuxtLink
           v-for="project in filteredProjects"
           :key="project.id"
-          :project="project"
-        />
+          :to="localePath(`/projects/${project.slug}`)"
+          class="project-showcase group"
+          :aria-label="`${project.title} — ${locale === 'fr' ? 'Voir le projet' : 'View project'}`"
+        >
+          <div class="project-showcase__media">
+            <NuxtImg :src="project.image" :alt="project.title" class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]" loading="lazy" />
+            <span class="project-showcase__open" aria-hidden="true">↗</span>
+          </div>
+          <div class="mt-5 flex items-baseline justify-between gap-5 border-t border-white/15 pt-4">
+            <h3 class="font-manrope text-2xl tracking-[-0.045em] sm:text-3xl">{{ project.title }}</h3>
+            <span class="shrink-0 text-[10px] uppercase tracking-[0.16em] text-white/40">{{ projectKind(project.slug) }}</span>
+          </div>
+        </NuxtLink>
       </TransitionGroup>
 
-      <p
-        v-if="!filteredProjects.length"
-        class="mt-12 text-center font-inter text-sm text-[var(--text-secondary)]"
-      >
-        {{ $t('projects.all.empty') }}
+      <p v-if="!filteredProjects.length" class="mt-12 text-center font-inter text-sm text-white/55">
+        {{ t('projects.all.empty') }}
       </p>
-      </section>
-
-      <div class="section-separator mt-16"></div>
-
-      <CtaSection />
-
-      <div class="section-separator mb-10 mt-10"></div>
-    </div>
+    </section>
 
     <FooterSection />
-    <ScrollToTop />
   </main>
 </template>
 
 <style scoped>
-/* Main container */
-.main-container {
-  background-color: var(--bg-primary);
+.projects-page__intro,
+.projects-page__work {
+  scroll-margin-top: 80px;
 }
 
-/* Border lines */
-.border-line {
-  background: linear-gradient(to bottom, var(--border-color) 0%, var(--border-color) 50%, transparent 100%);
+.project-filter {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: .65rem .95rem;
+  background: transparent;
+  color: rgba(255,255,255,.48);
+  cursor: pointer;
+  font: 600 .72rem/1 Inter, sans-serif;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
 }
 
-:global(.dark) .border-line {
-  background: linear-gradient(to bottom, rgba(240, 191, 108, 0.4) 0%, rgba(240, 191, 108, 0.2) 50%, transparent 100%);
+.project-filter:hover,
+.project-filter--active {
+  border-color: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08);
+  color: #fff;
 }
 
-:global(.light) .border-line {
-  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.15) 0%, rgba(26, 26, 26, 0.08) 50%, transparent 100%);
+.project-showcase {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 300ms cubic-bezier(.22,1,.36,1);
 }
 
-/* Section separator line */
-.section-separator {
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--border-color) 20%, var(--border-color) 80%, transparent 100%);
-  margin-bottom: 40px;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: calc(100% - 146px);
+.project-showcase:hover {
+  transform: translateY(-6px);
 }
 
-:global(.dark) .section-separator {
-  background: linear-gradient(90deg, transparent 0%, rgba(240, 191, 108, 0.25) 20%, rgba(240, 191, 108, 0.25) 80%, transparent 100%);
+.project-showcase__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #191919;
 }
 
-:global(.light) .section-separator {
-  background: linear-gradient(90deg, transparent 0%, rgba(26, 26, 26, 0.12) 20%, rgba(26, 26, 26, 0.12) 80%, transparent 100%);
+.project-showcase__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 54%, rgba(0,0,0,.22));
+  pointer-events: none;
 }
 
-@media (max-width: 1024px) {
-  .section-separator {
-    max-width: 100%;
-  }
+.project-showcase__open {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  z-index: 1;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 50%;
+  background: rgba(15,15,15,.2);
+  font-size: 20px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.project-showcase:hover .project-showcase__open,
+.project-showcase:focus-visible .project-showcase__open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-showcase:focus-visible {
+  outline: 2px solid #f0bf6c;
+  outline-offset: 7px;
 }
 
 .project-grid-enter-active,
 .project-grid-leave-active {
-  transition: opacity 200ms ease, transform 200ms ease;
+  transition: opacity 220ms ease, transform 220ms ease;
 }
 
 .project-grid-enter-from,
 .project-grid-leave-to {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(12px);
+}
+
+@media (max-width: 640px) {
+  .project-showcase__open {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-showcase,
+  .project-showcase__media img,
+  .project-showcase__open {
+    transition: none;
+  }
+
+  .project-showcase:hover {
+    transform: none;
+  }
 }
 </style>
