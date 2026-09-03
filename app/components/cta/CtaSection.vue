@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n();
-const activeContactMethod = ref<'form' | 'calendar'>('form')
-const hasOpenedCalendar = ref(false)
+const activeContactMethod = ref<'form' | 'calendar'>('calendar')
+const hasOpenedCalendar = ref(true)
 
 const selectContactMethod = (method: 'form' | 'calendar') => {
   activeContactMethod.value = method
@@ -76,7 +76,7 @@ const submitContact = async () => {
       'contact-section--creator': form.audience === 'creator'
     }"
   >
-    <div class="max-w-[1216px] mx-auto">
+    <div class="contact-container mx-auto">
       <!-- Header -->
       <div class="text-center mb-10 md:mb-12">
         <h2 class="section-title font-manrope text-2xl sm:text-3xl md:text-[32px] font-semibold text-[var(--text-primary)] mb-4 transition-colors duration-300" v-html="$t('cta.title')"></h2>
@@ -115,14 +115,14 @@ const submitContact = async () => {
         <div
           v-show="activeContactMethod === 'form'"
           id="contact-form-panel"
-          class="contact-card rounded-3xl border p-6 sm:p-8"
+          class="contact-card rounded-3xl border"
           role="tabpanel"
           aria-labelledby="contact-form-tab"
         >
-          <form class="space-y-4" @submit.prevent="submitContact">
+          <form class="contact-form" @submit.prevent="submitContact">
             <fieldset class="contact-field contact-audience-field">
               <legend>{{ $t('cta.form.audience') }} *</legend>
-              <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div class="contact-audience-grid">
                 <label class="contact-audience" :class="{ 'contact-audience--active': form.audience === 'business' }">
                   <input v-model="form.audience" type="radio" name="audience" value="business" required>
                   <span class="contact-audience__radio" aria-hidden="true" />
@@ -144,8 +144,8 @@ const submitContact = async () => {
               </div>
             </fieldset>
 
-            <div v-if="form.audience" class="contact-form-fields space-y-4">
-              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div v-if="form.audience" class="contact-form-fields">
+              <div class="contact-field-row">
                 <label class="contact-field">
                   <span>{{ nameLabel }} *</span>
                   <input v-model="form.name" type="text" name="name" autocomplete="name" required minlength="2" maxlength="100" :placeholder="namePlaceholder">
@@ -156,7 +156,7 @@ const submitContact = async () => {
                 </label>
               </div>
 
-              <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div class="contact-field-row">
                 <label class="contact-field">
                   <span>{{ $t('cta.form.phone') }}<template v-if="form.audience === 'creator'"> *</template></span>
                   <input v-model="form.phone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="+33 6 00 00 00 00" :required="form.audience === 'creator'">
@@ -198,16 +198,18 @@ const submitContact = async () => {
               <input v-model="form.website" type="text" name="website" tabindex="-1" autocomplete="off">
             </label>
 
-            <button class="contact-submit" type="submit" :disabled="isSubmitting">
-              <span>{{ isSubmitting ? $t('cta.form.sending') : $t('cta.form.submit') }}</span>
-              <span aria-hidden="true">→</span>
-            </button>
-            <p v-if="formStatus === 'success'" class="form-feedback form-feedback--success" role="status" aria-live="polite">
-              {{ $t('cta.form.success') }}
-            </p>
-            <p v-else-if="formStatus === 'error'" class="form-feedback form-feedback--error" role="alert">
-              {{ $t('cta.form.error') }}
-            </p>
+            <div class="contact-form-actions">
+              <button class="contact-submit" type="submit" :disabled="isSubmitting">
+                <span>{{ isSubmitting ? $t('cta.form.sending') : $t('cta.form.submit') }}</span>
+                <span aria-hidden="true">→</span>
+              </button>
+              <p v-if="formStatus === 'success'" class="form-feedback form-feedback--success" role="status" aria-live="polite">
+                {{ $t('cta.form.success') }}
+              </p>
+              <p v-else-if="formStatus === 'error'" class="form-feedback form-feedback--error" role="alert">
+                {{ $t('cta.form.error') }}
+              </p>
+            </div>
           </form>
         </div>
 
@@ -252,10 +254,40 @@ const submitContact = async () => {
   --contact-accent-soft: rgba(149, 104, 237, 0.1);
 }
 
+.contact-container {
+  width: min(100%, 70rem);
+}
+
 .contact-card {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.16);
   border-color: var(--contact-border) !important;
   background: var(--contact-surface) !important;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.contact-form-fields {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.contact-field-row,
+.contact-audience-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contact-field-row {
+  gap: 1.25rem;
+}
+
+.contact-audience-grid {
+  gap: 1rem;
 }
 
 .contact-tabs {
@@ -334,7 +366,7 @@ const submitContact = async () => {
 }
 
 .contact-audience-field legend {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .contact-audience {
@@ -418,13 +450,13 @@ const submitContact = async () => {
 
 .contact-field input,
 .contact-field select {
-  min-height: 3rem;
-  padding: 0 0.875rem;
+  min-height: 3.25rem;
+  padding: 0 1rem;
 }
 
 .contact-field textarea {
   min-height: 9.5rem;
-  padding: 0.875rem;
+  padding: 1rem;
   resize: vertical;
 }
 
@@ -445,7 +477,6 @@ const submitContact = async () => {
   min-height: 3.125rem;
   width: fit-content;
   min-width: 13.5rem;
-  margin-left: auto;
   padding: 0 1.5rem;
   align-items: center;
   justify-content: center;
@@ -459,6 +490,19 @@ const submitContact = async () => {
   font-weight: 600;
   cursor: pointer;
   transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
+}
+
+.contact-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.contact-form-actions .form-feedback {
+  order: -1;
+  flex: 1 1 20rem;
 }
 
 .contact-section--creator .contact-submit {
@@ -490,6 +534,20 @@ const submitContact = async () => {
 }
 
 @media (max-width: 639px) {
+  .contact-form {
+    gap: 1.5rem;
+  }
+
+  .contact-form-fields {
+    gap: 1rem;
+  }
+
+  .contact-field-row,
+  .contact-audience-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
   .contact-tabs {
     width: 100%;
   }
@@ -497,6 +555,10 @@ const submitContact = async () => {
   .contact-tab {
     padding-inline: 0.75rem;
     font-size: 0.8rem;
+  }
+
+  .contact-submit {
+    width: 100%;
   }
 }
 
