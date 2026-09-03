@@ -2,6 +2,16 @@
 const { t } = useI18n();
 const activeContactMethod = ref<'form' | 'calendar'>('calendar')
 const hasOpenedCalendar = ref(true)
+const calendarTabButton = ref<HTMLElement | null>(null)
+const calendarTabText = ref<HTMLElement | null>(null)
+const formTabButton = ref<HTMLElement | null>(null)
+const formTabText = ref<HTMLElement | null>(null)
+const submitButton = ref<HTMLElement | null>(null)
+const submitButtonText = ref<HTMLElement | null>(null)
+
+useTextSlideAnimation(calendarTabButton, calendarTabText)
+useTextSlideAnimation(formTabButton, formTabText)
+useTextSlideAnimation(submitButton, submitButtonText)
 
 const selectContactMethod = (method: 'form' | 'calendar') => {
   activeContactMethod.value = method
@@ -36,6 +46,7 @@ watch(() => form.audience, (audience, previousAudience) => {
 
 const isSubmitting = ref(false)
 const formStatus = ref<'idle' | 'success' | 'error'>('idle')
+const submitLabel = computed(() => isSubmitting.value ? t('cta.form.sending') : t('cta.form.submit'))
 
 const submitContact = async () => {
   formStatus.value = 'idle'
@@ -85,6 +96,7 @@ const submitContact = async () => {
       <div class="contact-tabs" role="tablist" :aria-label="$t('cta.tabs.label')">
         <button
           id="contact-calendar-tab"
+          ref="calendarTabButton"
           type="button"
           role="tab"
           class="contact-tab"
@@ -94,10 +106,17 @@ const submitContact = async () => {
           @click="selectContactMethod('calendar')"
         >
           <UIcon name="i-lucide-calendar-days" class="h-4 w-4" aria-hidden="true" />
-          <span>{{ $t('cta.tabs.calendar') }}</span>
+          <span class="sr-only">{{ $t('cta.tabs.calendar') }}</span>
+          <span class="contact-text-slide" aria-hidden="true">
+            <span ref="calendarTabText" class="contact-text-slide__track">
+              <span class="contact-text-slide__line">{{ $t('cta.tabs.calendar') }}</span>
+              <span class="contact-text-slide__line">{{ $t('cta.tabs.calendar') }}</span>
+            </span>
+          </span>
         </button>
         <button
           id="contact-form-tab"
+          ref="formTabButton"
           type="button"
           role="tab"
           class="contact-tab"
@@ -107,7 +126,13 @@ const submitContact = async () => {
           @click="selectContactMethod('form')"
         >
           <UIcon name="i-lucide-send" class="h-4 w-4" aria-hidden="true" />
-          <span>{{ $t('cta.tabs.form') }}</span>
+          <span class="sr-only">{{ $t('cta.tabs.form') }}</span>
+          <span class="contact-text-slide" aria-hidden="true">
+            <span ref="formTabText" class="contact-text-slide__track">
+              <span class="contact-text-slide__line">{{ $t('cta.tabs.form') }}</span>
+              <span class="contact-text-slide__line">{{ $t('cta.tabs.form') }}</span>
+            </span>
+          </span>
         </button>
       </div>
 
@@ -199,8 +224,14 @@ const submitContact = async () => {
             </label>
 
             <div class="contact-form-actions">
-              <button class="contact-submit" type="submit" :disabled="isSubmitting">
-                <span>{{ isSubmitting ? $t('cta.form.sending') : $t('cta.form.submit') }}</span>
+              <button ref="submitButton" class="contact-submit" type="submit" :disabled="isSubmitting">
+                <span class="sr-only">{{ submitLabel }}</span>
+                <span class="contact-text-slide" aria-hidden="true">
+                  <span ref="submitButtonText" class="contact-text-slide__track">
+                    <span class="contact-text-slide__line">{{ submitLabel }}</span>
+                    <span class="contact-text-slide__line">{{ submitLabel }}</span>
+                  </span>
+                </span>
                 <span aria-hidden="true">→</span>
               </button>
               <p v-if="formStatus === 'success'" class="form-feedback form-feedback--success" role="status" aria-live="polite">
@@ -333,6 +364,25 @@ const submitContact = async () => {
 .contact-tab:focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 2px;
+}
+
+.contact-text-slide {
+  display: block;
+  height: 1.25em;
+  overflow: hidden;
+  line-height: 1.25;
+}
+
+.contact-text-slide__track {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-text-slide__line {
+  display: block;
+  height: 1.25em;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
 .contact-field {
@@ -489,7 +539,7 @@ const submitContact = async () => {
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
+  transition: opacity 180ms ease;
 }
 
 .contact-form-actions {
@@ -508,11 +558,6 @@ const submitContact = async () => {
 .contact-section--creator .contact-submit {
   background: var(--contact-accent);
   color: #fff;
-}
-
-.contact-submit:hover:not(:disabled) {
-  filter: brightness(1.04);
-  transform: translateY(-1px);
 }
 
 .contact-submit:focus-visible {
