@@ -170,7 +170,7 @@ useSeoMeta({
 .world-card__arrow { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 22px; }
 .global-home__hero { isolation: isolate; }
 .global-home__hero::before { content: ''; position: absolute; inset: 12% 12% 4%; z-index: -1; border-radius: 999px; background: radial-gradient(ellipse at center, rgba(240,191,108,.1), transparent 68%); filter: blur(12px); pointer-events: none; }
-.global-home__hero-clouds { position: absolute; inset: -6%; z-index: -3; width: 112%; height: 112%; object-fit: cover; opacity: .92; filter: saturate(.9) contrast(1.06); animation: home-cloud-drift 18s ease-in-out infinite alternate; pointer-events: none; will-change: transform; }
+.global-home__hero-clouds { position: absolute; inset: 0; z-index: -3; width: 100%; max-width: none; height: 100%; object-fit: cover; object-position: center; opacity: .92; filter: saturate(.9) contrast(1.06); pointer-events: none; }
 .global-home__hero-vignette { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, rgba(15,15,15,.14) 0%, rgba(15,15,15,.34) 100%), radial-gradient(ellipse at center, rgba(15,15,15,.06), rgba(15,15,15,.36) 88%); pointer-events: none; }
 .global-home__hero-orb { position: absolute; top: 50%; left: 50%; z-index: -1; width: clamp(180px, 24vw, 360px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(240,191,108,.18), rgba(240,191,108,0) 68%); filter: blur(20px); transform: translate(-50%, -50%); pointer-events: none; }
 .global-home__hero h1 { animation: home-title-in 900ms cubic-bezier(.22,1,.36,1) both; background: none; color: #fff; -webkit-background-clip: border-box; -webkit-text-fill-color: #fff; }
@@ -191,7 +191,6 @@ useSeoMeta({
 .global-home.has-js .js-reveal.is-visible { opacity: 1; transform: translateY(0); }
 @keyframes home-title-in { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes home-copy-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes home-cloud-drift { from { transform: scale(1.04) translate3d(-3%, -1.5%, 0); } to { transform: scale(1.12) translate3d(3%, 1.5%, 0); } }
 
 @media (max-width: 640px) {
   .world-card { min-height: 500px; }
@@ -205,7 +204,7 @@ useSeoMeta({
 @media (prefers-reduced-motion: reduce) {
   .global-home__hero h1, .global-home__hero p { animation: none; }
   .global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: none; }
-  .global-home__hero-clouds, .global-home__hero-orb, .project-teaser { transition: none; animation: none; transform: none; }
+  .global-home__hero-orb, .project-teaser { transition: none; animation: none; transform: none; }
   .global-home.has-js .js-reveal, .global-home.has-js .js-reveal.is-visible { opacity: 1; transform: none; transition: none; }
 }
 </style>
