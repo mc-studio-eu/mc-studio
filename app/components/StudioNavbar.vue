@@ -200,9 +200,8 @@ onUnmounted(() => {
 .studio-nav__locale-option--active { opacity: 1; }
 .studio-nav--dark .studio-nav__locale-option--active { background: #fff; color: #171717; }
 .studio-nav--light .studio-nav__locale-option--active { background: #171717; color: #fff; }
-.studio-nav__cta, .studio-nav__mobile-cta { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; border-radius: 16px; padding: 0 18px; background: #fff; color: #171717; font-size: 15px; font-weight: 600; text-decoration: none; transition: transform 200ms ease, filter 200ms ease; }
+.studio-nav__cta, .studio-nav__mobile-cta { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; border-radius: 16px; padding: 0 18px; background: #fff; color: #171717; font-size: 15px; font-weight: 600; text-decoration: none; }
 .studio-nav--light .studio-nav__cta { background: #171717; color: #fff; }
-.studio-nav__cta:hover, .studio-nav__mobile-cta:hover { transform: scale(1.02); filter: brightness(1.05); }
 .studio-nav__menu { position: relative; z-index: 70; display: grid; width: 48px; height: 48px; place-content: center; gap: 6px; border: 1px solid currentColor; border-radius: 18px; background: transparent; color: inherit; cursor: pointer; opacity: .65; }
 .studio-nav__menu span { display: block; width: 15px; height: 1.5px; background: currentColor; transition: transform 220ms ease; }
 .studio-nav__menu-line--top { transform: translateY(3.75px) rotate(45deg); }
@@ -220,20 +219,10 @@ onUnmounted(() => {
   color: #fff;
 }
 
-.studio-nav--creator .studio-nav__cta:hover,
-.studio-nav--creator .studio-nav__mobile-cta:hover {
-  background: #9767eb;
-}
-
 .studio-nav--business .studio-nav__cta,
 .studio-nav--business .studio-nav__mobile-cta {
   background: linear-gradient(to right, #fff 50%, #f0bf6c);
   color: #0f0f0f;
-}
-
-.studio-nav--business .studio-nav__cta:hover,
-.studio-nav--business .studio-nav__mobile-cta:hover {
-  filter: brightness(1.05);
 }
 .studio-nav__text-slide-container { display: block; position: relative; overflow: hidden; height: 1em; }
 .studio-nav__text-slide-wrapper { display: flex; flex-direction: column; }

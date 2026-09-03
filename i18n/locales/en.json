@@ -386,7 +386,11 @@
           "Copywriting",
           "Development",
           "Accounting"
-        ]
+        ],
+        "testimonial": {
+          "review": "Very happy with my website created by MC STUDIO!\nI recommend them 200%!",
+          "job": "Founder, Shika Consulting"
+        }
       },
       "amg_promotion": {
         "description": "AMG Promotion is a company specialized in creating promotional products (textiles, goodies, personalized items, and more), working with well-known brands and organizations such as Groupe SEB, ALTRAD, and the French National Police.",
@@ -513,13 +517,17 @@
     "google_label": "Google reviews",
     "google_rating_value": "5.0",
     "google_rating_label": "Rated 5 out of 5 on Google",
-    "google_trust_text": "5 client stories to discover",
+    "google_trust_text": "6 client stories to discover",
     "google_review": "Google review",
     "five_stars": "5 stars out of 5",
     "previous": "Previous review",
     "next": "Next review",
     "go_to_review": "Go to review {number}",
     "items": {
+      "shika_consulting": {
+        "content": "Very happy with my website created by MC STUDIO!\nI recommend them 200%!",
+        "role": "Founder, Shika Consulting"
+      },
       "amg_promotion": {
         "content": "Creating our website was a success!\nWe truly recommend MC studio!\nEfficient work and a very good understanding of our expectations.",
         "role": "Founder of AMG Promotion"

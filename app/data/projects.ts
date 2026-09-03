@@ -268,6 +268,10 @@ export const projects: Project[] = [
     image: '/img/project/shika-consulting/homepage.webp',
     externalLink: 'https://shika-consulting.fr/',
     verified: true,
+    testimonial: {
+      name: 'Nouri Yahi',
+      avatar: '/img/testimonials/nouri-shika-consulting.png',
+    },
     screenshots: {
       desktop: [
         '/img/project/shika-consulting/homepage.webp',

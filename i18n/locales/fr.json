@@ -386,7 +386,11 @@
           "Copywriting",
           "Développement",
           "Expertise comptable"
-        ]
+        ],
+        "testimonial": {
+          "review": "Très content de mon site internet réalisé avec MC STUDIO !\nJe recommande à 200%!",
+          "job": "Fondateur, Shika Consulting"
+        }
       },
       "amg_promotion": {
         "description": "AMG Promotion, c’est une entreprise spécialisée dans la création de produits promotionnels (textile, goodies, objets personnalisés…), qui accompagne des références reconnues comme Groupe SEB, ALTRAD ou encore la Police Nationale.",
@@ -513,13 +517,17 @@
     "google_label": "Avis Google",
     "google_rating_value": "5,0",
     "google_rating_label": "Noté 5 sur 5 sur Google",
-    "google_trust_text": "5 témoignages clients à découvrir",
+    "google_trust_text": "6 témoignages clients à découvrir",
     "google_review": "Avis Google",
     "five_stars": "5 étoiles sur 5",
     "previous": "Avis précédent",
     "next": "Avis suivant",
     "go_to_review": "Aller à l'avis {number}",
     "items": {
+      "shika_consulting": {
+        "content": "Très content de mon site internet réalisé avec MC STUDIO !\nJe recommande à 200%!",
+        "role": "Fondateur, Shika Consulting"
+      },
       "amg_promotion": {
         "content": "La création de notre site est une réussite !\nNous recommandons vraiment MC studio !\nEfficacité et très bonne compréhension de nos attentes.",
         "role": "Fondateur de AMG Promotion"

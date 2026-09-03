@@ -16,6 +16,15 @@ const { t } = useI18n();
 const testimonials = computed<Testimonial[]>(() => [
   {
     id: 1,
+    content: t('testimonials.items.shika_consulting.content'),
+    author: {
+      name: 'Nouri Yahi',
+      role: t('testimonials.items.shika_consulting.role'),
+      avatar: '/img/testimonials/nouri-shika-consulting.png'
+    },
+  },
+  {
+    id: 2,
     content: t('testimonials.items.ra_energy.content'),
     author: {
       name: 'Yazid C.',
@@ -24,7 +33,7 @@ const testimonials = computed<Testimonial[]>(() => [
     },
   },
   {
-    id: 2,
+    id: 3,
     content: t('testimonials.items.souji_nova.content'),
     author: {
       name: 'Nelson M.',
@@ -33,7 +42,7 @@ const testimonials = computed<Testimonial[]>(() => [
     },
   },
   {
-    id: 3,
+    id: 4,
     content: t('testimonials.items.fontaines_vtc.content'),
     author: {
       name: 'Mario C.',
@@ -42,7 +51,7 @@ const testimonials = computed<Testimonial[]>(() => [
     }
   },
   {
-    id: 4,
+    id: 5,
     content: t('testimonials.items.liquid_scan.content'),
     author: {
       name: 'Pierre J.',
@@ -51,7 +60,7 @@ const testimonials = computed<Testimonial[]>(() => [
     }
   },
   {
-    id: 5,
+    id: 6,
     content: t('testimonials.items.amg_promotion.content'),
     author: {
       name: 'Jean francois Fialaire',

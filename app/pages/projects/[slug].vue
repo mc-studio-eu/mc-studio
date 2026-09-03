@@ -67,6 +67,13 @@ const localizedProject = computed(() => {
 
 const backToProjectsLink = computed(() => localePath('/projects'))
 const contactLink = computed(() => localePath('/contact'))
+const bookCallButton = ref<HTMLElement | { $el: HTMLElement } | null>(null)
+const bookCallText = ref<HTMLElement | null>(null)
+const visitWebsiteButton = ref<HTMLElement | null>(null)
+const visitWebsiteText = ref<HTMLElement | null>(null)
+
+useTextSlideAnimation(bookCallButton, bookCallText)
+useTextSlideAnimation(visitWebsiteButton, visitWebsiteText)
 
 const splitTextIntoParagraphs = (text: string) => {
   const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map((sentence) => sentence.trim()) ?? [text]
@@ -194,16 +201,16 @@ useSeoMeta({
       <section class="mx-auto w-full">
       <article class="relative">
         <div class="relative z-10 py-[clamp(34px,6vw,72px)]">
-          <NuxtLink
-            :to="backToProjectsLink"
-            class="inline-flex items-center gap-2 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
-            :aria-label="labels.back"
-          >
-            <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
-            <span>{{ labels.back }}</span>
-          </NuxtLink>
-
           <section class="mx-auto w-full max-w-[1100px]">
+            <NuxtLink
+              :to="backToProjectsLink"
+              class="inline-flex items-center gap-2 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
+              :aria-label="labels.back"
+            >
+              <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
+              <span>{{ labels.back }}</span>
+            </NuxtLink>
+
             <h1 class="case-study-title m-0 mt-14 max-w-[900px] text-balance font-manrope font-medium tracking-[-0.07em] text-white sm:mt-20">
               {{ localizedProject.title }}
             </h1>
@@ -224,20 +231,34 @@ useSeoMeta({
 
                 <div class="mt-7 flex flex-wrap items-center gap-3">
                   <NuxtLink
+                    ref="bookCallButton"
                     :to="contactLink"
-                    class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0f0f0f] no-underline transition-transform duration-200 hover:-translate-y-0.5"
+                    class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0f0f0f] no-underline"
                   >
-                    <span>{{ labels.bookCall }}</span>
+                    <span class="sr-only">{{ labels.bookCall }}</span>
+                    <span class="button-text-slide" aria-hidden="true">
+                      <span ref="bookCallText" class="button-text-slide__track">
+                        <span class="button-text-slide__line">{{ labels.bookCall }}</span>
+                        <span class="button-text-slide__line">{{ labels.bookCall }}</span>
+                      </span>
+                    </span>
                     <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
                   </NuxtLink>
 
                   <a
+                    ref="visitWebsiteButton"
                     :href="localizedProject.externalLink"
                     target="_blank"
                     rel="noreferrer"
-                    class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white/75 no-underline transition-colors duration-200 hover:border-white/50 hover:text-white"
+                    class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white/75 no-underline"
                   >
-                    <span>{{ labels.visitWebsite }}</span>
+                    <span class="sr-only">{{ labels.visitWebsite }}</span>
+                    <span class="button-text-slide" aria-hidden="true">
+                      <span ref="visitWebsiteText" class="button-text-slide__track">
+                        <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
+                        <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
+                      </span>
+                    </span>
                     <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
                   </a>
                 </div>
@@ -358,6 +379,23 @@ useSeoMeta({
 
 .case-study-copy p + p {
   margin-top: 1.15em;
+}
+
+.button-text-slide {
+  display: block;
+  height: 1.25rem;
+  overflow: hidden;
+}
+
+.button-text-slide__track {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-text-slide__line {
+  display: block;
+  height: 1.25rem;
+  line-height: 1.25rem;
 }
 
 @media (max-width: 640px) {
