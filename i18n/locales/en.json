@@ -21,14 +21,8 @@
   "hero": {
     "availability": "3 spots left in {month}",
     "reviews": "Rated 5/5 on Google",
-    "title": "The digital partner for businesses",
-    "title_prefix": "The digital partner for",
-    "rotating_words": [
-      "businesses",
-      "creators",
-      "startups"
-    ],
-    "subtitle": "Strategy, design and development brought together to bring your ambitions to life.",
+    "title": "The design & development partner for ambitious companies.",
+    "subtitle": "We help startups and companies create their brand identity, website and app, from idea to launch.",
     "cta": {
       "book": "Book a call",
       "whatsapp": "Chat on WhatsApp"
@@ -860,8 +854,14 @@
       "description": "MC Studio turns ambitious ideas into digital products for businesses and creators."
     },
     "hero": {
-      "title": "We build ambitious digital\nproducts.",
-      "subtitle": "One studio to design, build and launch digital experiences that move businesses and creators forward."
+      "title": "The digital partner for businesses",
+      "title_prefix": "The digital partner for",
+      "rotating_words": [
+        "businesses",
+        "creators",
+        "startups"
+      ],
+      "subtitle": "Strategy, design and development brought together to bring your ambitions to life."
     },
     "worlds": {
       "title": "Two worlds. One studio.",

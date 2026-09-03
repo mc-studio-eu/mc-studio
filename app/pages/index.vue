@@ -1,14 +1,33 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { rt, t, tm } = useI18n()
 const localePath = useLocalePath()
 const homeRoot = ref<HTMLElement | null>(null)
+const currentHeroWordIndex = ref(0)
 
 let revealObserver: IntersectionObserver | undefined
+let heroWordRotationTimer: ReturnType<typeof setInterval> | undefined
+
+const heroWords = computed(() => {
+  const words = tm('globalHome.hero.rotating_words')
+
+  return Array.isArray(words) ? words.map(word => rt(word)) : []
+})
+
+const currentHeroWord = computed(() => heroWords.value[currentHeroWordIndex.value] ?? '')
+const heroWordPlaceholder = computed(() => heroWords.value[0] ?? currentHeroWord.value)
 
 onMounted(() => {
   homeRoot.value?.classList.add('has-js')
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !homeRoot.value) return
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (!prefersReducedMotion && heroWords.value.length > 1) {
+    heroWordRotationTimer = window.setInterval(() => {
+      currentHeroWordIndex.value = (currentHeroWordIndex.value + 1) % heroWords.value.length
+    }, 2600)
+  }
+
+  if (prefersReducedMotion || !homeRoot.value) return
 
   revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -22,7 +41,10 @@ onMounted(() => {
   homeRoot.value.querySelectorAll<HTMLElement>('.js-reveal').forEach((element) => revealObserver?.observe(element))
 })
 
-onUnmounted(() => revealObserver?.disconnect())
+onUnmounted(() => {
+  revealObserver?.disconnect()
+  if (heroWordRotationTimer) window.clearInterval(heroWordRotationTimer)
+})
 
 useSeoMeta({
   title: () => t('globalHome.seo.title'),
@@ -48,7 +70,15 @@ useSeoMeta({
       <div class="global-home__hero-vignette" aria-hidden="true" />
       <div class="global-home__hero-orb" aria-hidden="true" />
       <h1 class="relative z-10 max-w-[980px] whitespace-pre-line text-balance font-manrope text-[clamp(34px,4.2vw,64px)] font-medium leading-[1.08] tracking-[-0.015em] text-white max-sm:text-[clamp(20px,6.4vw,34px)]">
-        {{ t('globalHome.hero.title') }}
+        <span class="sr-only">{{ t('globalHome.hero.title') }}</span>
+        <span aria-hidden="true">
+          {{ t('globalHome.hero.title_prefix') }}&nbsp;<span class="global-home__hero-word-rotator">
+            <span class="global-home__hero-word-placeholder">{{ heroWordPlaceholder }}</span>
+            <Transition name="global-home-hero-word">
+              <span :key="currentHeroWord" class="global-home__hero-word">{{ currentHeroWord }}</span>
+            </Transition>
+          </span>
+        </span>
       </h1>
       <p class="relative z-10 mt-[31px] max-w-[900px] text-balance font-inter text-[clamp(14px,1.32vw,19px)] leading-[1.28] text-white/60 max-sm:mt-6 max-sm:max-w-[520px] max-sm:text-[15px] max-sm:leading-[1.5]">
         {{ t('globalHome.hero.subtitle') }}
@@ -145,6 +175,13 @@ useSeoMeta({
 .global-home__hero-orb { position: absolute; top: 50%; left: 50%; z-index: -1; width: clamp(180px, 24vw, 360px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(240,191,108,.18), rgba(240,191,108,0) 68%); filter: blur(20px); transform: translate(-50%, -50%); pointer-events: none; }
 .global-home__hero h1 { animation: home-title-in 900ms cubic-bezier(.22,1,.36,1) both; background: none; color: #fff; -webkit-background-clip: border-box; -webkit-text-fill-color: #fff; }
 .global-home__hero p { animation: home-copy-in 900ms .14s cubic-bezier(.22,1,.36,1) both; }
+.global-home__hero-word-rotator { display: inline-grid; text-align: left; vertical-align: baseline; }
+.global-home__hero-word-placeholder, .global-home__hero-word { grid-area: 1 / 1; }
+.global-home__hero-word-placeholder { visibility: hidden; }
+.global-home__hero-word { display: block; }
+.global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: opacity 450ms ease, filter 450ms ease, transform 450ms cubic-bezier(.22,1,.36,1); }
+.global-home-hero-word-enter-from { opacity: 0; filter: blur(8px); transform: translateY(.65em); }
+.global-home-hero-word-leave-to { opacity: 0; filter: blur(8px); transform: translateY(-.65em); }
 .project-teaser { display: block; transform: translateY(0); transition: transform 250ms ease; }
 .project-teaser:hover { transform: translateY(-6px); }
 .project-teaser__type { transition: color 250ms ease; }
@@ -167,6 +204,7 @@ useSeoMeta({
 
 @media (prefers-reduced-motion: reduce) {
   .global-home__hero h1, .global-home__hero p { animation: none; }
+  .global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: none; }
   .global-home__hero-clouds, .global-home__hero-orb, .project-teaser { transition: none; animation: none; transform: none; }
   .global-home.has-js .js-reveal, .global-home.has-js .js-reveal.is-visible { opacity: 1; transform: none; transition: none; }
 }
