@@ -861,7 +861,10 @@
         "créateurs",
         "startups"
       ],
-      "subtitle": "Stratégie, design et développement réunis pour donner vie à vos ambitions."
+      "subtitle": "Stratégie, design et développement réunis pour donner vie à vos ambitions.",
+      "cta_primary": "Parler de votre projet",
+      "cta_secondary": "Voir nos réalisations",
+      "references_label": "Entreprises & créateurs accompagnés"
     },
     "worlds": {
       "title": "Deux univers. Un seul studio.",

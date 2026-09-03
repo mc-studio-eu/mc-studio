@@ -861,7 +861,10 @@
         "creators",
         "startups"
       ],
-      "subtitle": "Strategy, design and development brought together to bring your ambitions to life."
+      "subtitle": "Strategy, design and development brought together to bring your ambitions to life.",
+      "cta_primary": "Discuss your project",
+      "cta_secondary": "See our work",
+      "references_label": "Businesses & creators we support"
     },
     "worlds": {
       "title": "Two worlds. One studio.",
