@@ -59,12 +59,15 @@ export const projects: Project[] = [
     "categories": [
       "landing-page"
     ],
-    "image": "/img/project/sotraya/hero.jpg",
+    "image": "/img/project/sotraya/hero.png",
     "externalLink": "https://sotraya.vercel.app/",
     "verified": true,
     "screenshots": {
       "desktop": [
-        "/img/project/sotraya/hero.jpg"
+        "/img/project/sotraya/hero.png",
+        "/img/project/sotraya/about.png",
+        "/img/project/sotraya/services.png",
+        "/img/project/sotraya/brand.png"
       ],
       "mobile": []
     },
