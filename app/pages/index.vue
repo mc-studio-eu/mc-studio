@@ -31,6 +31,7 @@ const heroReferences = [
   { name: 'Personal', image: '/img/clients/personal.svg', className: 'global-home__reference--personal' },
   { name: 'Arises', image: '/img/clients/arises.svg', className: 'global-home__reference--arises' },
   { name: 'Shika Consulting', image: '/img/clients/shika-consulting.webp', className: 'global-home__reference--shika', showLabel: false }
+  ,{ name: 'Sotraya', image: '/img/clients/sotraya.png', className: 'global-home__reference--sotraya' }
 ]
 
 onMounted(() => {
