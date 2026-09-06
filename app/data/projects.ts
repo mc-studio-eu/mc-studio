@@ -53,6 +53,108 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    "slug": "sotraya",
+    "i18nKey": "sotraya",
+    "title": "Sotraya",
+    "categories": [
+      "landing-page"
+    ],
+    "image": "/img/project/sotraya/hero.jpg",
+    "externalLink": "https://sotraya.vercel.app/",
+    "verified": true,
+    "screenshots": {
+      "desktop": [
+        "/img/project/sotraya/hero.jpg"
+      ],
+      "mobile": []
+    },
+    "summary": {
+      "fr": "Sotraya accompagne les entreprises dans l’automatisation de leurs opérations. Son site présente une offre de systèmes connectés, d’intégrations et d’outils métier sur mesure, avec un parcours centré sur la demande d’audit gratuit.",
+      "en": "Sotraya helps businesses automate their operations. Its website presents connected systems, integrations and custom business tools through a journey focused on requesting a free audit."
+    },
+    "aboutCompany": {
+      "fr": "Fondé par Daris Rabouhi, Sotraya connecte les outils, fait circuler les données et automatise les tâches répétitives pour simplifier le quotidien des entreprises.",
+      "en": "Founded by Daris Rabouhi, Sotraya connects tools, moves data between systems and automates repetitive tasks to simplify day-to-day business operations."
+    },
+    "industry": {
+      "fr": "Automatisation & systèmes métier",
+      "en": "Automation & business systems"
+    },
+    "companySize": "—",
+    "supportBullets": {
+      "fr": [
+        "Une offre technique expliquée simplement",
+        "Des démonstrations concrètes de flux automatisés",
+        "Un parcours vers l’audit gratuit"
+      ],
+      "en": [
+        "A technical offering explained simply",
+        "Concrete demonstrations of automated workflows",
+        "A journey toward a free audit"
+      ]
+    },
+    "context": {
+      "fr": "L’automatisation peut sembler abstraite pour une entreprise qui travaille avec des outils dispersés. Le site Sotraya rend cette offre tangible à travers les tâches du quotidien : onboarding, CRM, documents, facturation et suivi.",
+      "en": "Automation can feel abstract to a business working with disconnected tools. The Sotraya website makes the offering tangible through everyday tasks: onboarding, CRM, documents, invoicing and follow-up."
+    },
+    "solution": {
+      "fr": "Une landing page qui relie la promesse de gain de temps à des exemples visuels : comparaison avant/après, démonstration d’un onboarding automatisé et présentation de la méthode. Les appels à l’action orientent vers un audit gratuit de 30 minutes.",
+      "en": "A landing page connecting the promise of saving time to visual examples: a before-and-after comparison, an automated onboarding demonstration and an overview of the method. Calls to action lead to a free 30-minute audit."
+    },
+    "challenges": {
+      "fr": [
+        "Rendre les systèmes et intégrations compréhensibles",
+        "Présenter plusieurs expertises dans une offre cohérente"
+      ],
+      "en": [
+        "Make systems and integrations easy to understand",
+        "Present multiple areas of expertise as a coherent offering"
+      ]
+    },
+    "objectives": {
+      "fr": [
+        "Expliquer les usages concrets de l’automatisation",
+        "Mettre en valeur la méthode et les réalisations",
+        "Faciliter la prise de rendez-vous"
+      ],
+      "en": [
+        "Explain practical uses of automation",
+        "Showcase the method and completed work",
+        "Make booking a call straightforward"
+      ]
+    },
+    "actions": {
+      "fr": [
+        {
+          "title": "Présentation de l’offre",
+          "body": "Une structure qui articule automatisation, intégrations, IA et outils métier autour des opérations de l’entreprise."
+        },
+        {
+          "title": "Démonstrations visuelles",
+          "body": "Des séquences avant/après et un scénario d’onboarding illustrent la circulation des informations entre les outils."
+        },
+        {
+          "title": "Parcours de contact",
+          "body": "Des appels à l’action répartis sur la page permettent de réserver un audit ou de contacter Sotraya."
+        }
+      ],
+      "en": [
+        {
+          "title": "Service presentation",
+          "body": "A structure that brings automation, integrations, AI and business tools together around company operations."
+        },
+        {
+          "title": "Visual demonstrations",
+          "body": "Before-and-after sequences and an onboarding scenario illustrate how information flows between tools."
+        },
+        {
+          "title": "Contact journey",
+          "body": "Calls to action throughout the page let visitors book an audit or contact Sotraya."
+        }
+      ]
+    }
+  },
+  {
     slug: 'personal',
     i18nKey: 'personal',
     title: 'Personal',

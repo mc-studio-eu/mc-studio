@@ -355,6 +355,14 @@
       "app": "SaaS / CRM / App"
     },
     "items": {
+      "sotraya": {
+        "description": "Sotraya connecte les outils et automatise les opérations des entreprises. Une landing page qui présente les services, les démonstrations et la méthode, avec un parcours vers l’audit gratuit.",
+        "tags": [
+          "Landing page",
+          "UI/UX",
+          "Automatisation"
+        ]
+      },
       "personal": {
         "description": "Personal est un SaaS IA qui aide les créateurs à trouver ce qui fonctionne dans leur niche et à le transformer en contenus fidèles à leur vécu et à leur voix.\nNous avons conçu la marque, la landing page et l’expérience produit complète.",
         "tags": [
