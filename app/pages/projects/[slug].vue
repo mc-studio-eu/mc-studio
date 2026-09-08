@@ -434,9 +434,6 @@ useSeoMeta({
   transition: transform 300ms cubic-bezier(.22, 1, .36, 1);
 }
 
-.more-project-card:hover {
-  transform: translateY(-6px);
-}
 
 .more-project-card__media {
   position: relative;
