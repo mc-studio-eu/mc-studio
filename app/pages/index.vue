@@ -150,6 +150,35 @@ useSeoMeta({
       </div>
     </section>
 
+    <section class="global-home__proof js-reveal border-y border-white/10" aria-labelledby="capabilities-title">
+      <div class="mx-auto grid w-[min(1240px,calc(100%-48px))] gap-10 py-16 sm:grid-cols-[0.8fr_1.2fr] sm:py-24">
+        <h2 id="capabilities-title" class="max-w-sm font-manrope text-3xl tracking-[-0.05em] sm:text-5xl">{{ t('globalHome.expertise.title') }}</h2>
+        <div class="grid grid-cols-2 gap-x-5 gap-y-4 text-sm text-white/60 sm:grid-cols-3 sm:text-base">
+          <span v-for="item in [t('globalHome.expertise.items.strategy'), t('globalHome.expertise.items.design'), t('globalHome.expertise.items.development'), t('globalHome.expertise.items.saas'), t('globalHome.expertise.items.ai'), t('globalHome.expertise.items.launch')]" :key="item" class="border-t border-white/15 pt-3">{{ item }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="global-home__proof js-reveal border-y border-white/10 py-24 sm:py-36" aria-labelledby="selected-projects-title">
+      <div class="w-[min(1240px,calc(100%-48px))]  mx-auto">
+        <div class="flex mx-auto items-end justify-between gap-5">
+          <h2 id="selected-projects-title" class="font-manrope text-4xl tracking-[-0.06em] sm:text-6xl">{{ t('globalHome.projects.title') }}</h2>
+          <NuxtLink class="hidden text-sm text-white/60 hover:text-white sm:block" :to="localePath('/projects')">{{ t('globalHome.projects.link') }} <span aria-hidden="true">↗</span></NuxtLink>
+        </div>
+        <div class="mt-10 grid gap-4 sm:grid-cols-3">
+          <NuxtLink v-for="project in [
+            { title: 'Personal', image: '/img/project/personal/hero.png', type: 'Creator' },
+            { title: 'Maison AWL', image: '/img/project/maison-awl/desktop-mockup.png', type: 'Creator' },
+            { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp', type: 'Business' }
+          ]" :key="project.title" :to="localePath('/projects')" class="project-teaser group">
+            <div class="aspect-[4/3] overflow-hidden rounded-xl bg-white/5"><img class="h-full w-full object-cover" :src="project.image" :alt="project.title" loading="lazy"></div>
+            <div class="mt-4 flex items-center justify-between gap-4"><span class="font-manrope text-xl tracking-[-0.03em]">{{ project.title }}</span><span class="project-teaser__type text-xs uppercase tracking-[0.14em] text-white/40">{{ project.type }}</span></div>
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
+
     <section id="worlds" class="global-home__worlds js-reveal mx-auto box-border w-full max-w-[1288px] px-6 pt-24 pb-24 sm:pt-36 sm:pb-36" aria-labelledby="worlds-title">
       <div class="mb-8 flex items-end justify-between gap-6">
         <h2 id="worlds-title" class="font-manrope text-3xl tracking-[-0.04em] sm:text-5xl">{{ t('globalHome.worlds.title') }}</h2>
@@ -179,32 +208,6 @@ useSeoMeta({
             <p class="world-card__body mt-5 max-w-[400px] text-base leading-7 text-white/65">{{ t('globalHome.worlds.creators.body') }}</p>
             <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">Explore Creators <span aria-hidden="true">→</span></span>
           </div>
-        </NuxtLink>
-      </div>
-    </section>
-
-    <section class="global-home__proof js-reveal border-y border-white/10" aria-labelledby="capabilities-title">
-      <div class="mx-auto grid w-[min(1240px,calc(100%-48px))] gap-10 py-16 sm:grid-cols-[0.8fr_1.2fr] sm:py-24">
-        <h2 id="capabilities-title" class="max-w-sm font-manrope text-3xl tracking-[-0.05em] sm:text-5xl">{{ t('globalHome.expertise.title') }}</h2>
-        <div class="grid grid-cols-2 gap-x-5 gap-y-4 text-sm text-white/60 sm:grid-cols-3 sm:text-base">
-          <span v-for="item in [t('globalHome.expertise.items.strategy'), t('globalHome.expertise.items.design'), t('globalHome.expertise.items.development'), t('globalHome.expertise.items.saas'), t('globalHome.expertise.items.ai'), t('globalHome.expertise.items.launch')]" :key="item" class="border-t border-white/15 pt-3">{{ item }}</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="js-reveal mx-auto w-[min(1240px,calc(100%-48px))] py-24 sm:py-36" aria-labelledby="selected-projects-title">
-      <div class="flex items-end justify-between gap-5">
-        <h2 id="selected-projects-title" class="font-manrope text-4xl tracking-[-0.06em] sm:text-6xl">{{ t('globalHome.projects.title') }}</h2>
-        <NuxtLink class="hidden text-sm text-white/60 hover:text-white sm:block" :to="localePath('/projects')">{{ t('globalHome.projects.link') }} <span aria-hidden="true">↗</span></NuxtLink>
-      </div>
-      <div class="mt-10 grid gap-4 sm:grid-cols-3">
-        <NuxtLink v-for="project in [
-          { title: 'Personal', image: '/img/project/personal/hero.png', type: 'Creator' },
-          { title: 'Maison AWL', image: '/img/project/maison-awl/desktop-mockup.png', type: 'Creator' },
-          { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp', type: 'Business' }
-        ]" :key="project.title" :to="localePath('/projects')" class="project-teaser group">
-          <div class="aspect-[4/3] overflow-hidden rounded-xl bg-white/5"><img class="h-full w-full object-cover" :src="project.image" :alt="project.title" loading="lazy"></div>
-          <div class="mt-4 flex items-center justify-between gap-4"><span class="font-manrope text-xl tracking-[-0.03em]">{{ project.title }}</span><span class="project-teaser__type text-xs uppercase tracking-[0.14em] text-white/40">{{ project.type }}</span></div>
         </NuxtLink>
       </div>
     </section>
