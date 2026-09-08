@@ -195,7 +195,7 @@ useSeoMeta({
     <section class="js-reveal mx-auto w-[min(1240px,calc(100%-48px))] py-24 sm:py-36" aria-labelledby="selected-projects-title">
       <div class="flex items-end justify-between gap-5">
         <h2 id="selected-projects-title" class="font-manrope text-4xl tracking-[-0.06em] sm:text-6xl">{{ t('globalHome.projects.title') }}</h2>
-        <NuxtLink class="hidden text-sm text-white/60 transition hover:text-white sm:block" :to="localePath('/projects')">{{ t('globalHome.projects.link') }} <span aria-hidden="true">↗</span></NuxtLink>
+        <NuxtLink class="hidden text-sm text-white/60 hover:text-white sm:block" :to="localePath('/projects')">{{ t('globalHome.projects.link') }} <span aria-hidden="true">↗</span></NuxtLink>
       </div>
       <div class="mt-10 grid gap-4 sm:grid-cols-3">
         <NuxtLink v-for="project in [
@@ -203,7 +203,7 @@ useSeoMeta({
           { title: 'Maison AWL', image: '/img/project/maison-awl/desktop-mockup.png', type: 'Creator' },
           { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp', type: 'Business' }
         ]" :key="project.title" :to="localePath('/projects')" class="project-teaser group">
-          <div class="aspect-[4/3] overflow-hidden rounded-xl bg-white/5"><img class="h-full w-full object-cover transition duration-500 group-hover:scale-105" :src="project.image" :alt="project.title" loading="lazy"></div>
+          <div class="aspect-[4/3] overflow-hidden rounded-xl bg-white/5"><img class="h-full w-full object-cover" :src="project.image" :alt="project.title" loading="lazy"></div>
           <div class="mt-4 flex items-center justify-between gap-4"><span class="font-manrope text-xl tracking-[-0.03em]">{{ project.title }}</span><span class="project-teaser__type text-xs uppercase tracking-[0.14em] text-white/40">{{ project.type }}</span></div>
         </NuxtLink>
       </div>
@@ -279,9 +279,6 @@ useSeoMeta({
 .global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: opacity 450ms ease, filter 450ms ease, transform 450ms cubic-bezier(.22,1,.36,1); }
 .global-home-hero-word-enter-from { opacity: 0; filter: blur(8px); transform: translateY(.65em); }
 .global-home-hero-word-leave-to { opacity: 0; filter: blur(8px); transform: translateY(-.65em); }
-.project-teaser { display: block; transform: translateY(0); transition: transform 250ms ease; }
-.project-teaser:hover { transform: translateY(-6px); }
-.project-teaser__type { transition: color 250ms ease; }
 .project-teaser:hover .project-teaser__type { color: rgba(255,255,255,.8); }
 .world-card:focus-visible, .project-teaser:focus-visible { outline: 2px solid #f0bf6c; outline-offset: 6px; }
 .global-home.has-js .js-reveal { opacity: 0; transform: translateY(28px); transition: opacity 700ms ease, transform 700ms cubic-bezier(.22,1,.36,1); }

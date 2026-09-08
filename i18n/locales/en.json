@@ -901,14 +901,14 @@
       "items": {
         "strategy": "Product strategy",
         "design": "UX/UI & branding",
-        "development": "Web development",
+        "development": "Development",
         "saas": "SaaS & applications",
         "ai": "Artificial intelligence",
         "launch": "Launch & growth"
       }
     },
     "projects": {
-      "title": "Products in motion.",
+      "title": "Our projects.",
       "link": "See all projects"
     }
   },

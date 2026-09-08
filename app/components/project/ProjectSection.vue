@@ -160,7 +160,7 @@ onBeforeUnmount(() => {
               width="1600"
               height="1000"
               loading="eager"
-              class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015]"
+              class="h-full w-full object-cover hover:scale-100"
               @load="markProjectAsLoaded(project.slug)"
             />
             <span

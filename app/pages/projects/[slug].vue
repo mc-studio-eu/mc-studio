@@ -11,9 +11,10 @@ const PAGE_LABELS = {
     aboutTitle: 'À propos',
     visitWebsite: 'Visiter le site',
     bookCall: 'Réserver un appel',
-    contextTitle: 'Contexte & enjeux',
-    objectivesTitle: 'Objectifs',
-    resultsTitle: 'Résultats',
+    industry: 'Secteur',
+    type: 'Type de projet',
+    companySize: 'Taille',
+    moreProjects: 'Autres projets',
   },
   en: {
     back: 'Back to projects',
@@ -21,9 +22,10 @@ const PAGE_LABELS = {
     aboutTitle: 'About',
     visitWebsite: 'Visit website',
     bookCall: 'Book a call',
-    contextTitle: 'Context & challenges',
-    objectivesTitle: 'Objectives',
-    resultsTitle: 'Results',
+    industry: 'Industry',
+    type: 'Project type',
+    companySize: 'Company size',
+    moreProjects: 'More projects',
   },
 } satisfies Record<LocaleKey, Record<string, string>>
 
@@ -57,10 +59,7 @@ const localizedProject = computed(() => {
     aboutCompany: getLocalizedValue(currentProject.aboutCompany, localeKey),
     industry: getLocalizedValue(currentProject.industry, localeKey),
     supportBullets: getLocalizedValue(currentProject.supportBullets, localeKey),
-    context: getLocalizedValue(currentProject.context, localeKey),
-    solution: getLocalizedValue(currentProject.solution, localeKey),
     challenges: getLocalizedValue(currentProject.challenges, localeKey),
-    objectives: getLocalizedValue(currentProject.objectives, localeKey),
     actions: getLocalizedValue(currentProject.actions, localeKey),
   }
 })
@@ -98,61 +97,36 @@ const splitTextIntoParagraphs = (text: string) => {
   return paragraphs
 }
 
-const projectImages = computed(() => {
+const galleryImages = computed(() => {
+  const heroImage = localizedProject.value.image
   const images = [
-    localizedProject.value.image,
     ...localizedProject.value.screenshots.desktop,
     ...localizedProject.value.screenshots.mobile,
   ]
 
-  return [...new Set(images)].filter(Boolean)
+  return [...new Set(images)].filter((src) => Boolean(src) && src !== heroImage)
 })
 
-type CaseStudyBlock =
-  | { type: 'image'; key: string; src: string; alt: string }
-  | { type: 'text'; key: string; title: string; body: string }
+type GalleryItem = { key: string; src: string; span: 5 | 10 }
 
-const caseStudyFlow = computed<CaseStudyBlock[]>(() => {
-  const textSections = [
-    { title: labels.value.contextTitle, body: localizedProject.value.context },
-    { title: labels.value.objectivesTitle, body: localizedProject.value.objectives.join(' ') },
-    { title: labels.value.resultsTitle, body: localizedProject.value.solution },
-  ]
+const galleryItems = computed<GalleryItem[]>(() => {
+  const images = galleryImages.value
+  const items: GalleryItem[] = []
+  let index = 0
+  let wantsPair = true
 
-  const blocks: CaseStudyBlock[] = []
+  while (index < images.length) {
+    const size = wantsPair ? 2 : 1
+    const chunk = images.slice(index, index + size)
+    const span = chunk.length === 2 ? 5 : 10
 
-  textSections.forEach((section, index) => {
-    const image = projectImages.value[index]
+    chunk.forEach((src) => items.push({ key: src, src, span }))
 
-    if (image) {
-      blocks.push({
-        type: 'image',
-        key: `image-${index}`,
-        src: image,
-        alt: `${localizedProject.value.title} - ${section.title}`,
-      })
-    }
-
-    blocks.push({
-      type: 'text',
-      key: `text-${index}`,
-      title: section.title,
-      body: section.body,
-    })
-  })
-
-  const closingImage = projectImages.value[textSections.length]
-
-  if (closingImage) {
-    blocks.push({
-      type: 'image',
-      key: 'image-closing',
-      src: closingImage,
-      alt: localizedProject.value.title,
-    })
+    index += chunk.length
+    wantsPair = !wantsPair
   }
 
-  return blocks
+  return items
 })
 
 const projectTestimonial = computed(() => {
@@ -170,19 +144,40 @@ const projectTestimonial = computed(() => {
   }
 })
 
-const nextProject = computed(() => {
+const categoryLabelKey = (category: string) => category.replace('-', '_')
+const categoryLabel = (category: string) => t(`projects.filters.${categoryLabelKey(category)}`)
+
+const eyebrowLabel = computed(() => project.value!.categories.map((category) => categoryLabel(category)).join(' · '))
+
+const metaItems = computed(() => {
+  const currentProject = project.value!
+  const items: { label: string; value: string }[] = [
+    { label: labels.value.industry, value: localizedProject.value.industry },
+    { label: labels.value.type, value: eyebrowLabel.value },
+  ]
+
+  if (currentProject.companySize && currentProject.companySize !== '—') {
+    items.push({ label: labels.value.companySize, value: currentProject.companySize })
+  }
+
+  return items
+})
+
+const moreProjects = computed(() => {
   const currentIndex = projects.findIndex((item) => item.slug === localizedProject.value.slug)
 
   if (currentIndex < 0) {
-    return undefined
+    return []
   }
 
-  return projects[(currentIndex + 1) % projects.length]
-})
+  const others: Project[] = []
 
-const nextProjectLink = computed(() =>
-  nextProject.value ? localePath(`/projects/${nextProject.value.slug}`) : localePath('/projects')
-)
+  for (let offset = 1; offset < projects.length && others.length < 3; offset++) {
+    others.push(projects[(currentIndex + offset) % projects.length]!)
+  }
+
+  return others
+})
 
 useSeoMeta({
   title: `${localizedProject.value.title} | MC Studio`,
@@ -198,119 +193,118 @@ useSeoMeta({
 
     <!-- Main Content with Border Frame -->
     <div class="mx-auto w-[min(1240px,calc(100%-48px))] pb-24 sm:pb-36">
-      <section class="mx-auto w-full">
+    <section class="mx-auto w-full">
       <article class="relative">
         <div class="relative z-10 py-[clamp(34px,6vw,72px)]">
-          <section class="mx-auto w-full max-w-[1100px]">
-            <NuxtLink
-              :to="backToProjectsLink"
-              class="inline-flex items-center gap-2 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
-              :aria-label="labels.back"
-            >
-              <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
-              <span>{{ labels.back }}</span>
-            </NuxtLink>
+          <section class="grid grid-cols-10 gap-x-4 sm:gap-x-6">
+            <div class="col-span-10">
+              <NuxtLink
+                :to="backToProjectsLink"
+                class="inline-flex items-center gap-2 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
+                :aria-label="labels.back"
+              >
+                <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
+                <span>{{ labels.back }}</span>
+              </NuxtLink>
 
-            <h1 class="case-study-title m-0 mt-14 max-w-[900px] text-balance font-manrope font-medium tracking-[-0.07em] text-white sm:mt-20">
-              {{ localizedProject.title }}
-            </h1>
+              <h1 class="case-study-title m-0 mt-4 max-w-[1000px] text-balance font-manrope font-medium tracking-[-0.07em] text-white">
+                {{ localizedProject.title }}
+              </h1>
+            </div>
 
-            <div class="mt-8 h-px w-full bg-white/15 sm:mt-12" />
+            <div class="col-span-10 mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] sm:mt-14">
+              <NuxtImg
+                :src="localizedProject.image"
+                :alt="localizedProject.title"
+                class="block aspect-[16/9] w-full object-cover"
+              />
+            </div>
 
-            <div class="grid grid-cols-2 gap-[clamp(34px,8vw,88px)] pt-[clamp(34px,5vw,56px)] max-md:grid-cols-1 max-md:gap-10">
-              <div>
-                <h2 class="case-study-heading">{{ labels.summaryTitle }}</h2>
-                <div class="case-study-copy">
-                  <p
-                    v-for="paragraph in splitTextIntoParagraphs(localizedProject.summary)"
-                    :key="paragraph"
-                  >
-                    {{ paragraph }}
-                  </p>
-                </div>
-
-                <div class="mt-7 flex flex-wrap items-center gap-3">
-                  <NuxtLink
-                    ref="bookCallButton"
-                    :to="contactLink"
-                    class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0f0f0f] no-underline"
-                  >
-                    <span class="sr-only">{{ labels.bookCall }}</span>
-                    <span class="button-text-slide" aria-hidden="true">
-                      <span ref="bookCallText" class="button-text-slide__track">
-                        <span class="button-text-slide__line">{{ labels.bookCall }}</span>
-                        <span class="button-text-slide__line">{{ labels.bookCall }}</span>
-                      </span>
-                    </span>
-                    <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
-                  </NuxtLink>
-
-                  <a
-                    ref="visitWebsiteButton"
-                    :href="localizedProject.externalLink"
-                    target="_blank"
-                    rel="noreferrer"
-                    class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white/75 no-underline"
-                  >
-                    <span class="sr-only">{{ labels.visitWebsite }}</span>
-                    <span class="button-text-slide" aria-hidden="true">
-                      <span ref="visitWebsiteText" class="button-text-slide__track">
-                        <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
-                        <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
-                      </span>
-                    </span>
-                    <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
-                  </a>
-                </div>
-              </div>
-
-              <div>
-                <h2 class="case-study-heading">{{ labels.aboutTitle }}</h2>
-                <div class="case-study-copy">
-                  <p
-                    v-for="paragraph in splitTextIntoParagraphs(localizedProject.aboutCompany)"
-                    :key="paragraph"
-                  >
-                    {{ paragraph }}
-                  </p>
-                </div>
+            <div class="meta-row col-span-10 mt-10 grid grid-cols-3 gap-6 border-y border-white/15 py-6 max-sm:grid-cols-1 max-sm:gap-4 sm:mt-12">
+              <div v-for="item in metaItems" :key="item.label">
+                <p class="m-0 text-[11px] uppercase tracking-[0.16em] text-white/40">{{ item.label }}</p>
+                <p class="m-0 mt-1 font-manrope text-base text-white sm:text-lg">{{ item.value }}</p>
               </div>
             </div>
-          </section>
 
-          <template v-for="block in caseStudyFlow" :key="block.key">
-            <section
-              v-if="block.type === 'image'"
-              class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
-            >
-              <NuxtImg
-                :src="block.src"
-                :alt="block.alt"
-                class="mx-auto block w-full rounded-2xl border border-white/10 bg-white/[0.03]"
-              />
-            </section>
-
-            <section
-              v-else
-              class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
-            >
-              <h2 class="case-study-heading">{{ block.title }}</h2>
+            <div class="col-span-10 pt-[clamp(34px,5vw,56px)] md:col-span-5">
+              <h2 class="case-study-heading">{{ labels.summaryTitle }}</h2>
               <div class="case-study-copy">
                 <p
-                  v-for="paragraph in splitTextIntoParagraphs(block.body)"
+                  v-for="paragraph in splitTextIntoParagraphs(localizedProject.summary)"
                   :key="paragraph"
                 >
                   {{ paragraph }}
                 </p>
               </div>
-            </section>
-          </template>
+
+              <div class="mt-7 flex flex-wrap items-center gap-3">
+                <NuxtLink
+                  ref="bookCallButton"
+                  :to="contactLink"
+                  class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0f0f0f] no-underline"
+                >
+                  <span class="sr-only">{{ labels.bookCall }}</span>
+                  <span class="button-text-slide" aria-hidden="true">
+                    <span ref="bookCallText" class="button-text-slide__track">
+                      <span class="button-text-slide__line">{{ labels.bookCall }}</span>
+                      <span class="button-text-slide__line">{{ labels.bookCall }}</span>
+                    </span>
+                  </span>
+                  <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
+                </NuxtLink>
+
+                <a
+                  ref="visitWebsiteButton"
+                  :href="localizedProject.externalLink"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white/75 no-underline"
+                >
+                  <span class="sr-only">{{ labels.visitWebsite }}</span>
+                  <span class="button-text-slide" aria-hidden="true">
+                    <span ref="visitWebsiteText" class="button-text-slide__track">
+                      <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
+                      <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
+                    </span>
+                  </span>
+                  <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
+                </a>
+              </div>
+            </div>
+
+            <div class="col-span-10 pt-[clamp(34px,5vw,56px)] md:col-span-5">
+              <h2 class="case-study-heading">{{ labels.aboutTitle }}</h2>
+              <div class="case-study-copy">
+                <p
+                  v-for="paragraph in splitTextIntoParagraphs(localizedProject.aboutCompany)"
+                  :key="paragraph"
+                >
+                  {{ paragraph }}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section
+            v-if="galleryItems.length"
+            class="grid grid-cols-10 gap-4 pt-[clamp(48px,7vw,72px)] sm:gap-6"
+          >
+            <NuxtImg
+              v-for="item in galleryItems"
+              :key="item.key"
+              :src="item.src"
+              :alt="localizedProject.title"
+              class="block w-full rounded-2xl border border-white/10 bg-white/[0.03] col-span-10"
+              :class="item.span === 5 ? 'md:col-span-5' : 'md:col-span-10'"
+            />
+          </section>
 
           <section
             v-if="projectTestimonial"
-            class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
+            class="grid grid-cols-10 gap-x-4 pt-[clamp(48px,7vw,72px)] sm:gap-x-6"
           >
-            <div class="flex w-full flex-col gap-6 border-l-2 border-white/30 py-1 pl-6 sm:pl-8">
+            <div class="col-span-10 flex flex-col gap-6 border-l-2 border-white/30 py-1 pl-6 sm:pl-8 md:col-span-6">
               <p class="m-0 whitespace-pre-line font-inter text-base leading-[1.7] text-white/80 transition-colors duration-300 sm:text-lg">
                 {{ projectTestimonial.review }}
               </p>
@@ -329,20 +323,49 @@ useSeoMeta({
             </div>
           </section>
 
-          <section
-            v-if="nextProject"
-            class="mx-auto w-full max-w-[760px] pt-[clamp(48px,7vw,72px)]"
-          >
-            <ProjectDetailNextProject
-              :title="nextProject.title"
-              :link="nextProjectLink"
-              :cta-label="t('projects.cta')"
-            />
-          </section>
         </div>
       </article>
       </section>
 
+      <section
+        v-if="moreProjects.length"
+        class="more-projects mx-auto w-full border-t border-white/15 pt-12 sm:pt-16"
+      >
+        <div class="flex items-baseline justify-between gap-4">
+          <h2 class="case-study-heading !mb-0">{{ labels.moreProjects }}</h2>
+          <NuxtLink
+            :to="localePath('/projects')"
+            class="shrink-0 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
+          >
+            {{ t('projects.show_more') }}
+          </NuxtLink>
+        </div>
+
+        <div class="mt-8 grid gap-x-5 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
+          <NuxtLink
+            v-for="item in moreProjects"
+            :key="item.slug"
+            :to="localePath(`/projects/${item.slug}`)"
+            class="more-project-card group"
+            :aria-label="`${item.title} — ${t('projects.cta')}`"
+          >
+            <div class="more-project-card__media">
+              <NuxtImg
+                :src="item.image"
+                :alt="item.title"
+                class="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div class="mt-4 flex items-baseline justify-between gap-3 border-t border-white/15 pt-3">
+              <h3 class="font-manrope text-xl tracking-[-0.03em] text-white">{{ item.title }}</h3>
+              <span class="shrink-0 text-[10px] uppercase tracking-[0.14em] text-white/40">
+                {{ categoryLabel(item.categories[0]) }}
+              </span>
+            </div>
+          </NuxtLink>
+        </div>
+      </section>
     </div>
 
     <FooterSection />
@@ -404,4 +427,38 @@ useSeoMeta({
   }
 }
 
+.more-project-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 300ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.more-project-card:hover {
+  transform: translateY(-6px);
+}
+
+.more-project-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #191919;
+}
+
+.more-project-card:focus-visible {
+  outline: 2px solid #f0bf6c;
+  outline-offset: 7px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .more-project-card,
+  .more-project-card__media img {
+    transition: none;
+  }
+
+  .more-project-card:hover {
+    transform: none;
+  }
+}
 </style>

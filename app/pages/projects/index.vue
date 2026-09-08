@@ -72,7 +72,7 @@ useSeoMeta({
           :aria-label="`${project.title} — ${locale === 'fr' ? 'Voir le projet' : 'View project'}`"
         >
           <div class="project-showcase__media">
-            <NuxtImg :src="project.image" :alt="project.title" class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]" loading="lazy" />
+            <NuxtImg :src="project.image" :alt="project.title" class="h-full w-full object-cover" loading="lazy" />
             <span class="project-showcase__open" aria-hidden="true">↗</span>
           </div>
           <div class="mt-5 flex items-baseline justify-between gap-5 border-t border-white/15 pt-4">
@@ -120,10 +120,6 @@ useSeoMeta({
   color: inherit;
   text-decoration: none;
   transition: transform 300ms cubic-bezier(.22,1,.36,1);
-}
-
-.project-showcase:hover {
-  transform: translateY(-6px);
 }
 
 .project-showcase__media {
