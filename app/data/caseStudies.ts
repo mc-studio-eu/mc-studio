@@ -61,13 +61,13 @@ export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
     fr: {
       headline: 'Un site qui répond aux associations avant même le premier rendez-vous.',
       client: "Shika Consulting, cabinet d'expertise comptable et de commissariat aux comptes dédié aux associations, partout en France.",
-      problem: 'Une expertise pointue et 14 pages de contenu : le risque était que personne ne trouve sa réponse.',
+      problem: 'Un site de base trop générique, qui ne parlait pas à sa cible principale : les associations.',
       solution: "Un site de 14 pages organisé par profil d'association, avec simulateurs, page Tarifs et un parcours direct vers le rendez-vous.",
     },
     en: {
       headline: 'A website that answers nonprofits before the first meeting.',
       client: 'Shika Consulting, an accounting and statutory audit firm dedicated to nonprofits across France.',
-      problem: 'Specialist expertise and 14 pages of content: the risk was that nobody would find their answer.',
+      problem: 'A basic, overly generic website that did not speak to its main audience: nonprofits.',
       solution: 'A 14-page website organised by nonprofit profile, with simulators, a Pricing page and a direct path to booking a meeting.',
     },
   },
