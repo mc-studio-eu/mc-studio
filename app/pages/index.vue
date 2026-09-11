@@ -42,7 +42,7 @@ onMounted(() => {
   if (!prefersReducedMotion && heroWords.value.length > 1) {
     heroWordRotationTimer = window.setInterval(() => {
       currentHeroWordIndex.value = (currentHeroWordIndex.value + 1) % heroWords.value.length
-    }, 2600)
+    }, 1800)
   }
 
   if (prefersReducedMotion || !homeRoot.value) return
@@ -193,7 +193,7 @@ useSeoMeta({
             <p class="world-card__audience text-sm uppercase tracking-[0.18em]">{{ t('globalHome.worlds.business.label') }}</p>
             <h3 class="world-card__title mt-4 max-w-[470px] font-manrope text-[clamp(2.3rem,5vw,5rem)] leading-[0.96] tracking-[-0.06em]">{{ t('globalHome.worlds.business.title') }}</h3>
             <p class="world-card__body mt-5 max-w-[400px] text-base leading-7 text-white/65">{{ t('globalHome.worlds.business.body') }}</p>
-            <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold">Explore Business <span aria-hidden="true">→</span></span>
+            <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold">{{ t('globalHome.worlds.business.cta') }} <span class="world-card__cta-arrow" aria-hidden="true">→</span></span>
           </div>
         </NuxtLink>
 
@@ -206,7 +206,7 @@ useSeoMeta({
             <p class="world-card__audience text-sm uppercase tracking-[0.18em]">{{ t('globalHome.worlds.creators.label') }}</p>
             <h3 class="world-card__title mt-4 max-w-[470px] font-manrope text-[clamp(2.3rem,5vw,5rem)] leading-[0.96] tracking-[-0.06em] text-white">{{ t('globalHome.worlds.creators.title') }}</h3>
             <p class="world-card__body mt-5 max-w-[400px] text-base leading-7 text-white/65">{{ t('globalHome.worlds.creators.body') }}</p>
-            <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">Explore Creators <span aria-hidden="true">→</span></span>
+            <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">{{ t('globalHome.worlds.creators.cta') }} <span class="world-card__cta-arrow" aria-hidden="true">→</span></span>
           </div>
         </NuxtLink>
       </div>
@@ -224,22 +224,32 @@ useSeoMeta({
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  min-height: 600px;
+  min-height: 440px;
   flex-direction: column;
   overflow: hidden;
   border-radius: 22px;
-  padding: clamp(24px, 4vw, 48px);
+  padding: clamp(24px, 3.5vw, 40px);
   text-decoration: none;
+  transition: box-shadow 450ms ease;
 }
 
 .world-card--business { background: linear-gradient(145deg, #26211a 0%, #17130f 100%); box-shadow: inset 0 0 0 1px rgba(240,191,108,.2); }
 .world-card--business::after { content: ''; position: absolute; inset: auto -12% -30% 28%; height: 55%; border-radius: 50%; background: radial-gradient(circle, rgba(240,191,108,.3), transparent 65%); filter: blur(24px); }
 .world-card--creators { background: #c9baf2; box-shadow: inset 0 0 0 1px rgba(124,58,237,.18); }
 .world-card--creators .world-card__body { color: rgba(31, 24, 52, .82) !important; }
-.world-card__top { display: flex; align-items: center; justify-content: flex-end; }
+.world-card__top { position: absolute; top: clamp(24px, 3.5vw, 40px); right: clamp(24px, 3.5vw, 40px); display: flex; align-items: center; justify-content: flex-end; }
 .world-card__content { margin-top: auto; }
+.world-card__title { font-size: clamp(2.3rem, 4.4vw, 4.25rem); }
 .world-card__audience { color: #fff; font-weight: 600; opacity: .9; text-shadow: 0 1px 3px rgba(0,0,0,.18); }
-.world-card__arrow { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 22px; }
+.world-card__arrow { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 22px; transition: transform 450ms cubic-bezier(.22,1,.36,1), background 300ms ease, color 300ms ease, border-color 300ms ease; }
+.world-card__cta-arrow { display: inline-block; transition: transform 350ms cubic-bezier(.22,1,.36,1); }
+@media (hover: hover) {
+  .world-card--business:hover { box-shadow: inset 0 0 0 1px rgba(240,191,108,.38), 0 24px 60px -24px rgba(240,191,108,.28); }
+  .world-card--creators:hover { box-shadow: inset 0 0 0 1px rgba(124,58,237,.28), 0 24px 60px -24px rgba(201,186,242,.45); }
+  .world-card:hover .world-card__arrow { transform: rotate(45deg); background: #fff; border-color: #fff; color: #17130f; }
+  .world-card--creators:hover .world-card__arrow { color: #6d4fd8; }
+  .world-card:hover .world-card__cta-arrow { transform: translateX(5px); }
+}
 .global-home__hero { isolation: isolate; }
 .global-home__hero::before { content: ''; position: absolute; inset: 8% 10% 2%; z-index: -1; border-radius: 999px; background: radial-gradient(ellipse at center, rgba(240,191,108,.13), transparent 66%); filter: blur(12px); pointer-events: none; }
 .global-home__hero-clouds { position: absolute; inset: 0; z-index: -3; width: 100%; max-width: none; height: 100%; object-fit: cover; object-position: center; opacity: .92; filter: saturate(.9) contrast(1.06); pointer-events: none; }
@@ -292,7 +302,8 @@ useSeoMeta({
 @media (max-width: 640px) {
   .global-home__worlds { overflow: hidden; }
   .global-home__worlds > .grid { min-width: 0; }
-  .world-card { min-height: 420px; border-radius: 18px; padding: 22px; }
+  .world-card { min-height: 340px; border-radius: 18px; padding: 22px; }
+  .world-card__top { top: 22px; right: 22px; }
   .world-card__arrow { width: 40px; height: 40px; font-size: 19px; }
   .world-card__audience { font-size: 11px; letter-spacing: .16em; }
   .world-card__title { max-width: 100%; font-size: clamp(29px,8vw,36px); line-height: 1.02; letter-spacing: -.055em; overflow-wrap: anywhere; }
@@ -315,7 +326,7 @@ useSeoMeta({
 }
 
 @media (min-width: 1024px) {
-  .world-card__title { min-height: 3.84em; }
+  .world-card__title { min-height: 2.88em; }
   .world-card__body { min-height: 3.5rem; }
 }
 
@@ -324,6 +335,8 @@ useSeoMeta({
   .global-home__hero-reference-track { animation: none; }
   .global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: none; }
   .global-home__hero-orb, .project-teaser { transition: none; animation: none; transform: none; }
+  .world-card__arrow, .world-card__cta-arrow { transition: none; }
+  .world-card:hover .world-card__arrow, .world-card:hover .world-card__cta-arrow { transform: none; }
   .global-home.has-js .js-reveal, .global-home.has-js .js-reveal.is-visible { opacity: 1; transform: none; transition: none; }
 }
 </style>

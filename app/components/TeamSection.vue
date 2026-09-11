@@ -57,9 +57,6 @@ const titleWithBreaks = (key: string) => {
           <div class="team-card__inner">
             <div class="p-6 sm:p-8 md:p-10">
               <h3 class="team-title" v-html="titleWithBreaks('team.cards.collective.title')"></h3>
-              <p class="team-paragraph">
-                {{ t('team.cards.collective.text') }}
-              </p>
             </div>
 
             <div class="px-6 sm:px-8 md:px-10 pb-6 sm:pb-8 md:pb-10">
@@ -108,9 +105,6 @@ const titleWithBreaks = (key: string) => {
           <div class="team-card__inner">
             <div class="p-6 sm:p-8 md:p-10">
               <h3 class="team-title" v-html="titleWithBreaks('team.cards.specialists.title')"></h3>
-              <p class="team-paragraph">
-                {{ t('team.cards.specialists.text') }}
-              </p>
             </div>
 
             <div class="px-6 sm:px-8 md:px-10 pb-8">
@@ -182,7 +176,6 @@ const titleWithBreaks = (key: string) => {
   background: color-mix(in srgb, var(--bg-secondary) 72%, transparent);
   overflow: hidden;
   position: relative;
-  min-height: 420px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
@@ -242,15 +235,6 @@ const titleWithBreaks = (key: string) => {
 .team-title__line--secondary {
   margin-top: 8px;
   color: color-mix(in srgb, var(--text-primary) 84%, transparent);
-}
-
-.team-paragraph {
-  font-family: var(--font-inter, ui-sans-serif);
-  font-size: 0.95rem;
-  line-height: 1.65;
-  margin-top: 14px;
-  max-width: 62ch;
-  color: var(--text-secondary);
 }
 
 .team-pill {

@@ -886,14 +886,16 @@
       "title": "Two worlds. One studio.",
       "caption": "Choose your playground.",
       "business": {
-        "label": "For Businesses",
-        "title": "Products that move businesses forward.",
-        "body": "Websites, platforms, SaaS and business applications designed around your real challenges."
+        "label": "Businesses",
+        "title": "Move your business forward.",
+        "body": "Branding, websites, SaaS and business tools to grow your company.",
+        "cta": "Discover Business"
       },
       "creators": {
-        "label": "Content Creators",
-        "title": "Products that expand creator universes.",
-        "body": "Useful, desirable applications designed around your audience and your business model."
+        "label": "Creators",
+        "title": "Turn your audience into a product.",
+        "body": "Apps built around your community and your world.",
+        "cta": "Discover Creators"
       }
     },
     "expertise": {

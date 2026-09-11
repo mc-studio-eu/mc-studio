@@ -153,13 +153,23 @@ useSeoMeta({
   font-size: 20px;
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity 250ms ease, transform 250ms ease;
+  transition: opacity 250ms ease, transform 450ms cubic-bezier(.22,1,.36,1), background 300ms ease, color 300ms ease, border-color 300ms ease;
 }
 
 .project-showcase:hover .project-showcase__open,
 .project-showcase:focus-visible .project-showcase__open {
   opacity: 1;
   transform: translateY(0);
+}
+
+@media (hover: hover) {
+  .project-showcase:hover .project-showcase__open,
+  .project-showcase:focus-visible .project-showcase__open {
+    transform: translateY(0) rotate(45deg);
+    border-color: #fff;
+    background: #fff;
+    color: #17130f;
+  }
 }
 
 .project-showcase:focus-visible {
@@ -193,6 +203,11 @@ useSeoMeta({
   }
 
   .project-showcase:hover {
+    transform: none;
+  }
+
+  .project-showcase:hover .project-showcase__open,
+  .project-showcase:focus-visible .project-showcase__open {
     transform: none;
   }
 }

@@ -8,8 +8,8 @@
     "back": "Retour",
     "backHome": "Retour à l'accueil",
     "backPortfolio": "Retour au portfolio",
-    "bookCall": "Apply",
-    "bookCallShort": "Apply",
+    "bookCall": "Candidater",
+    "bookCallShort": "Candidater",
     "seePortfolio": "Voir le portfolio",
     "seeProject": "Voir le projet",
     "view": "Voir",
@@ -18,7 +18,7 @@
   "nav": {
     "label": "Navigation principale",
     "portfolio": "Portfolio",
-    "appointment": "Apply"
+    "appointment": "Candidater"
   },
   "home": {
     "seo": {

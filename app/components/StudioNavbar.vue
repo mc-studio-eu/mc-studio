@@ -23,7 +23,7 @@ useTextSlideAnimation(mobileCtaBtn, mobileCtaWrapper)
 
 const copy = computed(() => {
   const cta = props.universe === 'creator'
-    ? 'Apply'
+    ? locale.value === 'fr' ? 'Candidater' : 'Apply'
     : locale.value === 'fr' ? 'Démarrer un projet' : 'Start a project'
 
   return locale.value === 'fr'

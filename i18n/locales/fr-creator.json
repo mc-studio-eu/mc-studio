@@ -21,7 +21,6 @@
             "projects": "+10 projets réalisés",
             "rotating_stats": [
                 "+10 projets réalisés",
-                "10 000 users générés",
                 "+5 ans d'expériences"
             ],
             "location": [
@@ -56,20 +55,20 @@
     },
     "case_study": {
         "badge": "Case Study",
-        "title": "Maison AWL — <span class=\"text-gradient\">180k abonnés</span>, 10 000 users.",
-        "subtitle": "Nous avons accompagné Maison AWL dans la conception et le développement de sa plateforme. Résultat : 10 000 utilisateurs actifs issus directement de sa communauté.",
+        "title": "Maison AWL — <span class=\"text-gradient\">180k abonnés</span>, une plateforme qui lui appartient.",
+        "subtitle": "Nous avons accompagné Maison AWL de l'idée au lancement : une marketplace qui connecte sa communauté aux prestataires formés à sa méthode, du premier message jusqu'au paiement.",
         "stats": {
             "followers": {
                 "value": "180k",
-                "label": "Abonnés"
+                "label": "Abonnés au lancement"
             },
-            "users": {
-                "value": "10 000",
-                "label": "Utilisateurs"
+            "spaces": {
+                "value": "3",
+                "label": "Espaces : client, prestataire, admin"
             },
-            "conversion": {
-                "value": "5.5%",
-                "label": "Taux de conversion"
+            "payments": {
+                "value": "Stripe",
+                "label": "Paiements intégrés via Connect"
             }
         },
         "quote": "La force d'un créateur, c'est sa distribution. On transforme cette audience en utilisateurs d'un produit concret.",
@@ -230,7 +229,7 @@
             },
             "5": {
                 "question": "D'autres créateurs ont déjà fait ça ?",
-                "answer": "Oui ! Nous avons travaillé avec Maison AWL (180k abonnés) : 10 000 utilisateurs sur la plateforme. Et c'est une tendance forte — de plus en plus de créateurs développent leur propre app pour diversifier leurs revenus et offrir plus de valeur à leur communauté."
+                "answer": "Oui ! Nous avons conçu et développé la plateforme de Maison AWL (180k abonnés), lancée directement auprès de sa communauté. Et c'est une tendance forte — de plus en plus de créateurs développent leur propre app pour diversifier leurs revenus et offrir plus de valeur à leur communauté."
             }
         }
     },

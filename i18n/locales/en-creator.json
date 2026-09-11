@@ -21,7 +21,6 @@
             "projects": "+10 projects delivered",
             "rotating_stats": [
                 "+10 projects delivered",
-                "10,000 users generated",
                 "+5 years of experience"
             ],
             "location": [
@@ -56,20 +55,20 @@
     },
     "case_study": {
         "badge": "Case Study",
-        "title": "Maison AWL — <span class=\"text-gradient\">180k followers</span>, 10,000 users.",
-        "subtitle": "We helped Maison AWL design and build their platform. Result: 10,000 active users directly from their community.",
+        "title": "Maison AWL — <span class=\"text-gradient\">180k followers</span>, a platform of its own.",
+        "subtitle": "We took Maison AWL from idea to launch: a marketplace connecting its community with professionals trained in its method, from first message to payment.",
         "stats": {
             "followers": {
                 "value": "180k",
-                "label": "Followers"
+                "label": "Followers at launch"
             },
-            "users": {
-                "value": "10,000",
-                "label": "Users"
+            "spaces": {
+                "value": "3",
+                "label": "Spaces: client, provider, admin"
             },
-            "conversion": {
-                "value": "5.5%",
-                "label": "Conversion rate"
+            "payments": {
+                "value": "Stripe",
+                "label": "Built-in payments via Connect"
             }
         },
         "quote": "A creator's strength is their distribution. We turn that audience into users of a real product.",
@@ -230,7 +229,7 @@
             },
             "5": {
                 "question": "Have other creators done this?",
-                "answer": "Yes! We worked with Maison AWL (180k followers): 10,000 users on the platform. And it's a strong trend — more and more creators are developing their own app to diversify revenue and offer more value to their community."
+                "answer": "Yes! We designed and built Maison AWL's platform (180k followers), launched directly to its community. And it's a strong trend — more and more creators are developing their own app to diversify revenue and offer more value to their community."
             }
         }
     },

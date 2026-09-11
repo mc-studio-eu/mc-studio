@@ -887,13 +887,15 @@
       "caption": "Choisissez votre terrain de jeu.",
       "business": {
         "label": "Entreprises",
-        "title": "Des produits qui font grandir les entreprises.",
-        "body": "Sites web, plateformes, SaaS et applications métier conçus autour de vos enjeux réels."
+        "title": "Faites avancer votre business.",
+        "body": "Branding, sites, SaaS et outils métier pour faire grandir votre entreprise.",
+        "cta": "Découvrir Business"
       },
       "creators": {
-        "label": "Créateurs de contenu",
-        "title": "Des produits qui prolongent les univers créateurs.",
-        "body": "Des applications utiles, désirables et pensées autour de votre audience et de votre modèle."
+        "label": "Créateurs",
+        "title": "Transformez votre audience en produit.",
+        "body": "Des applications pensées pour votre communauté et votre univers.",
+        "cta": "Découvrir Creators"
       }
     },
     "expertise": {

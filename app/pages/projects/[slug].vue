@@ -1,37 +1,41 @@
 <script setup lang="ts">
 import { findProjectBySlug, projects } from '../../data/projects'
-import type { LocalizedValue, Project } from '../../data/projects'
+import type { Project } from '../../data/projects'
+import { findCaseStudyBySlug } from '../../data/caseStudies'
+import type { CaseStudy } from '../../data/caseStudies'
 
 type LocaleKey = 'fr' | 'en'
 
 const PAGE_LABELS = {
   fr: {
     back: 'Retour aux projets',
-    summaryTitle: 'Résumé',
-    aboutTitle: 'À propos',
     visitWebsite: 'Visiter le site',
     bookCall: 'Réserver un appel',
-    industry: 'Secteur',
-    type: 'Type de projet',
-    companySize: 'Taille',
+    keyFacts: 'Infos clés',
+    client: 'Le client',
+    challenge: 'Le challenge',
+    objectives: 'Les objectifs',
+    approach: 'Notre approche',
+    solution: 'La solution',
+    features: 'Fonctionnalités clés',
+    result: 'Le résultat',
     moreProjects: 'Autres projets',
   },
   en: {
     back: 'Back to projects',
-    summaryTitle: 'Summary',
-    aboutTitle: 'About',
     visitWebsite: 'Visit website',
     bookCall: 'Book a call',
-    industry: 'Industry',
-    type: 'Project type',
-    companySize: 'Company size',
+    keyFacts: 'Key facts',
+    client: 'The client',
+    challenge: 'The challenge',
+    objectives: 'Objectives',
+    approach: 'Our approach',
+    solution: 'The solution',
+    features: 'Key features',
+    result: 'The result',
     moreProjects: 'More projects',
   },
 } satisfies Record<LocaleKey, Record<string, string>>
-
-function getLocalizedValue<T>(value: LocalizedValue<T>, localeKey: LocaleKey): T {
-  return value[localeKey]
-}
 
 const route = useRoute()
 const localePath = useLocalePath()
@@ -41,28 +45,20 @@ const currentLocale = computed<LocaleKey>(() => (locale.value === 'en' ? 'en' : 
 const labels = computed(() => PAGE_LABELS[currentLocale.value])
 const projectSlug = computed(() => String(route.params.slug ?? ''))
 const project = computed<Project | undefined>(() => findProjectBySlug(projectSlug.value))
+const localizedCaseStudy = computed(() => findCaseStudyBySlug(projectSlug.value))
 
-if (!project.value) {
+if (!project.value || !localizedCaseStudy.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Project not found',
   })
 }
 
-const localizedProject = computed(() => {
-  const currentProject = project.value!
-  const localeKey = currentLocale.value
+const localizedProject = computed(() => project.value!)
+const caseStudy = computed<CaseStudy>(() => localizedCaseStudy.value![currentLocale.value])
 
-  return {
-    ...currentProject,
-    summary: getLocalizedValue(currentProject.summary, localeKey),
-    aboutCompany: getLocalizedValue(currentProject.aboutCompany, localeKey),
-    industry: getLocalizedValue(currentProject.industry, localeKey),
-    supportBullets: getLocalizedValue(currentProject.supportBullets, localeKey),
-    challenges: getLocalizedValue(currentProject.challenges, localeKey),
-    actions: getLocalizedValue(currentProject.actions, localeKey),
-  }
-})
+const formatIndex = (index: number) => String(index + 1).padStart(2, '0')
+const projectLink = (slug: string) => localePath(`/projects/${slug}`)
 
 const backToProjectsLink = computed(() => localePath('/projects'))
 const contactLink = computed(() => localePath('/contact'))
@@ -73,29 +69,6 @@ const visitWebsiteText = ref<HTMLElement | null>(null)
 
 useTextSlideAnimation(bookCallButton, bookCallText)
 useTextSlideAnimation(visitWebsiteButton, visitWebsiteText)
-
-const splitTextIntoParagraphs = (text: string) => {
-  const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map((sentence) => sentence.trim()) ?? [text]
-  const paragraphs: string[] = []
-  let current = ''
-
-  for (const sentence of sentences) {
-    const next = current ? `${current} ${sentence}` : sentence
-
-    if (current && next.length > 220) {
-      paragraphs.push(current)
-      current = sentence
-    } else {
-      current = next
-    }
-  }
-
-  if (current) {
-    paragraphs.push(current)
-  }
-
-  return paragraphs
-}
 
 const galleryImages = computed(() => {
   const heroImage = localizedProject.value.image
@@ -129,6 +102,11 @@ const galleryItems = computed<GalleryItem[]>(() => {
   return items
 })
 
+// The gallery is split in two so screenshots break up the text instead of stacking in one block
+const GALLERY_FIRST_BLOCK_SIZE = 3
+const galleryFirstBlock = computed(() => galleryItems.value.slice(0, GALLERY_FIRST_BLOCK_SIZE))
+const gallerySecondBlock = computed(() => galleryItems.value.slice(GALLERY_FIRST_BLOCK_SIZE))
+
 const projectTestimonial = computed(() => {
   const currentProject = project.value!
 
@@ -147,22 +125,6 @@ const projectTestimonial = computed(() => {
 const categoryLabelKey = (category: string) => category.replace('-', '_')
 const categoryLabel = (category: string) => t(`projects.filters.${categoryLabelKey(category)}`)
 
-const eyebrowLabel = computed(() => project.value!.categories.map((category) => categoryLabel(category)).join(' · '))
-
-const metaItems = computed(() => {
-  const currentProject = project.value!
-  const items: { label: string; value: string }[] = [
-    { label: labels.value.industry, value: localizedProject.value.industry },
-    { label: labels.value.type, value: eyebrowLabel.value },
-  ]
-
-  if (currentProject.companySize && currentProject.companySize !== '—') {
-    items.push({ label: labels.value.companySize, value: currentProject.companySize })
-  }
-
-  return items
-})
-
 const moreProjects = computed(() => {
   const currentIndex = projects.findIndex((item) => item.slug === localizedProject.value.slug)
 
@@ -180,10 +142,10 @@ const moreProjects = computed(() => {
 })
 
 useSeoMeta({
-  title: `${localizedProject.value.title} | MC Studio`,
-  description: localizedProject.value.summary,
-  ogTitle: `${localizedProject.value.title} | MC Studio`,
-  ogDescription: localizedProject.value.summary,
+  title: () => `${localizedProject.value.title} | MC Studio`,
+  description: () => caseStudy.value.subtitle,
+  ogTitle: () => `${localizedProject.value.title} | MC Studio`,
+  ogDescription: () => caseStudy.value.subtitle,
 })
 </script>
 
@@ -207,38 +169,23 @@ useSeoMeta({
                 <span>{{ labels.back }}</span>
               </NuxtLink>
 
+              <p class="m-0 mt-10 text-[11px] uppercase tracking-[0.16em] text-white/45 sm:mt-12">
+                {{ caseStudy.category }}
+              </p>
+
               <h1 class="case-study-title m-0 mt-4 max-w-[1000px] text-balance font-manrope font-medium tracking-[-0.07em] text-white">
                 {{ localizedProject.title }}
               </h1>
-            </div>
 
-            <div class="col-span-10 mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] sm:mt-14">
-              <NuxtImg
-                :src="localizedProject.image"
-                :alt="localizedProject.title"
-                class="block aspect-[16/9] w-full object-cover"
-              />
-            </div>
+              <p class="case-study-headline m-0 mt-8 max-w-[920px] text-balance font-manrope font-medium tracking-[-0.03em] text-white">
+                {{ caseStudy.headline }}
+              </p>
 
-            <div class="meta-row col-span-10 mt-10 grid grid-cols-3 gap-6 border-y border-white/15 py-6 max-sm:grid-cols-1 max-sm:gap-4 sm:mt-12">
-              <div v-for="item in metaItems" :key="item.label">
-                <p class="m-0 text-[11px] uppercase tracking-[0.16em] text-white/40">{{ item.label }}</p>
-                <p class="m-0 mt-1 font-manrope text-base text-white sm:text-lg">{{ item.value }}</p>
-              </div>
-            </div>
+              <p class="case-study-copy m-0 mt-5 max-w-[700px] sm:text-lg">
+                {{ caseStudy.subtitle }}
+              </p>
 
-            <div class="col-span-10 pt-[clamp(34px,5vw,56px)] md:col-span-5">
-              <h2 class="case-study-heading">{{ labels.summaryTitle }}</h2>
-              <div class="case-study-copy">
-                <p
-                  v-for="paragraph in splitTextIntoParagraphs(localizedProject.summary)"
-                  :key="paragraph"
-                >
-                  {{ paragraph }}
-                </p>
-              </div>
-
-              <div class="mt-7 flex flex-wrap items-center gap-3">
+              <div class="mt-8 flex flex-wrap items-center gap-3">
                 <NuxtLink
                   ref="bookCallButton"
                   :to="contactLink"
@@ -273,25 +220,84 @@ useSeoMeta({
               </div>
             </div>
 
-            <div class="col-span-10 pt-[clamp(34px,5vw,56px)] md:col-span-5">
-              <h2 class="case-study-heading">{{ labels.aboutTitle }}</h2>
+            <div class="col-span-10 mt-12 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] sm:mt-16">
+              <NuxtImg
+                :src="localizedProject.image"
+                :alt="localizedProject.title"
+                class="block aspect-[16/9] w-full object-cover"
+              />
+            </div>
+
+            <div class="col-span-10 mt-10 border-y border-white/15 py-6 sm:mt-12">
+              <h2 class="sr-only">{{ labels.keyFacts }}</h2>
+              <ul class="m-0 grid list-none gap-x-6 gap-y-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+                <li v-for="(fact, index) in caseStudy.keyFacts" :key="fact" class="flex gap-3">
+                  <span class="pt-[3px] text-[11px] tracking-[0.16em] text-white/40">{{ formatIndex(index) }}</span>
+                  <span class="font-manrope text-base text-white">{{ fact }}</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Client & challenge -->
+          <section class="case-study-section grid grid-cols-10 gap-x-4 gap-y-12 sm:gap-x-6">
+            <div class="col-span-10 md:col-span-4">
+              <h2 class="case-study-heading">{{ caseStudy.clientTitle ?? labels.client }}</h2>
               <div class="case-study-copy">
-                <p
-                  v-for="paragraph in splitTextIntoParagraphs(localizedProject.aboutCompany)"
-                  :key="paragraph"
-                >
-                  {{ paragraph }}
-                </p>
+                <p v-for="paragraph in caseStudy.client" :key="paragraph">{{ paragraph }}</p>
+              </div>
+              <NuxtLink
+                v-if="caseStudy.clientLink"
+                :to="projectLink(caseStudy.clientLink.slug)"
+                class="case-study-link mt-6"
+              >
+                {{ caseStudy.clientLink.label }}
+                <UIcon name="i-lucide-arrow-right" class="h-4 w-4" />
+              </NuxtLink>
+            </div>
+
+            <div class="col-span-10 md:col-span-5 md:col-start-6">
+              <h2 class="case-study-heading">{{ labels.challenge }}</h2>
+              <div class="case-study-copy case-study-copy--lead">
+                <p v-for="paragraph in caseStudy.challenge" :key="paragraph" class="whitespace-pre-line">{{ paragraph }}</p>
               </div>
             </div>
           </section>
 
+          <!-- Objectives -->
+          <section class="case-study-section">
+            <h2 class="case-study-heading">{{ labels.objectives }}</h2>
+            <p v-if="caseStudy.objectivesIntro" class="case-study-copy m-0 mb-6">{{ caseStudy.objectivesIntro }}</p>
+            <ol class="m-0 mt-8 grid list-none gap-x-6 gap-y-6 p-0 sm:grid-cols-2">
+              <li
+                v-for="(objective, index) in caseStudy.objectives"
+                :key="objective"
+                class="flex gap-4 border-t border-white/15 pt-5"
+              >
+                <span class="pt-1 text-[11px] tracking-[0.16em] text-white/40">{{ formatIndex(index) }}</span>
+                <span class="font-manrope text-lg leading-snug text-white sm:text-xl">{{ objective }}</span>
+              </li>
+            </ol>
+          </section>
+
+          <!-- Approach -->
+          <section class="case-study-section">
+            <h2 class="case-study-heading">{{ labels.approach }}</h2>
+            <div class="mt-8 grid gap-x-10 gap-y-10 md:grid-cols-2">
+              <article v-for="(step, index) in caseStudy.approach" :key="step.title" class="border-t border-white/15 pt-5">
+                <p class="m-0 font-manrope text-sm text-[#f0bf6c]">{{ formatIndex(index) }}</p>
+                <h3 class="m-0 mt-3 font-manrope text-xl font-medium tracking-[-0.02em] text-white sm:text-2xl">{{ step.title }}</h3>
+                <p class="case-study-copy m-0 mt-3">{{ step.body }}</p>
+              </article>
+            </div>
+          </section>
+
           <section
-            v-if="galleryItems.length"
-            class="grid grid-cols-10 gap-4 pt-[clamp(48px,7vw,72px)] sm:gap-6"
+            v-if="galleryFirstBlock.length"
+            class="grid grid-cols-10 gap-4 pt-[clamp(56px,8vw,96px)] sm:gap-6"
           >
             <NuxtImg
-              v-for="item in galleryItems"
+              v-for="item in galleryFirstBlock"
               :key="item.key"
               :src="item.src"
               :alt="localizedProject.title"
@@ -300,12 +306,131 @@ useSeoMeta({
             />
           </section>
 
+          <!-- Solution -->
+          <section class="case-study-section grid grid-cols-10 gap-x-4 gap-y-8 sm:gap-x-6">
+            <div class="col-span-10 md:col-span-4">
+              <h2 class="case-study-heading">{{ labels.solution }}</h2>
+              <p v-if="caseStudy.solutionIntro" class="case-study-copy m-0">{{ caseStudy.solutionIntro }}</p>
+            </div>
+
+            <div class="col-span-10 flex flex-col gap-8 md:col-span-6">
+              <div v-for="(group, index) in caseStudy.solution" :key="group.title ?? index">
+                <h3 v-if="group.title" class="m-0 mb-3 text-[11px] uppercase tracking-[0.16em] text-white/45">{{ group.title }}</h3>
+                <ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+                  <li
+                    v-for="item in group.items"
+                    :key="item"
+                    class="rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-sm text-white/80"
+                  >
+                    {{ item }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Features -->
+          <section class="case-study-section">
+            <h2 class="case-study-heading">{{ labels.features }}</h2>
+            <div
+              class="mt-8 grid gap-4 sm:gap-6"
+              :class="caseStudy.features.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3'"
+            >
+              <article
+                v-for="feature in caseStudy.features"
+                :key="feature.title"
+                class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7"
+              >
+                <h3 class="m-0 font-manrope text-xl font-medium leading-snug tracking-[-0.02em] text-white">{{ feature.title }}</h3>
+                <p class="case-study-copy m-0 mt-4">{{ feature.body }}</p>
+              </article>
+            </div>
+          </section>
+
+          <section
+            v-if="gallerySecondBlock.length"
+            class="grid grid-cols-10 gap-4 pt-[clamp(56px,8vw,96px)] sm:gap-6"
+          >
+            <NuxtImg
+              v-for="item in gallerySecondBlock"
+              :key="item.key"
+              :src="item.src"
+              :alt="localizedProject.title"
+              class="block w-full rounded-2xl border border-white/10 bg-white/[0.03] col-span-10"
+              :class="item.span === 5 ? 'md:col-span-5' : 'md:col-span-10'"
+            />
+          </section>
+
+          <!-- Result -->
+          <section class="case-study-section">
+            <h2 class="case-study-heading">{{ labels.result }}</h2>
+
+            <dl
+              v-if="caseStudy.resultStats?.length"
+              class="m-0 mt-8 grid gap-4 sm:gap-6"
+              :class="caseStudy.resultStats.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'"
+            >
+              <div
+                v-for="stat in caseStudy.resultStats"
+                :key="stat.label"
+                class="rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+              >
+                <dt class="sr-only">{{ stat.label }}</dt>
+                <dd class="m-0 font-manrope text-5xl font-medium tracking-[-0.05em] text-white sm:text-6xl">{{ stat.value }}</dd>
+                <dd class="m-0 mt-2 text-sm text-white/55">{{ stat.label }}</dd>
+              </div>
+            </dl>
+
+            <div class="case-study-copy case-study-copy--lead mt-8 max-w-[760px]">
+              <p v-for="paragraph in caseStudy.result" :key="paragraph">{{ paragraph }}</p>
+            </div>
+
+            <p
+              v-if="caseStudy.resultEmphasis"
+              class="m-0 mt-8 max-w-[760px] text-balance font-manrope text-2xl font-medium leading-tight tracking-[-0.03em] text-white sm:text-3xl"
+            >
+              {{ caseStudy.resultEmphasis }}
+            </p>
+
+            <NuxtLink
+              v-if="caseStudy.resultLink"
+              :to="projectLink(caseStudy.resultLink.slug)"
+              class="case-study-link mt-8"
+            >
+              {{ caseStudy.resultLink.label }}
+              <UIcon name="i-lucide-arrow-right" class="h-4 w-4" />
+            </NuxtLink>
+          </section>
+
+          <section
+            v-if="caseStudy.quote && !projectTestimonial"
+            class="grid grid-cols-10 gap-x-4 pt-[clamp(56px,8vw,96px)] sm:gap-x-6"
+          >
+            <figure class="col-span-10 m-0 border-l-2 border-white/30 py-1 pl-6 sm:pl-8 md:col-span-7">
+              <blockquote class="m-0 text-balance font-manrope text-2xl font-medium leading-tight tracking-[-0.03em] text-white sm:text-3xl">
+                « {{ caseStudy.quote }} »
+              </blockquote>
+              <figcaption class="mt-5 font-inter text-sm text-white/50">{{ localizedProject.title }}</figcaption>
+            </figure>
+          </section>
+
           <section
             v-if="projectTestimonial"
-            class="grid grid-cols-10 gap-x-4 pt-[clamp(48px,7vw,72px)] sm:gap-x-6"
+            class="grid grid-cols-10 gap-x-4 pt-[clamp(56px,8vw,96px)] sm:gap-x-6"
           >
-            <div class="col-span-10 flex flex-col gap-6 border-l-2 border-white/30 py-1 pl-6 sm:pl-8 md:col-span-6">
-              <p class="m-0 whitespace-pre-line font-inter text-base leading-[1.7] text-white/80 transition-colors duration-300 sm:text-lg">
+            <div class="col-span-10 flex flex-col gap-6 border-l-2 border-white/30 py-1 pl-6 sm:pl-8 md:col-span-7">
+              <p v-if="caseStudy.testimonialContext" class="m-0 text-[11px] uppercase tracking-[0.16em] text-white/45">
+                {{ caseStudy.testimonialContext }}
+              </p>
+
+              <p
+                v-if="caseStudy.testimonialHighlight"
+                class="m-0 text-balance font-manrope text-2xl font-medium leading-tight tracking-[-0.03em] text-white sm:text-3xl"
+              >
+                « {{ caseStudy.testimonialHighlight }} »
+              </p>
+
+              <p class="m-0 whitespace-pre-line font-inter text-base leading-[1.7] text-white/70 transition-colors duration-300 sm:text-lg">
                 {{ projectTestimonial.review }}
               </p>
 
@@ -322,7 +447,6 @@ useSeoMeta({
               </div>
             </div>
           </section>
-
         </div>
       </article>
       </section>
@@ -402,6 +526,34 @@ useSeoMeta({
 
 .case-study-copy p + p {
   margin-top: 1.15em;
+}
+
+.case-study-copy--lead {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.case-study-headline {
+  font-size: clamp(1.5rem, 3.2vw, 2.6rem);
+  line-height: 1.12;
+}
+
+.case-study-section {
+  padding-top: clamp(56px, 8vw, 96px);
+}
+
+.case-study-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f0bf6c;
+  text-decoration: none;
+  transition: gap 200ms ease;
+}
+
+.case-study-link:hover {
+  gap: 12px;
 }
 
 .button-text-slide {
