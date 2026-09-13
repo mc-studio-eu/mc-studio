@@ -25,7 +25,8 @@
     "subtitle": "We help startups and companies create their brand identity, website and app, from idea to launch.",
     "cta": {
       "book": "Book a call",
-      "whatsapp": "Chat on WhatsApp"
+      "whatsapp": "Chat on WhatsApp",
+      "portfolio": "View portfolio"
     },
     "clients": {
       "aria_label": "Clients supported by MC Studio"

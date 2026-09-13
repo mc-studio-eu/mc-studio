@@ -25,7 +25,8 @@
     "subtitle": "Nous accompagnons startups et entreprises dans la création de leur identité, site web et application, de l'idée jusqu'au lancement.",
     "cta": {
       "book": "Réserver un appel",
-      "whatsapp": "Discuter sur WhatsApp"
+      "whatsapp": "Discuter sur WhatsApp",
+      "portfolio": "Voir le portfolio"
     },
     "clients": {
       "aria_label": "Clients accompagnés par MC Studio"

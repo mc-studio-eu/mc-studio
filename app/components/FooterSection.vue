@@ -5,7 +5,7 @@ const { t } = useI18n()
 
 <template>
   <footer id="footer" class="bg-[#111111] text-white">
-    <div class="max-w-[1280px] mx-auto px-6 md:px-8">
+    <div class="px-[clamp(20px,2.05vw,42px)]">
       
       <!-- Main Footer Content -->
       <div class="py-16 md:py-20">

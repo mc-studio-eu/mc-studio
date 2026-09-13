@@ -41,19 +41,18 @@ useTextSlideAnimation(secondaryBtn, secondaryWrapper)
     </NuxtLink>
     
     <!-- Secondary CTA avec text slide effect -->
-    <a 
+    <NuxtLink
       ref="secondaryBtn"
-      href="https://api.whatsapp.com/send/?phone=%2B33781724683&text&type=phone_number&app_absent=0" 
-      target="_blank" 
-      class="secondary-btn group flex items-center justify-center gap-2.5 px-5 py-2.5 rounded-xl font-medium text-sm text-[#f0eadb] cursor-pointer transition-all duration-300 no-underline"
+      :to="localePath('/projects')"
+      class="secondary-btn group flex items-center justify-center gap-2.5 px-5 py-2.5 rounded-full bg-black font-medium text-sm text-white cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.25)] transition-all duration-300 no-underline"
     >
       <span class="text-slide-container h-[20px]">
         <span ref="secondaryWrapper" class="text-slide-wrapper">
-          <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('hero.cta.whatsapp') }}</span>
-          <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('hero.cta.whatsapp') }}</span>
+          <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('hero.cta.portfolio') }}</span>
+          <span class="text-slide-text h-[20px] leading-[20px]">{{ $t('hero.cta.portfolio') }}</span>
         </span>
       </span>
-    </a>
+    </NuxtLink>
   </div>
 </template>
 
