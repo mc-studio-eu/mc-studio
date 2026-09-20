@@ -26,7 +26,7 @@ const navItems = [
   { key: 'projects', id: 'projets' },
   { key: 'services', id: 'services' },
   { key: 'reviews', id: 'avis' },
-  { key: 'pricing', id: 'tarifs' },
+  { key: 'offers', id: 'offres' },
   { key: 'faq', id: 'faq' }
 ]
 
@@ -100,7 +100,7 @@ onMounted(() => {
     isScrolled.value = window.scrollY > 200
     
     // Detect active section based on scroll position
-    const sections = ['projets', 'services', 'avis', 'tarifs', 'faq']
+    const sections = ['projets', 'services', 'avis', 'offres', 'faq']
     for (const section of sections.reverse()) {
       const el = document.getElementById(section)
       if (el) {

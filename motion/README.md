@@ -1,89 +1,84 @@
-# MC Studio — Motion Reel (Remotion)
+# MC Studio — From idea to impact
 
-Film de motion design présentant MC Studio et ses réalisations.
-Rendu programmatique avec [Remotion](https://remotion.dev) : tout est du React,
-donc le reel se re-rend automatiquement quand le portfolio évolue.
+A 30-second Remotion showreel: **1920 × 1080, 30 fps, 900 frames**.
+The master export is `out/mc-studio-reel.mp4` (H.264, CRF 17, 4:2:0).
+The film is intentionally silent; no licensed soundtrack was present locally.
 
-## Lancer
+## Preview, validate, export
 
 ```bash
 cd motion
-npm install
-npm run dev          # Remotion Studio (preview + scrub)
+npm ci                    # only needed on a fresh checkout
+npm run dev               # Remotion Studio; choose McStudioReel
+npm run typecheck
+npm run review            # 12 representative full-resolution PNGs
+npm run review -- --frames=172,322,502,682,772  # targeted transitions
+npm run render            # full 1080p MP4
 ```
 
-## Rendre
+The renderer uses the installed Remotion Chromium. A fresh environment may need
+its initial browser download. Once installed, the film's assets and fonts load
+locally and rendering requires no external services. The export script bundles
+only the six featured portfolio assets and two fonts, rather than copying the
+entire website portfolio. Render concurrency is limited to four.
 
-```bash
-npm run render           # 1920×1080 → out/mc-studio-reel.mp4
-npm run render:square    # 1080×1080 → out/mc-studio-reel-square.mp4
-npm run render:vertical  # 1080×1920 → out/mc-studio-reel-vertical.mp4
-```
+## The sequence
 
-## Storyboard (55 s — 1650 frames @ 30 fps)
+| Time | Scene | Motion |
+| --- | --- | --- |
+| 0–3 s | The spark | A dot develops into three geometric forms |
+| 3–6 s | MC Studio | The forms resolve into disciplines under the authentic wordmark |
+| 6–11 s | R&A Energy branding | Original vector reveal, sign application, staggered color panels |
+| 11–17 s | Websites | The brand panel expands into a browser; R&A Energy becomes Shika |
+| 17–23 s | Personal | The browser docks into a product layout; real login → feed screens |
+| 23–26 s | The big picture | Three disciplines form a triptych, then converge into one point |
+| 26–30 s | Signature | The point leads the wordmark reveal; the last 2.5 seconds hold still |
 
-Le film est éditorial et work-first : le travail occupe l'image, la typo se
-contente de nommer. Il pose surtout le nouveau positionnement — un studio,
-deux voies.
+Entrances overlap by 16 frames. `src/Video.tsx` owns the timeline;
+`src/showreel/` contains the individual scenes. `primitives.tsx` holds the small
+shared set of masking, text, browser, image and timing components. Animations
+are entirely frame-driven; no timers, CSS animations, network calls or random
+values. `theme.ts` and the existing `components/Logo.tsx` supply the brand.
 
-| # | Scène | Frames | Intention |
-|---|-------|--------|-----------|
-| 01 | `Open` | 0–110 | Wordmark en filigrane géant + « Un studio de design et de développement. » |
-| 02 | `TwoWays` | 110–330 | Le positionnement : **Business** et **Creator** côte à côte, chacun avec sa capture, sa promesse et sa preuve |
-| 03 | `Trust` | 330–470 | Les logos clients défilent, celui du centre est saisi dans une pastille blanche |
-| 04 | `LaneTitle` Business | 470–560 | Carton de chapitre : le nom de la voie et sa promesse |
-| 05 | `Reel` Business | 560–966 | 7 captures plein cadre, pastille de discipline en bas à droite |
-| 06 | `LaneTitle` Creator | 966–1056 | Même carton, en or |
-| 07 | `Reel` Creator | 1056–1346 | 5 captures : communauté, app créateur, design produit, branding |
-| 08 | `Numbers` | 1346–1504 | 20+ projets · 180 000 followers · 5/5, chiffre géant sur intitulé fantôme |
-| 09 | `Close` | 1504–1650 | Wordmark, les deux voies nommées, et l'unique adresse : mc-studio.eu |
+To adjust a scene, edit its local frame timing in the corresponding component.
+If changing total duration, update `TOTAL_FRAMES` and the specification assertion
+in `scripts/render.mjs`. The renderer writes `out/render-report.json` and fails
+on browser errors. Generated review frames and exports stay in ignored `out/`.
 
-## Une seule adresse
+The existing square/vertical compositions remain available as framed versions
+of the master (`npm run render:square`, `npm run render:vertical`). The delivered
+and visually reviewed export is the 16:9 master.
 
-Les deux voies sont nommées tout au long du film, mais le studio n'affiche
-qu'une adresse, au carton final : `mc-studio.eu`. Aucun sous-domaine n'apparaît
-nulle part.
+## Source and provenance
 
-## La pastille de discipline
+The requested Figma file was attempted before implementation:
+https://www.figma.com/design/Q7mpxV7ExHgGXoTfMesA0n/Motion-Design-Frames?node-id=1-691
+The Figma connector denied access because the connected account lacks editor
+access. **Fidelity to those frames could not be verified.** Per the brief's
+fallback instruction, this version follows the available MC Studio assets and
+existing motion/website identity instead. No Figma assets were reconstructed.
 
-Pendant les deux reels, une pastille blanche reste ancrée en bas à droite :
-elle nomme la discipline (Branding, Site web, Design produit, Développement,
-App créateur, Communauté) et le client. C'est elle qui donne au reel sa
-lisibilité — le travail parle, la pastille classe.
+Brand positioning was checked against https://mc-studio.eu/ and
+https://mc-studio.eu/business. Project attribution is recorded in
+`../app/data/projects.ts`. `public` is the existing symlink to `../public`,
+so portfolio images are reused without source duplication.
 
-## Direction artistique
+| Content | Original local asset |
+| --- | --- |
+| MC Studio wordmark | `../public/img/logo/mc-studio.svg` via existing Logo component |
+| R&A Energy leaf | `../public/img/clients/ra-energy.svg` |
+| R&A Energy sign | `../public/img/project/logo-raenergy.png` |
+| R&A Energy website | `../public/img/project/hero-raenergy.png` |
+| Shika website | `../public/img/project/shika-consulting/homepage.webp` |
+| Personal login | `../public/img/project/personal/login.webp` |
+| Personal feed | `../public/img/project/personal/feed.webp` |
 
-Éditorial clair, repris de la version light du site :
+UI content and any figures visible within it are part of the supplied original
+screenshots, not newly authored claims. Personal is presented through its real
+screens; no simulated feature or fabricated customer data has been added.
+Color panels and faint alignment guides are motion presentation elements, not
+a claim to reproduce an official client brand manual.
 
-- Papier `#E8E8E8`, encre `#141414`, gris fantôme `#D2D2D2`
-- L'or `#F0BF6C` réservé à la voie Creator, jamais décoratif
-- Host Grotesk en display, Inter en UI
-
-## Structure
-
-```
-src/
-  Video.tsx        # montage : la liste des plans et leurs durées
-  Reframe.tsx      # crops sociaux (1:1, 9:16) avec fond flouté
-  Root.tsx         # les 3 compositions
-  projects.ts      # portfolio du reel, calqué sur app/data/projects.ts
-  theme.ts         # tokens de marque
-  shots.ts         # l'ordre des plans, leur discipline et leur voie
-  stage.tsx        # dimensions de scène (16:9) partagées entre les crops
-  components/      # Logo, Text, Editorial (Paper, FullBleed, DisciplinePill, Statement)
-  scenes/          # Open, TwoWays, Trust, LaneTitle, Reel, Numbers, Close
-```
-
-`public/` est un lien symbolique vers le `public/` du site Nuxt : les captures
-projets et les avatars sont donc toujours ceux de production, sans duplication.
-
-## Mettre à jour le portfolio
-
-Ajouter une entrée dans `src/projects.ts` (les mêmes champs que
-`app/data/projects.ts`). Elle apparaît automatiquement dans le mur de la scène
-`Wall` ; pour lui donner une scène complète, ajouter son slug à `featured` et
-allonger `TIMELINE.showcase` de 86 frames dans `src/Video.tsx`.
-
-Pour ajouter un plan au reel, ajouter une entrée dans `src/shots.ts` avec sa
-voie (`business` ou `creator`), sa discipline et son cadrage. La durée du reel
-suit automatiquement — chaque plan dure 58 frames.
+Host Grotesk and Inter match `../app/assets/css/main.css`. Their small Latin
+variable font files are bundled in `../public/motion/fonts/` with the upstream
+SIL Open Font License texts. Font sources are Google Fonts / Google Fonts GitHub.

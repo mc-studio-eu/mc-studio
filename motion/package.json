@@ -5,7 +5,11 @@
   "description": "Remotion motion design reel for MC Studio",
   "scripts": {
     "dev": "remotion studio src/index.ts",
-    "render": "remotion render src/index.ts McStudioReel out/mc-studio-reel.mp4",
+    "render": "node scripts/render.mjs --render",
+    "review": "node scripts/render.mjs",
+    "render:creator": "node scripts/render.mjs --creator --render",
+    "review:creator": "node scripts/render.mjs --creator",
+    "typecheck": "tsc --noEmit",
     "render:square": "remotion render src/index.ts McStudioReelSquare out/mc-studio-reel-square.mp4",
     "render:vertical": "remotion render src/index.ts McStudioReelVertical out/mc-studio-reel-vertical.mp4",
     "still": "remotion still src/index.ts McStudioReel out/frame.png"

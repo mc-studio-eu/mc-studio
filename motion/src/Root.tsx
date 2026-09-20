@@ -3,9 +3,11 @@ import { Composition } from 'remotion'
 import { McStudioReel, TOTAL_FRAMES } from './Video'
 import { Reframe } from './Reframe'
 import { FPS } from './theme'
+import { McStudioCreator, CREATOR_FRAMES } from './creator/CreatorVideo'
 
 export const RemotionRoot: React.FC = () => (
   <>
+    <Composition id="McStudioCreator" component={McStudioCreator} durationInFrames={CREATOR_FRAMES} fps={FPS} width={1920} height={1080} />
     {/* Master — website hero, YouTube, LinkedIn */}
     <Composition
       id="McStudioReel"

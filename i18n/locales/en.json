@@ -3,7 +3,7 @@
   "nav": {
     "projects": "Projects",
     "services": "Services",
-    "pricing": "Pricing",
+    "offers": "Services & offers",
     "reviews": "Reviews",
     "faq": "FAQ",
     "contact": "Contact",
@@ -250,84 +250,50 @@
       "Impeccable Details"
     ]
   },
-  "pricing": {
-    "aria_label": "Pricing and packages",
-    "title": "Clear packages, <span class=\"text-gradient\">no surprises</span>",
-    "subtitle": "Two offers with a fixed scope and price. For more complex products, we prepare a quote tailored to your requirements.",
-    "popular": "Most popular",
+  "offers": {
+    "aria_label": "Our services and expertise",
+    "title": "From your brand identity to your <span class=\"text-gradient\">digital presence</span>",
+    "subtitle": "Branding, websites and applications: tailored support to bring your project to life.",
     "included": "What is included",
-    "delay_label": "Delivery:",
-    "note": "Displayed prices are fixed packages excluding VAT. The scope is confirmed before work begins.",
-    "plans": {
+    "items": {
       "branding": {
         "title": "Branding",
-        "price": "€490",
         "description": "A clear, professional visual identity that gives your brand credibility.",
-        "delay": "3 days",
-        "cta": "Choose branding",
+        "cta": "Create my brand identity",
         "features": {
-          "0": "Brand brief and questionnaire",
-          "1": "2 creative logo directions",
-          "2": "Primary logo and variations",
-          "3": "Icon and monochrome version",
-          "4": "Color palette",
-          "5": "Typography selection",
-          "6": "Mini usage guide",
-          "7": "SVG, PNG and PDF exports",
-          "8": "2 revision rounds included"
+          "0": "Primary logo and variations",
+          "1": "Branding and visual identity",
+          "2": "Color palette",
+          "3": "Typography selection",
+          "4": "Brand guidelines and usage guide",
+          "5": "SVG, PNG and PDF exports"
         }
       },
-      "landing": {
-        "title": "Landing page",
-        "price": "€1,890",
-        "description": "A custom page designed to present your offer and generate enquiries.",
-        "delay": "7 days",
-        "cta": "Create my landing page",
-        "features": {
-          "0": "Offer scoping workshop",
-          "1": "Complete page architecture",
-          "2": "Conversion-focused copywriting",
-          "3": "Custom UI design",
-          "4": "Responsive integration",
-          "5": "Form or appointment booking",
-          "6": "Technical SEO and performance",
-          "7": "Analytics and conversion tracking",
-          "8": "Go-live and quality assurance",
-          "9": "Unlimited revisions until approval"
-        }
-      },
-      "showcase": {
-        "title": "5-page website",
-        "price": "€2,990",
-        "description": "A complete business website that clearly presents your company and services.",
-        "delay": "15 days",
+      "website": {
+        "title": "Websites & landing pages",
+        "description": "A custom business website or landing page to present your company, showcase your offer and generate enquiries.",
         "cta": "Create my website",
         "features": {
-          "0": "Site structure up to 5 pages",
-          "1": "Content and user-flow scoping",
-          "2": "Structural copywriting",
-          "3": "Custom UI design",
-          "4": "Responsive integration",
-          "5": "Forms and calls to action",
-          "6": "SEO across all 5 pages",
-          "7": "Essential performance and security",
-          "8": "Analytics and conversion tracking",
-          "9": "Go-live and quality assurance",
-          "10": "Unlimited revisions until approval"
+          "0": "Offer scoping and site structure",
+          "1": "Conversion-focused copywriting",
+          "2": "Custom UI design",
+          "3": "Responsive integration",
+          "4": "Forms and appointment booking",
+          "5": "Technical SEO and performance",
+          "6": "Analytics and conversion tracking",
+          "7": "Go-live and quality assurance"
         }
-      }
-    },
-    "custom": {
-      "title": "Applications (SaaS, web, mobile)",
-      "description": "CRM, SaaS, web and mobile applications are scoped according to the required features, integrations and level of support.",
-      "price": "Custom quote",
-      "cta": "Discuss the project",
-      "scope_label": "Custom scope",
-      "services": {
-        "0": "CRM",
-        "1": "SaaS",
-        "2": "Web application",
-        "3": "Mobile application"
+      },
+      "applications": {
+        "title": "Applications (SaaS, web, mobile)",
+        "description": "CRM, SaaS, web and mobile applications are scoped according to the required features, integrations and level of support.",
+        "cta": "Discuss the project",
+        "features": {
+          "0": "CRM",
+          "1": "SaaS",
+          "2": "Web application",
+          "3": "Mobile application"
+        }
       }
     }
   },

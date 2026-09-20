@@ -53,8 +53,8 @@ import ScreenMarquee from "../components/project/ScreenMarquee.vue";
 
       <div class="section-separator"></div>
 
-      <!-- Pricing Section -->
-      <PricingSection id="tarifs" />
+      <!-- Service Offers Section -->
+      <ServiceOffersSection />
 
       <div class="section-separator"></div>
 

@@ -3,7 +3,7 @@
   "nav": {
     "projects": "Projets",
     "services": "Services",
-    "pricing": "Tarifs",
+    "offers": "Offres",
     "reviews": "Avis",
     "faq": "FAQ",
     "contact": "Contact",
@@ -250,84 +250,50 @@
       "Détails Impeccables"
     ]
   },
-  "pricing": {
-    "aria_label": "Tarifs et formules",
-    "title": "Des forfaits clairs, <span class=\"text-gradient\">sans surprise</span>",
-    "subtitle": "Deux offres avec un périmètre et un prix fixes. Pour les produits plus complexes, nous construisons un devis adapté à votre besoin.",
-    "popular": "Le plus choisi",
+  "offers": {
+    "aria_label": "Nos offres et expertises",
+    "title": "De votre identité à votre <span class=\"text-gradient\">présence digitale</span>",
+    "subtitle": "Branding, sites web et applications : un accompagnement sur mesure pour donner vie à votre projet.",
     "included": "Ce qui est inclus",
-    "delay_label": "Livraison :",
-    "note": "Les prix affichés sont des forfaits fixes hors taxes. Le périmètre est confirmé avant le démarrage.",
-    "plans": {
+    "items": {
       "branding": {
         "title": "Branding",
-        "price": "490 €",
         "description": "Une identité visuelle claire et professionnelle pour donner de la crédibilité à votre marque.",
-        "delay": "3 jours",
-        "cta": "Choisir le branding",
+        "cta": "Créer mon identité",
         "features": {
-          "0": "Brief et questionnaire de marque",
-          "1": "2 pistes créatives de logo",
-          "2": "Logo principal et déclinaisons",
-          "3": "Icône et version monochrome",
-          "4": "Palette de couleurs",
-          "5": "Sélection des typographies",
-          "6": "Mini guide d’utilisation",
-          "7": "Exports SVG, PNG et PDF",
-          "8": "2 séries de retours incluses"
+          "0": "Logo principal et déclinaisons",
+          "1": "Branding et identité visuelle",
+          "2": "Palette de couleurs",
+          "3": "Sélection des typographies",
+          "4": "Charte graphique et guide d’utilisation",
+          "5": "Exports SVG, PNG et PDF"
         }
       },
-      "landing": {
-        "title": "Landing page",
-        "price": "1 890 €",
-        "description": "Une page sur mesure pensée pour présenter votre offre et générer des demandes.",
-        "delay": "7 jours",
-        "cta": "Créer ma landing page",
-        "features": {
-          "0": "Atelier de cadrage de l’offre",
-          "1": "Architecture complète de la page",
-          "2": "Copywriting orienté conversion",
-          "3": "Design UI sur mesure",
-          "4": "Intégration responsive",
-          "5": "Formulaire ou prise de rendez-vous",
-          "6": "SEO technique et performance",
-          "7": "Analytics et suivi des conversions",
-          "8": "Mise en ligne et vérification qualité",
-          "9": "Retours illimités jusqu’à validation"
-        }
-      },
-      "showcase": {
-        "title": "Site 5 pages",
-        "price": "2 990 €",
-        "description": "Un site vitrine complet pour présenter clairement votre activité et vos services.",
-        "delay": "15 jours",
+      "website": {
+        "title": "Sites web & landing pages",
+        "description": "Un site vitrine ou une landing page sur mesure pour présenter votre activité, valoriser votre offre et générer des demandes.",
         "cta": "Créer mon site",
         "features": {
-          "0": "Arborescence jusqu’à 5 pages",
-          "1": "Cadrage des contenus et parcours",
-          "2": "Copywriting structurel",
-          "3": "Design UI sur mesure",
-          "4": "Intégration responsive",
-          "5": "Formulaires et appels à l’action",
-          "6": "SEO optimisé sur les 5 pages",
-          "7": "Performance et sécurité essentielles",
-          "8": "Analytics et suivi des conversions",
-          "9": "Mise en ligne et vérification qualité",
-          "10": "Retours illimités jusqu’à validation"
+          "0": "Cadrage de l’offre et arborescence",
+          "1": "Copywriting orienté conversion",
+          "2": "Design UI sur mesure",
+          "3": "Intégration responsive",
+          "4": "Formulaires et prise de rendez-vous",
+          "5": "SEO technique et performance",
+          "6": "Analytics et suivi des conversions",
+          "7": "Mise en ligne et vérification qualité"
         }
-      }
-    },
-    "custom": {
-      "title": "Applications (SaaS, web, mobile)",
-      "description": "CRM, SaaS et applications web ou mobiles sont étudiés selon les fonctionnalités, les intégrations et le niveau d’accompagnement nécessaires.",
-      "price": "Sur devis",
-      "cta": "Parler du projet",
-      "scope_label": "Périmètre sur mesure",
-      "services": {
-        "0": "CRM",
-        "1": "SaaS",
-        "2": "Application web",
-        "3": "Application mobile"
+      },
+      "applications": {
+        "title": "Applications (SaaS, web, mobile)",
+        "description": "CRM, SaaS et applications web ou mobiles sont étudiés selon les fonctionnalités, les intégrations et le niveau d’accompagnement nécessaires.",
+        "cta": "Parler du projet",
+        "features": {
+          "0": "CRM",
+          "1": "SaaS",
+          "2": "Application web",
+          "3": "Application mobile"
+        }
       }
     }
   },
