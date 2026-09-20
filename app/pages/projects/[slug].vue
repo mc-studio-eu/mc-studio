@@ -14,6 +14,8 @@ const PAGE_LABELS = {
     client: 'Client',
     problem: 'Problème',
     solution: 'Solution',
+    result: 'Résultats',
+    screen: 'Écran',
     moreProjects: 'Autres projets',
   },
   en: {
@@ -23,6 +25,8 @@ const PAGE_LABELS = {
     client: 'Client',
     problem: 'Problem',
     solution: 'Solution',
+    result: 'Results',
+    screen: 'Screen',
     moreProjects: 'More projects',
   },
 } satisfies Record<LocaleKey, Record<string, string>>
@@ -52,6 +56,8 @@ const overview = computed(() => [
   { label: labels.value.problem, text: caseStudy.value.problem },
   { label: labels.value.solution, text: caseStudy.value.solution },
 ])
+
+const result = computed(() => caseStudy.value.result)
 
 const backToProjectsLink = computed(() => localePath('/projects'))
 const contactLink = computed(() => localePath('/contact'))
@@ -153,16 +159,18 @@ useSeoMeta({
             <span>{{ labels.back }}</span>
           </NuxtLink>
 
-          <h1 class="case-study-title m-0 mt-10 max-w-[1000px] sm:mt-12 text-balance font-manrope font-medium tracking-[-0.07em] text-white">
-            {{ localizedProject.title }}
-          </h1>
+        </header>
 
-          <div class="mt-8 flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
-            <p class="case-study-headline m-0 max-w-[760px] text-balance font-manrope font-medium tracking-[-0.03em] text-white/85">
+        <div class="project-case-layout mt-10 sm:mt-12">
+          <div class="project-case-copy">
+            <h1 class="case-study-title m-0 text-balance font-manrope font-medium tracking-[-0.07em] text-white">
+              {{ localizedProject.title }}
+            </h1>
+            <p class="case-study-headline m-0 mt-5 text-balance font-manrope font-medium tracking-[-0.03em] text-white/75">
               {{ caseStudy.headline }}
             </p>
 
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="mt-7 flex flex-wrap items-center gap-3">
               <NuxtLink
                 ref="bookCallButton"
                 :to="contactLink"
@@ -195,46 +203,45 @@ useSeoMeta({
                 <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
               </a>
             </div>
-          </div>
-        </header>
 
-        <div class="mt-12 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] sm:mt-16">
-          <NuxtImg
-            :src="localizedProject.image"
-            :alt="localizedProject.title"
-            class="block aspect-[16/9] w-full object-cover"
-          />
+            <dl class="m-0 mt-10 space-y-8">
+              <div v-for="item in overview" :key="item.label" class="border-t border-white/15 pt-4">
+                <dt class="text-[11px] uppercase tracking-[0.16em] text-white/45">{{ item.label }}</dt>
+                <dd class="m-0 mt-3 whitespace-pre-line font-manrope text-base leading-relaxed text-white/80">{{ item.text }}</dd>
+              </div>
+              <div v-if="result" class="border-t border-white/15 pt-4">
+                <dt class="text-[11px] uppercase tracking-[0.16em] text-white/45">{{ labels.result }}</dt>
+                <dd class="m-0 mt-3 whitespace-pre-line font-manrope text-base leading-relaxed text-white/80">{{ result }}</dd>
+              </div>
+            </dl>
+
+            <NuxtLink
+              v-if="caseStudy.link"
+              :to="localePath(`/projects/${caseStudy.link.slug}`)"
+              class="case-study-link mt-8"
+            >
+              {{ caseStudy.link.label }}
+              <UIcon name="i-lucide-arrow-right" class="h-4 w-4" />
+            </NuxtLink>
+          </div>
+
+          <section v-if="galleryImages.length" class="project-case-gallery" :aria-label="`${localizedProject.title} screenshots`">
+            <div class="project-case-gallery__viewport">
+              <div class="project-case-gallery__track">
+                <div v-for="copy in 2" :key="copy" class="project-case-gallery__group" :aria-hidden="copy === 2 ? 'true' : undefined">
+                  <figure v-for="(src, index) in galleryImages" :key="`${copy}-${src}`" class="m-0 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+                    <NuxtImg
+                      :src="src"
+                      :alt="copy === 1 ? `${localizedProject.title} — ${labels.screen} ${index + 1}` : ''"
+                      class="block h-auto w-full"
+                      :loading="index > 1 || copy === 2 ? 'lazy' : 'eager'"
+                    />
+                  </figure>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-
-        <dl class="m-0 mt-12 grid gap-x-10 gap-y-8 sm:mt-16 md:grid-cols-3">
-          <div v-for="item in overview" :key="item.label" class="border-t border-white/15 pt-5">
-            <dt class="text-[11px] uppercase tracking-[0.16em] text-white/45">{{ item.label }}</dt>
-            <dd class="m-0 mt-4 font-manrope text-lg leading-snug tracking-[-0.01em] text-white/85">{{ item.text }}</dd>
-          </div>
-        </dl>
-
-        <NuxtLink
-          v-if="caseStudy.link"
-          :to="localePath(`/projects/${caseStudy.link.slug}`)"
-          class="case-study-link mt-8"
-        >
-          {{ caseStudy.link.label }}
-          <UIcon name="i-lucide-arrow-right" class="h-4 w-4" />
-        </NuxtLink>
-
-        <section
-          v-if="galleryItems.length"
-          class="grid grid-cols-10 gap-4 pt-[clamp(56px,8vw,96px)] sm:gap-6"
-        >
-          <NuxtImg
-            v-for="item in galleryItems"
-            :key="item.key"
-            :src="item.src"
-            :alt="localizedProject.title"
-            class="block w-full rounded-2xl border border-white/10 bg-white/[0.03] col-span-10"
-            :class="item.span === 5 ? 'md:col-span-5' : 'md:col-span-10'"
-          />
-        </section>
 
         <figure
           v-if="projectTestimonial"
@@ -319,13 +326,65 @@ useSeoMeta({
 <style scoped>
 .case-study-title {
   overflow-wrap: anywhere;
-  font-size: clamp(3.5rem, 8vw, 8.5rem);
-  line-height: 0.92;
+  font-size: clamp(2.8rem, 5vw, 5.5rem);
+  line-height: 0.98;
+  /* Override the site-wide h1 gold gradient for case-study titles. */
+  background: none;
+  color: #fff;
+  -webkit-background-clip: border-box;
+  -webkit-text-fill-color: #fff;
 }
 
 .case-study-headline {
-  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
   line-height: 1.15;
+}
+
+.project-case-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.22fr);
+  align-items: start;
+  gap: clamp(36px, 6vw, 88px);
+}
+
+.project-case-copy {
+  position: sticky;
+  top: 32px;
+  align-self: start;
+}
+
+.project-case-gallery {
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 48px);
+  overflow: hidden;
+  border-radius: 18px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 1%, #000 99%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 1%, #000 99%, transparent);
+}
+
+.project-case-gallery__track {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: project-gallery-scroll 24s linear infinite;
+  will-change: transform;
+}
+
+.project-case-gallery__group {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 18px;
+  padding-bottom: 18px;
+}
+
+.project-case-gallery:hover .project-case-gallery__track,
+.project-case-gallery:focus-within .project-case-gallery__track {
+  animation-play-state: paused;
+}
+
+@keyframes project-gallery-scroll {
+  to { transform: translateY(-50%); }
 }
 
 .case-study-heading {
@@ -370,6 +429,23 @@ useSeoMeta({
   line-height: 1.25rem;
 }
 
+@media (max-width: 800px) {
+  .project-case-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+
+  .project-case-copy {
+    position: static;
+  }
+
+  .project-case-gallery {
+    position: relative;
+    top: auto;
+    height: min(72vh, 680px);
+  }
+}
+
 @media (max-width: 640px) {
   .case-study-title {
     font-size: clamp(3.2rem, 16vw, 5.4rem);
@@ -397,6 +473,11 @@ useSeoMeta({
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .project-case-gallery__track {
+    animation: none;
+    will-change: auto;
+  }
+
   .more-project-card,
   .more-project-card__media img {
     transition: none;

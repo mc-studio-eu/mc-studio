@@ -12,6 +12,8 @@ export interface CaseStudy {
   client: string
   problem: string
   solution: string
+  /** Optional measurable or qualitative outcomes */
+  result?: string
   /** Related case study, e.g. the two R&A Energy chapters */
   link?: CaseStudyLink
   /** Short excerpt shown above the full testimonial */
@@ -29,12 +31,14 @@ export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
       client: "Maison AWL, l'univers home organizing de Célia : 180 000 abonnés et un réseau de prestataires formés à sa méthode.",
       problem: 'La demande de la communauté grandissait, mais aucun espace ne permettait de réserver, payer et garantir la qualité des prestations.',
       solution: 'Une marketplace sur mesure : recherche de prestataires, messagerie, propositions, paiement via Stripe Connect, avis et gestion des litiges.',
+      result: 'Maison AWL dispose désormais d’un espace dédié où sa communauté peut trouver un prestataire, organiser une mission et payer en toute confiance.',
     },
     en: {
       headline: 'Turning an audience of 180,000 people into a product it owns.',
       client: 'Maison AWL, Célia’s home organizing world: 180,000 followers and a network of professionals trained in her method.',
       problem: 'Demand from the community kept growing, but there was no place to book, pay and guarantee the quality of each job.',
       solution: 'A custom marketplace: provider search, messaging, proposals, payments via Stripe Connect, reviews and dispute handling.',
+      result: 'Maison AWL now has a dedicated space where its community can find a provider, organise a job and pay with confidence.',
     },
   },
 

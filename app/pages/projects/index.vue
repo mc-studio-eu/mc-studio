@@ -36,7 +36,7 @@ useSeoMeta({
 
     <section class="projects-page__intro mx-auto w-[min(1240px,calc(100%-48px))] pb-20 pt-[clamp(80px,12vw,150px)] sm:pb-28">
       <div class="max-w-[820px]">
-        <h1 class="font-manrope text-[clamp(3.4rem,8vw,7.8rem)] font-medium leading-[0.92] tracking-[-0.075em] text-white">
+        <h1 class="projects-page__title font-manrope text-[clamp(3.4rem,8vw,7.8rem)] font-medium leading-[0.92] tracking-[-0.075em] text-white">
           {{ t('globalHome.projects.title') }}
         </h1>
         <p class="mt-8 max-w-[560px] text-balance font-inter text-base leading-7 text-white/60 sm:text-lg">
@@ -95,6 +95,13 @@ useSeoMeta({
 .projects-page__intro,
 .projects-page__work {
   scroll-margin-top: 80px;
+}
+
+.projects-page__title {
+  background: none;
+  color: #fff;
+  -webkit-background-clip: border-box;
+  -webkit-text-fill-color: #fff;
 }
 
 .project-filter {
