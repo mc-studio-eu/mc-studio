@@ -286,13 +286,14 @@
       },
       "applications": {
         "title": "Applications (SaaS, web, mobile)",
-        "description": "CRM, SaaS, web and mobile applications are scoped according to the required features, integrations and level of support.",
+        "description": "CRM, ERP, SaaS, web and mobile applications are scoped according to the required features, integrations and level of support.",
         "cta": "Discuss the project",
         "features": {
           "0": "CRM",
-          "1": "SaaS",
-          "2": "Web application",
-          "3": "Mobile application"
+          "1": "ERP",
+          "2": "SaaS",
+          "3": "Web application",
+          "4": "Mobile application"
         }
       }
     }

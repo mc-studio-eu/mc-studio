@@ -7,12 +7,14 @@ import { fileURLToPath } from 'node:url'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 process.chdir(root)
 const creator = process.argv.includes('--creator')
-const compositionId = creator ? 'McStudioCreator' : 'McStudioReel'
-const filename = creator ? 'mc-studio-creator.mp4' : 'mc-studio-reel.mp4'
-const out = path.join(root, 'out', ...(creator ? ['creator'] : []))
+const business = process.argv.includes('--business')
+if (creator && business) throw new Error('Select only one film')
+const compositionId = business ? 'McStudioBusinessProcess' : creator ? 'McStudioCreator' : 'McStudioReel'
+const filename = business ? 'mc-studio-business-process.mp4' : creator ? 'mc-studio-creator.mp4' : 'mc-studio-reel.mp4'
+const out = path.join(root, 'out', ...(business ? ['business'] : creator ? ['creator'] : []))
 await mkdir(out, { recursive: true })
 // Bundle only the selected film’s actual assets and local fonts.
-const source = await readFile(creator ? 'src/creator/assets.ts' : 'src/showreel/primitives.tsx', 'utf8')
+const source = await readFile(business ? 'src/business/assets.ts' : creator ? 'src/creator/assets.ts' : 'src/showreel/primitives.tsx', 'utf8')
 const assets = [...source.matchAll(/: '((?:img|assets)\/[^']+)'/g)].map(m => m[1])
 assets.push('motion/fonts/host-grotesk-latin.woff2', 'motion/fonts/inter-latin.woff2')
 const publicDir = path.join(out, 'render-public')
@@ -40,7 +42,7 @@ try {
     console.log('Export complete: ' + path.join(out, filename))
   } else {
     const frameArg = process.argv.find(a => a.startsWith('--frames='))
-    const frames = frameArg ? frameArg.split('=')[1].split(',').map(Number) : creator ? [0, 65, 177, 270, 365, 478, 548, 656, 725, 825, 860, 899] : [0, 50, 130, 245, 375, 460, 540, 620, 715, 770, 850, 899]
+    const frames = frameArg ? frameArg.split('=')[1].split(',').map(Number) : business ? [40, 135, 255, 385, 430, 540, 585, 700, 745, 845, 880, 899] : creator ? [0, 65, 177, 270, 365, 478, 548, 656, 725, 825, 860, 899] : [0, 50, 130, 245, 375, 460, 540, 620, 715, 770, 850, 899]
     await mkdir(path.join(out, 'review'), { recursive: true })
     for (const frame of frames) {
       await renderStill({ serveUrl, composition, puppeteerInstance: browser, frame, output: path.join(out, 'review', 'frame-' + String(frame).padStart(3, '0') + '.png'), imageFormat: 'png', onBrowserLog })

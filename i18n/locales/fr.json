@@ -286,13 +286,14 @@
       },
       "applications": {
         "title": "Applications (SaaS, web, mobile)",
-        "description": "CRM, SaaS et applications web ou mobiles sont étudiés selon les fonctionnalités, les intégrations et le niveau d’accompagnement nécessaires.",
+        "description": "CRM, ERP, SaaS et applications web ou mobiles sont étudiés selon les fonctionnalités, les intégrations et le niveau d’accompagnement nécessaires.",
         "cta": "Parler du projet",
         "features": {
           "0": "CRM",
-          "1": "SaaS",
-          "2": "Application web",
-          "3": "Application mobile"
+          "1": "ERP",
+          "2": "SaaS",
+          "3": "Application web",
+          "4": "Application mobile"
         }
       }
     }

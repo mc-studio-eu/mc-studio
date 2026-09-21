@@ -1,5 +1,11 @@
 # MC Studio — From idea to impact
 
+La nouvelle vidéo **MC Studio Creator** a sa propre composition et son propre export.
+Voir [CREATOR.md](CREATOR.md) ; lancer `npm run render:creator` pour la rendre.
+
+Le troisième film présente le **process MC Studio Business**, avec des schémas
+animés : [BUSINESS-PROCESS.md](BUSINESS-PROCESS.md), `npm run render:business`.
+
 A 30-second Remotion showreel: **1920 × 1080, 30 fps, 900 frames**.
 The master export is `out/mc-studio-reel.mp4` (H.264, CRF 17, 4:2:0).
 The film is intentionally silent; no licensed soundtrack was present locally.

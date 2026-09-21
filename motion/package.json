@@ -9,6 +9,8 @@
     "review": "node scripts/render.mjs",
     "render:creator": "node scripts/render.mjs --creator --render",
     "review:creator": "node scripts/render.mjs --creator",
+    "render:business": "node scripts/render.mjs --business --render",
+    "review:business": "node scripts/render.mjs --business",
     "typecheck": "tsc --noEmit",
     "render:square": "remotion render src/index.ts McStudioReelSquare out/mc-studio-reel-square.mp4",
     "render:vertical": "remotion render src/index.ts McStudioReelVertical out/mc-studio-reel-vertical.mp4",

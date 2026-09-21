@@ -1,5 +1,5 @@
 import React from 'react'
-import { AbsoluteFill, Sequence, useCurrentFrame } from 'remotion'
+import { AbsoluteFill, Sequence, useCurrentFrame, interpolateColors } from 'remotion'
 import { Picture, p, mix, OUT } from '../showreel/primitives'
 import { creatorAssets as A } from './assets'
 import { Backdrop, C, CreatorLogo, Screen, Tag, Text } from './design'
@@ -30,7 +30,7 @@ const Audience: React.FC = () => {
     })}
     <div style={{position: 'absolute', left: 310, right: 310, top: 268, textAlign: 'center', transform: 'translateY(' + -exit * 90 + 'px)', opacity: 1 - exit}}>
       <Text f={f} at={0} size={180}>Votre audience</Text>
-      <div style={{display: 'inline-block', marginTop: 22, background: C.ink, color: C.paper, padding: '4px 36px 18px', transform: 'rotate(-2deg)'}}>
+      <div style={{display: 'inline-block', marginTop: 22, background: C.ink, color: C.paper, padding: '4px 36px 18px', transform: 'rotate(-2deg)', opacity: p(f, 0, 8)}}>
         <Text f={f} at={14} size={155}>est déjà là.</Text>
       </div>
     </div>
@@ -131,7 +131,7 @@ const Process: React.FC = () => {
     <div style={{position: 'absolute', left: 76, top: 614, display: 'flex', gap: 18}}>
       {steps.map((word, i) => {
         const t = p(f, 31 + i * 19, 48 + i * 19, OUT)
-        return <div key={word} style={{width: 339, height: 303, padding: 26, boxSizing: 'border-box', borderRadius: 12, background: t > 0 ? C.lilac : '#2d2d2d', color: t > 0 ? C.ink : '#a9a9a9', transform: 'translateY(' + mix(30, 0, t) + 'px)', opacity: p(f, 20 + i * 5, 34 + i * 5)}}>
+        return <div key={word} style={{width: 339, height: 303, padding: 26, boxSizing: 'border-box', borderRadius: 12, background: interpolateColors(t, [0, 1], ['#2d2d2d', C.lilac]), color: interpolateColors(t, [0, 1], ['#a9a9a9', C.ink]), transform: 'translateY(' + mix(30, 0, t) + 'px)', opacity: p(f, 20 + i * 5, 34 + i * 5)}}>
           <Tag style={{fontSize: 19}}>0{i + 1}</Tag>
           <div style={{fontSize: 40, fontWeight: 600, letterSpacing: '-0.055em', marginTop: 64}}>{word}</div>
           <div style={{fontSize: 19, marginTop: 16, letterSpacing: '-0.025em'}}>{captions[i]}</div>
@@ -159,7 +159,7 @@ const Signature: React.FC = () => {
       <span style={{display: 'inline-block', padding: '13px 36px', borderRadius: 7, background: C.purple, fontSize: 43, fontWeight: 650, letterSpacing: '0.08em', transform: 'rotate(-2deg)'}}>CREATOR</span>
     </div>
     <div style={{position: 'absolute', top: 826, width: '100%', textAlign: 'center'}}>
-      <Text f={f} at={49} size={32} style={{fontWeight: 450, letterSpacing: '-0.025em'}}>Créons l’application qui va avec.</Text>
+      <Text f={f} at={49} size={32} style={{fontWeight: 450, letterSpacing: '-0.025em'}}>Créons l’application qui va avec votre communauté.</Text>
     </div>
     <div style={{position: 'absolute', top: 942, width: '100%', textAlign: 'center', fontSize: 29, letterSpacing: '-0.025em', opacity: p(f, 56, 74)}}>mc-studio.eu</div>
   </AbsoluteFill>
