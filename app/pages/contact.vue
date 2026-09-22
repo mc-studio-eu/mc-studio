@@ -36,12 +36,12 @@ useSeoMeta({
 }
 
 .contact-page :deep(#contact) {
-  padding-top: clamp(3.5rem, 8vw, 7rem);
-  padding-bottom: clamp(1rem, 2vw, 1.5rem);
+  padding-top: clamp(1.25rem, 2.5vw, 2.25rem);
+  padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
 }
 
 .contact-page :deep(#avis) {
-  padding-top: clamp(1rem, 2vw, 1.5rem);
+  padding-top: clamp(0.5rem, 1.5vw, 1rem);
 }
 
 </style>

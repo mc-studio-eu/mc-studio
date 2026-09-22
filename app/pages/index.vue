@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { locale, rt, t, tm } = useI18n()
 const localePath = useLocalePath()
-const homeRoot = ref<HTMLElement | null>(null)
 const currentHeroWordIndex = ref(0)
 const heroPrimaryCta = ref<HTMLElement | { $el: HTMLElement } | null>(null)
 const heroPrimaryCtaText = ref<HTMLElement | null>(null)
@@ -11,7 +10,6 @@ const heroSecondaryCtaText = ref<HTMLElement | null>(null)
 useTextSlideAnimation(heroPrimaryCta, heroPrimaryCtaText)
 useTextSlideAnimation(heroSecondaryCta, heroSecondaryCtaText)
 
-let revealObserver: IntersectionObserver | undefined
 let heroWordRotationTimer: ReturnType<typeof setInterval> | undefined
 
 const heroWords = computed(() => {
@@ -35,8 +33,6 @@ const heroReferences = [
 ]
 
 onMounted(() => {
-  homeRoot.value?.classList.add('has-js')
-
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   if (!prefersReducedMotion && heroWords.value.length > 1) {
@@ -44,23 +40,9 @@ onMounted(() => {
       currentHeroWordIndex.value = (currentHeroWordIndex.value + 1) % heroWords.value.length
     }, 1800)
   }
-
-  if (prefersReducedMotion || !homeRoot.value) return
-
-  revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible')
-        revealObserver?.unobserve(entry.target)
-      }
-    })
-  }, { threshold: 0.12 })
-
-  homeRoot.value.querySelectorAll<HTMLElement>('.js-reveal').forEach((element) => revealObserver?.observe(element))
 })
 
 onUnmounted(() => {
-  revealObserver?.disconnect()
   if (heroWordRotationTimer) window.clearInterval(heroWordRotationTimer)
 })
 
@@ -73,7 +55,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <main ref="homeRoot" class="global-home min-h-screen bg-[#0f0f0f] text-white">
+  <main class="global-home min-h-screen bg-[#0f0f0f] text-white">
     <StudioNavbar tone="dark" />
 
     <section
@@ -167,7 +149,7 @@ useSeoMeta({
       </div>
     </section>
 
-    <div class="home-business-content js-reveal">
+    <div class="home-business-content">
       <div class="home-business-content__separator" aria-hidden="true" />
       <ProjectSection plain />
       <div class="home-business-content__separator" aria-hidden="true" />
@@ -290,8 +272,6 @@ useSeoMeta({
 .home-business-content :deep(#avis article > div:first-child) { color: rgba(255,255,255,.12); }
 .home-business-content :deep(#faq .bg-\[linear-gradient\(135deg\,var\(--color-gold\)_0\%\,\#e8a84c_100\%\)\]) { background: #222 !important; }
 .home-business-content :deep(#faq .\!bg-\[var\(--color-gold\)\]) { background: #fff !important; color: #111 !important; }
-.global-home.has-js .js-reveal { opacity: 0; transform: translateY(28px); transition: opacity 700ms ease, transform 700ms cubic-bezier(.22,1,.36,1); }
-.global-home.has-js .js-reveal.is-visible { opacity: 1; transform: translateY(0); }
 @keyframes home-title-in { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes home-copy-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -343,6 +323,5 @@ useSeoMeta({
   .global-home__hero-orb, .project-teaser { transition: none; animation: none; transform: none; }
   .world-card__arrow, .world-card__cta-arrow { transition: none; }
   .world-card:hover .world-card__arrow, .world-card:hover .world-card__cta-arrow { transform: none; }
-  .global-home.has-js .js-reveal, .global-home.has-js .js-reveal.is-visible { opacity: 1; transform: none; transition: none; }
 }
 </style>
