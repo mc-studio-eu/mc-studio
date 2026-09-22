@@ -27,8 +27,8 @@ const copy = computed(() => {
     : locale.value === 'fr' ? 'Démarrer un projet' : 'Start a project'
 
   return locale.value === 'fr'
-    ? { home: 'Accueil', projects: 'Projet', cta, menu: 'Menu', close: 'Fermer' }
-    : { home: 'Home', projects: 'Project', cta, menu: 'Menu', close: 'Close' }
+    ? { home: 'Accueil', projects: 'Projet', creators: 'Créateurs', cta, menu: 'Menu', close: 'Fermer' }
+    : { home: 'Home', projects: 'Project', creators: 'Creators', cta, menu: 'Menu', close: 'Close' }
 })
 
 const languageOptions = [
@@ -38,7 +38,8 @@ const languageOptions = [
 
 const navItems = computed(() => [
   { label: copy.value.home, path: '/', active: route.path === localePath('/') },
-  { label: copy.value.projects, path: '/projects', active: route.path.includes('/projects') }
+  { label: copy.value.projects, path: '/projects', active: route.path.includes('/projects') },
+  { label: copy.value.creators, path: '/creators', active: route.path.includes('/creators') }
 ])
 
 const selectLanguage = (value: 'fr' | 'en') => setLocale(value)
