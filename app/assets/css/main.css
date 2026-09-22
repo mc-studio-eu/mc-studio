@@ -4,6 +4,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Keeps anchor targets clear of the sticky navbar. */
+  scroll-padding-top: 88px;
 }
 
 /* Route transitions: keep navigation fluid without making it feel slow. */

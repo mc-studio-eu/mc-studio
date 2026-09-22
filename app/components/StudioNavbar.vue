@@ -13,6 +13,7 @@ const route = useRoute()
 const localePath = useLocalePath()
 const { locale, setLocale } = useI18n()
 const isMenuOpen = ref(false)
+const isScrolled = ref(false)
 const desktopCtaBtn = ref<HTMLElement | null>(null)
 const desktopCtaWrapper = ref<HTMLElement | null>(null)
 const mobileCtaBtn = ref<HTMLElement | null>(null)
@@ -44,6 +45,15 @@ const navItems = computed(() => [
 
 const selectLanguage = (value: 'fr' | 'en') => setLocale(value)
 
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 16
+}
+
+onMounted(() => {
+  handleScroll()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
 watch(() => route.fullPath, () => {
   isMenuOpen.value = false
 })
@@ -54,7 +64,9 @@ watch(isMenuOpen, (open) => {
 })
 
 onUnmounted(() => {
-  if (import.meta.client) document.body.style.overflow = ''
+  if (!import.meta.client) return
+  window.removeEventListener('scroll', handleScroll)
+  document.body.style.overflow = ''
 })
 </script>
 
@@ -65,7 +77,8 @@ onUnmounted(() => {
     props.tone === 'light' ? 'studio-nav--light' : 'studio-nav--dark',
     props.universe === 'creator' ? 'studio-nav--creator' : '',
     props.universe === 'business' ? 'studio-nav--business' : '',
-    props.overlay ? 'absolute inset-x-0 top-0' : 'relative'
+    isScrolled ? 'studio-nav--scrolled' : '',
+    props.overlay ? 'absolute inset-x-0 top-0' : 'sticky top-0'
   ]"
 >
     <NuxtLink class="studio-nav__brand" :to="localePath('/')" aria-label="MC Studio — Home">
@@ -182,7 +195,10 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.studio-nav { box-sizing: border-box; min-height: 88px; padding: 22px clamp(20px, 2.05vw, 42px); font-family: Inter, sans-serif; }
+.studio-nav { box-sizing: border-box; min-height: 88px; border-bottom: 1px solid transparent; padding: 22px clamp(20px, 2.05vw, 42px); font-family: Inter, sans-serif; transition: background-color 240ms ease, border-color 240ms ease, backdrop-filter 240ms ease; }
+.studio-nav--scrolled { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.studio-nav--dark.studio-nav--scrolled { border-bottom-color: rgba(255,255,255,.08); background-color: rgba(15,15,15,.72); }
+.studio-nav--light.studio-nav--scrolled { border-bottom-color: rgba(23,23,23,.08); background-color: rgba(248,248,248,.78); }
 .studio-nav--dark { color: #fff; }
 .studio-nav--light { color: #171717; }
 .studio-nav__brand { display: block; flex-shrink: 0; color: inherit; text-decoration: none; }
@@ -200,7 +216,7 @@ onUnmounted(() => {
 .studio-nav__locale-option--active { opacity: 1; }
 .studio-nav--dark .studio-nav__locale-option--active { background: #fff; color: #171717; }
 .studio-nav--light .studio-nav__locale-option--active { background: #171717; color: #fff; }
-.studio-nav__cta, .studio-nav__mobile-cta { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; border-radius: 16px; padding: 0 18px; background: #fff; color: #171717; font-size: 15px; font-weight: 600; text-decoration: none; }
+.studio-nav__cta, .studio-nav__mobile-cta { display: inline-flex; min-width: 172px; min-height: 44px; align-items: center; justify-content: center; border-radius: 16px; padding: 0 18px; background: #fff; color: #171717; font-size: 15px; font-weight: 600; text-decoration: none; }
 .studio-nav--light .studio-nav__cta { background: #171717; color: #fff; }
 .studio-nav__menu { position: relative; z-index: 70; display: grid; width: 48px; height: 48px; place-content: center; gap: 6px; border: 1px solid currentColor; border-radius: 18px; background: transparent; color: inherit; cursor: pointer; opacity: .65; }
 .studio-nav__menu span { display: block; width: 15px; height: 1.5px; background: currentColor; transition: transform 220ms ease; }
