@@ -1,24 +1,22 @@
 <script setup lang="ts">
 import { useProjectCards } from '../../composables/useProjectCards'
+import type { ProjectFilter } from '../../composables/useProjectCards'
 
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const { filterProjects } = useProjectCards()
 
-const activeFilter = ref<'all' | 'business' | 'creator'>('all')
+const activeFilter = ref<ProjectFilter>('all')
 const creatorSlugs = new Set(['personal', 'maison-awl'])
 
 const filters = computed(() => [
   { key: 'all' as const, label: locale.value === 'fr' ? 'Tous' : 'All' },
-  { key: 'business' as const, label: 'Business' },
-  { key: 'creator' as const, label: 'Creators' }
+  { key: 'branding' as const, label: 'Branding' },
+  { key: 'landing-page' as const, label: locale.value === 'fr' ? 'Site web' : 'Website' },
+  { key: 'app' as const, label: 'Apps' }
 ])
 
-const filteredProjects = computed(() => filterProjects('all').filter((project) => {
-  if (activeFilter.value === 'all') return true
-  const isCreator = creatorSlugs.has(project.slug)
-  return activeFilter.value === 'creator' ? isCreator : !isCreator
-}))
+const filteredProjects = computed(() => filterProjects(activeFilter.value))
 
 const projectKind = (slug: string) => creatorSlugs.has(slug) ? 'Creator' : 'Business'
 

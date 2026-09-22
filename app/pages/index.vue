@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { rt, t, tm } = useI18n()
+const { locale, rt, t, tm } = useI18n()
 const localePath = useLocalePath()
 const homeRoot = ref<HTMLElement | null>(null)
 const currentHeroWordIndex = ref(0)
@@ -22,7 +22,7 @@ const heroWords = computed(() => {
 
 const currentHeroWord = computed(() => heroWords.value[currentHeroWordIndex.value] ?? '')
 const heroWordPlaceholder = computed(() => heroWords.value[0] ?? currentHeroWord.value)
-
+const availabilityMonth = computed(() => new Intl.DateTimeFormat(locale.value, { month: 'long' }).format(new Date()))
 const heroReferences = [
   { name: 'R&A Energy', image: '/img/clients/ra-energy.svg', className: 'global-home__reference--ra' },
   { name: 'AMG Promotion', image: '/img/clients/amg-promotion.svg', className: 'global-home__reference--amg' },
@@ -88,6 +88,22 @@ useSeoMeta({
       <div class="global-home__hero-vignette" aria-hidden="true" />
       <div class="global-home__hero-orb" aria-hidden="true" />
       <div class="global-home__hero-main relative z-10 flex w-full flex-1 flex-col items-center justify-center">
+        <div class="global-home__hero-proof mb-7" aria-label="Informations de disponibilité et avis Google">
+          <p class="global-home__availability">
+            <span class="global-home__availability-dot" aria-hidden="true" />
+            {{ t('hero.availability', { month: availabilityMonth }) }}
+          </p>
+          <div class="global-home__google-rating" :aria-label="t('hero.reviews')">
+            <svg class="global-home__google-mark" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 0 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+            </svg>
+            <span class="global-home__stars" aria-hidden="true">★★★★★</span>
+            <span class="global-home__google-copy">{{ t('hero.reviews') }}</span>
+          </div>
+        </div>
         <h1 class="max-w-[1120px] whitespace-pre-line text-balance font-manrope text-[clamp(40px,5.1vw,78px)] font-medium leading-[1.02] tracking-[-0.045em] text-white max-sm:text-[clamp(34px,10.4vw,54px)]">
           <span class="sr-only">{{ t('globalHome.hero.title') }}</span>
           <span class="global-home__hero-title-visual" aria-hidden="true">
@@ -123,6 +139,7 @@ useSeoMeta({
             </span>
           </NuxtLink>
         </div>
+
       </div>
 
       <div class="global-home__hero-references relative z-10 w-full shrink-0" :aria-label="t('globalHome.hero.references_label')">
@@ -150,106 +167,42 @@ useSeoMeta({
       </div>
     </section>
 
-    <section class="global-home__proof js-reveal border-y border-white/10" aria-labelledby="capabilities-title">
-      <div class="mx-auto grid w-[min(1240px,calc(100%-48px))] gap-10 py-16 sm:grid-cols-[0.8fr_1.2fr] sm:py-24">
-        <h2 id="capabilities-title" class="max-w-sm font-manrope text-3xl tracking-[-0.05em] sm:text-5xl">{{ t('globalHome.expertise.title') }}</h2>
-        <div class="grid grid-cols-2 gap-x-5 gap-y-4 text-sm text-white/60 sm:grid-cols-3 sm:text-base">
-          <span v-for="item in [t('globalHome.expertise.items.strategy'), t('globalHome.expertise.items.design'), t('globalHome.expertise.items.development'), t('globalHome.expertise.items.saas'), t('globalHome.expertise.items.ai'), t('globalHome.expertise.items.launch')]" :key="item" class="border-t border-white/15 pt-3">{{ item }}</span>
-        </div>
-      </div>
-    </section>
+    <div class="home-business-content js-reveal">
+      <div class="home-business-content__separator" aria-hidden="true" />
+      <ProjectSection plain />
+      <div class="home-business-content__separator" aria-hidden="true" />
 
-    <section class="global-home__proof js-reveal border-y border-white/10 py-24 sm:py-36" aria-labelledby="selected-projects-title">
-      <div class="w-[min(1240px,calc(100%-48px))]  mx-auto">
-        <div class="flex mx-auto items-end justify-between gap-5">
-          <h2 id="selected-projects-title" class="font-manrope text-4xl tracking-[-0.06em] sm:text-6xl">{{ t('globalHome.projects.title') }}</h2>
-          <NuxtLink class="hidden text-sm text-white/60 hover:text-white sm:block" :to="localePath('/projects')">{{ t('globalHome.projects.link') }} <span aria-hidden="true">↗</span></NuxtLink>
-        </div>
-        <div class="mt-10 grid gap-4 sm:grid-cols-3">
-          <NuxtLink v-for="project in [
-            { title: 'Personal', image: '/img/project/personal/hero.png', type: 'Creator' },
-            { title: 'Maison AWL', image: '/img/project/maison-awl/desktop-mockup.png', type: 'Creator' },
-            { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp', type: 'Business' }
-          ]" :key="project.title" :to="localePath('/projects')" class="project-teaser group">
-            <div class="aspect-[4/3] overflow-hidden rounded-xl bg-white/5"><img class="h-full w-full object-cover" :src="project.image" :alt="project.title" loading="lazy"></div>
-            <div class="mt-4 flex items-center justify-between gap-4"><span class="font-manrope text-xl tracking-[-0.03em]">{{ project.title }}</span><span class="project-teaser__type text-xs uppercase tracking-[0.14em] text-white/40">{{ project.type }}</span></div>
-          </NuxtLink>
-        </div>
-      </div>
-    </section>
+      <ServicesInterMarquee />
+      <div class="home-business-content__separator" aria-hidden="true" />
 
+      <div class="section-separator mt-10"></div>  
+      
+      <!-- Services Section -->
+      <ServicesSection id="services" />
 
-    <section id="worlds" class="global-home__worlds js-reveal mx-auto box-border w-full max-w-[1288px] px-6 pt-24 pb-24 sm:pt-36 sm:pb-36" aria-labelledby="worlds-title">
-      <div class="mb-8 flex items-end justify-between gap-6">
-        <h2 id="worlds-title" class="font-manrope text-3xl tracking-[-0.04em] sm:text-5xl">{{ t('globalHome.worlds.title') }}</h2>
-      </div>
+      <div class="section-separator mt-10"></div>
 
-      <div class="grid gap-4 lg:grid-cols-2">
-        <NuxtLink :to="localePath('/business')" class="world-card world-card--business">
-          <div class="world-card__top relative z-10">
-            <span class="world-card__arrow" aria-hidden="true">↗</span>
-          </div>
-          <div class="world-card__content relative z-10">
-            <p class="world-card__audience text-sm uppercase tracking-[0.18em]">{{ t('globalHome.worlds.business.label') }}</p>
-            <h3 class="world-card__title mt-4 max-w-[470px] font-manrope text-[clamp(2.3rem,5vw,5rem)] leading-[0.96] tracking-[-0.06em]">{{ t('globalHome.worlds.business.title') }}</h3>
-            <p class="world-card__body mt-5 max-w-[400px] text-base leading-7 text-white/65">{{ t('globalHome.worlds.business.body') }}</p>
-            <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold">{{ t('globalHome.worlds.business.cta') }} <span class="world-card__cta-arrow" aria-hidden="true">→</span></span>
-          </div>
-        </NuxtLink>
+      <ScreenMarquee />
+      <div class="home-business-content__separator" aria-hidden="true" />
 
-        <NuxtLink :to="localePath('/creators')" class="world-card world-card--creators">
-          <img class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 mix-blend-multiply" src="/assets/creator/hero-bg.png" alt="" aria-hidden="true">
-          <div class="world-card__top relative z-10">
-            <span class="world-card__arrow" aria-hidden="true">↗</span>
-          </div>
-          <div class="world-card__content relative z-10">
-            <p class="world-card__audience text-sm uppercase tracking-[0.18em]">{{ t('globalHome.worlds.creators.label') }}</p>
-            <h3 class="world-card__title mt-4 max-w-[470px] font-manrope text-[clamp(2.3rem,5vw,5rem)] leading-[0.96] tracking-[-0.06em] text-white">{{ t('globalHome.worlds.creators.title') }}</h3>
-            <p class="world-card__body mt-5 max-w-[400px] text-base leading-7 text-white/65">{{ t('globalHome.worlds.creators.body') }}</p>
-            <span class="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white">{{ t('globalHome.worlds.creators.cta') }} <span class="world-card__cta-arrow" aria-hidden="true">→</span></span>
-          </div>
-        </NuxtLink>
-      </div>
-    </section>
+      <!-- La section Services est volontairement exclue : « De votre identité à votre présence digitale ». -->
+      <TeamSection />
+      <div class="home-business-content__separator" aria-hidden="true" />
+
+      <TestimonialSection />
+      <div class="home-business-content__separator" aria-hidden="true" />
+
+      <ServicesInterMarquee />
+      <div class="home-business-content__separator" aria-hidden="true" />
+
+      <FaqSection />
+    </div>
 
     <FooterSection />
   </main>
 </template>
 
 <style scoped>
-.world-card {
-  position: relative;
-  display: flex;
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-  min-height: 440px;
-  flex-direction: column;
-  overflow: hidden;
-  border-radius: 22px;
-  padding: clamp(24px, 3.5vw, 40px);
-  text-decoration: none;
-  transition: box-shadow 450ms ease;
-}
-
-.world-card--business { background: linear-gradient(145deg, #26211a 0%, #17130f 100%); box-shadow: inset 0 0 0 1px rgba(240,191,108,.2); }
-.world-card--business::after { content: ''; position: absolute; inset: auto -12% -30% 28%; height: 55%; border-radius: 50%; background: radial-gradient(circle, rgba(240,191,108,.3), transparent 65%); filter: blur(24px); }
-.world-card--creators { background: #c9baf2; box-shadow: inset 0 0 0 1px rgba(124,58,237,.18); }
-.world-card--creators .world-card__body { color: rgba(31, 24, 52, .82) !important; }
-.world-card__top { position: absolute; top: clamp(24px, 3.5vw, 40px); right: clamp(24px, 3.5vw, 40px); display: flex; align-items: center; justify-content: flex-end; }
-.world-card__content { margin-top: auto; }
-.world-card__title { font-size: clamp(2.3rem, 4.4vw, 4.25rem); }
-.world-card__audience { color: #fff; font-weight: 600; opacity: .9; text-shadow: 0 1px 3px rgba(0,0,0,.18); }
-.world-card__arrow { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 22px; transition: transform 450ms cubic-bezier(.22,1,.36,1), background 300ms ease, color 300ms ease, border-color 300ms ease; }
-.world-card__cta-arrow { display: inline-block; transition: transform 350ms cubic-bezier(.22,1,.36,1); }
-@media (hover: hover) {
-  .world-card--business:hover { box-shadow: inset 0 0 0 1px rgba(240,191,108,.38), 0 24px 60px -24px rgba(240,191,108,.28); }
-  .world-card--creators:hover { box-shadow: inset 0 0 0 1px rgba(124,58,237,.28), 0 24px 60px -24px rgba(201,186,242,.45); }
-  .world-card:hover .world-card__arrow { transform: rotate(45deg); background: #fff; border-color: #fff; color: #17130f; }
-  .world-card--creators:hover .world-card__arrow { color: #6d4fd8; }
-  .world-card:hover .world-card__cta-arrow { transform: translateX(5px); }
-}
 .global-home__hero { isolation: isolate; }
 .global-home__hero::before { content: ''; position: absolute; inset: 8% 10% 2%; z-index: -1; border-radius: 999px; background: radial-gradient(ellipse at center, rgba(240,191,108,.13), transparent 66%); filter: blur(12px); pointer-events: none; }
 .global-home__hero-clouds { position: absolute; inset: 0; z-index: -3; width: 100%; max-width: none; height: 100%; object-fit: cover; object-position: center; opacity: .92; filter: saturate(.9) contrast(1.06); pointer-events: none; }
@@ -257,7 +210,7 @@ useSeoMeta({
 .global-home__hero-orb { position: absolute; top: 50%; left: 50%; z-index: -1; width: clamp(180px, 24vw, 360px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(240,191,108,.18), rgba(240,191,108,0) 68%); filter: blur(20px); transform: translate(-50%, -50%); pointer-events: none; }
 .global-home__hero h1 { width: 100%; animation: home-title-in 900ms cubic-bezier(.22,1,.36,1) both; background: none; color: #fff; -webkit-background-clip: border-box; -webkit-text-fill-color: #fff; }
 .global-home__hero p { animation: home-copy-in 900ms .14s cubic-bezier(.22,1,.36,1) both; }
-.global-home__hero-main { min-height: 380px; padding-block: 28px 54px; }
+.global-home__hero-main { min-height: 380px; padding-block: 0 104px; }
 .global-home__hero-title-visual { display: block; }
 .global-home__hero-title-prefix, .global-home__hero-title-spacer { display: inline; }
 .global-home__hero-word-rotator { display: inline-grid; text-align: left; vertical-align: baseline; }
@@ -274,6 +227,13 @@ useSeoMeta({
 .global-home__hero-cta-text-window { display: block; height: 1em; overflow: hidden; }
 .global-home__hero-cta-text-track { display: flex; flex-direction: column; }
 .global-home__hero-cta-text { display: block; height: 1em; flex: none; line-height: 1; }
+.global-home__hero-proof { display: flex; align-items: center; justify-content: center; gap: 16px; color: rgba(255,255,255,.9); font: 500 14px/1 Inter, sans-serif; animation: home-copy-in 900ms .34s cubic-bezier(.22,1,.36,1) both; }
+.global-home__availability { display: inline-flex; align-items: center; gap: 10px; margin: 0; white-space: nowrap; }
+.global-home__availability-dot { width: 10px; height: 10px; border: 2px solid #f8d699; border-radius: 50%; background: #f0bf6c; box-shadow: 0 0 0 4px rgba(240,191,108,.12); }
+.global-home__google-rating { display: inline-flex; min-height: 38px; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 0 14px; background: rgba(255,255,255,.06); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); backdrop-filter: blur(12px); }
+.global-home__google-mark { width: 16px; height: 16px; flex: none; }
+.global-home__stars { color: #f0bf6c; font-size: 16px; letter-spacing: 1px; line-height: 1; }
+.global-home__google-copy { padding-left: 10px; border-left: 1px solid rgba(255,255,255,.15); font-size: 12px; white-space: nowrap; }
 .global-home__hero-references { animation: home-copy-in 900ms .42s cubic-bezier(.22,1,.36,1) both; }
 .global-home__hero-reference-label { margin: 0 0 20px; color: rgba(255,255,255,.4) !important; font: 600 10px/1 Inter, sans-serif !important; letter-spacing: .24em; text-transform: uppercase; }
 .global-home__hero-reference-marquee { width: 100%; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
@@ -292,8 +252,44 @@ useSeoMeta({
 .global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: opacity 450ms ease, filter 450ms ease, transform 450ms cubic-bezier(.22,1,.36,1); }
 .global-home-hero-word-enter-from { opacity: 0; filter: blur(8px); transform: translateY(.65em); }
 .global-home-hero-word-leave-to { opacity: 0; filter: blur(8px); transform: translateY(-.65em); }
+.global-home__projects-showcase { border-top: 1px solid rgba(255,255,255,.1); border-bottom: 1px solid rgba(255,255,255,.1); }
+.projects-showcase__link { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 0 17px; color: rgba(255,255,255,.88); font: 500 14px/1 Inter, sans-serif; text-decoration: none; transition: background 200ms ease, border-color 200ms ease, color 200ms ease; }
+.projects-showcase__link:hover { border-color: rgba(255,255,255,.42); background: rgba(255,255,255,.06); color: #fff; }
+.projects-showcase__frame { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 28px; padding: clamp(8px,1.3vw,18px); background-color: #151515; background-image: linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px); background-size: 48px 48px; text-decoration: none; transition: border-color 250ms ease, transform 350ms cubic-bezier(.22,1,.36,1); }
+.projects-showcase__screen { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: clamp(16px,2vw,26px); background: #0d0d0d; box-shadow: 0 28px 80px rgba(0,0,0,.32); }
+.projects-showcase__screen img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: center top; transition: transform 650ms cubic-bezier(.22,1,.36,1); }
+@media (hover: hover) { .projects-showcase__frame:hover { border-color: rgba(255,255,255,.28); transform: translateY(-4px); } .projects-showcase__frame:hover .projects-showcase__screen img { transform: scale(1.015); } }
+.global-home__offers { border-bottom: 1px solid rgba(255,255,255,.1); }
+.offers-feature__heading { display: flex; align-items: baseline; gap: clamp(22px,5vw,64px); }
+.offers-feature__index { color: rgba(255,255,255,.42); font: 400 clamp(2rem,4vw,3.75rem)/1 Manrope, sans-serif; letter-spacing: -.06em; }
+.offers-feature__image { overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 22px; background: #161616; }
+.offers-feature__image img { display: block; width: 100%; aspect-ratio: 1 / .72; object-fit: cover; object-position: center; }
+.offers-feature__item { display: flex; align-items: flex-start; gap: 11px; color: rgba(255,255,255,.78); font: 400 15px/1.5 Inter, sans-serif; }
+.offers-feature__item span { display: inline-grid; width: 19px; height: 19px; flex: 0 0 19px; place-items: center; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; color: #fff; font-size: 11px; }
+.offers-feature__cta { display: inline-flex; min-height: 44px; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,.22); border-radius: 12px; padding: 0 16px; color: #fff; font: 500 14px/1 Inter, sans-serif; text-decoration: none; transition: background 200ms ease, border-color 200ms ease; }
+.offers-feature__cta:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
 .project-teaser:hover .project-teaser__type { color: rgba(255,255,255,.8); }
-.world-card:focus-visible, .project-teaser:focus-visible { outline: 2px solid #f0bf6c; outline-offset: 6px; }
+.world-card:focus-visible, .project-teaser:focus-visible, .projects-showcase__frame:focus-visible, .projects-showcase__link:focus-visible, .offers-feature__cta:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
+.home-business-content { --color-gold: #fff; }
+.home-business-content__separator { width: min(1216px, calc(100% - 48px)); height: 1px; margin: clamp(24px, 3vw, 44px) auto; background: linear-gradient(90deg, transparent, rgba(255,255,255,.14) 20%, rgba(255,255,255,.14) 80%, transparent); }
+.home-business-content :deep(.text-gradient) { background: none !important; color: var(--text-primary) !important; -webkit-background-clip: border-box !important; -webkit-text-fill-color: currentColor !important; }
+.home-business-content :deep(.project-showcase) { background: #151515; }
+.home-business-content :deep(.project-grid-pattern) { background-color: #151515; }
+.home-business-content :deep(.team-card::before) { background: linear-gradient(to bottom, rgba(255,255,255,.06), transparent 38%); }
+.home-business-content :deep(.offers-card), .home-business-content :deep(.offers-card--featured) { background: linear-gradient(to bottom, rgba(255,255,255,.05), transparent 34%), color-mix(in srgb, var(--bg-secondary) 76%, transparent); }
+.home-business-content :deep(.offers-card__cta) { background: #fff; }
+.home-business-content :deep(.offers-card__check) { border-color: rgba(255,255,255,.26); color: #fff; }
+.home-business-content :deep(#services .offer-number) { color: rgba(255,255,255,.42); }
+.home-business-content :deep(#services .offer-row-header:hover .offer-number), .home-business-content :deep(#services .offer-row-header:hover .offer-row-title) { color: #fff; }
+.home-business-content :deep(#services .offer-toggle-bar) { background: rgba(255,255,255,.7); }
+.home-business-content :deep(#services .offer-label) { color: rgba(255,255,255,.5); }
+.home-business-content :deep(#services [class*="F0BF6C"]) { color: #fff; }
+.home-business-content :deep(#avis > div:first-child) { background: rgba(255,255,255,.06); }
+.home-business-content :deep(#avis article) { transition-property: border-color, background-color, box-shadow; }
+.home-business-content :deep(#avis article:hover) { border-color: rgba(255,255,255,.28); }
+.home-business-content :deep(#avis article > div:first-child) { color: rgba(255,255,255,.12); }
+.home-business-content :deep(#faq .bg-\[linear-gradient\(135deg\,var\(--color-gold\)_0\%\,\#e8a84c_100\%\)\]) { background: #222 !important; }
+.home-business-content :deep(#faq .\!bg-\[var\(--color-gold\)\]) { background: #fff !important; color: #111 !important; }
 .global-home.has-js .js-reveal { opacity: 0; transform: translateY(28px); transition: opacity 700ms ease, transform 700ms cubic-bezier(.22,1,.36,1); }
 .global-home.has-js .js-reveal.is-visible { opacity: 1; transform: translateY(0); }
 @keyframes home-title-in { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -316,6 +312,11 @@ useSeoMeta({
   .global-home__hero-title-spacer { display: none; }
   .global-home__hero-word-rotator { display: grid; width: 100%; margin-top: .12em; text-align: center; }
   .global-home__hero-actions { --hero-cta-width: 250px; grid-template-columns: minmax(0,var(--hero-cta-width)); }
+  .global-home__hero-proof { flex-direction: column; gap: 12px; font-size: 13px; }
+  .global-home__google-rating { min-height: 36px; gap: 9px; padding: 0 12px; }
+  .global-home__google-mark { width: 15px; height: 15px; }
+  .global-home__stars { font-size: 15px; letter-spacing: 0; }
+  .global-home__google-copy { padding-left: 9px; font-size: 11px; }
   .global-home__hero-reference-label { margin-bottom: 14px; }
   .global-home__hero-reference-marquee { mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
   .global-home__hero-reference-track { animation-duration: 22s; }
@@ -323,6 +324,11 @@ useSeoMeta({
   .global-home__reference { width: 160px; height: 58px; gap: 8px; font-size: 11px; }
   .global-home__reference img { width: 28px; height: 28px; flex-basis: 28px; }
   .global-home__reference--shika img { width: 68px; flex-basis: 68px; }
+  .home-business-content__separator { margin-block: 24px; }
+  .projects-showcase__link { width: fit-content; }
+  .projects-showcase__frame { margin-top: 32px; border-radius: 20px; background-size: 32px 32px; }
+  .offers-feature__heading { gap: 18px; }
+  .offers-feature__image { border-radius: 16px; }
 }
 
 @media (min-width: 1024px) {

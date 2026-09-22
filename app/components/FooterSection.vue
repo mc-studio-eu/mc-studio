@@ -4,7 +4,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <footer id="footer" class="bg-[#111111] text-white">
+  <footer id="footer" class="overflow-hidden bg-[#111111] text-white">
     <div class="px-[clamp(20px,2.05vw,42px)]">
       
       <!-- Main Footer Content -->
@@ -19,16 +19,19 @@ const { t } = useI18n()
             <p class="font-inter text-[15px] text-white/60 leading-relaxed max-w-[340px]">
               {{ t('footer.tagline') }}
             </p>
+            <p class="mt-8 font-inter text-xs text-white/40">
+              &copy; {{ new Date().getFullYear() }} {{ t('footer.copyright') }}
+            </p>
           </div>
 
           <!-- Navigation Column -->
           <div class="md:col-span-3">
             <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.navigation_title') }}</h4>
             <nav class="flex flex-col gap-3">
-              <NuxtLink :to="localePath('/business')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Business</NuxtLink>
-              <NuxtLink :to="localePath('/creators')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Creators</NuxtLink>
               <NuxtLink :to="localePath('/projects')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Projects</NuxtLink>
               <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Contact</NuxtLink>
+              <NuxtLink :to="localePath('/privacy')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ $t('legal.links.privacy') }}</NuxtLink>
+              <NuxtLink :to="localePath('/terms')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ $t('legal.links.terms') }}</NuxtLink>
             </nav>
           </div>
 
@@ -53,14 +56,38 @@ const { t } = useI18n()
         </div>
       </div>
 
-      <!-- Bottom Bar -->
-      <div class="border-t border-white/10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p class="font-inter text-xs text-white/40">&copy; {{ new Date().getFullYear() }} {{ t('footer.copyright') }}</p>
-        <div class="flex items-center gap-6">
-          <NuxtLink :to="localePath('/privacy')" class="font-inter text-xs text-white/40 hover:text-white/70 transition-colors no-underline">{{ $t('legal.links.privacy') }}</NuxtLink>
-          <NuxtLink :to="localePath('/terms')" class="font-inter text-xs text-white/40 hover:text-white/70 transition-colors no-underline">{{ $t('legal.links.terms') }}</NuxtLink>
-        </div>
-      </div>
+    </div>
+
+    <div class="footer-signature" aria-hidden="true">
+      <img src="/img/logo/mc-studio.svg" alt="">
     </div>
   </footer>
 </template>
+
+<style scoped>
+.footer-signature {
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(3.5rem, 8vw, 9rem);
+  margin-bottom: -0.15rem;
+  pointer-events: none;
+}
+
+.footer-signature img {
+  display: block;
+  width: min(94vw, 1560px);
+  max-width: none;
+  height: auto;
+  opacity: 0.14;
+}
+
+@media (max-width: 640px) {
+  .footer-signature {
+    padding-top: 4.5rem;
+  }
+
+  .footer-signature img {
+    width: 100%;
+  }
+}
+</style>

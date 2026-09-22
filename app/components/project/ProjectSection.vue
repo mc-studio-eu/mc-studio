@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { useProjectCards } from '../../composables/useProjectCards'
 
+const props = withDefaults(defineProps<{
+  plain?: boolean
+}>(), {
+  plain: false
+})
+
 const localePath = useLocalePath()
 const { filterProjects } = useProjectCards()
 
@@ -135,9 +141,11 @@ onBeforeUnmount(() => {
         @focusin="isPaused = true"
         @focusout="isPaused = false"
       >
-        <div class="project-grid-pattern absolute inset-0 -z-10" />
-        <div class="project-glow project-glow-one absolute -z-10" />
-        <div class="project-glow project-glow-two absolute -z-10" />
+        <div class="project-grid-pattern absolute inset-0 -z-10" :class="{ 'project-grid-pattern--plain': props.plain }" />
+        <template v-if="!props.plain">
+          <div class="project-glow project-glow-one absolute -z-10" />
+          <div class="project-glow project-glow-two absolute -z-10" />
+        </template>
 
         <div class="relative aspect-[3/2] p-3 sm:p-5 lg:p-6">
           <NuxtLink
@@ -196,6 +204,13 @@ onBeforeUnmount(() => {
     linear-gradient(rgba(240, 191, 108, 0.075) 1px, transparent 1px),
     linear-gradient(90deg, rgba(240, 191, 108, 0.075) 1px, transparent 1px);
   background-size: 48px 48px;
+}
+
+.project-grid-pattern--plain {
+  background-color: #151515;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
 }
 
 .project-glow {

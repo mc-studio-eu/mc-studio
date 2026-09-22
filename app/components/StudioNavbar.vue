@@ -27,8 +27,8 @@ const copy = computed(() => {
     : locale.value === 'fr' ? 'Démarrer un projet' : 'Start a project'
 
   return locale.value === 'fr'
-    ? { projects: 'Projets', cta, menu: 'Menu', close: 'Fermer' }
-    : { projects: 'Projects', cta, menu: 'Menu', close: 'Close' }
+    ? { home: 'Accueil', projects: 'Projet', cta, menu: 'Menu', close: 'Fermer' }
+    : { home: 'Home', projects: 'Project', cta, menu: 'Menu', close: 'Close' }
 })
 
 const languageOptions = [
@@ -37,8 +37,7 @@ const languageOptions = [
 ]
 
 const navItems = computed(() => [
-  { label: 'Business', path: '/business', active: route.path.includes('/business') && !route.hash },
-  { label: 'Creators', path: '/creators', active: route.path.includes('/creators') },
+  { label: copy.value.home, path: '/', active: route.path === localePath('/') },
   { label: copy.value.projects, path: '/projects', active: route.path.includes('/projects') }
 ])
 
@@ -191,7 +190,7 @@ onUnmounted(() => {
 .studio-nav__mobile-brand { display: block; color: inherit; text-decoration: none; }
 .studio-nav__mobile-logo { display: block; width: 158px; height: auto; }
 .studio-nav--light .studio-nav__mobile-logo { filter: invert(1); }
-.studio-nav__link { color: currentColor; font-size: 16px; font-weight: 500; line-height: 1; opacity: .3; text-decoration: none; transition: opacity 180ms ease; }
+.studio-nav__link { color: currentColor; font-size: 16px; font-weight: 560; line-height: 1; opacity: .3; text-decoration: none; transition: opacity 180ms ease; }
 .studio-nav__link:hover, .studio-nav__link--active { opacity: 1; }
 .studio-nav__locale { display: inline-flex; align-items: center; gap: 2px; border: 1px solid currentColor; border-radius: 999px; padding: 3px; color: currentColor; opacity: .72; transition: opacity 180ms ease; }
 .studio-nav__locale:hover { opacity: 1; }

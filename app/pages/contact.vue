@@ -13,6 +13,7 @@ useSeoMeta({
   <main class="contact-page min-h-screen bg-[#0f0f0f] text-white">
     <StudioNavbar tone="dark" />
     <CtaSection />
+    <TestimonialSection :show-intro="false" />
     <FooterSection />
   </main>
 </template>
@@ -36,12 +37,11 @@ useSeoMeta({
 
 .contact-page :deep(#contact) {
   padding-top: clamp(3.5rem, 8vw, 7rem);
-  padding-bottom: clamp(4rem, 9vw, 8rem);
+  padding-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
-.contact-page :deep(.contact-card) {
-  border-color: var(--border-subtle);
-  background: var(--bg-secondary);
+.contact-page :deep(#avis) {
+  padding-top: clamp(1rem, 2vw, 1.5rem);
 }
 
 </style>

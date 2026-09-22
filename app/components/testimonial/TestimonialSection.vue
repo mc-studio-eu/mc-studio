@@ -12,6 +12,12 @@ interface Testimonial {
 
 // Data
 const { t } = useI18n();
+defineProps({
+  showIntro: {
+    type: Boolean,
+    default: true
+  }
+})
 
 const testimonials = computed<Testimonial[]>(() => [
   {
@@ -78,10 +84,12 @@ const rows = computed(() => {
 </script>
 
 <template>
-  <p class="text-gradient text-center mb-2">{{ $t('testimonials.intro_label') }}</p>
+  <template v-if="showIntro">
+    <p class="text-gradient text-center mb-2">{{ $t('testimonials.intro_label') }}</p>
 
-  <p class="text-gradient text-center text-lg sm:text-xl md:text-3xl" v-html="$t('testimonials.intro_text')">
-  </p>
+    <p class="text-gradient text-center text-lg sm:text-xl md:text-3xl" v-html="$t('testimonials.intro_text')">
+    </p>
+  </template>
   <section id="avis" class="relative overflow-hidden bg-[var(--bg-primary)] py-12 transition-colors duration-300 ease-out sm:py-20">
     <div class="pointer-events-none absolute left-1/2 top-36 h-72 w-72 -translate-x-1/2 rounded-full bg-[#f0bf6c]/[0.07] blur-[100px]" aria-hidden="true"></div>
 

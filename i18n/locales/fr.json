@@ -109,8 +109,9 @@
           "0": "MVP & SaaS",
           "1": "Applications web & mobiles",
           "2": "Outils internes & CRM",
-          "3": "Dashboards & plateformes métier",
-          "4": "Intégration IA"
+          "3": "ERP & logiciels métier",
+          "4": "Dashboards & plateformes métier",
+          "5": "Intégration IA"
         }
       }
     },

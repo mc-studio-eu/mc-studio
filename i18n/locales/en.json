@@ -109,8 +109,9 @@
           "0": "MVP & SaaS",
           "1": "Web & mobile applications",
           "2": "Internal tools & CRM",
-          "3": "Dashboards & business platforms",
-          "4": "AI integration"
+          "3": "ERP & business software",
+          "4": "Dashboards & business platforms",
+          "5": "AI integration"
         }
       }
     },
