@@ -24,7 +24,7 @@
     "seo": {
       "title": "MC Studio — Logiciels pour créateurs",
       "description": "MC Studio accompagne les créateurs qui veulent aller plus loin que le contenu en construisant l'application qui prolonge leur univers.",
-      "ogTitle": "MC Studio Creator — On monétise votre audience",
+      "ogTitle": "MC Studio — Des applications pour créateurs",
       "ogDescription": "Construisons l'application qui prolonge votre univers."
     },
     "hero": {
@@ -129,7 +129,7 @@
   },
   "portfolio": {
     "seo": {
-      "title": "Portfolio — MC Studio Creator",
+      "title": "Portfolio — MC Studio",
       "description": "Les applications et expériences digitales créées pour les créateurs accompagnés par MC Studio."
     },
     "title": "Portfolio",
@@ -138,7 +138,7 @@
   },
   "call": {
     "seo": {
-      "title": "Parlons de votre projet — MC Studio Creator",
+      "title": "Parlons de votre projet — MC Studio",
       "description": "Présentez-nous votre audience et votre idée d'application. MC Studio vous répond sous 48 heures."
     },
     "eyebrow": "Votre projet",

@@ -1,9 +1,20 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { cities } from './app/data/cities'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxt/ui', '@nuxt/image', '@nuxtjs/i18n', 'nuxt-simple-sitemap'],
+  nitro: {
+    prerender: {
+      routes: cities.flatMap(({ slug }) => [`/${slug}`, `/en/${slug}`])
+    }
+  },
   css: ['~/assets/css/main.css'],
+  routeRules: {
+    '/projects/mc-studio-creator': { redirect: { to: '/projects', statusCode: 301 } },
+    '/en/projects/mc-studio-creator': { redirect: { to: '/en/projects', statusCode: 301 } },
+  },
 
   runtimeConfig: {
     resendApiKey: '',

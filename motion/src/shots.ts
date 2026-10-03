@@ -32,7 +32,6 @@ export const shots: Shot[] = [
   { src: 'img/project/maison-awl/desktop-mockup.png', label: 'App créateur', client: 'Maison AWL', lane: 'creator', fit: 'contain' },
   { src: 'img/project/personal/hero.png', label: 'App créateur', client: 'Personal', lane: 'creator', focus: 'top' },
   { src: 'img/project/personal/feed.webp', label: 'Design produit', client: 'Personal', lane: 'creator', focus: 'top' },
-  { src: 'img/project/mc-studio-creator/website-dark.png', label: 'Branding', client: 'MC Studio Creator', lane: 'creator', focus: 'top' },
 ]
 
 export const businessShots = shots.filter((s) => s.lane === 'business')

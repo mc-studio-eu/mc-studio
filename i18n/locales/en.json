@@ -309,9 +309,9 @@
       "open_project": "View the {project} project"
     },
     "all": {
-      "meta_title": "All our projects",
+      "meta_title": "Our website projects",
       "title": "All our <span class=\"text-gradient\">projects</span>",
-      "subtitle": "Every project we shipped: landing pages, websites and custom applications.",
+      "subtitle": "Explore the websites and landing pages we have built.",
       "back": "Back to home",
       "empty": "No project matches this filter yet."
     },
@@ -452,18 +452,6 @@
           "review": "MC Studio accompanied me in my digital project, very serious professional company I recommend it!",
           "job": "Manager Fontaines VTC"
         }
-      },
-      "mc_studio_creator": {
-        "description": "MC Studio Creator is our vertical dedicated to content creators: we build them custom apps for their community.\nWe built the brand end to end: full branding (logo, colors, typography) and the vertical's website.",
-        "tags": [
-          "Branding",
-          "Logo",
-          "Landing Page",
-          "Design",
-          "UI/UX",
-          "Copywriting",
-          "Content creators"
-        ]
       }
     }
   },
@@ -835,21 +823,19 @@
   },
   "globalHome": {
     "seo": {
-      "title": "MC Studio — Digital Product Studio",
-      "description": "MC Studio turns ambitious ideas into digital products for businesses and creators."
+      "title": "MC Studio — High-converting websites for SaaS",
+      "description": "MC Studio combines strategy, copywriting, design and development to create SaaS websites that drive more sign-ups and demos."
     },
     "hero": {
-      "title": "The digital partner for businesses",
-      "title_prefix": "The digital partner for",
+      "title": "High-converting websites for ambitious SaaS companies",
+      "title_prefix": "High-converting websites for",
       "rotating_words": [
-        "businesses",
-        "creators",
-        "startups"
+        "ambitious SaaS companies"
       ],
-      "subtitle": "Strategy, design and development brought together to bring your ambitions to life.",
-      "cta_primary": "Discuss your project",
+      "subtitle": "Strategy, copywriting, design and development combined to make your product instantly clear and drive more sign-ups and demos.",
+      "cta_primary": "Discuss your website",
       "cta_secondary": "See our work",
-      "references_label": "Businesses & creators we support"
+      "references_label": "They trust us"
     },
     "worlds": {
       "title": "Two worlds. One studio.",

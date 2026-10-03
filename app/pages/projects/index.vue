@@ -1,22 +1,12 @@
 <script setup lang="ts">
 import { useProjectCards } from '../../composables/useProjectCards'
-import type { ProjectFilter } from '../../composables/useProjectCards'
 
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const { filterProjects } = useProjectCards()
 
-const activeFilter = ref<ProjectFilter>('all')
 const creatorSlugs = new Set(['personal', 'maison-awl'])
-
-const filters = computed(() => [
-  { key: 'all' as const, label: locale.value === 'fr' ? 'Tous' : 'All' },
-  { key: 'branding' as const, label: 'Branding' },
-  { key: 'landing-page' as const, label: locale.value === 'fr' ? 'Site web' : 'Website' },
-  { key: 'app' as const, label: 'Apps' }
-])
-
-const filteredProjects = computed(() => filterProjects(activeFilter.value))
+const websiteProjects = computed(() => filterProjects('landing-page'))
 
 const projectKind = (slug: string) => creatorSlugs.has(slug) ? 'Creator' : 'Business'
 
@@ -42,28 +32,14 @@ useSeoMeta({
         </p>
       </div>
 
-      <div class="mt-12 flex flex-wrap gap-2 border-t border-white/10 pt-4" role="tablist" :aria-label="locale === 'fr' ? 'Filtrer les projets' : 'Filter projects'">
-        <button
-          v-for="filter in filters"
-          :key="filter.key"
-          type="button"
-          role="tab"
-          :aria-selected="activeFilter === filter.key"
-          class="project-filter"
-          :class="{ 'project-filter--active': activeFilter === filter.key }"
-          @click="activeFilter = filter.key"
-        >
-          {{ filter.label }}
-        </button>
-      </div>
     </section>
 
     <section class="projects-page__work mx-auto w-[min(1240px,calc(100%-48px))] pb-28 sm:pb-40" aria-labelledby="projects-grid-title">
       <h2 id="projects-grid-title" class="sr-only">{{ t('globalHome.projects.title') }}</h2>
 
-      <TransitionGroup name="project-grid" tag="div" class="grid gap-x-5 gap-y-14 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-20">
+      <div class="grid gap-x-5 gap-y-14 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-20">
         <NuxtLink
-          v-for="project in filteredProjects"
+          v-for="project in websiteProjects"
           :key="project.id"
           :to="localePath(`/projects/${project.slug}`)"
           class="project-showcase group"
@@ -78,11 +54,7 @@ useSeoMeta({
             <span class="shrink-0 text-[10px] uppercase tracking-[0.16em] text-white/40">{{ projectKind(project.slug) }}</span>
           </div>
         </NuxtLink>
-      </TransitionGroup>
-
-      <p v-if="!filteredProjects.length" class="mt-12 text-center font-inter text-sm text-white/55">
-        {{ t('projects.all.empty') }}
-      </p>
+      </div>
     </section>
 
     <FooterSection />
@@ -100,24 +72,6 @@ useSeoMeta({
   color: #fff;
   -webkit-background-clip: border-box;
   -webkit-text-fill-color: #fff;
-}
-
-.project-filter {
-  border: 1px solid transparent;
-  border-radius: 999px;
-  padding: .65rem .95rem;
-  background: transparent;
-  color: rgba(255,255,255,.48);
-  cursor: pointer;
-  font: 600 .72rem/1 Inter, sans-serif;
-  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
-}
-
-.project-filter:hover,
-.project-filter--active {
-  border-color: rgba(255,255,255,.18);
-  background: rgba(255,255,255,.08);
-  color: #fff;
 }
 
 .project-showcase {
@@ -180,17 +134,6 @@ useSeoMeta({
 .project-showcase:focus-visible {
   outline: 2px solid #f0bf6c;
   outline-offset: 7px;
-}
-
-.project-grid-enter-active,
-.project-grid-leave-active {
-  transition: opacity 220ms ease, transform 220ms ease;
-}
-
-.project-grid-enter-from,
-.project-grid-leave-to {
-  opacity: 0;
-  transform: translateY(12px);
 }
 
 @media (max-width: 640px) {

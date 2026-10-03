@@ -309,9 +309,9 @@
       "open_project": "Voir le projet {project}"
     },
     "all": {
-      "meta_title": "Tous nos projets",
+      "meta_title": "Nos projets de sites web",
       "title": "Tous nos <span class=\"text-gradient\">projets</span>",
-      "subtitle": "L'ensemble de nos réalisations : landing pages, sites internet et applications sur mesure.",
+      "subtitle": "Découvrez les sites web et landing pages que nous avons réalisés.",
       "back": "Retour à l'accueil",
       "empty": "Aucun projet ne correspond à ce filtre pour le moment."
     },
@@ -452,18 +452,6 @@
           "review": "MC studio m’a accompagné dans mon projet digital, entreprise très sérieuse professionnelle je la recommande !",
           "job": "Dirigeant Fontaines VTC"
         }
-      },
-      "mc_studio_creator": {
-        "description": "MC Studio Creator, c’est notre verticale dédiée aux créateurs de contenu : on leur conçoit des applications sur mesure pour leur communauté.\nOn a construit la marque de A à Z : branding complet (logo, couleurs, typographies) et site web de la verticale.",
-        "tags": [
-          "Branding",
-          "Logo",
-          "Landing Page",
-          "Design",
-          "UI/UX",
-          "Copywriting",
-          "Créateurs de contenu"
-        ]
       }
     }
   },
@@ -835,21 +823,19 @@
   },
   "globalHome": {
     "seo": {
-      "title": "MC Studio — Digital Product Studio",
-      "description": "MC Studio transforme les idées ambitieuses en produits digitaux pour les entreprises et les créateurs."
+      "title": "MC Studio — Des sites web qui convertissent pour les SaaS",
+      "description": "MC Studio combine stratégie, copywriting, design et développement pour créer des sites SaaS qui génèrent plus d’inscriptions et de démos."
     },
     "hero": {
-      "title": "Le partenaire digital des entreprises",
-      "title_prefix": "Le partenaire digital des",
+      "title": "Des sites web qui convertissent pour les SaaS ambitieux",
+      "title_prefix": "Des sites web qui convertissent pour les",
       "rotating_words": [
-        "entreprises",
-        "créateurs",
-        "startups"
+        "SaaS ambitieux"
       ],
-      "subtitle": "Stratégie, design et développement réunis pour donner vie à vos ambitions.",
-      "cta_primary": "Parler de votre projet",
+      "subtitle": "Stratégie, copywriting, design et développement réunis pour rendre votre produit évident et générer plus d’inscriptions et de démos.",
+      "cta_primary": "Parler de votre site",
       "cta_secondary": "Voir nos réalisations",
-      "references_label": "Entreprises & créateurs accompagnés"
+      "references_label": "Ils nous font confiance"
     },
     "worlds": {
       "title": "Deux univers. Un seul studio.",

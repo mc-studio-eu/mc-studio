@@ -226,27 +226,6 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: 'mc-studio-creator',
-    i18nKey: 'mc_studio_creator',
-    title: 'MC Studio Creator',
-    categories: ['branding', 'landing-page'],
-    image: '/img/project/mc-studio-creator/cover.png',
-    externalLink: 'https://mc-studio.eu',
-    verified: true,
-    screenshots: {
-      desktop: [
-        '/img/project/mc-studio-creator/cover.png',
-        '/img/project/mc-studio-creator/website-dark.png',
-        '/img/project/mc-studio-creator/logo-wordmark.png',
-        '/img/project/mc-studio-creator/typography.png',
-      ],
-      mobile: [
-        '/img/project/mc-studio-creator/sign-logo.png',
-        '/img/project/mc-studio-creator/billboard-logo.png',
-      ],
-    },
-  },
-  {
     slug: 'fontaines-vtc',
     i18nKey: 'fontaines_vtc',
     title: 'Fontaines VTC',

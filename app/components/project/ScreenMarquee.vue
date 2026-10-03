@@ -5,16 +5,13 @@ const props = defineProps<{
 }>()
 
 const screenProject = [
-  '/img/project/mc-studio-creator/cover.png',
   '/img/project/amgprom.png',
   '/img/project/fontaines-vtc-dark.jpeg',
   '/img/project/logo-raenergy.png',
   '/img/project/ra-energy.jpeg',
   '/img/project/souji-nova.jpeg',
-  '/img/project/mc-studio-creator/billboard-logo.png',
   '/img/project/arises-tablet.jpeg',
   '/img/project/ra-energy-v2.png',
-  '/img/project/mc-studio-creator/sign-logo.png',
   '/img/project/souji-nova-desktop.png',
 ]
 </script>

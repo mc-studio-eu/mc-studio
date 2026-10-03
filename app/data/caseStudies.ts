@@ -191,24 +191,6 @@ export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
     },
   },
 
-  'mc-studio-creator': {
-    fr: {
-      headline: 'Passer de prestataire pour créateurs à partenaire produit.',
-      clientLabel: 'Contexte',
-      client: 'MC Studio Creator, notre verticale dédiée aux créateurs qui veulent un produit pour leur communauté.',
-      problem: "Une même marque pour PME et créateurs diluait le message, avec le risque d'être vu comme une agence de plus qui fait « une app ».",
-      solution: 'Une identité dédiée, une thèse claire (audience → besoin → produit → lancement) et une landing avec parcours de candidature.',
-      quote: "La force d'un créateur, c'est sa distribution. On transforme cette audience en utilisateurs d'un produit concret.",
-    },
-    en: {
-      headline: 'From service provider for creators to product partner.',
-      clientLabel: 'Context',
-      client: 'MC Studio Creator, our vertical dedicated to creators who want a product for their community.',
-      problem: 'One brand for both small businesses and creators diluted the message, with the risk of being seen as yet another agency making "an app".',
-      solution: 'A dedicated identity, a clear thesis (audience → need → product → launch) and a landing page with an application journey.',
-      quote: 'A creator’s strength is their distribution. We turn that audience into users of a real product.',
-    },
-  },
 }
 
 export function findCaseStudyBySlug(slug: string): LocalizedValue<CaseStudy> | undefined {

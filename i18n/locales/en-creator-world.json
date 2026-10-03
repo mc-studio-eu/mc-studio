@@ -24,7 +24,7 @@
     "seo": {
       "title": "MC Studio — Creator-led software",
       "description": "MC Studio helps creators go beyond content by building the application that expands their universe.",
-      "ogTitle": "MC Studio Creator — Turn your audience into a business",
+      "ogTitle": "MC Studio — Apps for creators",
       "ogDescription": "Let's build the application that expands your universe."
     },
     "hero": {
@@ -129,7 +129,7 @@
   },
   "portfolio": {
     "seo": {
-      "title": "Portfolio — MC Studio Creator",
+      "title": "Portfolio — MC Studio",
       "description": "Applications and digital experiences created by MC Studio for ambitious creators."
     },
     "title": "Portfolio",
@@ -138,7 +138,7 @@
   },
   "call": {
     "seo": {
-      "title": "Tell us about your project — MC Studio Creator",
+      "title": "Tell us about your project — MC Studio",
       "description": "Tell us about your audience and application idea. MC Studio will get back to you within 48 hours."
     },
     "eyebrow": "Your project",
