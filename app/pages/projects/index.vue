@@ -4,17 +4,18 @@ const { t } = useI18n()
 const galleryProjects = [
   { title: 'Automatisation, intégrations et IA', image: '/img/project/automation-integrations-ai-screen.png' },
   { title: 'Sotraya — écran d’accueil', image: '/img/project/sotraya/hero-screen.png' },
-  { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp' },
   { title: 'Personal — hero', image: '/img/project/personal-hero.png' },
   { title: 'Personal — footer', image: '/img/project/personal-footer.png' },
   { title: 'Personal — dashboard', image: '/img/project/personal-dashboard.png' },
   { title: 'Arises — connexion', image: '/img/project/arises-login-screen.png' },
   { title: 'Souji Nova', image: '/img/project/souji-nova-section.png' },
   { title: 'R&A Energy', image: '/img/project/hero-raenergy.png' },
+  { title: 'R&A Energy — comment ça marche', image: '/img/project/ra-energy-how-it-works.png' },
   { title: 'Automatisation, intégrations et IA', image: '/img/project/automation-integrations-ai.webp' },
-  { title: 'Gestion d’association — vue d’ensemble', image: '/img/project/association-management.png' },
   { title: 'Shika Consulting — footer', image: '/img/project/shika-footer.png' },
   { title: 'MC Studio — espace créateurs', image: '/img/project/mc-studio-creators-hero.png' },
+  { title: 'Gestion d’association — vue d’ensemble', image: '/img/project/association-management.png' },
+  { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp' },
   { title: 'AMG Promotion — showroom', image: '/img/project/amg-promotion-showroom.png' },
 ]
 
