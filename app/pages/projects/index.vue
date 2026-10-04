@@ -2,11 +2,20 @@
 const { t } = useI18n()
 
 const galleryProjects = [
-  { title: 'Sotraya', image: '/img/project/sotraya/hero.jpg' },
+  { title: 'Automatisation, intégrations et IA', image: '/img/project/automation-integrations-ai-screen.png' },
+  { title: 'Sotraya — écran d’accueil', image: '/img/project/sotraya/hero-screen.png' },
   { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp' },
+  { title: 'Personal — hero', image: '/img/project/personal-hero.png' },
+  { title: 'Personal — footer', image: '/img/project/personal-footer.png' },
+  { title: 'Personal — dashboard', image: '/img/project/personal-dashboard.png' },
+  { title: 'Arises — connexion', image: '/img/project/arises-login-screen.png' },
   { title: 'Souji Nova', image: '/img/project/souji-nova-section.png' },
   { title: 'R&A Energy', image: '/img/project/hero-raenergy.png' },
-  { title: 'Fontaines VTC', image: '/img/project/live-screens/fontaines-vtc.png' },
+  { title: 'Automatisation, intégrations et IA', image: '/img/project/automation-integrations-ai.webp' },
+  { title: 'Gestion d’association — vue d’ensemble', image: '/img/project/association-management.png' },
+  { title: 'Shika Consulting — footer', image: '/img/project/shika-footer.png' },
+  { title: 'MC Studio — espace créateurs', image: '/img/project/mc-studio-creators-hero.png' },
+  { title: 'AMG Promotion — showroom', image: '/img/project/amg-promotion-showroom.png' },
 ]
 
 useSeoMeta({
@@ -20,17 +29,6 @@ useSeoMeta({
 <template>
   <main class="projects-page min-h-screen bg-[#0f0f0f] text-white">
     <StudioNavbar tone="dark" />
-
-    <section class="projects-page__intro mx-auto w-[min(1240px,calc(100%-48px))] pb-20 pt-[clamp(80px,12vw,150px)] sm:pb-28">
-      <div class="max-w-[820px]">
-        <h1 class="projects-page__title font-manrope text-[clamp(3.4rem,8vw,7.8rem)] font-medium leading-[0.92] tracking-[-0.075em] text-white">
-          {{ t('globalHome.projects.title') }}
-        </h1>
-        <p class="mt-8 max-w-[560px] text-balance font-inter text-base leading-7 text-white/60 sm:text-lg">
-          {{ t('projects.all.subtitle') }}
-        </p>
-      </div>
-    </section>
 
     <section class="projects-page__work mx-auto w-[min(1240px,calc(100%-48px))] pb-28 sm:pb-40" aria-labelledby="projects-grid-title">
       <h2 id="projects-grid-title" class="sr-only">{{ t('globalHome.projects.title') }}</h2>
@@ -51,16 +49,8 @@ useSeoMeta({
 </template>
 
 <style scoped>
-.projects-page__intro,
 .projects-page__work {
   scroll-margin-top: 80px;
-}
-
-.projects-page__title {
-  background: none;
-  color: #fff;
-  -webkit-background-clip: border-box;
-  -webkit-text-fill-color: #fff;
 }
 
 .project-screens {

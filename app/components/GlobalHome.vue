@@ -269,6 +269,7 @@ useSeoMeta({
   .global-home__hero-title-spacer { display: none; }
   .global-home__hero-word-rotator { display: grid; width: 100%; margin-top: .12em; text-align: center; }
   .global-home__hero-actions { --hero-cta-width: 250px; grid-template-columns: minmax(0,var(--hero-cta-width)); }
+  .global-home__hero-testimonial { top: calc(100% + 8px); }
   .global-home__hero-proof { flex-direction: column; gap: 12px; font-size: 13px; }
   .global-home__hero-reference-label { margin-bottom: 14px; }
   .global-home__hero-reference-marquee { mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
