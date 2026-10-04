@@ -105,9 +105,9 @@ export const projects: Project[] = [
     },
     screenshots: {
       desktop: [
-        '/img/project/shika-consulting/homepage.webp',
         '/img/project/shika-consulting/associations.webp',
         '/img/project/shika-consulting/process.webp',
+        '/img/project/shika-consulting/homepage.webp',
         '/img/project/shika-consulting/testimonials.webp',
       ],
       mobile: [],
