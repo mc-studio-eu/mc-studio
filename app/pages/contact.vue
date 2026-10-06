@@ -12,7 +12,19 @@ useSeoMeta({
 <template>
   <main class="contact-page min-h-screen bg-[#0f0f0f] text-white">
     <StudioNavbar tone="dark" />
-    <CtaSection />
+    <CtaSection>
+      <div class="flex justify-center pb-6 pt-4">
+        <a
+          href="https://api.whatsapp.com/send/?phone=%2B33781724683"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/15 bg-[#232323] px-6 py-3 font-inter text-sm font-medium text-white no-underline transition-colors hover:border-[#25D366] hover:bg-[#25D366] hover:text-[#0f0f0f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#25D366]"
+        >
+          <UIcon name="i-lucide-message-circle" class="size-5" aria-hidden="true" />
+          {{ t('hero.cta.whatsapp') }}
+        </a>
+      </div>
+    </CtaSection>
     <TestimonialSection :show-intro="false" />
     <FooterSection />
   </main>

@@ -50,6 +50,7 @@ export const projects: Project[] = [
     "screenshots": {
       "desktop": [
         "/img/project/sotraya/hero.png",
+        "/img/project/sotraya/splash.png",
         "/img/project/sotraya/about.png",
         "/img/project/sotraya/services.png",
         "/img/project/sotraya/brand.png"

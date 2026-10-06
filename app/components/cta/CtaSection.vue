@@ -13,6 +13,7 @@ const { t } = useI18n()
         loading="lazy"
         :title="t('cta.calendar.iframe_title')"
       />
+      <slot />
     </div>
   </section>
 </template>
