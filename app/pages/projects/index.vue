@@ -4,6 +4,7 @@ const { t } = useI18n()
 const galleryProjects = [
   { title: 'Automatisation, intégrations et IA', image: '/img/project/automation-integrations-ai-screen.png' },
   { title: 'Sotraya — écran d’accueil', image: '/img/project/sotraya/hero-screen.png' },
+  { title: 'Sotraya — écran de lancement', image: '/img/project/sotraya/splash.png' },
   { title: 'Personal — hero', image: '/img/project/personal-hero.png' },
   { title: 'Personal — footer', image: '/img/project/personal-footer.png' },
   { title: 'Personal — dashboard', image: '/img/project/personal-dashboard.png' },
