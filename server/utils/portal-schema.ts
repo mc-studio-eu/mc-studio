@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS resources (
 
  id TEXT PRIMARY KEY, project_id TEXT REFERENCES projects(id) ON DELETE CASCADE,
 
- kind TEXT NOT NULL CHECK(kind IN ('payment','document','file','mockup','link','wiki','analytics')),
+ kind TEXT NOT NULL CHECK(kind IN ('payment','file','mockup','link','wiki','analytics')),
 
  title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '', url TEXT NOT NULL DEFAULT '',
 

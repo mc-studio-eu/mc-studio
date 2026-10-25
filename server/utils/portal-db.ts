@@ -33,6 +33,7 @@ async function connect(): Promise<PortalDatabase> {
    await client.query('CREATE SCHEMA IF NOT EXISTS mc_portal')
    await client.query('SET LOCAL search_path TO mc_portal')
    await client.query(portalSchema)
+   await client.query("UPDATE resources SET kind='file' WHERE kind='document'")
    await client.query('CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx ON users(lower(email))')
    await client.query('COMMIT')
   } catch (error) { await client.query('ROLLBACK'); throw error }
@@ -72,6 +73,7 @@ async function connect(): Promise<PortalDatabase> {
  const sqlite = new DatabaseSync(file); chmodSync(file, 0o600)
  sqlite.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;')
  sqlite.exec(portalSchema)
+ sqlite.prepare("UPDATE resources SET kind='file' WHERE kind='document'").run()
  sqlite.exec('CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx ON users(lower(email))')
  // Serialize SQLite operations so unrelated requests cannot enter another transaction.
  const context = new AsyncLocalStorage<boolean>()

@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
  const file = parts?.find(p => p.name === 'file' && p.filename)
  if (!file || !file.data.length || file.data.length > max) throw createError({ statusCode: 400, statusMessage: 'Choisissez un fichier de 10 Mo maximum.' })
  const name = file.filename!.replace(/[\x00-\x1f\x7f/\\]/g, '_').slice(0, 180)
- const kind = user.role === 'admin' && parts?.find(p => p.name === 'kind')?.data.toString() === 'document' ? 'document' : 'file'
+ const kind = 'file'
  const id = randomUUID()
  await db.transaction(async () => {
   if (db.dialect === 'postgres') await db.prepare('SELECT id FROM projects WHERE id=? FOR UPDATE').get(project.id)

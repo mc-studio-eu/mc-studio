@@ -15,7 +15,7 @@ export async function accessibleProject(event: any, id?: string) {
 export function resourceInput(body: any) {
  const text = (v: unknown, max: number) => typeof v === 'string' ? v.trim().slice(0, max) : ''
  const kind = text(body.kind, 20), title = text(body.title, 160), url = text(body.url, 2000)
- if (!['payment','document','file','mockup','link','wiki','analytics'].includes(kind) || !title) throw createError({ statusCode: 400, statusMessage: 'Choisissez une rubrique et un titre.' })
+ if (!['payment','file','mockup','link','wiki','analytics'].includes(kind) || !title) throw createError({ statusCode: 400, statusMessage: 'Choisissez une rubrique et un titre.' })
  if (url) {
   try { const parsed = new URL(url); if (parsed.protocol !== 'https:' || parsed.username || parsed.password) throw new Error() }
   catch { throw createError({ statusCode: 400, statusMessage: 'Le lien doit être une adresse HTTPS valide.' }) }

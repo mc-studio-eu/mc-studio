@@ -7,8 +7,7 @@ L’admin ouvre `/portal/admin`, crée une fiche client et son projet, puis ajou
 - Accueil : étape, progression, échéance, actions attendues et dernières nouvelles.
 - Suivi : quatre phases et journal des changements, dépôts et retours.
 - Paiements : liens HTTPS de tout prestataire (Stripe, etc.), montant en euros, échéance et statut confirmé manuellement par MC Studio. Aucun prélèvement ni vérification bancaire automatique. Un clic ne marque jamais un paiement comme réglé.
-- Documents : liens et vrais fichiers ajoutés par l’admin.
-- Fichiers : dépôt par le client ou l’admin, téléchargement authentifié. 10 Mo par fichier, 100 Mo par projet. Les fichiers archivés restent comptabilisés.
+- Fichiers : liens et vrais fichiers ajoutés par l’admin, dépôts du client, documents et téléchargements authentifiés. 10 Mo par fichier, 100 Mo par projet. Les fichiers archivés restent comptabilisés.
 - Maquettes : liens externes, validation ou demande de modifications avec commentaire, historique par ressource dans le journal.
 - Liens utiles : URLs HTTPS par projet.
 - Wiki : articles texte et liens, spécifiques au projet ou partagés avec tous les clients. Trois guides de démarrage sont créés au premier accès admin, puis modifiables/archivables.
