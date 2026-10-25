@@ -15,6 +15,20 @@ html[data-portal-theme="light"] :is(.sidebar, .admin-nav, .page-sidebar) { backg
 html[data-portal-theme="light"] .canvas { background: #f3f4f6; scrollbar-color: #c4c5cc transparent; }
 html[data-portal-theme="light"] .artboard { box-shadow: 0 0 0 1px #00000012, 0 8px 30px #00000008; }
 html[data-portal-theme="light"] .portal-brand img { filter: brightness(0); }
+/* Keep form controls readable when component styles still carry dark-mode fallbacks. */
+html[data-portal-theme="light"] :is(.portal, .admin-space, .portal-login) :is(input, textarea, select) {
+  color: var(--portal-text);
+  color-scheme: light;
+}
+html[data-portal-theme="light"] :is(.portal, .admin-space, .portal-login) :is(input, textarea, select)::placeholder {
+  color: var(--portal-muted);
+  opacity: 1;
+}
+html[data-portal-theme="light"] .admin-space .admin-nav nav button.active,
+html[data-portal-theme="light"] .admin-space .admin-nav nav button:hover {
+  color: var(--portal-text) !important;
+}
+html[data-portal-theme="light"] .admin-space .modal-backdrop { background: rgba(20, 22, 27, .48); }
 html[data-portal-theme] :is(.portal, .admin-space, .portal-login) h1 {
   color: var(--portal-text, #eee);
   background: none;
