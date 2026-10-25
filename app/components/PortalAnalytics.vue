@@ -1,0 +1,6 @@
+<script setup lang="ts">
+const props=defineProps<{resourceId:string}>()
+const {data,status,error}=await useFetch<{connected:boolean;message?:string;metrics?:{label:string;value:number}[]}>('/api/portal/analytics',{query:{resourceId:props.resourceId},server:false,key:`analytics-${props.resourceId}`})
+</script>
+<template><div class="ga"><p v-if="status==='pending'">Chargement des statistiques…</p><p v-else-if="error">Les statistiques sont temporairement indisponibles.</p><template v-else-if="data?.connected"><p>Les 30 derniers jours · Google Analytics</p><div class="ga-metrics"><div v-for="metric in data.metrics" :key="metric.label"><strong>{{metric.value.toLocaleString('fr-FR')}}</strong><span>{{metric.label}}</span></div></div></template><p v-else>{{data?.message || 'Connexion Google Analytics à configurer.'}}</p></div></template>
+<style scoped>.ga{margin:14px 0;padding:16px;background:var(--portal-surface, #121212);border-radius:8px}.ga p{font-size:11px;color:var(--portal-muted, #999)}.ga-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ga strong{display:block;font-size:23px;color:var(--portal-text, #bcbcbc)}.ga span{display:block;font-size:10px;color:var(--portal-muted, #aaa)}</style>

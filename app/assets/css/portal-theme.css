@@ -1,0 +1,76 @@
+/* Portal-only tokens; dark mode retains each component's original fallback. */
+html[data-portal-theme="light"] {
+  --portal-scheme: light;
+  --portal-surface: #fff;
+  --portal-raised: #f0f1f3;
+  --portal-strong: #44464c;
+  --portal-line: #dcdde1;
+  --portal-text: #202126;
+  --portal-muted: #686a73;
+  color-scheme: light;
+  scrollbar-color: #c4c5cc #f6f7f9;
+}
+html[data-portal-theme="light"] :is(.portal, .admin-space, .portal-login) { background: #f7f8fa; }
+html[data-portal-theme="light"] :is(.sidebar, .admin-nav, .page-sidebar) { background: #fafafa; }
+html[data-portal-theme="light"] .canvas { background: #f3f4f6; scrollbar-color: #c4c5cc transparent; }
+html[data-portal-theme="light"] .artboard { box-shadow: 0 0 0 1px #00000012, 0 8px 30px #00000008; }
+html[data-portal-theme="light"] .portal-brand img { filter: brightness(0); }
+html[data-portal-theme] :is(.portal, .admin-space, .portal-login) h1 {
+  color: var(--portal-text, #eee);
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+/* Gold is the shared interaction accent in both portal themes. */
+html[data-portal-theme] {
+  --portal-accent: #d4ad5b;
+  --portal-accent-hover: #e3c574;
+  --portal-accent-deep: #a97c32;
+  --portal-accent-ink: #17140d;
+  --portal-focus: rgba(212, 173, 91, .42);
+}
+html[data-portal-theme] :is(.create-button, .wa-button, .main-action, .pr-primary, .mk .primary, .growth .primary, .login-submit) {
+  background: linear-gradient(180deg, var(--portal-accent-hover), var(--portal-accent));
+  border-color: var(--portal-accent-hover);
+  color: var(--portal-accent-ink) !important;
+  -webkit-text-fill-color: var(--portal-accent-ink) !important;
+}
+html[data-portal-theme] :is(.create-button, .wa-button, .main-action, .pr-primary, .mk .primary, .growth .primary, .login-submit):hover {
+  background: linear-gradient(180deg, #ecd795, #dabc70);
+}
+html[data-portal-theme] :is(.password-label a, .login-footer a) { color: var(--portal-muted, #ccc); }
+html[data-portal-theme] .login-card input:focus { border-color: var(--portal-accent); box-shadow: 0 0 0 2px var(--portal-focus); }
+html[data-portal-theme] .remember-check input:checked { background: var(--portal-accent); border-color: var(--portal-accent-hover); }
+html[data-portal-theme] .remember-check input:checked:after { color: var(--portal-accent-ink); }
+html[data-portal-theme] .mk .pin { color: #fff; background: #222; border-color: #fff; }
+html[data-portal-theme] .mk .pin:is(.selected, .draft) { background: var(--portal-accent); color: var(--portal-accent-ink); border-color: var(--portal-accent-hover); }
+html[data-portal-theme="light"] .growth-chart line { stroke: #e1e2e6; }
+html[data-portal-theme="light"] .growth-chart rect { fill: #c8a352; }
+html[data-portal-theme="light"] .growth-chart rect:is(:hover, :focus) { fill: #a97c32; }
+.portal-header-actions { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.portal-login-header { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 20px; margin-bottom: 24px; }
+.portal-login-header .login-brand { margin-bottom: 0; align-self: center; }
+html[data-portal-theme] button.portal-theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; min-width: 36px; flex-shrink: 0;
+  padding: 0; border: 1px solid var(--portal-line, #393939); border-radius: 50%;
+  background: var(--portal-surface, #222); color: var(--portal-text, #eee);
+  cursor: pointer; font-size: 18px; line-height: 1;
+}
+html[data-portal-theme] button.portal-theme-toggle:hover { background: var(--portal-raised, #303030); }
+html[data-portal-theme] button.portal-theme-toggle:focus-visible { outline: 2px solid var(--portal-accent-hover); outline-offset: 3px; }
+@media (max-width: 600px) { .portal-header-actions { gap: 8px; } }
+
+/* Native checkboxes, radios, progress and keyboard focus use the same gold accent. */
+html[data-portal-theme] :is(input[type="checkbox"], input[type="radio"]) { accent-color: var(--portal-accent); }
+html[data-portal-theme] :is(.portal, .admin-space, .portal-login, .mk-viewer, .pr, .growth) :focus-visible {
+  outline-color: var(--portal-accent-hover);
+}
+html[data-portal-theme] :is(.sidebar nav button.active, .admin-nav nav button.active) {
+  color: var(--portal-accent-hover) !important;
+  border-color: var(--portal-line);
+  border-left-color: var(--portal-accent);
+}
+html[data-portal-theme] :is(.workspace-tabs button.selected, .pr-tabs button.active, .view-bar nav button.active) {
+  border-bottom-color: var(--portal-accent) !important;
+}
+html[data-portal-theme] :is(.admin-progress i, .mini-progress i) { background: var(--portal-accent); }

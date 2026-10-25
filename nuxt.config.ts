@@ -10,7 +10,7 @@ export default defineNuxtConfig({
       routes: cities.flatMap(({ slug }) => [`/${slug}`, `/en/${slug}`])
     }
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/portal-auth.css', '~/assets/css/portal-theme.css'],
   routeRules: {
     '/projects/mc-studio-creator': { redirect: { to: '/projects', statusCode: 301 } },
     '/en/projects/mc-studio-creator': { redirect: { to: '/en/projects', statusCode: 301 } },
@@ -20,7 +20,9 @@ export default defineNuxtConfig({
     resendApiKey: '',
     contactFrom: 'MC Studio <contact@mc-studio.eu>',
     contactTo: 'contact@mc-studio.eu',
+    portalDbPath: '',
     public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || '',
       partnerPlatformUrl:
         process.env.NUXT_PUBLIC_PARTNER_PLATFORM_URL || 'https://app.mc-studio.eu'
     }

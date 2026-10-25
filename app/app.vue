@@ -1,14 +1,19 @@
 <script setup lang="ts">
-const { t } = useI18n()
+import { usePortalTheme } from '~/composables/usePortalTheme'
 
-useHead({
+const { t } = useI18n()
+const route = useRoute()
+const { theme: portalTheme } = usePortalTheme()
+const isPortal = computed(() => /^\/(?:en\/)?portal(?:\/|$)/.test(route.path))
+
+useHead(() => ({
   title: computed(() => t('meta.title')),
   meta: [
     { name: 'description', content: computed(() => t('meta.description')) },
     { property: 'og:title', content: computed(() => t('meta.title')) },
     { property: 'og:description', content: computed(() => t('meta.description')) }
   ],
-  script: [
+  script: isPortal.value ? [] : [
     {
       src: 'https://www.googletagmanager.com/gtag/js?id=G-0PT349TFG7',
       async: true,
@@ -27,8 +32,9 @@ useHead({
   ],
   htmlAttrs: {
     class: 'nuxt-ui-scrollbars',
+    'data-portal-theme': isPortal.value ? portalTheme.value : undefined,
   },
-});
+}));
 </script>
 
 <template>
