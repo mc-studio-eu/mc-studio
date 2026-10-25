@@ -35,7 +35,7 @@ async function connect(): Promise<PortalDatabase> {
    await client.query(portalSchema)
    await client.query("UPDATE resources SET kind='file' WHERE kind='document'")
    await client.query("UPDATE resources SET archived=1,updated_at=CURRENT_TIMESTAMP WHERE id IN ('mc-wiki-welcome','mc-wiki-feedback','mc-wiki-files') AND archived=0")
-   await client.query("UPDATE resources SET url='https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0',updated_at=CURRENT_TIMESTAMP WHERE id='mc-wiki-client-documentation' AND url<>'https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0'")
+   await client.query("UPDATE resources SET url='https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0a?pvs=74',updated_at=CURRENT_TIMESTAMP WHERE id='mc-wiki-client-documentation' AND url<>'https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0a?pvs=74'")
    await client.query('CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx ON users(lower(email))')
    await client.query('COMMIT')
   } catch (error) { await client.query('ROLLBACK'); throw error }
@@ -77,7 +77,7 @@ async function connect(): Promise<PortalDatabase> {
  sqlite.exec(portalSchema)
  sqlite.prepare("UPDATE resources SET kind='file' WHERE kind='document'").run()
  sqlite.prepare("UPDATE resources SET archived=1,updated_at=CURRENT_TIMESTAMP WHERE id IN ('mc-wiki-welcome','mc-wiki-feedback','mc-wiki-files') AND archived=0").run()
- sqlite.prepare("UPDATE resources SET url='https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0',updated_at=CURRENT_TIMESTAMP WHERE id='mc-wiki-client-documentation' AND url<>'https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0'").run()
+ sqlite.prepare("UPDATE resources SET url='https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0a?pvs=74',updated_at=CURRENT_TIMESTAMP WHERE id='mc-wiki-client-documentation' AND url<>'https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0a?pvs=74'").run()
  sqlite.exec('CREATE UNIQUE INDEX IF NOT EXISTS users_email_lower_idx ON users(lower(email))')
  // Serialize SQLite operations so unrelated requests cannot enter another transaction.
  const context = new AsyncLocalStorage<boolean>()
