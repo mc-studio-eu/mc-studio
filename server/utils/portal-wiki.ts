@@ -7,4 +7,6 @@ export async function ensurePortalWiki(adminId:string) {
  ]
  const db=await portalDb()
  for(const [key,title,description,content] of articles) await db.prepare("INSERT INTO resources(id,kind,title,description,content,created_by) VALUES(?,'wiki',?,?,?,?) ON CONFLICT(id) DO NOTHING").run('mc-wiki-'+key,title,description,content,adminId)
+ await db.prepare("INSERT INTO resources(id,project_id,kind,title,description,url,content,created_by) VALUES(?,NULL,'wiki',?,?,?, ?,?) ON CONFLICT(id) DO NOTHING")
+  .run('mc-wiki-client-documentation','Documentation client','Retrouvez la documentation partagée par MC Studio.', 'https://app.notion.com/p/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0a?source=copy_link', '', adminId)
 }
