@@ -9,13 +9,22 @@ export function figmaSource(value: unknown) {
  } catch { throw createError({statusCode:400,statusMessage:'Ajoutez un lien de fichier Figma valide.'}) }
 }
 export async function figmaRequest(path: string) {
- const token = process.env.FIGMA_ACCESS_TOKEN
+ const token = process.env.FIGMA_ACCESS_TOKEN || process.env.NUXT_FIGMA_ACCESS_TOKEN
  if (!token) throw createError({statusCode:503,statusMessage:'Ajoutez FIGMA_ACCESS_TOKEN sur le serveur pour connecter Figma.'})
  let response: Response
  try { response = await fetch('https://api.figma.com/v1/'+path,{headers:{'X-Figma-Token':token},signal:AbortSignal.timeout(90000),redirect:'error'}) }
  catch { throw createError({statusCode:502,statusMessage:'Figma ne répond pas. Réessayez dans un instant.'}) }
- if (!response.ok) throw createError({statusCode:response.status===429?429:502,statusMessage:response.status===429?'Limite Figma atteinte. Réessayez plus tard.':response.status===403?'Le jeton Figma ne permet pas de lire ce fichier.':response.status===404?'Fichier Figma introuvable ou inaccessible.':'Impossible de récupérer le fichier Figma.'})
- return response.json()
+ if (!response.ok) {
+  const details = await response.json().catch(() => ({}))
+  const message = typeof details.err === 'string' ? details.err : ''
+  const isScopeError = message.toLowerCase().includes('scope')
+  throw createError({
+   statusCode:response.status===401?401:response.status===403?403:response.status===404?404:response.status===429?429:502,
+   statusMessage:response.status===429?'Limite Figma atteinte. Réessayez plus tard.':response.status===401?'Le jeton Figma est invalide ou expiré.':isScopeError?'Le jeton Figma doit disposer du droit file_content:read.':response.status===403?'Le compte associé au jeton Figma n’a pas accès à ce fichier.':response.status===404?'Fichier Figma introuvable ou inaccessible.':'Impossible de récupérer le fichier Figma.'
+  })
+ }
+ try { return await response.json() }
+ catch { throw createError({statusCode:502,statusMessage:'Figma a renvoyé une réponse illisible. Réessayez dans un instant.'}) }
 }
 export async function inspectFigma(key: string, version?: string) {
  const params = new URLSearchParams({depth:'4'}); if(version)params.set('version',version)
