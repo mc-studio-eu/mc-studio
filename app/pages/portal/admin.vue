@@ -8,6 +8,12 @@ const section = ref<'clients' | 'projects' | 'growth'>(useRoute().query.tab==='g
 
 const search = ref('')
 
+const statusFilter = ref('all')
+
+const sortBy = ref<'name' | 'contact' | 'project' | 'status' | 'progress' | 'due'>('name')
+
+const sortDirection = ref<'asc' | 'desc'>('asc')
+
 const selected = ref<Client | null>(null)
 
 const showCreate = ref(false)
@@ -50,7 +56,25 @@ const adminName = ref('Administration')
 
 const projectForm = reactive({ name: '', description: '', status: '', progress: 0, dueDate: '', currentPhase: 'Cadrage' })
 
-const visibleClients = computed(() => clients.value.filter(client => `${client.name} ${client.contact} ${client.project}`.toLowerCase().includes(search.value.toLowerCase())))
+const clientStatuses = computed(() => [...new Set(clients.value.map(client => client.status))].sort((a, b) => a.localeCompare(b, 'fr')))
+
+const visibleClients = computed(() => {
+  const query = search.value.trim().toLocaleLowerCase('fr')
+  const direction = sortDirection.value === 'asc' ? 1 : -1
+  return clients.value
+    .filter(client => statusFilter.value === 'all' || client.status === statusFilter.value)
+    .filter(client => !query || `${client.name} ${client.contact} ${client.project} ${client.status}`.toLocaleLowerCase('fr').includes(query))
+    .sort((a, b) => {
+      if (sortBy.value === 'progress') return (a.progress - b.progress) * direction
+      if (sortBy.value === 'due' && (a.due === 'À définir' || b.due === 'À définir')) {
+        if (a.due === b.due) return 0
+        return a.due === 'À définir' ? 1 : -1
+      }
+      const left = a[sortBy.value]
+      const right = b[sortBy.value]
+      return String(left).localeCompare(String(right), 'fr', { numeric: true, sensitivity: 'base' }) * direction
+    })
+})
 
 useHead({ title: 'Administration · MC Studio' })
 
@@ -275,7 +299,19 @@ const signOut = async () => {
 
             <div class="admin-stats"><article><span>CLIENTS</span><strong>{{ clients.length }}</strong><small>dans votre espace</small></article><article><span>PROJETS EN COURS</span><strong>{{ clients.filter(c => c.status !== 'Terminé').length }}</strong><small>à suivre cette semaine</small></article><article><span>À VALIDER</span><strong>{{ clients.filter(c => c.status === 'En validation').length }}</strong><small>en attente d’un retour</small></article></div>
 
-            <section class="admin-card client-list-card"><div class="list-heading"><div><h2>{{ section === 'clients' ? 'Tous les clients' : 'Tous les projets' }} <span>{{ visibleClients.length }}</span></h2></div><label class="admin-search"><UIcon name="i-tabler-search" /><input v-model="search" type="search" placeholder="Rechercher un client…" aria-label="Rechercher un client"></label></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>CLIENT</th><th>CONTACT</th><th>PROJET</th><th>STATUT</th><th>AVANCEMENT</th><th>LIVRAISON</th><th /></tr></thead><tbody><tr v-for="client in visibleClients" :key="client.id" class="client-row" @click="openClient(client)"><td><span :class="['client-logo small', client.tone]">{{ client.initials }}</span><strong>{{ client.name }}</strong></td><td>{{ client.contact }}</td><td>{{ client.project }}</td><td><span :class="['admin-status', { done: client.status === 'Terminé', waiting: client.status === 'En validation' }]"><i />{{ client.status }}</span></td><td><div class="table-progress"><span class="admin-progress"><i :style="{ width: `${client.progress}%` }" /></span><small>{{ client.progress }}%</small></div></td><td>{{ client.due }}</td><td><button class="row-open" :aria-label="`Ouvrir ${client.name}`" @click.stop="openClient(client)"><UIcon name="i-tabler-chevron-right" /></button><button class="row-open delete-row" :aria-label="`Supprimer ${section === 'clients' ? client.name : client.project}`" @click.stop="requestDelete(client, section === 'clients' ? 'client' : 'project')"><UIcon name="i-tabler-trash" /></button></td></tr><tr v-if="visibleClients.length === 0"><td colspan="7" class="empty-table">Aucun client ne correspond à cette recherche.</td></tr></tbody></table></div><p class="table-foot">{{ visibleClients.length }} client{{ visibleClients.length > 1 ? 's' : '' }} dans votre portefeuille.</p></section>
+            <section class="admin-card client-list-card">
+              <div class="list-heading">
+                <div><h2>{{ section === 'clients' ? 'Tous les clients' : 'Tous les projets' }} <span>{{ visibleClients.length }}</span></h2></div>
+                <div class="table-tools">
+                  <label class="admin-search"><UIcon name="i-tabler-search" /><input v-model="search" type="search" placeholder="Rechercher un client…" aria-label="Rechercher un client ou projet"></label>
+                  <label class="table-select"><span>Filtrer le statut</span><select v-model="statusFilter" aria-label="Filtrer par statut"><option value="all">Tous les statuts</option><option v-for="status in clientStatuses" :key="status" :value="status">{{ status }}</option></select></label>
+                  <label class="table-select"><span>Trier par</span><select v-model="sortBy" aria-label="Trier le tableau par"><option value="name">Client</option><option value="contact">Contact</option><option value="project">Projet</option><option value="status">Statut</option><option value="progress">Avancement</option><option value="due">Livraison</option></select></label>
+                  <button class="sort-direction" type="button" :aria-label="sortDirection === 'asc' ? 'Ordre croissant' : 'Ordre décroissant'" :title="sortDirection === 'asc' ? 'Ordre croissant' : 'Ordre décroissant'" @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</button>
+                </div>
+              </div>
+              <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>CLIENT</th><th>CONTACT</th><th>PROJET</th><th>STATUT</th><th>AVANCEMENT</th><th>LIVRAISON</th><th /></tr></thead><tbody><tr v-for="client in visibleClients" :key="client.id" class="client-row" @click="openClient(client)"><td><span :class="['client-logo small', client.tone]">{{ client.initials }}</span><strong>{{ client.name }}</strong></td><td>{{ client.contact }}</td><td>{{ client.project }}</td><td><span :class="['admin-status', { done: client.status === 'Terminé', waiting: client.status === 'En validation' }]"><i />{{ client.status }}</span></td><td><div class="table-progress"><span class="admin-progress"><i :style="{ width: `${client.progress}%` }" /></span><small>{{ client.progress }}%</small></div></td><td>{{ client.due }}</td><td><button class="row-open" :aria-label="`Ouvrir ${client.name}`" @click.stop="openClient(client)"><UIcon name="i-tabler-chevron-right" /></button><button class="row-open delete-row" :aria-label="`Supprimer ${section === 'clients' ? client.name : client.project}`" @click.stop="requestDelete(client, section === 'clients' ? 'client' : 'project')"><UIcon name="i-tabler-trash" /></button></td></tr><tr v-if="visibleClients.length === 0"><td colspan="7" class="empty-table">Aucun résultat pour ces filtres.</td></tr></tbody></table></div>
+              <p class="table-foot">{{ visibleClients.length }} client{{ visibleClients.length > 1 ? 's' : '' }} dans votre portefeuille.</p>
+            </section>
 
           </template>
 
@@ -321,4 +357,13 @@ const signOut = async () => {
 
 @media(max-width:680px){.detail-actions{align-items:stretch;flex-direction:column-reverse}.admin-title-row:has(.detail-actions){align-items:flex-start}.admin-nav{width:100%;position:static;padding:16px 12px 0}.admin-main{margin:0}.admin-content{padding:20px 16px}.admin-title-row h1{font-size:21px}.client-list-card{margin:0 -16px}.list-heading{padding:0 16px 14px}.admin-stats article{padding:12px}.admin-stats article strong{font-size:20px}.admin-header{padding:0 16px}.admin-brand{padding:0 4px 14px}}
 
+</style>
+
+<style scoped>
+.table-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.table-select{display:flex;align-items:center;gap:6px;color:var(--portal-muted,#888);font-size:10px;white-space:nowrap}
+.table-select select,.sort-direction{height:32px;padding:0 10px;border:1px solid var(--portal-line,#3b3b3b);border-radius:6px;background:var(--portal-surface,#202020);color:var(--portal-text,#ddd);font:11px Inter,Arial,sans-serif}
+.sort-direction{min-width:48px;padding:0 9px;color:var(--portal-text,#ddd)}
+@media(max-width:1100px){.table-tools{justify-content:flex-start}.table-select span{display:none}}
+@media(max-width:680px){.table-tools{width:100%;justify-content:stretch}.table-tools .admin-search{width:100%;flex-basis:100%}.table-select{flex:1}.table-select select{width:100%}}
 </style>
