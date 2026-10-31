@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { resourceLabels, resourceIcons, money, portalDate, type PortalResource, type ResourceKind } from '~/types/portal'
-const props = defineProps<{projectId:string; kind?:ResourceKind; admin?:boolean}>()
+const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'; admin?:boolean}>()
 const emit = defineEmits<{changed:[]}>()
 const resources = ref<PortalResource[]>([])
 const activity = ref<{id:string;message:string;createdAt:string}[]>([])
-const activeKind = ref<ResourceKind>('payment')
+const activeKind = ref<ResourceKind|'assets'>('payment')
 const kind = computed(() => props.kind || activeKind.value)
 const items = computed(() => resources.value.filter(r=>r.kind===kind.value && (r.kind!=='mockup' || Number(r.versionCount || 0)===0)))
 const loading = ref(true), busy = ref(false), error = ref(''), success = ref(''), search = ref('')
@@ -88,7 +88,9 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 </script>
 <template>
  <section class="pr">
-  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" @click="activeKind=key"><UIcon :name="resourceIcons[key]"/>{{label}}</button></nav>
+  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" @click="activeKind=key"><UIcon :name="resourceIcons[key]"/>{{label}}</button><button :class="{active:kind==='assets'}" @click="activeKind='assets'"><UIcon name="i-tabler-photo"/>Assets</button></nav>
+  <PortalAssets v-if="kind==='assets'" :project-id="projectId" :admin="admin"/>
+  <template v-else>
   <PortalMockups v-if="kind==='mockup'" :project-id="projectId" :admin="admin" @changed="load();emit('changed')"/>
   <template v-if="kind!=='mockup' || items.length">
   <div class="pr-heading"><div><h2>{{resourceLabels[kind]}}</h2><p>{{kind==='payment'?'Vos échéances et liens de règlement.':kind==='file'?'Les fichiers partagés avec votre équipe MC Studio.':kind==='wiki'?'Les guides pour avancer sereinement avec MC Studio.':kind==='analytics'?'Les performances de votre site, au même endroit.':'Tout ce dont vous avez besoin pour votre projet.'}}</p></div><button v-if="admin" class="pr-primary" @click="edit()"><UIcon name="i-tabler-plus"/>Ajouter</button></div>
@@ -138,6 +140,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
     <template v-if="removeTarget"><h2>Supprimer « {{removeTarget.title}} » ?</h2><p>Cette ressource et son contenu seront définitivement supprimés{{removeTarget.kind==='mockup'?' avec ses versions, écrans et commentaires':''}}. Cette action est irréversible.</p><div class="pr-actions"><button class="pr-secondary" :disabled="busy" @click="removeTarget=null">Annuler</button><button class="pr-danger" :disabled="busy" @click="removeResource"><UIcon name="i-tabler-trash"/>{{busy?'Suppression…':'Supprimer définitivement'}}</button></div></template>
    </section>
   </div>
+  </template>
   </template>
  </section>
 </template>

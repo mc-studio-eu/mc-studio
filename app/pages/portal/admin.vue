@@ -369,7 +369,6 @@ const saveGlobalPrompt = async () => {
           <p v-if="notice" class="admin-notice" role="status">{{ notice }}<button @click="notice = ''">×</button></p>
 
           <PortalResources v-if="activeProject" :key="activeProject.id" :project-id="activeProject.id" admin />
-          <PortalAssets v-if="activeProject" :key="`assets-${activeProject.id}`" :project-id="activeProject.id" admin />
 
         <footer class="admin-footer">MC Studio · Espace interne sécurisé</footer>
 
