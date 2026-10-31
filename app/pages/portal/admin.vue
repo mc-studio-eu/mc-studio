@@ -1,10 +1,11 @@
 <script setup lang="ts">
 
-type Client = { id: string; projectId: string; name: string; initials: string; contact: string; email: string; project: string; description?: string; currentPhase?: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; due: string; tone: string; invitedEmail?: string | null }
+type Project = { id: string; organizationId: string; name: string; description: string; currentPhase: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; dueDate: string; createdAt?: string; updatedAt?: string }
+type Client = { id: string; name: string; initials: string; contact: string; email: string; projects: Project[]; projectId: string; project: string; description?: string; currentPhase?: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; due: string; tone: string; invitedEmail?: string | null }
 
 const ready = ref(false)
 
-const section = ref<'clients' | 'projects' | 'growth'>(useRoute().query.tab==='growth'?'growth':'clients')
+const section = ref<'clients' | 'projects' | 'growth' | 'assets'>(['growth','assets'].includes(String(useRoute().query.tab)) ? String(useRoute().query.tab) as 'growth'|'assets' : 'clients')
 
 const search = ref('')
 
@@ -15,6 +16,7 @@ const sortBy = ref<'name' | 'contact' | 'project' | 'status' | 'progress' | 'due
 const sortDirection = ref<'asc' | 'desc'>('asc')
 
 const selected = ref<Client | null>(null)
+const selectedProjectId = ref('')
 
 const showCreate = ref(false)
 
@@ -45,6 +47,10 @@ const inviteSent = ref(false)
 const inviteBusy = ref(false)
 
 const projectBusy = ref(false)
+const showAddProject = ref(false)
+const newProjectForm = reactive({ name: '', description: '', status: 'En cours', progress: 0, dueDate: '', currentPhase: 'Cadrage' })
+const projectRecords = computed(() => selected.value?.projects || [])
+const activeProject = computed(() => projectRecords.value.find(project => project.id === selectedProjectId.value) || projectRecords.value[0] || null)
 
 const deleteTarget = ref<Client | null>(null)
 
@@ -55,23 +61,24 @@ const deleteBusy = ref(false)
 const adminName = ref('Administration')
 
 const projectForm = reactive({ name: '', description: '', status: '', progress: 0, dueDate: '', currentPhase: 'Cadrage' })
+const globalPrompt = ref(''), promptBusy = ref(false)
 
-const clientStatuses = computed(() => [...new Set(clients.value.map(client => client.status))].sort((a, b) => a.localeCompare(b, 'fr')))
+const clientStatuses = computed(() => [...new Set(clients.value.flatMap(client => client.projects.map(project => project.status)))].sort((a, b) => a.localeCompare(b, 'fr')))
+const projectCount = computed(() => clients.value.reduce((count, client) => count + client.projects.length, 0))
+const inProgressCount = computed(() => clients.value.reduce((count, client) => count + client.projects.filter(project => project.status !== 'Terminé').length, 0))
+const reviewCount = computed(() => clients.value.reduce((count, client) => count + client.projects.filter(project => project.status === 'En validation').length, 0))
 
 const visibleClients = computed(() => {
   const query = search.value.trim().toLocaleLowerCase('fr')
   const direction = sortDirection.value === 'asc' ? 1 : -1
   return clients.value
-    .filter(client => statusFilter.value === 'all' || client.status === statusFilter.value)
-    .filter(client => !query || `${client.name} ${client.contact} ${client.project} ${client.status}`.toLocaleLowerCase('fr').includes(query))
+    .filter(client => statusFilter.value === 'all' || client.projects.some(project => project.status === statusFilter.value))
+    .filter(client => !query || `${client.name} ${client.contact} ${client.projects.map(project => project.name).join(' ')} ${client.projects.map(project => project.status).join(' ')}`.toLocaleLowerCase('fr').includes(query))
     .sort((a, b) => {
-      if (sortBy.value === 'progress') return (a.progress - b.progress) * direction
-      if (sortBy.value === 'due' && (a.due === 'À définir' || b.due === 'À définir')) {
-        if (a.due === b.due) return 0
-        return a.due === 'À définir' ? 1 : -1
-      }
-      const left = a[sortBy.value]
-      const right = b[sortBy.value]
+      if (sortBy.value === 'progress') return ((a.projects[0]?.progress || 0) - (b.projects[0]?.progress || 0)) * direction
+      const left = sortBy.value === 'project' ? a.projects.map(project => project.name).join(', ') : sortBy.value === 'status' ? a.projects[0]?.status || '' : sortBy.value === 'due' ? a.projects[0]?.dueDate || 'À définir' : a[sortBy.value]
+      const right = sortBy.value === 'project' ? b.projects.map(project => project.name).join(', ') : sortBy.value === 'status' ? b.projects[0]?.status || '' : sortBy.value === 'due' ? b.projects[0]?.dueDate || 'À définir' : b[sortBy.value]
+      if (sortBy.value === 'due' && (left === 'À définir' || right === 'À définir')) return left === right ? 0 : left === 'À définir' ? 1 : -1
       return String(left).localeCompare(String(right), 'fr', { numeric: true, sensitivity: 'base' }) * direction
     })
 })
@@ -82,19 +89,19 @@ const loadClients = async () => {
 
   const { clients: rows } = await $fetch<{ clients: any[] }>('/api/portal/admin/clients')
 
-  clients.value = rows.map((row, index) => ({
-
-    ...row,
-
-    initials: String(row.name).split(/\s+/).slice(0, 2).map((part: string) => part[0]).join('').toUpperCase(),
-
-    contact: row.contact || 'Invitation en attente', email: row.email || '', project: row.project || 'Projet à créer',
-
-    status: row.status || 'À cadrer', progress: row.progress ?? 0, due: row.dueDate || 'À définir',
-
-    tone: ['gold', 'blue', 'green'][index % 3]
-
-  }))
+  clients.value = rows.map((row, index) => {
+    const projects = (row.projects || []).map((project: any) => ({ ...project, status: project.status || 'À cadrer', progress: project.progress ?? 0, dueDate: project.dueDate || '' }))
+    const latest = projects[0]
+    return {
+      ...row,
+      projects,
+      initials: String(row.name).split(/\s+/).slice(0, 2).map((part: string) => part[0]).join('').toUpperCase(),
+      contact: row.contact || 'Invitation en attente', email: row.email || '',
+      projectId: latest?.id || '', project: latest?.name || 'Projet à créer', description: latest?.description || '', currentPhase: latest?.currentPhase || 'Cadrage', reviewState: latest?.reviewState, reviewFeedback: latest?.reviewFeedback,
+      status: latest?.status || 'À cadrer', progress: latest?.progress ?? 0, due: latest?.dueDate || 'À définir',
+      tone: ['gold', 'blue', 'green'][index % 3]
+    }
+  })
 
 }
 
@@ -109,6 +116,9 @@ onMounted(async () => {
     adminName.value = user.name
 
     await loadClients()
+
+    const promptData = await $fetch<{prompt:string}>('/api/portal/assets/prompt')
+    globalPrompt.value = promptData.prompt
 
     ready.value = true
 
@@ -173,22 +183,44 @@ const copyInvite = async () => { await navigator.clipboard.writeText(inviteUrl.v
 const openClient = (client: Client) => {
 
   selected.value = client
+  selectedProjectId.value = client.projects[0]?.id || ''
+  syncProjectForm()
 
-  Object.assign(projectForm, { name: client.project, description: client.description || '', status: client.status, progress: client.progress, dueDate: client.due === 'À définir' ? '' : client.due, currentPhase: client.currentPhase || 'Cadrage' })
+}
 
+const syncProjectForm = () => {
+  const project = activeProject.value
+  Object.assign(projectForm, { name: project?.name || '', description: project?.description || '', status: project?.status || 'À cadrer', progress: project?.progress ?? 0, dueDate: project?.dueDate || '', currentPhase: project?.currentPhase || 'Cadrage' })
+}
+
+const addProject = async () => {
+  if (!selected.value) return
+  projectBusy.value = true
+  try {
+    const { project } = await $fetch<{ project: Project }>(`/api/portal/admin/clients/${selected.value.id}/projects`, { method: 'POST', body: newProjectForm })
+    await loadClients()
+    selected.value = clients.value.find(client => client.id === selected.value?.id) || selected.value
+    selectedProjectId.value = project.id
+    syncProjectForm()
+    Object.assign(newProjectForm, { name: '', description: '', status: 'En cours', progress: 0, dueDate: '', currentPhase: 'Cadrage' })
+    showAddProject.value = false
+    notice.value = 'Le projet a été créé.'
+  } catch (error: any) { notice.value = error?.data?.statusMessage || 'Impossible de créer le projet.' }
+  finally { projectBusy.value = false }
 }
 
 const saveProject = async () => {
 
-  if (!selected.value) return
+  if (!activeProject.value) return
 
   projectBusy.value = true
 
   try {
 
-    await $fetch(`/api/portal/admin/projects/${selected.value.projectId}`, { method: 'PATCH', body: projectForm })
-
-    await loadClients(); selected.value = clients.value.find(row => row.id === selected.value?.id) || selected.value
+    await $fetch(`/api/portal/admin/projects/${activeProject.value.id}`, { method: 'PATCH', body: projectForm })
+    const organizationId = selected.value?.id
+    await loadClients(); selected.value = clients.value.find(row => row.id === organizationId) || selected.value
+    syncProjectForm()
 
     notice.value = 'Le projet a été mis à jour.'
 
@@ -214,12 +246,18 @@ const deleteRecord = async () => {
       notice.value = `Le client ${target.name} et ses données associées ont été supprimés.`
       selected.value = null
     } else {
-      await $fetch(`/api/portal/admin/projects/${target.projectId}`, { method: 'DELETE' })
-      notice.value = `Le projet ${target.project} et ses données associées ont été supprimés.`
-      selected.value = null
+      const projectId = selectedProjectId.value
+      const projectName = activeProject.value?.name || target.project
+      await $fetch(`/api/portal/admin/projects/${projectId}`, { method: 'DELETE' })
+      notice.value = `Le projet ${projectName} et ses données associées ont été supprimés.`
     }
     deleteTarget.value = null
     await loadClients()
+    if (deleteKind.value === 'project' && selected.value) {
+      selected.value = clients.value.find(row => row.id === selected.value?.id) || null
+      selectedProjectId.value = selected.value?.projects[0]?.id || ''
+      syncProjectForm()
+    }
   } catch (error: any) {
     notice.value = error?.data?.statusMessage || `Impossible de supprimer ce ${deleteKind.value === 'client' ? 'client' : 'projet'}.`
   } finally {
@@ -233,6 +271,13 @@ const signOut = async () => {
 
   await navigateTo('/portal/login')
 
+}
+
+const saveGlobalPrompt = async () => {
+  promptBusy.value = true
+  try { await $fetch('/api/portal/admin/assets/prompt', { method:'PUT', body:{prompt:globalPrompt.value} }); notice.value='Le prompt IA global a été enregistré.' }
+  catch (error:any) { notice.value=error?.data?.statusMessage || 'Impossible d’enregistrer le prompt.' }
+  finally { promptBusy.value=false }
 }
 
 </script>
@@ -259,6 +304,8 @@ const signOut = async () => {
 
           <button :class="{ active: section === 'growth' }" @click="section = 'growth'; selected = null"><UIcon name="i-tabler-chart-line" />Croissance & performance</button>
 
+          <button :class="{ active: section === 'assets' }" @click="section = 'assets'; selected = null"><UIcon name="i-tabler-photo" />Prompt IA</button>
+
         </nav>
 
         <div class="admin-nav-bottom">
@@ -281,15 +328,19 @@ const signOut = async () => {
 
           <PortalGrowth v-if="section==='growth' && !selected"/>
 
+          <section v-else-if="section==='assets' && !selected" class="admin-card prompt-settings"><p class="subheading">BIBLIOTHÈQUE DE MARQUE</p><h1>Prompt IA global</h1><p class="subheading">Ce prompt sera visible par tous les clients dans leur médiathèque. Ajoutez les règles visuelles communes et laissez le client adapter le sujet.</p><form @submit.prevent="saveGlobalPrompt"><label for="global-ai-prompt">Prompt de génération d’image</label><textarea id="global-ai-prompt" v-model="globalPrompt" rows="14" maxlength="12000" placeholder="Décrivez le style visuel, la palette, la lumière, la composition et les éléments à éviter…"/><div class="prompt-settings-footer"><small>{{globalPrompt.length}} / 12 000 caractères · partagé avec tous les clients</small><button class="create-button" :disabled="promptBusy">{{promptBusy?'Enregistrement…':'Enregistrer le prompt'}}</button></div></form></section>
+
           <template v-else-if="selected">
 
             <button class="back-to-clients" @click="selected = null"><UIcon name="i-tabler-arrow-left" /> Tous les clients</button>
 
-            <div class="admin-title-row"><div class="client-heading"><span :class="['client-logo', selected.tone]">{{ selected.initials }}</span><div><h1>{{ selected.name }}</h1><p class="subheading">Espace client sécurisé</p></div></div><div class="detail-actions"><button class="quiet-button delete-button" @click="requestDelete(selected, 'project')"><UIcon name="i-tabler-trash" />Supprimer le projet</button><button class="wa-button" @click="startInvite(selected)"><UIcon name="i-tabler-mail-forward" />{{ selected.email ? 'Gérer l’accès' : 'Inviter le client' }}</button></div></div>
+            <div class="admin-title-row"><div class="client-heading"><span :class="['client-logo', selected.tone]">{{ selected.initials }}</span><div><h1>{{ selected.name }}</h1><p class="subheading">Espace client sécurisé · {{ selected.projects.length }} projet{{ selected.projects.length > 1 ? 's' : '' }}</p></div></div><div class="detail-actions"><button class="create-button" @click="showAddProject = true"><UIcon name="i-tabler-plus" />Ajouter un projet</button><button class="wa-button" @click="startInvite(selected)"><UIcon name="i-tabler-mail-forward" />{{ selected.email ? 'Gérer l’accès' : 'Inviter le client' }}</button></div></div>
 
-            <section class="client-detail-grid"><article class="admin-card"><h2>{{ selected.contact }}</h2><p v-if="selected.email">{{ selected.email }}</p><p v-else class="contact-note">Aucun compte client. Envoyez une invitation pour ouvrir l’accès.</p><button v-if="selected.invitedEmail" class="quiet-button" @click="startInvite(selected)">Invitation en attente · renvoyer</button><p class="contact-note">Le client ne verra que les projets de son organisation.</p><div class="client-review-note"><p>{{ selected.reviewFeedback || (selected.reviewState === 'approved' ? 'Dernière maquette validée.' : selected.reviewState === 'changes' ? 'Demande de modifications reçue.' : 'Aucun retour pour le moment.') }}</p></div></article><article class="admin-card"><span class="admin-status"><i></i>{{ selected.status }}</span><h2>{{ selected.project }}</h2><p class="project-type">Visible par le client après connexion</p><div class="admin-progress-meta"><span>Avancement</span><strong>{{ selected.progress }} %</strong></div><div class="admin-progress"><i :style="{ width: `${selected.progress}%` }" /></div><div class="due-row"><span>Livraison prévue</span><strong>{{ selected.due }}</strong></div></article></section>
+            <section class="admin-card project-list-card"><div class="card-heading"><h2>Projets du client</h2></div><div v-if="selected.projects.length" class="client-project-list"><button v-for="project in selected.projects" :key="project.id" :class="['client-project-item', { selected: selectedProjectId === project.id }]" @click="selectedProjectId = project.id; syncProjectForm()"><span><strong>{{ project.name }}</strong><small>{{ project.status }} · {{ project.progress }} % · {{ project.dueDate || 'Livraison à définir' }}</small></span><UIcon name="i-tabler-chevron-right" /></button></div><p v-else class="empty-projects">Ce client n’a pas encore de projet.</p></section>
 
-            <section class="admin-card phases-card"><div class="card-heading"><div><h2>Modifier le projet</h2></div></div><form class="project-edit" @submit.prevent="saveProject"><label>Nom du projet<input v-model="projectForm.name" required></label><label>Étape actuelle<select v-model="projectForm.currentPhase"><option>Cadrage</option><option>Design</option><option>Développement</option><option>Mise en ligne</option></select></label><label>Statut<select v-model="projectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select></label><label>Avancement (%)<input v-model.number="projectForm.progress" type="number" min="0" max="100" required></label><label>Date de livraison<input v-model="projectForm.dueDate" type="date"></label><label class="wide">Description visible par le client<textarea v-model="projectForm.description" rows="3" placeholder="Présentez brièvement le projet"></textarea></label><button class="create-button" :disabled="projectBusy">{{ projectBusy ? 'Enregistrement…' : 'Enregistrer le projet' }}</button></form></section>
+            <template v-if="activeProject"><section class="client-detail-grid"><article class="admin-card"><h2>{{ selected.contact }}</h2><p v-if="selected.email">{{ selected.email }}</p><p v-else class="contact-note">Aucun compte client. Envoyez une invitation pour ouvrir l’accès.</p><button v-if="selected.invitedEmail" class="quiet-button" @click="startInvite(selected)">Invitation en attente · renvoyer</button><p class="contact-note">Le client ne verra que les projets de son organisation.</p><div class="client-review-note"><p>{{ activeProject.reviewFeedback || (activeProject.reviewState === 'approved' ? 'Dernière maquette validée.' : activeProject.reviewState === 'changes' ? 'Demande de modifications reçue.' : 'Aucun retour pour le moment.') }}</p></div></article><article class="admin-card"><span class="admin-status"><i></i>{{ activeProject.status }}</span><h2>{{ activeProject.name }}</h2><p class="project-type">Visible par le client après connexion</p><div class="admin-progress-meta"><span>Avancement</span><strong>{{ activeProject.progress }} %</strong></div><div class="admin-progress"><i :style="{ width: `${activeProject.progress}%` }" /></div><div class="due-row"><span>Livraison prévue</span><strong>{{ activeProject.dueDate || 'À définir' }}</strong></div></article></section>
+
+            <section class="admin-card phases-card"><div class="card-heading"><div><h2>Modifier le projet</h2></div><button class="quiet-button delete-button" @click="requestDelete(selected, 'project')"><UIcon name="i-tabler-trash" />Supprimer ce projet</button></div><form class="project-edit" @submit.prevent="saveProject"><label>Nom du projet<input v-model="projectForm.name" required></label><label>Étape actuelle<select v-model="projectForm.currentPhase"><option>Cadrage</option><option>Design</option><option>Développement</option><option>Mise en ligne</option></select></label><label>Statut<select v-model="projectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select></label><label>Avancement (%)<input v-model.number="projectForm.progress" type="number" min="0" max="100" required></label><label>Date de livraison<input v-model="projectForm.dueDate" type="date"></label><label class="wide">Description visible par le client<textarea v-model="projectForm.description" rows="3" placeholder="Présentez brièvement le projet"></textarea></label><button class="create-button" :disabled="projectBusy">{{ projectBusy ? 'Enregistrement…' : 'Enregistrer le projet' }}</button></form></section></template>
 
           </template>
 
@@ -297,7 +348,7 @@ const signOut = async () => {
 
             <div class="admin-title-row"><div><h1>{{ section === 'clients' ? 'Clients' : 'Projets' }}</h1><p class="subheading">{{ section === 'clients' ? 'Retrouvez les clients et l’avancement de leurs projets.' : 'Suivez les projets en cours et leurs prochaines livraisons.' }}</p></div><button class="create-button" @click="showCreate = true"><UIcon name="i-tabler-plus" />Ajouter un client</button></div>
 
-            <div class="admin-stats"><article><span>CLIENTS</span><strong>{{ clients.length }}</strong><small>dans votre espace</small></article><article><span>PROJETS EN COURS</span><strong>{{ clients.filter(c => c.status !== 'Terminé').length }}</strong><small>à suivre cette semaine</small></article><article><span>À VALIDER</span><strong>{{ clients.filter(c => c.status === 'En validation').length }}</strong><small>en attente d’un retour</small></article></div>
+            <div class="admin-stats"><article><span>CLIENTS</span><strong>{{ clients.length }}</strong><small>dans votre espace</small></article><article><span>PROJETS</span><strong>{{ projectCount }}</strong><small>{{ inProgressCount }} en cours</small></article><article><span>À VALIDER</span><strong>{{ reviewCount }}</strong><small>projets en attente d’un retour</small></article></div>
 
             <section class="admin-card client-list-card">
               <div class="list-heading">
@@ -309,7 +360,7 @@ const signOut = async () => {
                   <button class="sort-direction" type="button" :aria-label="sortDirection === 'asc' ? 'Ordre croissant' : 'Ordre décroissant'" :title="sortDirection === 'asc' ? 'Ordre croissant' : 'Ordre décroissant'" @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'">{{ sortDirection === 'asc' ? '↑' : '↓' }}</button>
                 </div>
               </div>
-              <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>CLIENT</th><th>CONTACT</th><th>PROJET</th><th>STATUT</th><th>AVANCEMENT</th><th>LIVRAISON</th><th /></tr></thead><tbody><tr v-for="client in visibleClients" :key="client.id" class="client-row" @click="openClient(client)"><td><span :class="['client-logo small', client.tone]">{{ client.initials }}</span><strong>{{ client.name }}</strong></td><td>{{ client.contact }}</td><td>{{ client.project }}</td><td><span :class="['admin-status', { done: client.status === 'Terminé', waiting: client.status === 'En validation' }]"><i />{{ client.status }}</span></td><td><div class="table-progress"><span class="admin-progress"><i :style="{ width: `${client.progress}%` }" /></span><small>{{ client.progress }}%</small></div></td><td>{{ client.due }}</td><td><button class="row-open" :aria-label="`Ouvrir ${client.name}`" @click.stop="openClient(client)"><UIcon name="i-tabler-chevron-right" /></button><button class="row-open delete-row" :aria-label="`Supprimer ${section === 'clients' ? client.name : client.project}`" @click.stop="requestDelete(client, section === 'clients' ? 'client' : 'project')"><UIcon name="i-tabler-trash" /></button></td></tr><tr v-if="visibleClients.length === 0"><td colspan="7" class="empty-table">Aucun résultat pour ces filtres.</td></tr></tbody></table></div>
+              <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>CLIENT</th><th>CONTACT</th><th>PROJETS</th><th>PROGRESSION</th><th>LIVRAISON LA PLUS PROCHE</th><th /></tr></thead><tbody><tr v-for="client in visibleClients" :key="client.id" class="client-row" @click="openClient(client)"><td><span :class="['client-logo small', client.tone]">{{ client.initials }}</span><strong>{{ client.name }}</strong></td><td>{{ client.contact }}</td><td><span class="project-count">{{ client.projects.length }} projet{{ client.projects.length > 1 ? 's' : '' }}</span><small class="project-names">{{ client.projects.map(project => project.name).join(' · ') || 'Aucun projet' }}</small></td><td><div v-if="client.projects.length" class="table-progress"><span class="admin-progress"><i :style="{ width: `${Math.round(client.projects.reduce((sum, project) => sum + project.progress, 0) / client.projects.length)}%` }" /></span><small>{{ Math.round(client.projects.reduce((sum, project) => sum + project.progress, 0) / client.projects.length) }}%</small></div><span v-else>—</span></td><td>{{ client.projects.map(project => project.dueDate).filter(Boolean).sort()[0] || 'À définir' }}</td><td><button class="row-open" :aria-label="`Ouvrir ${client.name}`" @click.stop="openClient(client)"><UIcon name="i-tabler-chevron-right" /></button><button class="row-open delete-row" :aria-label="`Supprimer ${client.name}`" @click.stop="requestDelete(client, 'client')"><UIcon name="i-tabler-trash" /></button></td></tr><tr v-if="visibleClients.length === 0"><td colspan="6" class="empty-table">Aucun résultat pour ces filtres.</td></tr></tbody></table></div>
               <p class="table-foot">{{ visibleClients.length }} client{{ visibleClients.length > 1 ? 's' : '' }} dans votre portefeuille.</p>
             </section>
 
@@ -317,7 +368,8 @@ const signOut = async () => {
 
           <p v-if="notice" class="admin-notice" role="status">{{ notice }}<button @click="notice = ''">×</button></p>
 
-          <PortalResources v-if="selected?.projectId" :key="selected.projectId" :project-id="selected.projectId" admin />
+          <PortalResources v-if="activeProject" :key="activeProject.id" :project-id="activeProject.id" admin />
+          <PortalAssets v-if="activeProject" :key="`assets-${activeProject.id}`" :project-id="activeProject.id" admin />
 
         <footer class="admin-footer">MC Studio · Espace interne sécurisé</footer>
 
@@ -327,9 +379,11 @@ const signOut = async () => {
 
       <div v-if="showCreate" class="modal-backdrop" @click.self="showCreate = false"><form class="create-modal" @submit.prevent="addClient"><button type="button" class="modal-close" aria-label="Fermer" @click="showCreate = false">×</button><h2>Ajouter un client</h2><p class="subheading">Créez le projet puis envoyez une invitation à son contact.</p><label for="new-client-name">Nom du client / organisation</label><input id="new-client-name" v-model="newName" required placeholder="Ex. Maison Alba"><label for="new-client-project">Nom du projet</label><input id="new-client-project" v-model="newProject" required placeholder="Ex. Refonte du site"><label for="new-client-description">Description du projet</label><textarea id="new-client-description" v-model="newDescription" rows="3" placeholder="Visible par le client"></textarea><label for="new-client-due">Date de livraison</label><input id="new-client-due" v-model="newDue" type="date"><label for="new-client-email">E-mail du contact (facultatif)</label><input id="new-client-email" v-model="newEmail" type="email" placeholder="client@entreprise.fr"><div class="modal-actions"><button class="quiet-button" type="button" @click="showCreate = false">Annuler</button><button class="create-button" type="submit"><UIcon name="i-tabler-plus" />Créer la fiche</button></div></form></div>
 
+      <div v-if="showAddProject" class="modal-backdrop" @click.self="!projectBusy && (showAddProject = false)"><form class="create-modal" @submit.prevent="addProject"><button type="button" class="modal-close" aria-label="Fermer" :disabled="projectBusy" @click="showAddProject = false">×</button><h2>Ajouter un projet</h2><p class="subheading">Nouveau projet pour {{ selected?.name }}. Il apparaîtra dans son espace client.</p><label for="new-project-name">Nom du projet</label><input id="new-project-name" v-model="newProjectForm.name" required minlength="2" maxlength="160" placeholder="Ex. Identité visuelle"><label for="new-project-description">Description visible par le client</label><textarea id="new-project-description" v-model="newProjectForm.description" rows="3" maxlength="1500" placeholder="Présentez brièvement le projet"></textarea><label for="new-project-phase">Étape actuelle</label><select id="new-project-phase" v-model="newProjectForm.currentPhase"><option>Cadrage</option><option>Design</option><option>Développement</option><option>Mise en ligne</option></select><label for="new-project-status">Statut</label><select id="new-project-status" v-model="newProjectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select><label for="new-project-progress">Avancement (%)</label><input id="new-project-progress" v-model.number="newProjectForm.progress" type="number" min="0" max="100" required><label for="new-project-due">Date de livraison</label><input id="new-project-due" v-model="newProjectForm.dueDate" type="date"><div class="modal-actions"><button class="quiet-button" type="button" :disabled="projectBusy" @click="showAddProject = false">Annuler</button><button class="create-button" type="submit" :disabled="projectBusy"><UIcon name="i-tabler-plus" />{{ projectBusy ? 'Création…' : 'Créer le projet' }}</button></div></form></div>
+
       <div v-if="showInvite" class="modal-backdrop" @click.self="showInvite = false"><form class="create-modal" @submit.prevent="sendInvite"><button type="button" class="modal-close" aria-label="Fermer" @click="showInvite = false">×</button><h2>{{ inviteSent ? 'Invitation envoyée' : inviteUrl ? 'Lien prêt à partager' : 'Inviter un client' }}</h2><p class="subheading">{{ inviteClient?.name }} · le lien expire après 7 jours et ne peut être utilisé qu’une fois.</p><template v-if="!inviteUrl"><label for="invite-email">Adresse e-mail du client</label><input id="invite-email" v-model="inviteEmail" type="email" required placeholder="client@entreprise.fr"><div class="modal-actions"><button class="quiet-button" type="button" @click="showInvite = false">Annuler</button><button class="create-button" type="submit" :disabled="inviteBusy"><UIcon name="i-tabler-mail-forward" />{{ inviteBusy ? 'Envoi…' : 'Créer et envoyer le lien' }}</button></div></template><template v-else><p class="invite-result" role="status">{{ inviteSent ? 'E-mail envoyé. Vous pouvez aussi copier le lien pour le partager.' : 'E-mail non envoyé. Vérifiez la configuration Resend et partagez ce lien manuellement.' }}</p><input :value="inviteUrl" readonly aria-label="Lien d’invitation"><div class="modal-actions"><button class="quiet-button" type="button" @click="showInvite = false">Fermer</button><button class="create-button" type="button" @click="copyInvite"><UIcon name="i-tabler-copy" />Copier le lien</button></div></template></form></div>
 
-      <div v-if="deleteTarget" class="modal-backdrop" @click.self="!deleteBusy && (deleteTarget = null)"><section class="create-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-title" aria-describedby="delete-description"><button type="button" class="modal-close" aria-label="Fermer" :disabled="deleteBusy" @click="deleteTarget = null">×</button><h2 id="delete-title">Supprimer {{ deleteKind === 'client' ? 'le client' : 'le projet' }} ?</h2><p id="delete-description" class="subheading">{{ deleteKind === 'client' ? `${deleteTarget.name} et tous ses projets, comptes clients, invitations, fichiers et historiques seront définitivement supprimés.` : `Le projet « ${deleteTarget.project} » et ses fichiers, maquettes, retours et historiques seront définitivement supprimés. Le client conservera son compte.` }}</p><div class="modal-actions"><button class="quiet-button" type="button" :disabled="deleteBusy" @click="deleteTarget = null">Annuler</button><button class="create-button confirm-delete" type="button" :disabled="deleteBusy" @click="deleteRecord"><UIcon name="i-tabler-trash" />{{ deleteBusy ? 'Suppression…' : 'Supprimer définitivement' }}</button></div></section></div>
+      <div v-if="deleteTarget" class="modal-backdrop" @click.self="!deleteBusy && (deleteTarget = null)"><section class="create-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-title" aria-describedby="delete-description"><button type="button" class="modal-close" aria-label="Fermer" :disabled="deleteBusy" @click="deleteTarget = null">×</button><h2 id="delete-title">Supprimer {{ deleteKind === 'client' ? 'le client' : 'le projet' }} ?</h2><p id="delete-description" class="subheading">{{ deleteKind === 'client' ? `${deleteTarget.name} et tous ses projets, comptes clients, invitations, fichiers et historiques seront définitivement supprimés.` : `Le projet « ${activeProject?.name || deleteTarget.project} » et ses fichiers, maquettes, retours et historiques seront définitivement supprimés. Le client conservera ses autres projets et son compte.` }}</p><div class="modal-actions"><button class="quiet-button" type="button" :disabled="deleteBusy" @click="deleteTarget = null">Annuler</button><button class="create-button confirm-delete" type="button" :disabled="deleteBusy" @click="deleteRecord"><UIcon name="i-tabler-trash" />{{ deleteBusy ? 'Suppression…' : 'Supprimer définitivement' }}</button></div></section></div>
 
     </template>
 
@@ -361,6 +415,19 @@ const signOut = async () => {
 
 <style scoped>
 .table-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.project-list-card{margin-bottom:16px}
+.project-list-card .card-heading{margin-bottom:12px}
+.client-project-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.client-project-item{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;padding:11px 13px;border:1px solid var(--portal-line,#393939);border-radius:6px;background:var(--portal-surface,#151515);text-align:left}
+.client-project-item:hover,.client-project-item.selected{background:var(--portal-raised,#252525);border-color:var(--portal-line,#666)}
+.client-project-item strong,.client-project-item small,.project-names{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.client-project-item strong{font-size:12px;font-weight:500;color:var(--portal-text,#eee)}
+.client-project-item small,.project-names{margin-top:3px;color:var(--portal-muted,#888);font-size:10px}
+.client-project-item>.iconify{flex:none;color:var(--portal-muted,#999)}
+.empty-projects{color:var(--portal-muted,#888);margin:0;font-size:12px}
+.project-count{display:block}
+.project-names{max-width:280px}
+.create-modal select{width:100%;height:40px;padding:0 10px;border:1px solid var(--portal-line,#414141);border-radius:6px;background:var(--portal-surface,#111);color:var(--portal-text,#eee);font:13px Inter,sans-serif}
 .table-select{display:flex;align-items:center;gap:6px;color:var(--portal-muted,#888);font-size:10px;white-space:nowrap}
 .table-select select,.sort-direction{height:32px;padding:0 10px;border:1px solid var(--portal-line,#3b3b3b);border-radius:6px;background:var(--portal-surface,#202020);color:var(--portal-text,#ddd);font:11px Inter,Arial,sans-serif}
 .sort-direction{min-width:48px;padding:0 9px;color:var(--portal-text,#ddd)}

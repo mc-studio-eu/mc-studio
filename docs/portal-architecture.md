@@ -2,7 +2,7 @@
 
 ## Parcours
 
-L’admin ouvre `/portal/admin`, crée une fiche client et son projet, puis ajoute les ressources dans les onglets de la fiche. Il peut générer une invitation et copier son lien ou déclencher son envoi via Resend. Le client accepte l’invitation, crée son mot de passe et retrouve son espace sur `/portal`.
+L’admin ouvre `/portal/admin`, crée une fiche client et son premier projet, puis peut ajouter d’autres projets depuis cette fiche. Les projets et leurs ressources sont gérés séparément. Il peut générer une invitation au niveau du client et copier son lien ou déclencher son envoi via Resend. Le client accepte l’invitation, crée son mot de passe et retrouve son espace sur `/portal`.
 
 - Accueil : étape, progression, échéance, actions attendues et dernières nouvelles.
 - Suivi : quatre phases et journal des changements, dépôts et retours.
@@ -13,7 +13,7 @@ L’admin ouvre `/portal/admin`, crée une fiche client et son projet, puis ajou
 - Wiki : articles texte et liens, spécifiques au projet ou partagés avec tous les clients. Trois guides de démarrage sont créés au premier accès admin, puis modifiables/archivables.
 - Analytics : lien Google Analytics/Looker Studio et, avec le compte de service configuré, visiteurs actifs, sessions et pages vues sur les 30 derniers jours complets. Aucun chiffre simulé n’apparaît en cas d’absence de connexion.
 
-Le client peut sélectionner parmi les projets de son organisation. L’administration existante présente le projet le plus récemment mis à jour par organisation. Un compte client appartient à une organisation. Les ressources archivées sont masquées et conservées en base.
+Le client peut sélectionner parmi les projets de son organisation ; à l’ouverture, le portail choisit le projet modifié le plus récemment. L’administration affiche chaque client une seule fois et donne accès à tous ses projets. Un compte client appartient à une organisation. Les ressources archivées sont masquées et conservées en base.
 
 ## Neon / PostgreSQL
 
@@ -61,6 +61,12 @@ Configurer `FIGMA_ACCESS_TOKEN` dans l’environnement privé du serveur, avec l
 Les exports PNG sont copiés dans la base privée : les URL temporaires Figma ne servent pas de stockage. Chaque publication fige la version source Figma. Limites : 12 Mo par écran, 200 Mo de maquettes par projet. La publication est atomique ; si un export échoue, aucune version partielle n’est créée. Les images sont accessibles uniquement à l’organisation du projet et aux administrateurs. Les nouvelles tables sont incluses dans la migration SQLite → Neon.
 
 Le client peut zoomer, placer des annotations, répondre et résoudre/rouvrir une discussion. Les coordonnées sont normalisées sur chaque écran. La validation porte sur la dernière version publiée ; les commentaires et les validations précédentes restent dans l’historique. Les commentaires sont propres au portail, sans synchronisation vers Figma. Les exports sont des images fixes : les interactions d’un prototype ne sont pas reproduites. La mise à jour est déclenchée par « Nouvelle version » ; aucune synchronisation automatique n’est activée.
+
+## MCP des retours maquettes
+
+Le portail expose un serveur MCP HTTP stateless à `https://<domaine-du-portail>/api/portal/mcp`. Définir `PORTAL_MCP_TOKEN` comme secret serveur (au moins 32 octets aléatoires, par exemple `openssl rand -hex 32`) et fournir aux clients MCP l’URL et l’en-tête `Authorization: Bearer <token>`. Ne pas préfixer ce secret par `NUXT_PUBLIC_`. Le jeton donne un accès administrateur aux projets, retours clients et captures de maquettes : le conserver dans le gestionnaire de secrets du client MCP et le renouveler en le remplaçant côté serveur. Les requêtes avec un en-tête `Origin` ne sont acceptées que si son hôte correspond à celui du portail.
+
+Outils exposés : `list_portal_projects` pour choisir le projet, `get_mockup_feedback` pour lire les versions, écrans, annotations et réponses, `get_mockup_screen` pour obtenir une capture PNG, et `complete_mockup_feedback` pour résoudre les annotations ciblées et ajouter un compte rendu au journal. N’appeler le dernier outil qu’après avoir effectivement appliqué les changements. L’agent connecté peut ensuite modifier le code du projet et utiliser une intégration Figma autorisée pour appliquer les retours à la maquette. Le serveur du portail ne modifie pas directement les fichiers Figma.
 
 ## Croissance & performance (administration)
 

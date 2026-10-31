@@ -94,6 +94,20 @@ CREATE TABLE IF NOT EXISTS resources (
 
 );
 
+CREATE TABLE IF NOT EXISTS portal_assets (
+ id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '', category TEXT NOT NULL,
+ file_name TEXT NOT NULL, mime_type TEXT NOT NULL, file_size INTEGER NOT NULL,
+ file_data TEXT NOT NULL, created_by TEXT NOT NULL REFERENCES users(id),
+ created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS portal_assets_project_idx ON portal_assets(project_id,created_at);
+
+CREATE TABLE IF NOT EXISTS portal_settings (
+ key TEXT PRIMARY KEY, value TEXT NOT NULL DEFAULT '', updated_by TEXT REFERENCES users(id),
+ updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE INDEX IF NOT EXISTS resources_project_idx ON resources(project_id);
 
 CREATE TABLE IF NOT EXISTS activity (

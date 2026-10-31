@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { resourceLabels,resourceIcons,money,portalDate,type ResourceKind,type PortalResource } from '~/types/portal'
-type View='home'|'project'|ResourceKind
+type View='home'|'project'|'assets'|ResourceKind
 const route=useRoute(), router=useRouter()
-const view=computed<View>(()=>['home','project',...Object.keys(resourceLabels)].includes(String(route.query.tab))?String(route.query.tab) as View:'home')
+const view=computed<View>(()=>['home','project','assets',...Object.keys(resourceLabels)].includes(String(route.query.tab))?String(route.query.tab) as View:'home')
 const navigate=(tab:View)=>router.replace({query:{...route.query,tab}})
 const user=ref({name:'',email:'',role:''}),organization=ref(''),ready=ref(false),loading=ref(false),error=ref('')
 const project=ref({id:'',name:'',description:'',status:'',progress:0,dueDate:'',currentPhase:'Cadrage'})
@@ -15,7 +15,7 @@ const overviewTab=ref<'resources'|'activity'>('resources')
 const resourceSearch=ref(''), resourceFilter=ref('all'), resourceSort=ref('recent')
 const statusLabels:Record<string,string>={available:'Disponible',due:'À régler',paid:'Réglé',cancelled:'Annulé',pending:'À valider',approved:'Validée',changes:'À modifier'}
 const visibleResources=computed(()=>resources.value.filter(r=>(resourceFilter.value==='all'||r.kind===resourceFilter.value)&&(r.title+' '+r.description).toLowerCase().includes(resourceSearch.value.toLowerCase())).slice().sort((a,b)=>resourceSort.value==='name'?a.title.localeCompare(b.title,'fr'):b.createdAt.localeCompare(a.createdAt)))
-const navigation=[{id:'home' as View,label:'Vue d’ensemble',icon:'i-tabler-home'},{id:'project' as View,label:'Suivi du projet',icon:'i-tabler-layout-board'},...Object.entries(resourceLabels).map(([id,label])=>({id:id as View,label,icon:resourceIcons[id as ResourceKind]}))]
+const navigation=[{id:'home' as View,label:'Vue d’ensemble',icon:'i-tabler-home'},{id:'project' as View,label:'Suivi du projet',icon:'i-tabler-layout-board'},{id:'assets' as View,label:'Assets',icon:'i-tabler-photo'},...Object.entries(resourceLabels).map(([id,label])=>({id:id as View,label,icon:resourceIcons[id as ResourceKind]}))]
 const refresh=async()=>{const data=await $fetch<{resources:PortalResource[];activity:typeof activity.value}>('/api/portal/resources',{query:{projectId:project.value.id}});resources.value=data.resources;activity.value=data.activity}
 const loadProject=async(id?:string)=>{
  loading.value=true;error.value=''
@@ -50,7 +50,8 @@ onMounted(async()=>{
       </template>
       <section v-else class="updates"><div v-if="!activity.length" class="empty-updates">Aucune activité pour le moment.</div><article v-for="item in activity" :key="item.id"><span class="activity-dot"/><p>{{item.message}}</p><time>{{portalDate(item.createdAt)}}</time></article></section>
      </template>
-     <template v-else-if="view==='project'"><div class="page-title"><h1>{{project.name}}</h1><p>{{project.description}}</p></div><section class="timeline"><article v-for="(phase,i) in phaseNames" :key="phase" :class="{current:i===phaseIndex,done:i<phaseIndex}"><span>{{i<phaseIndex?'✓':String(i+1).padStart(2,'0')}}</span><div><small>{{i<phaseIndex?'TERMINÉ':i===phaseIndex?'EN COURS':'À VENIR'}}</small><h2>{{phase}}</h2><p>{{['Nous définissons ensemble les objectifs, les contenus et le périmètre du projet.','Nous donnons forme à votre identité et préparons les maquettes à valider.','Nous construisons votre site ou application et intégrons vos contenus.','Nous préparons la livraison et vous accompagnons dans la prise en main.'][i]}}</p><button v-if="phase==='Design'" class="text-link" @click="navigate('mockup')">Consulter les maquettes →</button></div></article></section><section class="updates"><h2>Journal du projet</h2><p v-if="!activity.length">Les nouvelles étapes seront consignées ici.</p><article v-for="item in activity" :key="item.id"><span class="activity-dot"/><p>{{item.message}}</p><time>{{portalDate(item.createdAt)}}</time></article></section></template>
+    <template v-else-if="view==='project'"><div class="page-title"><h1>{{project.name}}</h1><p>{{project.description}}</p></div><section class="timeline"><article v-for="(phase,i) in phaseNames" :key="phase" :class="{current:i===phaseIndex,done:i<phaseIndex}"><span>{{i<phaseIndex?'✓':String(i+1).padStart(2,'0')}}</span><div><small>{{i<phaseIndex?'TERMINÉ':i===phaseIndex?'EN COURS':'À VENIR'}}</small><h2>{{phase}}</h2><p>{{['Nous définissons ensemble les objectifs, les contenus et le périmètre du projet.','Nous donnons forme à votre identité et préparons les maquettes à valider.','Nous construisons votre site ou application et intégrons vos contenus.','Nous préparons la livraison et vous accompagnons dans la prise en main.'][i]}}</p><button v-if="phase==='Design'" class="text-link" @click="navigate('mockup')">Consulter les maquettes →</button></div></article></section><section class="updates"><h2>Journal du projet</h2><p v-if="!activity.length">Les nouvelles étapes seront consignées ici.</p><article v-for="item in activity" :key="item.id"><span class="activity-dot"/><p>{{item.message}}</p><time>{{portalDate(item.createdAt)}}</time></article></section></template>
+    <PortalAssets v-else-if="view==='assets'" :project-id="project.id" />
      <PortalResources v-else :key="project.id" :project-id="project.id" :kind="view as ResourceKind" @changed="refresh"/>
     </template>
    </div>
