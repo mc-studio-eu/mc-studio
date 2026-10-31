@@ -61,7 +61,8 @@ const deleteBusy = ref(false)
 const adminName = ref('Administration')
 
 const projectForm = reactive({ name: '', description: '', status: '', progress: 0, dueDate: '', currentPhase: 'Cadrage' })
-const globalPrompt = ref(''), promptBusy = ref(false)
+const globalPrompt = ref(''), promptBusy = ref(false), promptProjectId = ref(''), promptLoading = ref(false)
+const promptProjects = computed(() => clients.value.flatMap(client => client.projects.map(project => ({...project, clientName:client.name}))))
 
 const clientStatuses = computed(() => [...new Set(clients.value.flatMap(client => client.projects.map(project => project.status)))].sort((a, b) => a.localeCompare(b, 'fr')))
 const projectCount = computed(() => clients.value.reduce((count, client) => count + client.projects.length, 0))
@@ -116,9 +117,6 @@ onMounted(async () => {
     adminName.value = user.name
 
     await loadClients()
-
-    const promptData = await $fetch<{prompt:string}>('/api/portal/assets/prompt')
-    globalPrompt.value = promptData.prompt
 
     ready.value = true
 
@@ -273,9 +271,22 @@ const signOut = async () => {
 
 }
 
-const saveGlobalPrompt = async () => {
+watch(promptProjectId, async projectId => {
+  globalPrompt.value = ''
+  if (!projectId) return
+  promptLoading.value = true
+  try {
+    const data = await $fetch<{prompt:string}>('/api/portal/admin/assets/prompt', { query:{projectId} })
+    globalPrompt.value = data.prompt
+  } catch (error:any) {
+    notice.value = error?.data?.statusMessage || 'Impossible de charger le prompt.'
+  } finally { promptLoading.value = false }
+})
+
+const saveProjectPrompt = async () => {
+  if (!promptProjectId.value) return
   promptBusy.value = true
-  try { await $fetch('/api/portal/admin/assets/prompt', { method:'PUT', body:{prompt:globalPrompt.value} }); notice.value='Le prompt IA global a été enregistré.' }
+  try { await $fetch('/api/portal/admin/assets/prompt', { method:'PUT', body:{projectId:promptProjectId.value,prompt:globalPrompt.value} }); notice.value='Le prompt IA de ce projet a été enregistré.' }
   catch (error:any) { notice.value=error?.data?.statusMessage || 'Impossible d’enregistrer le prompt.' }
   finally { promptBusy.value=false }
 }
@@ -328,7 +339,7 @@ const saveGlobalPrompt = async () => {
 
           <PortalGrowth v-if="section==='growth' && !selected"/>
 
-          <section v-else-if="section==='assets' && !selected" class="admin-card prompt-settings"><p class="subheading">BIBLIOTHÈQUE DE MARQUE</p><h1>Prompt IA global</h1><p class="subheading">Ce prompt sera visible par tous les clients dans leur médiathèque. Ajoutez les règles visuelles communes et laissez le client adapter le sujet.</p><form @submit.prevent="saveGlobalPrompt"><label for="global-ai-prompt">Prompt de génération d’image</label><textarea id="global-ai-prompt" v-model="globalPrompt" rows="14" maxlength="12000" placeholder="Décrivez le style visuel, la palette, la lumière, la composition et les éléments à éviter…"/><div class="prompt-settings-footer"><small>{{globalPrompt.length}} / 12 000 caractères · partagé avec tous les clients</small><button class="create-button" :disabled="promptBusy">{{promptBusy?'Enregistrement…':'Enregistrer le prompt'}}</button></div></form></section>
+          <section v-else-if="section==='assets' && !selected" class="admin-card prompt-settings"><p class="subheading">PROMPT DE GÉNÉRATION</p><h1>Un prompt par projet</h1><p class="subheading">Choisissez un client et un projet pour modifier le prompt visible dans sa médiathèque Assets.</p><form @submit.prevent="saveProjectPrompt"><label for="prompt-project">Projet client</label><select id="prompt-project" v-model="promptProjectId" required><option value="" disabled>Sélectionner un projet…</option><option v-for="project in promptProjects" :key="project.id" :value="project.id">{{project.clientName}} · {{project.name}}</option></select><template v-if="promptProjectId"><label for="project-ai-prompt">Prompt de génération d’image</label><textarea id="project-ai-prompt" v-model="globalPrompt" rows="14" maxlength="12000" :disabled="promptLoading" placeholder="Décrivez le style visuel, la palette, la lumière, la composition et les éléments à éviter…"/><div class="prompt-settings-footer"><small>{{globalPrompt.length}} / 12 000 caractères · propre à ce projet</small><button class="create-button" :disabled="promptBusy || promptLoading">{{promptBusy?'Enregistrement…':'Enregistrer le prompt'}}</button></div></template></form><p v-if="!promptProjects.length" class="subheading">Créez d’abord un projet dans la rubrique Clients.</p></section>
 
           <template v-else-if="selected">
 

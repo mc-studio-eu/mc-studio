@@ -1,7 +1,6 @@
-import { portalDb } from '../../../utils/portal-db'
-import { requirePortalUser } from '../../../utils/portal-auth'
+import { accessibleProject } from '../../../utils/portal-resources'
 export default defineEventHandler(async event => {
-  await requirePortalUser(event)
-  const row = await (await portalDb()).prepare("SELECT value,updated_at AS updatedAt FROM portal_settings WHERE key='global_image_prompt'").get()
-  return { prompt: row?.value || '', updatedAt: row?.updatedAt || null }
+  const { db, project } = await accessibleProject(event, String(getQuery(event).projectId || '') || undefined)
+  const row = await db.prepare('SELECT prompt,updated_at AS updatedAt FROM portal_project_prompts WHERE project_id=?').get(project.id)
+  return { prompt: row?.prompt || '', updatedAt: row?.updatedAt || null }
 })

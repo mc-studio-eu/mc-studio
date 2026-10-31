@@ -103,6 +103,12 @@ CREATE TABLE IF NOT EXISTS portal_assets (
 );
 CREATE INDEX IF NOT EXISTS portal_assets_project_idx ON portal_assets(project_id,created_at);
 
+    CREATE TABLE IF NOT EXISTS portal_project_prompts (
+      project_id TEXT PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE,
+      prompt TEXT NOT NULL DEFAULT '', updated_by TEXT REFERENCES users(id),
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
 CREATE TABLE IF NOT EXISTS portal_settings (
  key TEXT PRIMARY KEY, value TEXT NOT NULL DEFAULT '', updated_by TEXT REFERENCES users(id),
  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
