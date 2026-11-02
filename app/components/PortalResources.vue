@@ -4,6 +4,8 @@ const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'; admin?
 const emit = defineEmits<{changed:[]}>()
 const resources = ref<PortalResource[]>([])
 const activity = ref<{id:string;message:string;createdAt:string}[]>([])
+type FileRequest={id:string;projectId:string;title:string;description:string;status:'open'|'fulfilled';resourceId?:string|null;fileName?:string|null;createdAt:string;fulfilledAt?:string|null;createdBy:string;uploadedBy?:string|null}
+const fileRequests=ref<FileRequest[]>([]),showFileRequestForm=ref(false),requestTitle=ref(''),requestDescription=ref('')
 const activeKind = ref<ResourceKind|'assets'>('payment')
 const kind = computed(() => props.kind || activeKind.value)
 const items = computed(() => resources.value.filter(r=>r.kind===kind.value && (r.kind!=='mockup' || Number(r.versionCount || 0)===0)))
@@ -15,12 +17,17 @@ const form = reactive(emptyForm())
 const load = async () => {
  if (!props.projectId) return
  loading.value=true; error.value=''
- try { const data=await $fetch<{resources:PortalResource[];activity:typeof activity.value}>('/api/portal/resources',{query:{projectId:props.projectId}}); resources.value=data.resources; activity.value=data.activity }
+ try { const [data,requests]=await Promise.all([ $fetch<{resources:PortalResource[];activity:typeof activity.value}>('/api/portal/resources',{query:{projectId:props.projectId}}), kind.value==='file'?$fetch<{requests:FileRequest[]}>('/api/portal/files/requests',{query:{projectId:props.projectId}}):Promise.resolve({requests:[] as FileRequest[]}) ]); resources.value=data.resources; activity.value=data.activity;fileRequests.value=requests.requests }
  catch(e:any){error.value=e?.data?.statusMessage || 'Impossible de charger les ressources.'}
  finally{loading.value=false}
 }
 watch(()=>props.projectId, load, {immediate:true})
-watch(kind,()=>{search.value='';editing.value=false;reading.value=null;reviewing.value=null;error.value='';success.value=''})
+watch(kind,()=>{search.value='';editing.value=false;reading.value=null;reviewing.value=null;error.value='';success.value='';showFileRequestForm.value=false;load()})
+const createFileRequest=async()=>{
+ busy.value=true;error.value='';success.value=''
+ try{await $fetch('/api/portal/files/requests',{method:'POST',body:{projectId:props.projectId,title:requestTitle.value,description:requestDescription.value}});requestTitle.value='';requestDescription.value='';showFileRequestForm.value=false;await load();success.value='La demande a été envoyée au client.'}
+ catch(e:any){error.value=e?.data?.statusMessage||'Impossible de créer la demande.'}finally{busy.value=false}
+}
 const edit = (r?:PortalResource) => {
  editingId.value=r?.id || ''; Object.assign(form,emptyForm(),r || {}, {amount:(r?.amount || 0)/100,global:r ? r.projectId===null : false,status:r?.status || (kind.value==='payment'?'due':kind.value==='mockup'?'pending':'available')});editing.value=true
 }
@@ -71,11 +78,11 @@ const removeResource = async () => {
  try{await $fetch(`/api/portal/resources/${removeTarget.value.id}`,{method:'DELETE'});removeTarget.value=null;success.value='Ressource supprimée.';await load();emit('changed')}
  catch(e:any){error.value=e?.data?.statusMessage || 'Suppression impossible.'}finally{busy.value=false}
 }
-const upload = async (event:Event) => {
+const upload = async (event:Event,requestId='') => {
  const input=event.target as HTMLInputElement, file=input.files?.[0];if(!file)return
  if(file.size>10*1024*1024){error.value='Le fichier dépasse la limite de 10 Mo.';input.value='';return}
  busy.value=true;error.value=''
- try{const body=new FormData();body.append('file',file);body.append('kind',kind.value);await $fetch('/api/portal/files',{method:'POST',query:{projectId:props.projectId},body});await load();success.value='Fichier déposé.';emit('changed')}
+ try{const body=new FormData();body.append('file',file);body.append('kind',kind.value);if(requestId)body.append('requestId',requestId);await $fetch('/api/portal/files',{method:'POST',query:{projectId:props.projectId},body});await load();success.value=requestId?'Fichier envoyé pour la demande.':'Fichier déposé.';emit('changed')}
  catch(e:any){error.value=e?.data?.statusMessage || 'Le dépôt a échoué.'}finally{busy.value=false;input.value=''}
 }
 const review = async (state:'approved'|'changes') => {
@@ -93,8 +100,9 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
   <template v-else>
   <PortalMockups v-if="kind==='mockup'" :project-id="projectId" :admin="admin" @changed="load();emit('changed')"/>
   <template v-if="kind!=='mockup' || items.length">
-  <div class="pr-heading"><div><h2>{{resourceLabels[kind]}}</h2><p>{{kind==='payment'?'Vos échéances et liens de règlement.':kind==='file'?'Les fichiers partagés avec votre équipe MC Studio.':kind==='wiki'?'Les guides pour avancer sereinement avec MC Studio.':kind==='analytics'?'Les performances de votre site, au même endroit.':'Tout ce dont vous avez besoin pour votre projet.'}}</p></div><button v-if="admin" class="pr-primary" @click="edit()"><UIcon name="i-tabler-plus"/>Ajouter</button></div>
+  <div class="pr-heading"><div><h2>{{resourceLabels[kind]}}</h2><p>{{kind==='payment'?'Vos échéances et liens de règlement.':kind==='file'?'Les fichiers partagés et les éléments demandés par MC Studio.':kind==='wiki'?'Les guides pour avancer sereinement avec MC Studio.':kind==='analytics'?'Les performances de votre site, au même endroit.':'Tout ce dont vous avez besoin pour votre projet.'}}</p></div><div v-if="admin" class="pr-heading-actions"><button v-if="kind==='file'" class="pr-secondary" @click="showFileRequestForm=!showFileRequestForm"><UIcon name="i-tabler-file-plus"/>Demander un fichier</button><button class="pr-primary" @click="edit()"><UIcon name="i-tabler-plus"/>Ajouter</button></div></div>
   <p v-if="error" class="pr-error" role="alert">{{error}}</p><p v-if="success" class="pr-success" role="status">{{success}}</p>
+  <form v-if="kind==='file' && admin && showFileRequestForm" class="pr-editor" @submit.prevent="createFileRequest"><h3>Demander un fichier au client</h3><p>Le client recevra une demande avec un bouton pour déposer directement son fichier dans ce projet.</p><label>Fichier attendu<input v-model="requestTitle" required maxlength="160" placeholder="Ex. Logo en haute définition"></label><label>Consigne<textarea v-model="requestDescription" rows="3" maxlength="1000" placeholder="Format souhaité, dimensions ou informations utiles…"/></label><div class="pr-actions"><button type="button" class="pr-secondary" @click="showFileRequestForm=false">Annuler</button><button class="pr-primary" :disabled="busy">{{busy?'Envoi…':'Envoyer la demande'}}</button></div></form>
   <form v-if="editing" class="pr-editor" @submit.prevent="save">
    <h3>{{editingId?'Modifier la ressource':'Nouvelle ressource'}}</h3>
    <label>Titre<input v-model="form.title" required maxlength="160" placeholder="Ex. Acompte de lancement"></label>
@@ -108,6 +116,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
    <div class="pr-actions"><button type="button" class="pr-secondary" @click="editing=false">Annuler</button><button class="pr-primary" :disabled="busy">{{busy?'Enregistrement…':'Enregistrer'}}</button></div>
   </form>
   <label v-if="kind==='file'" class="pr-upload"><UIcon name="i-tabler-cloud-upload"/><strong>{{busy?'Dépôt en cours…':'Déposer un fichier'}}</strong><span>10 Mo par fichier · espace privé du projet</span><input type="file" :disabled="busy" aria-label="Choisir un fichier à déposer" @change="upload"></label>
+  <section v-if="kind==='file' && fileRequests.length" class="pr-file-requests"><div class="pr-request-heading"><h3>Demandes de fichiers</h3><span>{{fileRequests.filter(request=>request.status==='open').length}} en attente</span></div><article v-for="request in fileRequests" :key="request.id" class="pr-file-request"><div class="pr-request-copy"><div><h4>{{request.title}}</h4><span :class="['pr-request-status',request.status]">{{request.status==='open'?'À envoyer':'Reçu'}}</span></div><p v-if="request.description">{{request.description}}</p><small v-if="request.status==='fulfilled'">{{request.uploadedBy||'Client'}} · {{request.fileName||'Fichier envoyé'}}</small></div><label v-if="!admin && request.status==='open'" class="pr-request-file"><UIcon name="i-tabler-cloud-upload"/><span>{{busy?'Envoi…':'Choisir le fichier'}}</span><input type="file" :disabled="busy" :aria-label="'Envoyer le fichier demandé : '+request.title" @change="upload($event,request.id)"></label><small v-else-if="admin && request.status==='open'" class="pr-request-meta">Demande envoyée le {{portalDate(request.createdAt)}}</small></article></section>
   <div v-if="kind==='payment' && items.length" class="pr-money"><div><span>À régler</span><strong>{{money(items.filter(r=>r.status==='due').reduce((s,r)=>s+r.amount,0))}}</strong></div><div><span>Déjà réglé</span><strong>{{money(items.filter(r=>r.status==='paid').reduce((s,r)=>s+r.amount,0))}}</strong></div><p>Le statut est confirmé par MC Studio après réception du règlement.</p></div>
   <div class="pr-toolbar"><span>{{items.length}} ressource{{items.length>1?'s':''}}</span><label class="pr-search-box"><UIcon name="i-tabler-search"/><input v-model="search" class="pr-search" aria-label="Rechercher une ressource" placeholder="Rechercher…"></label></div>
   <p v-if="loading" role="status">Chargement…</p>
@@ -153,4 +162,6 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 
 
 @media(max-width:700px){.pr-grid{overflow:visible}.pr-list-head{display:none}.pr-card{min-width:0;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:18px 0}.pr-resource-name{grid-column:1/-1}.pr-card .pr-actions{grid-column:1/-1;justify-content:flex-start}.pr-date{text-align:right}.pr-analytics{min-width:0}}
+
+.pr-heading-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pr-file-requests{margin:20px 0 26px;padding:22px;border:1px solid var(--portal-line,#383838);border-radius:12px;background:var(--portal-surface,#191919)}.pr-request-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.pr-request-heading h3{margin:0;font-size:16px}.pr-request-heading>span,.pr-request-meta{color:var(--portal-muted,#999);font-size:10px}.pr-file-request{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:16px 0;border-top:1px solid var(--portal-line,#303030)}.pr-request-copy{min-width:0}.pr-request-copy>div{display:flex;align-items:center;gap:10px}.pr-request-copy h4{margin:0;font-size:13px;font-weight:500;color:var(--portal-text,#eee)}.pr-request-copy p{margin:6px 0 0;white-space:pre-wrap;font-size:11px}.pr-request-copy small{display:block;margin-top:7px;color:var(--portal-muted,#999);font-size:10px}.pr-request-status{padding:3px 8px;border-radius:99px;background:var(--portal-raised,#292929);color:var(--portal-muted,#aaa);font-size:9px}.pr-request-status.fulfilled{color:var(--portal-text,#ddd)}.pr-request-file{position:relative;display:inline-flex!important;align-items:center;gap:7px;flex:none;margin:0!important;padding:8px 12px;border:1px solid var(--portal-line,#444);border-radius:7px;background:var(--portal-raised,#252525);color:var(--portal-text,#ddd);font-size:10px!important;cursor:pointer;overflow:hidden}.pr-request-file input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}.pr-request-file:focus-within{outline:2px solid var(--portal-line,#bfbfbf);outline-offset:2px}@media(max-width:700px){.pr-heading-actions{justify-content:flex-start}.pr-file-request{align-items:flex-start;flex-direction:column}.pr-file-requests{padding:16px}}
 </style>

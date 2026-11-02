@@ -18,6 +18,7 @@ export default defineEventHandler(async event => {
   }
 
   await db.transaction(async () => {
+    await db.prepare("UPDATE portal_file_requests SET status='open',uploaded_by=NULL,resource_id=NULL,fulfilled_at=NULL WHERE resource_id=?").run(file.id)
     const deleted = await db.prepare("DELETE FROM resources WHERE id=? AND kind='file' AND archived=0").run(file.id)
     if (!deleted.changes) throw createError({ statusCode: 404, statusMessage: 'Fichier introuvable.' })
     await recordActivity(file.projectId, `${user.role === 'admin' ? 'MC Studio' : user.name} a supprimé le fichier « ${file.title} ».`)

@@ -114,6 +114,22 @@ CREATE TABLE IF NOT EXISTS portal_settings (
  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS portal_file_requests (
+ id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+ status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','fulfilled')),
+ created_by TEXT NOT NULL REFERENCES users(id), uploaded_by TEXT REFERENCES users(id),
+ resource_id TEXT REFERENCES resources(id) ON DELETE SET NULL,
+ created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, fulfilled_at TEXT
+);
+CREATE INDEX IF NOT EXISTS portal_file_requests_project_idx ON portal_file_requests(project_id,status,created_at);
+
+CREATE TABLE IF NOT EXISTS portal_user_preferences (
+ user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+ onboarding_completed INTEGER NOT NULL DEFAULT 0 CHECK(onboarding_completed IN (0,1)),
+ updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE INDEX IF NOT EXISTS resources_project_idx ON resources(project_id);
 
 CREATE TABLE IF NOT EXISTS activity (
