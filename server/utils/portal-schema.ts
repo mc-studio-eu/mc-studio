@@ -208,4 +208,55 @@ CREATE TABLE IF NOT EXISTS growth_sites (
 
 );
 
+
+CREATE TABLE IF NOT EXISTS portal_members (
+ user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+ member_role TEXT NOT NULL DEFAULT 'contributor' CHECK(member_role IN ('decision_maker','contributor','viewer')),
+ suspended INTEGER NOT NULL DEFAULT 0 CHECK(suspended IN (0,1)), updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS portal_project_deciders (
+ project_id TEXT PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE,
+ user_id TEXT REFERENCES users(id), updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS portal_invitation_roles (
+ invitation_id TEXT PRIMARY KEY REFERENCES invitations(id) ON DELETE CASCADE,
+ member_role TEXT NOT NULL CHECK(member_role IN ('decision_maker','contributor','viewer'))
+);
+CREATE TABLE IF NOT EXISTS portal_review_history (
+ id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ resource_id TEXT NOT NULL REFERENCES resources(id) ON DELETE CASCADE,
+ version_id TEXT REFERENCES mockup_versions(id) ON DELETE CASCADE,
+ state TEXT NOT NULL CHECK(state IN ('approved','changes')), feedback TEXT NOT NULL DEFAULT '',
+ author_id TEXT NOT NULL REFERENCES users(id), created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS portal_password_resets (
+ token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ expires_at TEXT NOT NULL, used_at TEXT, created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS portal_password_resets_user_idx ON portal_password_resets(user_id);
+CREATE TABLE IF NOT EXISTS portal_notification_preferences (
+ user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+ in_app INTEGER NOT NULL DEFAULT 1 CHECK(in_app IN (0,1)), email INTEGER NOT NULL DEFAULT 1 CHECK(email IN (0,1)),
+ reminder_days INTEGER NOT NULL DEFAULT 3 CHECK(reminder_days BETWEEN 0 AND 30)
+);
+CREATE TABLE IF NOT EXISTS portal_notifications (
+ id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ kind TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL DEFAULT '',
+ created_at TEXT NOT NULL, read_at TEXT, visible INTEGER NOT NULL DEFAULT 1,
+ email_status TEXT NOT NULL DEFAULT 'pending', dedupe_key TEXT UNIQUE
+);
+CREATE INDEX IF NOT EXISTS portal_notifications_user_idx ON portal_notifications(user_id,created_at);
+CREATE TABLE IF NOT EXISTS portal_milestones (
+ id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+ kind TEXT NOT NULL DEFAULT 'milestone' CHECK(kind IN ('milestone','deliverable','checklist')),
+ status TEXT NOT NULL DEFAULT 'todo' CHECK(status IN ('todo','in_progress','done','blocked')),
+ due_date TEXT NOT NULL DEFAULT '', responsible_id TEXT REFERENCES users(id), blocker TEXT NOT NULL DEFAULT '',
+ created_by TEXT NOT NULL REFERENCES users(id), created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS portal_file_request_assignments (
+ request_id TEXT PRIMARY KEY REFERENCES portal_file_requests(id) ON DELETE CASCADE,
+ responsible_id TEXT REFERENCES users(id), due_date TEXT NOT NULL DEFAULT ''
+);
 `

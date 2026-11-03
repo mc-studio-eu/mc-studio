@@ -1,3 +1,4 @@
+import { notifyProject, deliverNotifications } from '../../../utils/portal-notifications'
 import { randomUUID } from 'node:crypto'
 import { assertSameOrigin } from '../../../utils/portal-auth'
 import { mockupContext } from '../../../utils/portal-mockups'
@@ -7,7 +8,7 @@ export default defineEventHandler(async event=>{
  const {db,user,project,version}=await mockupContext(event,body.projectId,body.versionId)
  const text=typeof body.body==='string'?body.body.trim():''
  if(body.action!=='resolve' && (!text || text.length>3000))throw createError({statusCode:400,statusMessage:'Écrivez un commentaire de 1 à 3 000 caractères.'})
- return db.transaction(async()=>{
+ const result=await db.transaction(async()=>{
   if(body.action==='reply'||body.action==='resolve'){
    const annotation=await db.prepare('SELECT a.id FROM mockup_annotations a JOIN mockup_screens s ON s.id=a.screen_id WHERE a.id=? AND s.version_id=?').get(String(body.annotationId||''),version.id)
    if(!annotation)throw createError({statusCode:404,statusMessage:'Annotation introuvable.'})
@@ -21,6 +22,9 @@ export default defineEventHandler(async event=>{
    await db.prepare('INSERT INTO mockup_annotations(id,screen_id,x,y,body,author_id,created_at) VALUES(?,?,?,?,?,?,?)').run(randomUUID(),screen.id,body.x,body.y,text,user.id,new Date().toISOString())
    await recordActivity(project.id,`${user.name} a annoté « ${version.title} » · version ${version.number}.`)
   }else throw createError({statusCode:400,statusMessage:'Action invalide.'})
+  if(body.action!=='resolve')await notifyProject(project.id,body.action==='reply'?'reply':'comment',`${user.name} ${body.action==='reply'?'a répondu':'a commenté'} : ${version.title}`,text,user.id)
   return {ok:true}
  })
+ await deliverNotifications(event)
+ return result
 })

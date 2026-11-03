@@ -1,3 +1,4 @@
+import { notifyProject, deliverNotifications } from '../../../utils/portal-notifications'
 import { randomUUID } from 'node:crypto'
 import { assertSameOrigin,requirePortalUser } from '../../../utils/portal-auth'
 import { accessibleProject,recordActivity } from '../../../utils/portal-resources'
@@ -19,7 +20,7 @@ export default defineEventHandler(async event=>{
  const rendered=await figmaRequest(`images/${key}?${params}`)
  const exports=[]
  for(const screen of selected){if(!screen)continue;const url=rendered.images?.[screen.id];if(!url)throw createError({statusCode:502,statusMessage:'Figma n’a pas pu exporter tous les écrans. Aucune version publiée.'});exports.push({...screen,...await figmaImage(url)})}
- return db.transaction(async()=>{
+ const result=await db.transaction(async()=>{
   if(db.dialect==='postgres')await db.prepare('SELECT id FROM projects WHERE id=? FOR UPDATE').get(project.id)
   if(resourceId && !await db.prepare('SELECT id FROM resources WHERE id=? AND project_id=? AND archived=0').get(resourceId,project.id))throw createError({statusCode:404,statusMessage:'Maquette archivée.'})
   const storage=await db.prepare(`SELECT COALESCE(SUM(s.file_size),0) AS total FROM mockup_screens s JOIN mockup_versions v ON v.id=s.version_id JOIN resources r ON r.id=v.resource_id WHERE r.project_id=?`).get(project.id)
@@ -33,6 +34,9 @@ export default defineEventHandler(async event=>{
   await db.prepare("UPDATE resources SET status='pending',updated_at=? WHERE id=?").run(now,rid)
   await db.prepare(`INSERT INTO project_reviews(project_id,state,feedback,updated_by) VALUES(?,'pending','',?) ON CONFLICT(project_id) DO UPDATE SET state='pending',feedback='',updated_by=excluded.updated_by,updated_at=CURRENT_TIMESTAMP`).run(project.id,user.id)
   await recordActivity(project.id,`MC Studio a publié « ${file.name} » · version ${number} · ${exports.length} écran(s).`)
+  await notifyProject(project.id,'mockup',`Nouvelle maquette : ${file.name}`,`Version ${number} disponible.`,user.id,`mockup:${versionId}`)
   return {versionId,resourceId:rid}
  })
+ await deliverNotifications(event)
+ return result
 })

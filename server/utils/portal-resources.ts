@@ -1,10 +1,11 @@
 import { randomUUID } from 'node:crypto'
 import { portalDb } from './portal-db'
-import { requirePortalUser } from './portal-auth'
+import { requirePortalUser, requireContributor } from './portal-auth'
 
 export const resourceColumns = `r.id,r.project_id AS projectId,r.kind,r.title,r.description,r.url,r.content,r.amount,r.currency,r.status,r.due_date AS dueDate,r.file_name AS fileName,r.file_size AS fileSize,r.created_at AS createdAt,r.updated_at AS updatedAt,(SELECT COUNT(*) FROM mockup_versions mv WHERE mv.resource_id=r.id) AS versionCount`
 export async function accessibleProject(event: any, id?: string) {
  const user = await requirePortalUser(event)
+ if (!['GET','HEAD','OPTIONS'].includes(event.method || event.node?.req?.method || 'GET')) requireContributor(user)
  const db = await portalDb()
  const project = id
   ? await db.prepare('SELECT * FROM projects WHERE id=?').get(id)

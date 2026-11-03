@@ -30,6 +30,8 @@ export default defineEventHandler(async (event) => {
     if (!claimed.changes) throw createError({ statusCode: 410, statusMessage: 'Invitation déjà utilisée ou expirée.' })
     await db.prepare(`INSERT INTO users(id,email,name,password_hash,role,organization_id) VALUES(?,?,?,?, 'client',?)`)
       .run(userId, email, name, passwordHash, invitation.organizationId)
+    const invitationRole = await db.prepare('SELECT member_role FROM portal_invitation_roles WHERE invitation_id=?').get(invitation.id)
+    await db.prepare('INSERT INTO portal_members(user_id,member_role) VALUES(?,?)').run(userId,invitationRole?.member_role || 'contributor')
     await db.prepare('INSERT INTO sessions(token_hash,user_id,expires_at) VALUES(?,?,?)')
       .run(hashToken(session), userId, new Date(Date.now() + 30 * 24 * 60 * 60_000).toISOString())
   })

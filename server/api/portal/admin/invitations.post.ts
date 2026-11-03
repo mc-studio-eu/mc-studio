@@ -1,3 +1,4 @@
+import { memberRoles } from '../../../utils/portal-workflow'
 import { randomUUID } from 'node:crypto'
 import { assertSameOrigin, cleanEmail, hashToken, newToken, requirePortalUser, validEmail } from '../../../utils/portal-auth'
 import { portalDb } from '../../../utils/portal-db'
@@ -5,9 +6,11 @@ import { portalDb } from '../../../utils/portal-db'
 export default defineEventHandler(async (event) => {
   assertSameOrigin(event)
   const admin = await requirePortalUser(event, 'admin')
-  const body = await readBody<{ organizationId?: unknown; email?: unknown }>(event)
+  const body = await readBody<{ organizationId?: unknown; email?: unknown; memberRole?:unknown }>(event)
   const organizationId = typeof body.organizationId === 'string' ? body.organizationId : ''
   const email = cleanEmail(body.email)
+  const memberRole = body.memberRole ?? 'contributor'
+  if (!memberRoles.includes(String(memberRole))) throw createError({statusCode:400,statusMessage:'Rôle invalide.'})
   if (!organizationId || !validEmail(email)) throw createError({ statusCode: 400, statusMessage: 'Client ou adresse e-mail invalide.' })
   const db = await portalDb()
   const org = await db.prepare('SELECT name FROM organizations WHERE id=?').get(organizationId) as { name: string } | undefined
@@ -33,15 +36,17 @@ export default defineEventHandler(async (event) => {
     if (db.dialect === 'postgres') await db.prepare('SELECT id FROM organizations WHERE id=? FOR UPDATE').get(organizationId)
     if (await db.prepare('SELECT id FROM users WHERE lower(email)=?').get(email)) throw createError({ statusCode: 409, statusMessage: 'Cette adresse possède déjà un compte.' })
     await db.prepare('DELETE FROM invitations WHERE organization_id=? AND lower(email)=? AND accepted_at IS NULL').run(organizationId, email)
+    const invitationId = randomUUID()
     await db.prepare('INSERT INTO invitations(id,organization_id,project_id,email,token_hash,expires_at,created_by) VALUES(?,?,?,?,?,?,?)')
-      .run(randomUUID(), organizationId, project.id, email, hashToken(rawToken), expiresAt, admin.id)
+      .run(invitationId, organizationId, project.id, email, hashToken(rawToken), expiresAt, admin.id)
+    await db.prepare('INSERT INTO portal_invitation_roles(invitation_id,member_role) VALUES(?,?)').run(invitationId,memberRole)
   })
   const inviteUrl = `${String(baseUrl).replace(/\/$/, '')}/portal/accept?token=${encodeURIComponent(rawToken)}`
   const config = useRuntimeConfig(event)
   const apiKey = String(config.resendApiKey || '')
   const from = String(config.contactFrom || 'MC Studio <contact@mc-studio.eu>')
   let emailSent = false
-  if (apiKey) {
+  if (apiKey && process.env.PORTAL_EMAIL_DISABLED !== '1' && process.env.PORTAL_EMAIL_DISABLED !== 'true') {
     try {
       await $fetch('https://api.resend.com/emails', {
         method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },

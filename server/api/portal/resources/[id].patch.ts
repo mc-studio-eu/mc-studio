@@ -1,3 +1,4 @@
+import { notifyProject, deliverNotifications } from '../../../utils/portal-notifications'
 import { assertSameOrigin, requirePortalUser } from '../../../utils/portal-auth'
 import { portalDb } from '../../../utils/portal-db'
 import { resourceInput, recordActivity } from '../../../utils/portal-resources'
@@ -16,7 +17,9 @@ export default defineEventHandler(async event => {
  await db.transaction(async () => {
   await db.prepare('UPDATE resources SET title=?,description=?,url=?,content=?,amount=?,status=?,due_date=?,updated_at=CURRENT_TIMESTAMP WHERE id=?')
    .run(r.title,r.description,r.url,r.content,r.amount,r.status,r.dueDate,id)
+  if(current.project_id && r.kind==='mockup' && ((r.status==='pending' && current.status!=='pending') || r.url!==current.url)) await notifyProject(current.project_id,'mockup',`Nouvelle maquette : ${r.title}`,r.description,undefined,`mockup-update:${id}:${Date.now()}`)
   if (current.project_id) await recordActivity(current.project_id, `MC Studio a mis à jour : ${r.title}`)
  })
+ await deliverNotifications(event)
  return { ok: true }
 })

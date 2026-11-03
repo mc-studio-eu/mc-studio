@@ -44,7 +44,7 @@ Documentation : https://developers.google.com/analytics/devguides/reporting/data
 - Contrôle du rôle et de l’organisation sur chaque lecture ou écriture de ressource/fichier.
 - Pages et réponses privées non mises en cache, `noindex`, `no-referrer`. Le script marketing du site n’est pas chargé sur les pages portail.
 - Wiki rendu comme texte, liens HTTPS uniquement, aucun HTML fourni par le client exécuté.
-- Le mot de passe oublié reste géré par contact avec MC Studio via WhatsApp.
+- Le mot de passe oublié utilise un lien temporaire à usage unique (30 minutes), envoyé par e-mail. Son jeton est conservé sous forme de hash. Le changement depuis le compte exige le mot de passe actuel ; les deux parcours révoquent les sessions existantes.
 - Resend nécessite `NUXT_RESEND_API_KEY` et un expéditeur vérifié dans `NUXT_CONTACT_FROM`. L’admin reçoit aussi le lien si l’e-mail ne peut pas être envoyé.
 - Le portail nécessite un serveur Nuxt/Nitro ; un hébergement purement statique ne suffit pas.
 
@@ -53,6 +53,26 @@ Documentation : https://developers.google.com/analytics/devguides/reporting/data
 Compilation Nuxt et parcours API avec base temporaire isolée : connexion, création client, invitation à usage unique, refus d’accès à une autre organisation, dépôt/téléchargement privé, validation des URLs, retour de maquette, statut paiement, wiki commun, analytics non configuré et archivage. Vérification visuelle du portail dans le navigateur local.
 
 Les connexions externes Neon et GA4 ne sont considérées activées qu’après configuration des accès et vérification réelle. Le lien de console Neon seul ne fournit pas d’identifiants de connexion.
+
+## Équipe, actions attendues et livrables
+
+L’administration attribue à chaque membre client un rôle **lecteur**, **contributeur** ou **décideur**. Les comptes existants deviennent contributeurs par défaut. Un décideur actif doit ensuite être désigné pour chaque projet : seul ce compte peut valider une maquette ou demander formellement des modifications. Les contributions et commentaires restent ouverts aux contributeurs. Les décisions successives sont conservées avec leur auteur et leur date.
+
+La suspension d’un membre révoque ses sessions et ses liens de réinitialisation, empêche une nouvelle connexion et conserve ses commentaires. La suspension ou le passage en lecteur libère ses demandes de fichiers et ses livrables affectés ; l’administration peut les réattribuer. La suspension ou la perte du rôle décideur retire sa désignation. La réactivation exige une nouvelle connexion et une nouvelle désignation si nécessaire.
+
+L’accueil présente **À faire pour vous**, calculé à partir des données du projet : demandes de fichiers ouvertes, maquettes à valider par le décideur, paiements attendus et jalons affectés au membre. Ces actions sont indépendantes de la limite du journal d’activité. Les lecteurs peuvent consulter le projet sans effectuer de mutations métier.
+
+Le suivi comporte des jalons, livrables et éléments de checklist, chacun avec un responsable facultatif, une date, un état et une description du blocage. L’administration crée et modifie ces éléments ; le responsable client peut actualiser son état et son blocage. Les demandes de fichiers peuvent également recevoir un responsable et une date attendue.
+
+## Notifications et relances
+
+Les publications de maquettes, commentaires et demandes de fichiers créent des notifications persistantes. Chaque membre règle ses notifications dans le portail, ses e-mails et l’intervalle des relances (0 pour désactiver, de 1 à 30 jours sinon ; 3 jours par défaut). Les e-mails nécessitent la configuration Resend et l’URL canonique `NUXT_PUBLIC_SITE_URL` en HTTPS en production. `PORTAL_EMAIL_DISABLED=1` désactive les envois du portail, y compris invitations et réinitialisations, pour les tests.
+
+Les relances se déclenchent depuis l’administration ou via `POST /api/portal/notifications/remind`. Pour une exécution périodique, configurer le planificateur de l’hébergement pour appeler cette route avec `Authorization: Bearer <PORTAL_REMINDER_SECRET>` ; utiliser un secret serveur d’au moins 24 caractères. Le corps JSON peut être `{}` pour tous les projets ou contenir `projectId`. Le dépôt ne configure pas le planificateur de l’hébergement. Les préférences, les droits, les tâches encore ouvertes et la déduplication sont vérifiés avant de créer une relance.
+
+Les nouvelles tables sont créées de manière additive à l’ouverture de la base et incluses dans le script de migration SQLite → Neon. Aucune attribution automatique du pouvoir de validation n’est faite aux comptes existants : désigner les décideurs dans l’administration après mise à jour.
+
+Pour vérifier les parcours API sans toucher aux données existantes : `node scripts/test-portal-workflows.mjs`. Ce script démarre Nuxt sur le port 4179 (`PORTAL_TEST_PORT` permet de le changer), utilise une base SQLite temporaire et un fichier d’environnement vide, désactive les e-mails, puis nettoie ses fichiers et son serveur. Il couvre les rôles, l’isolation des organisations, la suspension, les mots de passe, les actions attendues et les notifications. La compilation se vérifie avec `npm run build`.
 
 ## Maquettes Figma et annotations
 
