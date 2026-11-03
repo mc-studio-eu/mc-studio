@@ -31,17 +31,30 @@ export async function notifyProject(projectId:string,kind:string,title:string,bo
   await db.prepare('INSERT INTO portal_notifications(id,user_id,project_id,kind,title,body,created_at,visible,email_status,dedupe_key) VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(dedupe_key) DO NOTHING').run(randomUUID(),user.id,projectId,kind,title,body,new Date().toISOString(),user.inApp?1:0,user.email?'pending':'disabled',dedupePrefix?`${dedupePrefix}:${user.id}`:null)
  }
 }
+// Administrator notifications share the same durable queue and preferences as
+// client notifications; mutation handlers never perform external I/O in a transaction.
+export async function notifyProjectAdmins(projectId:string,kind:string,title:string,body='',excludeUserId?:string,dedupePrefix?:string) {
+ const db=await portalDb()
+ const admins=await db.prepare(`SELECT u.id,COALESCE(p.in_app,1) AS inApp,COALESCE(p.email,1) AS email FROM users u LEFT JOIN portal_members m ON m.user_id=u.id LEFT JOIN portal_notification_preferences p ON p.user_id=u.id WHERE u.role='admin' AND COALESCE(m.suspended,0)=0`).all()
+ for(const admin of admins) {
+  if(admin.id===excludeUserId || (!admin.inApp && !admin.email))continue
+  await db.prepare('INSERT INTO portal_notifications(id,user_id,project_id,kind,title,body,created_at,visible,email_status,dedupe_key) VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(dedupe_key) DO NOTHING').run(randomUUID(),admin.id,projectId,kind,title,body,new Date().toISOString(),admin.inApp?1:0,admin.email?'pending':'disabled',dedupePrefix?`${dedupePrefix}:${admin.id}`:null)
+ }
+}
 export async function flushNotificationEmails(event:any) {
  const db=await portalDb()
  const baseUrl=portalBaseUrl(event), stale=`sending:${Date.now()-10*60000}`, failed=`failed:${Date.now()-5*60000}`
- const queued=await db.prepare(`SELECT n.id,n.title,n.body,u.email,n.project_id,n.email_status FROM portal_notifications n JOIN users u ON u.id=n.user_id LEFT JOIN portal_members m ON m.user_id=u.id LEFT JOIN portal_notification_preferences p ON p.user_id=u.id WHERE (n.email_status IN ('pending','failed') OR (n.email_status LIKE 'sending:%' AND n.email_status<?) OR (n.email_status LIKE 'failed:%' AND n.email_status<?)) AND COALESCE(m.suspended,0)=0 AND COALESCE(p.email,1)=1 ORDER BY n.created_at LIMIT 100`).all(stale,failed)
+ const queued=await db.prepare(`SELECT n.id,n.title,n.body,n.kind,u.email,u.role,n.project_id,n.email_status FROM portal_notifications n JOIN users u ON u.id=n.user_id LEFT JOIN portal_members m ON m.user_id=u.id LEFT JOIN portal_notification_preferences p ON p.user_id=u.id WHERE (n.email_status IN ('pending','failed') OR (n.email_status LIKE 'sending:%' AND n.email_status<?) OR (n.email_status LIKE 'failed:%' AND n.email_status<?)) AND COALESCE(m.suspended,0)=0 AND COALESCE(p.email,1)=1 ORDER BY n.created_at LIMIT 100`).all(stale,failed)
  let sent=0
  for(const notification of queued) {
   // Claim before external I/O: concurrent workers never send the same notification twice.
   const claim=`sending:${Date.now()}`
   const claimed=await db.prepare('UPDATE portal_notifications SET email_status=? WHERE id=? AND email_status=?').run(claim,notification.id,notification.email_status)
   if(!claimed.changes)continue
-  const state=await sendPortalEmail(event,notification.email,`${notification.title} · MC Studio`,`${notification.body}\n\n${baseUrl}/portal?projectId=${encodeURIComponent(notification.project_id)}`,`portal-notification-${notification.id}`)
+  const requestNotification=['request_created','request_reply','request_status'].includes(notification.kind)
+  const path=requestNotification && notification.role==='admin'?'/portal/admin':'/portal'
+  const link=`${baseUrl}${path}?projectId=${encodeURIComponent(notification.project_id)}${requestNotification?'&tab=requests':''}`
+  const state=await sendPortalEmail(event,notification.email,`${notification.title} · MC Studio`,`${notification.body}\n\n${link}`,`portal-notification-${notification.id}`)
   await db.prepare('UPDATE portal_notifications SET email_status=? WHERE id=?').run(state==='failed'?`failed:${Date.now()}`:state,notification.id)
   if(state==='sent')sent++
  }

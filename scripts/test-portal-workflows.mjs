@@ -139,6 +139,89 @@ async function run() {
     const viewer = await login('viewer@test.invalid')
     const outsider = await login('other@test.invalid')
 
+    await test('new requests support organization-scoped creation, replies, status changes, and validation', async () => {
+      const created = await request('/api/portal/requests', {
+        method: 'POST', cookie: contributor,
+        body: { projectId: 'project-a', title: 'Clarifier le périmètre', body: 'Pouvez-vous préciser les livrables attendus ?' }
+      })
+      expectStatus(created, 200, 'contributor creates a request')
+      const requestId = created.data.id
+      assert.ok(requestId)
+      assert.ok(db.prepare("SELECT 1 FROM portal_notifications WHERE user_id='admin' AND project_id='project-a' AND kind='request_created'").get(), 'request creation should persist an in-app notification for the admin')
+      expectStatus(await request('/api/portal/requests', { method: 'POST', cookie: viewer, body: { projectId: 'project-a', title: 'Demande lecteur', body: 'Interdite' } }), 403, 'reader cannot create a request')
+
+      const list = await request('/api/portal/requests?projectId=project-a', { cookie: contributor })
+      expectStatus(list, 200, 'organization request list')
+      assert.ok(list.data.requests.some(item => item.id === requestId && item.authorId === 'contributor'))
+      assert.equal(list.data.permissions.canCreate, true)
+      const readerList = await request('/api/portal/requests?projectId=project-a', { cookie: viewer })
+      expectStatus(readerList, 200, 'reader request list')
+      assert.equal(readerList.data.permissions.canCreate, false)
+      const foreignList = await request('/api/portal/requests?projectId=project-b', { cookie: contributor })
+      expectStatus(foreignList, 404, 'cross-organization request list')
+
+      const initial = await request(`/api/portal/requests/${requestId}`, { cookie: contributor })
+      expectStatus(initial, 200, 'request detail')
+      assert.equal(initial.data.request.id, requestId)
+      assert.equal(initial.data.request.status, 'open')
+      assert.equal(initial.data.permissions.canReply, true)
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { cookie: outsider }), 404, 'cross-organization request detail')
+
+      expectStatus(await request(`/api/portal/requests/${requestId}/messages`, { method: 'POST', cookie: viewer, body: { body: 'Réponse interdite' } }), 403, 'reader reply denied')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: viewer, body: { status: 'resolved' } }), 403, 'reader status change denied')
+      expectStatus(await request(`/api/portal/requests/${requestId}/messages`, { method: 'POST', cookie: outsider, body: { body: 'Réponse hors organisation' } }), 404, 'cross-organization reply')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: outsider, body: { status: 'resolved' } }), 404, 'cross-organization status change')
+
+      expectStatus(await request(`/api/portal/requests/${requestId}/messages`, { method: 'POST', cookie: contributor, body: { body: 'Voici une précision côté client.' } }), 200, 'client reply')
+      expectStatus(await request(`/api/portal/requests/${requestId}/messages`, { method: 'POST', cookie: admin, body: { body: 'Nous allons confirmer les livrables.' } }), 200, 'admin reply')
+      assert.ok(db.prepare("SELECT 1 FROM portal_notifications WHERE user_id='admin' AND project_id='project-a' AND kind='request_reply'").get(), 'client reply should persist an in-app notification for the admin')
+      assert.ok(db.prepare("SELECT 1 FROM portal_notifications WHERE user_id='contributor' AND project_id='project-a' AND kind='request_reply'").get(), 'admin reply should persist an in-app notification for the client')
+      const replied = await request(`/api/portal/requests/${requestId}`, { cookie: decider })
+      expectStatus(replied, 200)
+      assert.equal(replied.data.messages.filter(item => item.type === 'reply').length, 2)
+      assert.ok(replied.data.messages.some(item => item.authorId === 'contributor' && item.body === 'Voici une précision côté client.'))
+      assert.ok(replied.data.messages.some(item => item.authorId === 'admin' && item.body === 'Nous allons confirmer les livrables.'))
+
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: decider, body: { status: 'resolved' } }), 403, 'non-author member cannot resolve')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: admin, body: { status: 'resolved' } }), 200, 'admin resolves request')
+      const resolved = await request(`/api/portal/requests/${requestId}`, { cookie: contributor })
+      assert.equal(resolved.data.request.status, 'resolved')
+      assert.ok(resolved.data.request.resolvedAt)
+      assert.ok(resolved.data.messages.some(item => item.type === 'status' && item.status === 'resolved'))
+      assert.ok(db.prepare("SELECT 1 FROM portal_notifications WHERE user_id='contributor' AND project_id='project-a' AND kind='request_status'").get(), 'status change should persist an in-app notification for the client')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: viewer, body: { status: 'open' } }), 403, 'reader cannot reopen')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: decider, body: { status: 'open' } }), 403, 'other member cannot reopen')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: contributor, body: { status: 'open' } }), 200, 'author reopens request')
+      assert.equal((await request(`/api/portal/requests/${requestId}`, { cookie: contributor })).data.request.status, 'open')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: admin, body: { status: 'resolved' } }), 200, 'admin resolves after reopening')
+
+      const overlong = 'x'.repeat(10_001)
+      for (const body of [
+        { projectId: 'project-a', title: '', body: 'Description valide' },
+        { projectId: 'project-a', title: 'Titre sans description', body: '   ' },
+        { projectId: 'project-a', title: 'x'.repeat(161), body: 'Description valide' },
+        { projectId: 'project-a', title: 'Description trop longue', body: overlong }
+      ]) expectStatus(await request('/api/portal/requests', { method: 'POST', cookie: contributor, body }), 400, 'invalid request input')
+      expectStatus(await request(`/api/portal/requests/${requestId}/messages`, { method: 'POST', cookie: contributor, body: { body: '  ' } }), 400, 'empty reply')
+      expectStatus(await request(`/api/portal/requests/${requestId}/messages`, { method: 'POST', cookie: contributor, body: { body: overlong } }), 400, 'overlong reply')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: admin, body: { status: 'closed' } }), 400, 'invalid status')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: admin, body: { status: 'open' } }), 200, 'admin reopens request')
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { method: 'PATCH', cookie: contributor, body: { status: 'resolved' } }), 200, 'author resolves request')
+      assert.equal((await request(`/api/portal/requests/${requestId}`, { cookie: contributor })).data.request.status, 'resolved')
+
+      await request('/api/portal/admin/members/contributor', { method: 'PATCH', cookie: admin, body: { suspended: true } }).then(result => expectStatus(result, 200, 'suspend request author'))
+      expectStatus(await request(`/api/portal/requests/${requestId}`, { cookie: contributor }), 401, 'suspended author cannot read requests')
+      const suspendedMe = await request('/api/portal/auth/me', { cookie: contributor })
+      expectStatus(suspendedMe, 200)
+      assert.equal(suspendedMe.data.user, null)
+      expectStatus(await request('/api/portal/auth/login', { method: 'POST', body: { email: 'contributor@test.invalid', password: 'Portal-test-Password-2026!' } }), 401, 'suspended contributor login')
+      expectStatus(await request('/api/portal/admin/members/contributor', { method: 'PATCH', cookie: admin, body: { suspended: false } }), 200, 'unsuspend request author')
+      contributor = await login('contributor@test.invalid')
+
+      // Keep the later notification-preference workflow's seeded unread count deterministic.
+      db.prepare("DELETE FROM portal_notifications WHERE project_id='project-a' AND kind IN ('request_created','request_reply','request_status')").run()
+    })
+
     await test('client project access stays within its organization', async () => {
       const own = await request('/api/portal/client/project?projectId=project-a', { cookie: decider })
       expectStatus(own, 200)

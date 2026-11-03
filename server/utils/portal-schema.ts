@@ -124,6 +124,25 @@ CREATE TABLE IF NOT EXISTS portal_file_requests (
 );
 CREATE INDEX IF NOT EXISTS portal_file_requests_project_idx ON portal_file_requests(project_id,status,created_at);
 
+CREATE TABLE IF NOT EXISTS portal_requests (
+ id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ title TEXT NOT NULL, body TEXT NOT NULL,
+ status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','resolved')),
+ created_by TEXT NOT NULL REFERENCES users(id), created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+ resolved_by TEXT REFERENCES users(id), resolved_at TEXT,
+ CHECK((status='open' AND resolved_by IS NULL AND resolved_at IS NULL) OR
+       (status='resolved' AND resolved_by IS NOT NULL AND resolved_at IS NOT NULL))
+);
+CREATE INDEX IF NOT EXISTS portal_requests_project_idx ON portal_requests(project_id,status,created_at);
+CREATE TABLE IF NOT EXISTS portal_request_messages (
+ id TEXT PRIMARY KEY, request_id TEXT NOT NULL REFERENCES portal_requests(id) ON DELETE CASCADE,
+ body TEXT NOT NULL, author_id TEXT NOT NULL REFERENCES users(id), created_at TEXT NOT NULL,
+ type TEXT NOT NULL DEFAULT 'reply' CHECK(type IN ('reply','status')),
+ status TEXT CHECK(status IN ('open','resolved')),
+ CHECK((type='reply' AND status IS NULL) OR (type='status' AND status IS NOT NULL))
+);
+CREATE INDEX IF NOT EXISTS portal_request_messages_request_idx ON portal_request_messages(request_id,created_at);
+
 CREATE TABLE IF NOT EXISTS portal_user_preferences (
  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
  onboarding_completed INTEGER NOT NULL DEFAULT 0 CHECK(onboarding_completed IN (0,1)),

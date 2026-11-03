@@ -8,5 +8,32 @@ const overdue = (date:string) => Boolean(date && date.slice(0,10) < new Date().t
 </script>
 <template><section class="todos"><div class="todo-heading"><h2>À faire pour vous <span>{{ items.length }}</span></h2><p>Les prochaines actions pour faire avancer votre projet.</p></div><p v-if="!items.length" class="todo-empty">{{canContribute?'Tout est à jour. Aucune action en attente pour le moment.':'Votre accès est en lecture seule. Aucune action ne vous est demandée.'}}</p><div v-else class="todo-list"><article v-for="item in items" :key="item.id"><div><small>{{ labels[item.kind] }}</small><h3>{{ item.title }}</h3><p>{{ item.responsibleName || 'Votre équipe' }}<span :class="{overdue:overdue(item.dueDate)}"> · {{ item.dueDate ? 'Attendu le '+portalDate(item.dueDate) : 'Date à définir' }}</span></p><p v-if="item.kind==='mockup' && !canReview" class="permission-note">La validation finale appartient au décideur du projet.</p><p v-else-if="!actionable(item)" class="permission-note">{{ !canContribute ? 'Votre accès est en lecture seule.' : 'Cette action est confiée à un autre membre.' }}</p></div><button @click="emit('navigate', item.kind==='milestone'?'project':item.kind)">{{ actionable(item) ? item.kind==='file'?'Envoyer le fichier':item.kind==='mockup'?'Examiner et valider':item.kind==='payment'?'Voir l’échéance':'Voir mon action' : 'Consulter' }} <UIcon name="i-tabler-arrow-up-right"/></button></article></div></section></template>
 <style scoped>
-.todos{margin:0 24px 24px;padding:20px;border:1px solid var(--portal-line,#333);border-radius:9px;background:var(--portal-surface,#181818)}.todo-heading h2{font-size:16px;margin:0;font-weight:500}.todo-heading h2 span{font-size:11px;border:1px solid var(--portal-line,#444);border-radius:99px;padding:2px 6px;margin-left:6px}.todo-heading p,.todo-empty{font-size:12px;color:var(--portal-muted,#999);margin:7px 0 0}.todo-list{margin-top:16px}.todo-list article{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-top:1px solid var(--portal-line,#333)}.todo-list article>div{min-width:0}.todo-list small{font-size:10px;color:var(--portal-muted,#999)}h3{font-size:13px;margin:4px 0;font-weight:500;overflow-wrap:anywhere}.todo-list p{font-size:11px;color:var(--portal-muted,#999);margin:4px 0}.todo-list .overdue{color:#efac80}.todo-list .permission-note{font-size:10px}button{display:inline-flex;align-items:center;gap:7px;flex-shrink:0;cursor:pointer;border:1px solid var(--portal-line,#444);border-radius:99px;background:var(--portal-raised,#252525);color:inherit;padding:8px 12px;font:inherit;font-size:11px}@media(max-width:700px){.todos{margin:0 16px 20px;padding:16px}.todo-list article{align-items:flex-start;flex-direction:column;gap:8px}}
+.todos{border:1px solid var(--portal-line,#333);border-radius:8px}
+.todo-heading h2{margin:0}
+.todo-heading h2 span{margin-left:6px}
+.todo-heading p,.todo-empty{color:var(--portal-muted,#999);margin:7px 0 0}
+.todo-list{margin-top:16px}
+.todo-list article{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid var(--portal-line,#333)}
+.todo-list article>div{min-width:0}
+h3{overflow-wrap:anywhere}
+.todo-list p{color:var(--portal-muted,#999);margin:4px 0}
+.todo-list .overdue{color:var(--portal-warning)}
+button{display:inline-flex;align-items:center;gap:7px;flex-shrink:0;cursor:pointer;border:1px solid var(--portal-line,#444);background:var(--portal-raised,#252525);color:inherit;font:inherit}
+@media(max-width:700px){.todo-list article{align-items:flex-start;flex-direction:column}}
+.todos{margin:0 32px 28px;padding:24px;background:var(--portal-surface)}
+.todo-heading h2{font-size:18px;font-weight:600}
+.todo-heading h2 span{font-size:11px;border:0;background:var(--portal-accent-soft);color:var(--portal-accent-text);border-radius:6px;padding:3px 7px}
+.todo-heading p,.todo-empty{font-size:13px;line-height:1.6}
+.todo-empty{padding:16px 0 0}
+.todo-list article{padding:20px 0}
+.todo-list article:last-child{padding-bottom:0}
+.todo-list small{font-size:11px;color:var(--portal-accent-text)}
+h3{font-size:15px;font-weight:500;margin:6px 0}
+.todo-list p{font-size:12px}
+.todo-list .permission-note{font-size:12px;margin-top:8px}
+button{min-height:40px;border-radius:8px;font-size:13px;padding:9px 14px}
+button:hover{background:var(--portal-accent-soft);border-color:var(--portal-accent);color:var(--portal-accent-text)}
+@media(max-width:700px){.todos{margin:0 16px 24px;padding:20px 16px}
+.todo-list article{gap:12px}
+button{font-size:12px}}
 </style>

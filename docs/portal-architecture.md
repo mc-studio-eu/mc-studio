@@ -64,6 +64,16 @@ L’accueil présente **À faire pour vous**, calculé à partir des données du
 
 Le suivi comporte des jalons, livrables et éléments de checklist, chacun avec un responsable facultatif, une date, un état et une description du blocage. L’administration crée et modifie ces éléments ; le responsable client peut actualiser son état et son blocage. Les demandes de fichiers peuvent également recevoir un responsable et une date attendue.
 
+## Demandes du client
+
+La rubrique **Demandes** regroupe les demandes propres à chaque projet, séparément des annotations de maquettes. Un contributeur ou décideur peut créer une demande avec un titre et une description, puis échanger avec MC Studio dans son fil de discussion. Les membres de l’organisation peuvent consulter les demandes ; les lecteurs ne peuvent ni créer, ni répondre, ni changer leur état.
+
+Une demande est **Ouverte** ou **Résolue**. Son auteur, tant qu’il dispose d’un droit de contribution, et l’administration peuvent la résoudre ou la rouvrir. Les changements d’état conservent leur auteur et leur date dans le fil ; les messages restent disponibles après résolution. L’administration retrouve la rubrique dans la fiche projet. Les demandes ne sont pas supprimables depuis l’interface.
+
+Les nouvelles demandes et réponses du client notifient l’administration. Les réponses de MC Studio et les changements d’état notifient les membres concernés, selon leurs préférences. Les notifications ouvrent la rubrique Demandes du projet.
+
+Les accès API vérifient l’organisation du projet et l’état actif du compte. Les tables `portal_requests` et `portal_request_messages` sont créées de manière additive et incluses dans la migration vers Neon.
+
 ## Notifications et relances
 
 Les publications de maquettes, commentaires et demandes de fichiers créent des notifications persistantes. Chaque membre règle ses notifications dans le portail, ses e-mails et l’intervalle des relances (0 pour désactiver, de 1 à 30 jours sinon ; 3 jours par défaut). Les e-mails nécessitent la configuration Resend et l’URL canonique `NUXT_PUBLIC_SITE_URL` en HTTPS en production. `PORTAL_EMAIL_DISABLED=1` désactive les envois du portail, y compris invitations et réinitialisations, pour les tests.

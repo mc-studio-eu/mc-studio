@@ -1,0 +1,182 @@
+[
+  {
+    "project": "Souji Nova",
+    "angle": "Project reveal",
+    "asset": "souji-hero.png",
+    "text": "A cleaning business with this much personality deserves a website to match.\n\nOur work for Souji Nova: cinematic imagery, editorial type, and a clear route to a quote.\n\nRun a service business? DM us your website + what you want it to do better.",
+    "id": 1,
+    "characters": 243,
+    "alt": "Souji Nova homepage with a dark cinematic background, large editorial typography, a customer review, and quote and WhatsApp buttons.",
+    "status": "draft"
+  },
+  {
+    "project": "Newlense",
+    "angle": "Product reveal",
+    "asset": "newlense-welcome.png",
+    "text": "Your next customer walks into your shop. What brought them there?\n\nWe built Newlense around that question: a simple screen where customers tap how they found you.\n\nHave a business problem that needs a small, focused app? Tell us about it.",
+    "id": 2,
+    "characters": 238,
+    "alt": "Newlense customer screen asks how visitors discovered the business. Six large choices cover TikTok, Instagram, Facebook, Google, AI/ChatGPT and other sources.",
+    "status": "draft"
+  },
+  {
+    "project": "Abri Toi",
+    "angle": "Project reveal",
+    "asset": "abri-hero.png",
+    "text": "A place to sit. Shade to stay longer. People spending time outside.\n\nFor Abri Toi, we put the product in use at the centre of the website.\n\nThe first screen gives the technical details a reason to matter.\n\nHave a physical product to bring online? DM us.",
+    "id": 3,
+    "characters": 253,
+    "alt": "Abri Toi homepage shows people using an outdoor shelter, with a headline about reclaiming outdoor spaces and buttons to view products or book a meeting.",
+    "status": "draft"
+  },
+  {
+    "project": "Shika Consulting",
+    "angle": "Audience positioning",
+    "asset": "shika-home.webp",
+    "text": "The most useful word on this homepage?\n\nAssociations.\n\nShika Consulting specialises in nonprofits. We made that visible in the headline, then gave visitors a way to estimate their budget or book a meeting.\n\nWho should recognise themselves in your first screen?",
+    "id": 4,
+    "characters": 260,
+    "alt": "Shika Consulting homepage identifies the firm as an accounting specialist for nonprofits, with budget-estimation and meeting-booking buttons.",
+    "status": "draft"
+  },
+  {
+    "project": "Souji Nova",
+    "angle": "Lead capture",
+    "asset": "souji-quote.png",
+    "text": "A quote request is part of your customer experience.\n\nFor Souji Nova, we designed a guided journey: profile, need, service, details. With phone and WhatsApp alongside it.\n\nWant a clearer path from your website to an enquiry? DM us your URL.",
+    "id": 5,
+    "characters": 240,
+    "alt": "Souji Nova quote form with four labelled stages, blank contact fields, household and professional choices, and alternative contact options.",
+    "status": "draft"
+  },
+  {
+    "project": "Personal",
+    "angle": "Brand direction",
+    "asset": "personal-hero.png",
+    "text": "Personal is an AI product for creators. Its identity needed a voice of its own.\n\nWarm orange. Expressive type. A headline about the person using it.\n\nOne of our favourite directions from the portfolio.\n\nBuilding a product? Let's give it an identity people remember.",
+    "id": 6,
+    "characters": 265,
+    "alt": "Personal landing page with a dark background, orange accents and expressive typography, introducing an AI product for creators.",
+    "status": "draft"
+  },
+  {
+    "project": "Abri Toi",
+    "angle": "Product navigation",
+    "asset": "abri-products.png",
+    "text": "Product names alone don't help buyers choose.\n\nFor Abri Toi, each card pairs the shelter with a use: taking a break, meeting outside, eating or working in the shade.\n\nHelp visitors picture where your product fits. Then give them the details.",
+    "id": 7,
+    "characters": 241,
+    "alt": "Abri Toi product cards show three Galiléo shelter models, their uses and links to the individual product pages.",
+    "status": "draft"
+  },
+  {
+    "project": "Maison AWL",
+    "angle": "Marketplace",
+    "asset": "maison-awl.png",
+    "text": "What happens when your community wants to book your expertise?\n\nFor Maison AWL, we built a marketplace for finding providers, messaging, proposals and payments.\n\nA place for the next step beyond content.\n\nCreators: what does your audience keep asking you for?",
+    "id": 8,
+    "characters": 259,
+    "alt": "Existing Maison AWL portfolio mockup showing a desktop marketplace with provider search, location and service filters, and provider cards.",
+    "status": "draft"
+  },
+  {
+    "project": "Newlense",
+    "angle": "Focused interface",
+    "asset": "newlense-welcome.png",
+    "text": "One question. Six choices.\n\nNewlense's customer screen asks how someone found the business, then lets them answer with a tap.\n\nBig targets, familiar channel icons, no long questionnaire.\n\nFor an in-store interface, every extra step deserves scrutiny.",
+    "id": 9,
+    "characters": 250,
+    "alt": "Newlense customer screen asks how visitors discovered the business. Six large choices cover TikTok, Instagram, Facebook, Google, AI/ChatGPT and other sources.",
+    "status": "draft"
+  },
+  {
+    "project": "AMG Promotion",
+    "angle": "Digital showroom",
+    "asset": "amg.png",
+    "text": "Your website should feel ready for the clients you want to work with.\n\nFor AMG Promotion, we created a digital showroom with product categories, client references and a direct route to an enquiry.\n\nHas your business outgrown its website? DM us.",
+    "id": 10,
+    "characters": 244,
+    "alt": "Existing AMG Promotion portfolio mockup showing its digital showroom, branded product imagery, enquiry options and customer references.",
+    "status": "draft"
+  },
+  {
+    "project": "Souji Nova",
+    "angle": "Audience paths",
+    "asset": "souji-services.png",
+    "text": "A homeowner and an office manager arrive with different needs.\n\nOn Souji Nova, visitors can switch between household and professional services.\n\nA small interface choice that gives the offer more context.\n\nDoes your website help each type of buyer find their way?",
+    "id": 11,
+    "characters": 263,
+    "alt": "Souji Nova service cards for window cleaning, upholstery and terraces, with a household/professional selector above them.",
+    "status": "draft"
+  },
+  {
+    "project": "Personal",
+    "angle": "Product interaction",
+    "asset": "personal-feed.webp",
+    "text": "Inspiration needs a next step.\n\nIn Personal's feed, each content card leads to saving or remixing an idea. The action sits beside the inspiration.\n\nWe designed the interface around that moment.\n\nBuilding a SaaS? DM us the workflow you want to improve.",
+    "id": 12,
+    "characters": 251,
+    "alt": "Personal content feed with inspiration cards and actions to save or remix an idea. The example social posts are interface content, not endorsements.",
+    "status": "draft"
+  },
+  {
+    "project": "Sotraya",
+    "angle": "Service positioning",
+    "asset": "sotraya.png",
+    "text": "How do you show a service that happens behind the scenes?\n\nFor Sotraya, we framed automation around the working day: connected tools, fewer repetitive tasks, room to grow.\n\nThen a clear invitation to discuss the business.\n\nComplex offer? Let's make it easier to explain.",
+    "id": 13,
+    "characters": 270,
+    "alt": "Existing Sotraya portfolio mockup showing its automation-service homepage on a laptop, with an invitation to request an audit.",
+    "status": "draft"
+  },
+  {
+    "project": "Abri Toi",
+    "angle": "Catalogue design",
+    "asset": "abri-products.png",
+    "text": "A catalogue is a series of decisions.\n\nFor Abri Toi, we organised shelters into product families, individual models and use cases, with a comparison section for the two ranges.\n\nSelling a technical product? DM us what buyers struggle to choose.",
+    "id": 14,
+    "characters": 244,
+    "alt": "Abri Toi product cards show three Galiléo shelter models, their uses and links to the individual product pages.",
+    "status": "draft"
+  },
+  {
+    "project": "R&A Energy",
+    "angle": "Complex service",
+    "asset": "ra-energy.png",
+    "text": "Energy contracts are complicated. The first step on the website should be easy to find.\n\nFor R&A Energy, we created a brand and landing page around a clear explanation of the service and a route to contact.\n\nNeed to make your expertise easier to buy? DM us.",
+    "id": 15,
+    "characters": 257,
+    "alt": "Existing R&A Energy portfolio mockup showing an energy-brokerage landing page on a laptop in an industrial setting.",
+    "status": "draft"
+  },
+  {
+    "project": "Newlense",
+    "angle": "Business utility",
+    "asset": "newlense-welcome.png",
+    "text": "Useful software can start with one question your business keeps asking.\n\nFor Newlense: how did this customer find us?\n\nA kiosk collects answers. A dashboard groups them by channel. CSV export makes them usable elsewhere.\n\nWhat question would you build around?",
+    "id": 16,
+    "characters": 259,
+    "alt": "Newlense customer screen asks how visitors discovered the business. Six large choices cover TikTok, Instagram, Facebook, Google, AI/ChatGPT and other sources.",
+    "status": "draft"
+  },
+  {
+    "project": "Shika Consulting",
+    "angle": "Explain the process",
+    "asset": "shika-process.webp",
+    "text": "Before booking a service, buyers want to know what working together looks like.\n\nFor Shika Consulting, we made the process visible, including how the firm sets up its clients' tools.\n\nGive people something concrete to expect.\n\nDoes your site explain the next step?",
+    "id": 17,
+    "characters": 264,
+    "alt": "Shika Consulting website section describing how the firm sets up tools and centralises client information, accompanied by an illustrative laptop image.",
+    "status": "draft"
+  },
+  {
+    "project": "Souji Nova",
+    "angle": "Direct offer",
+    "asset": "souji-hero.png",
+    "text": "Your team does great work. Your website should make that easy to see.\n\nSouji Nova brings together service pages, customer reviews and a guided quote request in one visual identity.\n\nWe design and build websites for service businesses.\n\nDM us your URL + your goal.",
+    "id": 18,
+    "characters": 263,
+    "alt": "Souji Nova homepage with a dark cinematic background, large editorial typography, a customer review, and quote and WhatsApp buttons.",
+    "status": "draft"
+  }
+]

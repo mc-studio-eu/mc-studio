@@ -14,7 +14,7 @@ try {
    // Backup includes WAL contents via SQLite's consistent VACUUM INTO snapshot.
    const backup=sourcePath+'.backup-'+Date.now()
    source.exec(`VACUUM INTO '${backup.replace(/'/g,"''")}'`)
-   const tables=['organizations','users','projects','invitations','sessions','project_reviews','resources','portal_assets','portal_project_prompts','portal_settings','portal_file_requests','portal_user_preferences','activity','mockup_versions','mockup_screens','mockup_annotations','mockup_replies','growth_sites','portal_members','portal_project_deciders','portal_invitation_roles','portal_review_history','portal_password_resets','portal_notification_preferences','portal_notifications','portal_milestones','portal_file_request_assignments']
+   const tables=['organizations','users','projects','invitations','sessions','project_reviews','resources','portal_assets','portal_project_prompts','portal_settings','portal_file_requests','portal_requests','portal_request_messages','portal_user_preferences','activity','mockup_versions','mockup_screens','mockup_annotations','mockup_replies','growth_sites','portal_members','portal_project_deciders','portal_invitation_roles','portal_review_history','portal_password_resets','portal_notification_preferences','portal_notifications','portal_milestones','portal_file_request_assignments']
    await db.transaction(async()=>{
     for(const table of tables){
      if(!source.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?").get(table))continue

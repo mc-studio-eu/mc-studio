@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { resourceLabels, resourceIcons, money, portalDate, type PortalResource, type ResourceKind, type PortalMember } from '~/types/portal'
-const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
+const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'|'requests'; initialKind?:ResourceKind|'assets'|'requests'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
 const canWrite = computed(()=>Boolean(props.admin || props.canContribute))
 const canValidate = computed(()=>Boolean(props.admin || props.canReview))
 const emit = defineEmits<{changed:[]}>()
@@ -10,7 +10,8 @@ const reviewHistory=ref<ReviewDecision[]>([])
 const activity = ref<{id:string;message:string;createdAt:string}[]>([])
 type FileRequest={id:string;projectId:string;title:string;description:string;status:'open'|'fulfilled';resourceId?:string|null;fileName?:string|null;createdAt:string;fulfilledAt?:string|null;createdBy:string;responsibleId?:string;responsibleName?:string;dueDate?:string;uploadedBy?:string|null}
 const fileRequests=ref<FileRequest[]>([]),showFileRequestForm=ref(false),requestTitle=ref(''),requestDescription=ref(''),requestResponsible=ref(''),requestDueDate=ref('')
-const activeKind = ref<ResourceKind|'assets'>('payment')
+const activeKind = ref<ResourceKind|'assets'|'requests'>(props.initialKind || 'payment')
+watch(()=>props.initialKind,value=>{if(value)activeKind.value=value})
 const kind = computed(() => props.kind || activeKind.value)
 const items = computed(() => resources.value.filter(r=>r.kind===kind.value && (r.kind!=='mockup' || Number(r.versionCount || 0)===0)))
 const loading = ref(true), busy = ref(false), error = ref(''), success = ref(''), search = ref('')
@@ -99,8 +100,9 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 </script>
 <template>
  <section class="pr">
-  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" @click="activeKind=key"><UIcon :name="resourceIcons[key]"/>{{label}}</button><button :class="{active:kind==='assets'}" @click="activeKind='assets'"><UIcon name="i-tabler-photo"/>Assets</button></nav>
-  <PortalAssets v-if="kind==='assets'" :project-id="projectId" :admin="admin"/>
+  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" @click="activeKind=key"><UIcon :name="resourceIcons[key]"/>{{label}}</button><button :class="{active:kind==='assets'}" @click="activeKind='assets'"><UIcon name="i-tabler-photo"/>Assets</button><button :class="{active:kind==='requests'}" @click="activeKind='requests'"><UIcon name="i-tabler-messages"/>Demandes</button></nav>
+  <PortalRequests v-if="kind==='requests'" :project-id="projectId" :admin="admin" @changed="emit('changed')"/>
+  <PortalAssets v-else-if="kind==='assets'" :project-id="projectId" :admin="admin"/>
   <template v-else>
   <PortalMockups v-if="kind==='mockup'" :project-id="projectId" :admin="admin" :can-contribute="canWrite" :can-review="canValidate" @changed="load();emit('changed')"/>
   <section v-if="kind==='mockup' && reviewHistory.length" class="pr-review-history"><h3>Historique des décisions</h3><article v-for="decision in reviewHistory" :key="decision.id"><div><strong>{{decision.state==='approved'?'Validation':'Modifications demandées'}}</strong><span>{{resources.find(resource=>resource.id===decision.resourceId)?.title || 'Maquette'}}</span></div><p>{{decision.author}} · {{portalDate(decision.createdAt)}}</p><p v-if="decision.feedback">{{decision.feedback}}</p></article></section><template v-if="kind!=='mockup' || items.length">
@@ -129,7 +131,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
    <div class="pr-list-head"><span>Nom</span><span>Statut</span><span>{{kind==='payment'?'Montant / échéance':'Date d’ajout'}}</span><span>Actions</span></div>
    <article v-for="r in filtered" :key="r.id" class="pr-card">
     <div class="pr-resource-name"><UIcon :name="resourceIcons[r.kind]"/><div><h3>{{r.title}}</h3><p v-if="r.description" class="pr-description">{{r.description}}</p><p v-if="r.fileName" class="pr-meta">{{(r.fileSize/1024/1024).toFixed(2)}} Mo</p></div></div>
-    <div><span class="pr-badge">{{r.projectId===null?'Guide commun':labels[r.status]}}</span></div>
+    <div><span :class="['pr-badge',r.status]">{{r.projectId===null?'Guide commun':labels[r.status]}}</span></div>
     <div class="pr-date"><template v-if="r.kind==='payment'"><strong class="pr-amount">{{money(r.amount)}}</strong><small>{{portalDate(r.dueDate)}}</small></template><template v-else>{{portalDate(r.createdAt)}}</template></div>
     <div class="pr-actions">
      <a v-if="r.fileName" class="pr-secondary" :href="`/api/portal/files/${r.id}`" :aria-label="'Télécharger '+r.title"><UIcon name="i-tabler-download"/>Télécharger</a>
@@ -145,6 +147,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
   <section v-if="admin && activity.length" class="pr-journal"><h3>Journal du projet</h3><article v-for="event in activity.slice(0,12)" :key="event.id"><p>{{event.message}}</p><time>{{portalDate(event.createdAt)}}</time></article></section>
   <div v-if="reading || reviewing || archiveTarget || deleteTarget || removeTarget" class="pr-modal-backdrop" @click.self="reading=null;reviewing=null;archiveTarget=null;deleteTarget=null;removeTarget=null" @keydown.esc="reading=null;reviewing=null;archiveTarget=null;deleteTarget=null;removeTarget=null">
    <section ref="dialogPanel" class="pr-modal" @keydown="trapFocus" role="dialog" aria-modal="true" :aria-label="reading?.title || reviewing?.title || (deleteTarget ? 'Supprimer le fichier' : removeTarget ? 'Supprimer la ressource' : 'Archiver la ressource')" tabindex="-1">
+    <p v-if="error && (archiveTarget || deleteTarget || removeTarget)" class="pr-error" role="alert">{{error}}</p>
     <button class="pr-close" aria-label="Fermer" @click="reading=null;reviewing=null;archiveTarget=null;deleteTarget=null;removeTarget=null">×</button>
     <template v-if="reading"><h2>{{reading.title}}</h2><p>{{reading.description}}</p><div class="pr-article">{{reading.content}}</div></template>
     <template v-if="reviewing"><h2>{{reviewing.title}}</h2><a v-if="reviewing.url" :href="reviewing.url" target="_blank" rel="noopener noreferrer" class="pr-secondary">Ouvrir la maquette ↗</a><label>Vos remarques<textarea v-model="feedback" rows="6" maxlength="3000" placeholder="Indiquez les éléments à ajuster…"/></label><p v-if="error" role="alert" class="pr-error">{{error}}</p><div class="pr-actions"><button class="pr-secondary" :disabled="busy || !feedback.trim()" @click="review('changes')">Demander des modifications</button><button class="pr-primary" :disabled="busy" @click="review('approved')">Valider la maquette</button></div></template>
@@ -158,14 +161,147 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
  </section>
 </template>
 <style scoped>
-.pr-review-history{margin:24px 0;padding:18px;border:1px solid var(--portal-line,#333);border-radius:8px}.pr-review-history h3{font-size:14px;font-weight:500;margin:0 0 12px}.pr-review-history article{padding:12px 0;border-top:1px solid var(--portal-line,#333)}.pr-review-history article>div{display:flex;gap:10px;flex-wrap:wrap;font-size:12px}.pr-review-history strong{font-weight:500}.pr-review-history span,.pr-review-history p{font-size:11px;color:var(--portal-muted,#999);margin:5px 0;white-space:pre-wrap}.pr-reader-note{font-size:12px;color:var(--portal-muted,#999);padding:12px;border:1px solid var(--portal-line,#333);border-radius:7px;margin:14px 0}.pr{color:var(--portal-text, #eee);font:14px/1.5 Inter,sans-serif}.pr *{box-sizing:border-box}.pr button,.pr input,.pr textarea,.pr select{font:inherit}.pr button,.pr a{cursor:pointer}.pr h2,.pr h3{font-family:'Host Grotesk',sans-serif;color:var(--portal-text, #f2f2f2);letter-spacing:-.4px}.pr h2{font-size:28px;margin:4px 0 10px}.pr h3{font-size:19px;margin:12px 0 8px}.pr p{color:var(--portal-muted, #a6a6a6)}.pr-tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--portal-line, #303030);padding-bottom:18px;margin-bottom:24px}.pr-tabs button{display:flex;gap:7px;align-items:center;padding:9px 12px;background:var(--portal-surface, #1b1b1b);border:1px solid var(--portal-line, #333);color:var(--portal-muted, #aaa);border-radius:8px}.pr-tabs button.active{color:var(--portal-text, #b4b4b4);border-color:var(--portal-line, #5b5b5b);background:var(--portal-raised, #232323)}.pr-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.pr-heading p{margin:0}.pr-kicker{font-size:10px!important;letter-spacing:1.7px;color:var(--portal-muted, #a1a1a1)!important}.pr-primary,.pr-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:9px;text-decoration:none;font-size:12px!important}.pr-primary{background:var(--portal-strong, #bfbfbf);border:1px solid var(--portal-line, #bfbfbf);color:var(--portal-muted, #131313)!important}.pr-secondary{background:var(--portal-raised, #222);border:1px solid var(--portal-line, #414141);color:var(--portal-text, #eee)!important}.pr button:disabled{opacity:.5;cursor:wait}.pr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.pr-card{background:var(--portal-surface, #191919);border:1px solid var(--portal-line, #303030);padding:24px;border-radius:12px;display:flex;flex-direction:column}.pr-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.pr-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:var(--portal-raised, #292929);color:var(--portal-text, #bfbfbf);font-size:21px}.pr-badge{font-size:10px;color:var(--portal-text, #bbb);padding:4px 8px;border-radius:99px;background:var(--portal-raised, #292929)}.pr-badge.paid,.pr-badge.approved{color:var(--portal-text, #b7b7b7);background:var(--portal-raised, #2c2c2c)}.pr-badge.due,.pr-badge.pending{color:var(--portal-text, #bebebe);background:var(--portal-raised, #2a2a2a)}.pr-description{white-space:pre-wrap;overflow-wrap:anywhere;flex:1}.pr-card h3{overflow-wrap:anywhere}.pr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.pr-admin{display:flex;gap:16px;border-top:1px solid var(--portal-line, #333);padding-top:16px;margin-top:20px}.pr-admin button{background:none;border:0;padding:0;color:var(--portal-muted, #a2a2a2);font-size:12px}.pr-empty{padding:56px 20px;text-align:center;background:var(--portal-surface, #171717);border:1px dashed var(--portal-line, #3c3c3c);border-radius:12px}.pr-empty>.iconify{font-size:30px;color:var(--portal-muted, #aeaeae)}.pr-empty h3{margin-top:20px}.pr-meta{font-size:11px;overflow-wrap:anywhere}.pr-amount{font:500 32px 'Host Grotesk',sans-serif;margin-top:16px}.pr-money{display:flex;gap:40px;align-items:center;flex-wrap:wrap;padding:24px;border:1px solid var(--portal-line, #303030);border-radius:12px;background:var(--portal-surface, #1c1c1c);margin-bottom:24px}.pr-money span{display:block;font-size:12px;color:var(--portal-muted, #a6a6a6)}.pr-money strong{display:block;font-size:28px;margin-top:6px}.pr-money p{font-size:11px;max-width:210px;margin-left:auto}.pr-upload{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:30px;border:1px dashed var(--portal-line, #535353);background:var(--portal-surface, #1c1c1c);border-radius:12px;margin-bottom:24px}.pr-upload>.iconify{font-size:24px;color:var(--portal-text, #bdbdbd)}.pr-upload span{font-size:11px;color:var(--portal-muted, #a4a4a4)}.pr-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}.pr-upload:focus-within{outline:2px solid var(--portal-line, #b4b4b4)}.pr-search,.pr-editor input,.pr-editor textarea,.pr-editor select,.pr-modal textarea{width:100%;background:var(--portal-surface, #111);border:1px solid var(--portal-line, #414141);color:var(--portal-text, #eee);border-radius:7px;padding:11px;outline-offset:3px}.pr-search{margin-bottom:20px}.pr-editor{padding:24px;border:1px solid var(--portal-line, #464646);background:var(--portal-surface, #1a1a1a);border-radius:12px;margin-bottom:24px}.pr label:not(.pr-upload){display:grid;gap:7px;margin-top:15px;font-size:12px}.pr label small{color:var(--portal-muted, #aaa)}.pr-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pr-checkbox{display:flex!important;align-items:center}.pr-checkbox input{width:auto}.pr-error,.pr-success{padding:12px;border:1px solid var(--portal-line, #595959);background:var(--portal-raised, #222222);border-radius:8px;color:var(--portal-text, #c7c7c7)!important}.pr-success{border-color:var(--portal-line, #494949);background:var(--portal-surface, #202020);color:var(--portal-text, #c3c3c3)!important}.pr-modal-backdrop{position:fixed;inset:0;background:#000b;z-index:100;display:grid;place-items:center;padding:20px;backdrop-filter:blur(5px)}.pr-modal{position:relative;width:min(680px,100%);max-height:90vh;overflow-y:auto;background:var(--portal-surface, #1b1b1b);border:1px solid var(--portal-line, #444);border-radius:16px;padding:34px}.pr-close{position:absolute;right:15px;top:10px;background:none;border:0;color:var(--portal-text, #ccc);font-size:26px!important}.pr-article{white-space:pre-wrap;line-height:1.9;color:var(--portal-text, #d1d1d1);margin-top:24px;overflow-wrap:anywhere}.pr-journal{margin-top:32px}.pr-journal article{display:flex;gap:20px;justify-content:space-between;padding:14px 0;border-top:1px solid var(--portal-line, #333)}.pr-journal p{white-space:pre-wrap;margin:0;font-size:12px;overflow-wrap:anywhere}.pr-journal time{white-space:nowrap;font-size:10px;color:var(--portal-muted, #888)}.pr:focus-visible{outline:2px solid var(--portal-line, #bfbfbf);outline-offset:3px}@media(max-width:700px){.pr-grid{grid-template-columns:1fr}.pr-heading{align-items:flex-start}.pr-heading h2{font-size:24px}.pr-card{padding:20px}.pr-money{gap:24px}.pr-money p{margin:0;max-width:none}.pr-modal{padding:28px 20px}.pr-fields{grid-template-columns:1fr}}
-
-/* Compact monochrome workspace, shared by client and administration. */
-.pr-danger{display:inline-flex;align-items:center;gap:7px;border:1px solid #9b5146;border-radius:99px;padding:6px 12px;min-height:30px;background:linear-gradient(180deg,#98493e,#71332b);color:#fff;font-size:10px;white-space:nowrap}.pr-danger:hover{background:linear-gradient(180deg,#ad5749,#813b30)}.pr-delete-button{color:#d79a8c!important}.pr-delete-button:hover{border-color:#9b5146!important;color:#f1a18f!important}
-@media(max-width:700px){.pr-heading h2{font-size:20px}.pr-grid{display:block}.pr-card{padding:14px}.pr-money{gap:28px}.pr-money p{margin:0;max-width:100%;width:100%}.pr-upload{flex-wrap:wrap;padding:16px}.pr-tabs{gap:18px}.pr-modal{padding:28px 18px}.pr-fields{grid-template-columns:1fr}}
-
-
-@media(max-width:700px){.pr-grid{overflow:visible}.pr-list-head{display:none}.pr-card{min-width:0;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:18px 0}.pr-resource-name{grid-column:1/-1}.pr-card .pr-actions{grid-column:1/-1;justify-content:flex-start}.pr-date{text-align:right}.pr-analytics{min-width:0}}
-
-.pr-heading-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pr-file-requests{margin:20px 0 26px;padding:22px;border:1px solid var(--portal-line,#383838);border-radius:12px;background:var(--portal-surface,#191919)}.pr-request-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.pr-request-heading h3{margin:0;font-size:16px}.pr-request-heading>span,.pr-request-meta{color:var(--portal-muted,#999);font-size:10px}.pr-file-request{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:16px 0;border-top:1px solid var(--portal-line,#303030)}.pr-request-copy{min-width:0}.pr-request-copy>div{display:flex;align-items:center;gap:10px}.pr-request-copy h4{margin:0;font-size:13px;font-weight:500;color:var(--portal-text,#eee)}.pr-request-copy p{margin:6px 0 0;white-space:pre-wrap;font-size:11px}.pr-request-copy small{display:block;margin-top:7px;color:var(--portal-muted,#999);font-size:10px}.pr-request-status{padding:3px 8px;border-radius:99px;background:var(--portal-raised,#292929);color:var(--portal-muted,#aaa);font-size:9px}.pr-request-status.fulfilled{color:var(--portal-text,#ddd)}.pr-request-file{position:relative;display:inline-flex!important;align-items:center;gap:7px;flex:none;margin:0!important;padding:8px 12px;border:1px solid var(--portal-line,#444);border-radius:7px;background:var(--portal-raised,#252525);color:var(--portal-text,#ddd);font-size:10px!important;cursor:pointer;overflow:hidden}.pr-request-file input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}.pr-request-file:focus-within{outline:2px solid var(--portal-line,#bfbfbf);outline-offset:2px}@media(max-width:700px){.pr-heading-actions{justify-content:flex-start}.pr-file-request{align-items:flex-start;flex-direction:column}.pr-file-requests{padding:16px}}
+.pr{color:var(--portal-text);font:14px/1.5 Inter,Arial,sans-serif;min-width:0}
+.pr *{box-sizing:border-box}
+.pr button,.pr input,.pr textarea,.pr select{font:inherit}
+.pr button,.pr a{cursor:pointer}
+.pr h2,.pr h3{font-family:inherit;color:var(--portal-text);font-weight:600;letter-spacing:-.025em}
+.pr h2{font-size:26px;margin:0 0 8px}
+.pr h3{font-size:16px;margin:0 0 12px}
+.pr p{color:var(--portal-muted);font-size:13px;line-height:1.6}
+.pr button:disabled{opacity:.5;cursor:default}
+.pr :focus-visible{outline:2px solid var(--portal-accent);outline-offset:3px}
+.pr-tabs{display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--portal-line);padding-bottom:20px;margin-bottom:28px}
+.pr-tabs button{display:flex;gap:8px;align-items:center;min-height:40px;padding:8px 12px;background:transparent;border:1px solid transparent;color:var(--portal-muted);border-radius:8px;font-size:13px}
+.pr-tabs button:hover{background:var(--portal-raised);color:var(--portal-text)}
+.pr-tabs button.active{color:var(--portal-accent-text);background:var(--portal-accent-soft)}
+.pr-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:28px}
+.pr-heading p{margin:0;max-width:640px}
+.pr-heading-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pr-primary,.pr-secondary,.pr-danger{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 14px;border-radius:8px;text-decoration:none;font-size:13px!important;font-weight:500;line-height:1.4}
+.pr-primary{background:var(--portal-accent);border:1px solid var(--portal-accent);color:var(--portal-accent-ink,#fff)!important}
+.pr-primary:hover{background:var(--portal-accent-hover)}
+.pr-secondary{background:var(--portal-raised);border:1px solid var(--portal-line);color:var(--portal-text)!important}
+.pr-secondary:hover{border-color:var(--portal-muted)}
+.pr-danger{background:var(--portal-danger-soft);border:1px solid var(--portal-danger);color:var(--portal-danger)}
+.pr-danger:hover{background:var(--portal-danger);color:var(--portal-bg)}
+.pr-icon-button{display:inline-grid;place-items:center;min-width:36px;height:40px;padding:0;border:1px solid var(--portal-line);background:var(--portal-raised);border-radius:8px;color:var(--portal-muted);font-size:17px!important}
+.pr-delete-button{color:var(--portal-danger)!important}
+.pr-delete-button:hover{background:var(--portal-danger-soft)}
+.pr-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:24px 0 16px;color:var(--portal-muted);font-size:12px}
+.pr label.pr-search-box{display:flex;align-items:center;gap:8px;margin:0;padding:0 12px;min-height:40px;max-width:280px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-raised)}
+.pr-search-box:focus-within{outline:2px solid var(--portal-accent);outline-offset:2px}
+.pr-search{width:100%;min-width:0;padding:0;background:none;border:0;color:var(--portal-text);font-size:13px!important;outline:none!important}
+.pr-grid{border:1px solid var(--portal-line);border-radius:8px;overflow:hidden;background:var(--portal-surface)}
+.pr-list-head,.pr-card{display:grid;grid-template-columns:minmax(180px,1fr) minmax(100px,.55fr) minmax(110px,.5fr) minmax(120px,auto);gap:20px;align-items:center;padding:18px 20px;border-bottom:1px solid var(--portal-line)}
+.pr-list-head{font-size:12px;color:var(--portal-muted);background:var(--portal-raised);font-weight:500}
+.pr-list-head>:last-child{text-align:right}
+.pr-card{min-height:90px}
+.pr-card:last-child{border-bottom:0}
+.pr-resource-name{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.pr-resource-name>.iconify{font-size:21px;color:var(--portal-muted);margin-top:3px;flex:none}
+.pr-resource-name>div{min-width:0}
+.pr-card h3{font-size:14px;font-weight:500;margin:0 0 4px;overflow-wrap:anywhere}
+.pr-description{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px!important}
+.pr-meta{font-size:11px!important;margin:4px 0 0;overflow-wrap:anywhere}
+.pr-badge{display:inline-flex;font-size:11px;font-weight:500;padding:4px 8px;border-radius:6px;color:var(--portal-info);background:var(--portal-info-soft);max-width:100%}
+.pr-badge.paid,.pr-badge.approved{color:var(--portal-success);background:var(--portal-success-soft)}
+.pr-badge.due,.pr-badge.pending{color:var(--portal-warning);background:var(--portal-warning-soft)}
+.pr-badge.changes,.pr-badge.cancelled{color:var(--portal-danger);background:var(--portal-danger-soft)}
+.pr-date{font-size:12px;color:var(--portal-muted)}
+.pr-amount{display:block;font-size:17px;font-weight:500;color:var(--portal-text);font-variant-numeric:tabular-nums}
+.pr-date small{display:block;margin-top:4px;font-size:11px}
+.pr-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:20px}
+.pr-card>.pr-actions{margin:0}
+.pr-analytics{grid-column:1/-1;min-width:0}
+.pr-empty{padding:60px 24px;text-align:center;background:var(--portal-surface);border:1px dashed var(--portal-line);border-radius:8px}
+.pr-empty>.iconify{font-size:32px;color:var(--portal-muted)}
+.pr-empty h3{margin-top:20px}
+.pr-empty p{margin-bottom:0}
+.pr-money{display:flex;gap:48px;align-items:center;flex-wrap:wrap;padding:24px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-surface);margin-bottom:24px}
+.pr-money span{display:block;font-size:12px;color:var(--portal-muted)}
+.pr-money strong{display:block;font-size:30px;letter-spacing:-.03em;font-weight:600;margin-top:6px;font-variant-numeric:tabular-nums}
+.pr-money>div:first-child strong{color:var(--portal-warning)}
+.pr-money>div:nth-child(2) strong{color:var(--portal-success)}
+.pr-money p{font-size:12px;max-width:260px;margin:0 0 0 auto}
+.pr-upload{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;padding:32px;border:1px dashed var(--portal-line);background:var(--portal-surface);border-radius:8px;margin-bottom:24px}
+.pr-upload:hover{border-color:var(--portal-accent);background:var(--portal-accent-soft)}
+.pr-upload>.iconify{font-size:28px;color:var(--portal-accent-text)}
+.pr-upload strong{font-size:14px;font-weight:500}
+.pr-upload span{font-size:12px;color:var(--portal-muted)}
+.pr-upload input,.pr-request-file input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.pr-upload:focus-within,.pr-request-file:focus-within{outline:2px solid var(--portal-accent);outline-offset:3px}
+.pr-reader-note{font-size:12px;color:var(--portal-muted);padding:14px 16px;border:1px solid var(--portal-line);border-radius:8px;margin:16px 0;background:var(--portal-surface)}
+.pr-editor{padding:24px;border:1px solid var(--portal-line);background:var(--portal-surface);border-radius:8px;margin-bottom:24px}
+.pr label:not(.pr-upload,.pr-search-box,.pr-request-file){display:grid;gap:8px;margin-top:18px;font-size:13px}
+.pr label small{color:var(--portal-muted);font-size:12px}
+.pr-editor input,.pr-editor textarea,.pr-editor select,.pr-modal textarea{width:100%;min-height:40px;min-width:0;background:var(--portal-raised);border:1px solid var(--portal-line);color:var(--portal-text);border-radius:8px;padding:10px 12px;outline-offset:3px}
+.pr textarea{resize:vertical;line-height:1.6}
+.pr-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pr label.pr-checkbox{display:flex!important;align-items:center}
+.pr-checkbox input{width:16px;min-height:16px;flex:none;accent-color:var(--portal-accent)}
+.pr-error,.pr-success{padding:14px 16px;border:1px solid var(--portal-danger);background:var(--portal-danger-soft);border-radius:8px;color:var(--portal-danger)!important;font-size:13px}
+.pr-success{border-color:var(--portal-success);background:var(--portal-success-soft);color:var(--portal-success)!important}
+.pr-modal-backdrop{position:fixed;inset:0;background:#0009;z-index:100;display:grid;place-items:center;padding:24px;backdrop-filter:blur(4px)}
+.pr-modal{position:relative;width:min(680px,100%);max-height:calc(100dvh - 48px);overflow-y:auto;background:var(--portal-surface);border:1px solid var(--portal-line);border-radius:8px;padding:32px;box-shadow:0 24px 80px #0006;overflow-wrap:anywhere}
+.pr-modal h2{padding-right:28px;font-size:23px;line-height:1.3;margin-bottom:16px}
+.pr-close{position:absolute;right:16px;top:16px;display:grid;place-items:center;width:32px;height:32px;background:none;border:0;border-radius:8px;color:var(--portal-muted);font-size:26px!important;line-height:1}
+.pr-close:hover{background:var(--portal-raised)}
+.pr-article{white-space:pre-wrap;line-height:1.8;color:var(--portal-text);margin-top:24px;overflow-wrap:anywhere}
+.pr-journal{margin-top:32px}
+.pr-journal article{display:flex;gap:20px;justify-content:space-between;padding:16px 0;border-top:1px solid var(--portal-line)}
+.pr-journal p{white-space:pre-wrap;margin:0;font-size:13px;overflow-wrap:anywhere}
+.pr-journal time{white-space:nowrap;font-size:12px;color:var(--portal-muted)}
+.pr-review-history{margin:24px 0;padding:20px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-surface)}
+.pr-review-history article{padding:14px 0;border-top:1px solid var(--portal-line)}
+.pr-review-history article>div{display:flex;gap:10px;flex-wrap:wrap;font-size:13px}
+.pr-review-history strong{font-weight:500}
+.pr-review-history span,.pr-review-history p{font-size:12px;color:var(--portal-muted);margin:5px 0;white-space:pre-wrap}
+.pr-file-requests{margin:24px 0;padding:22px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-surface)}
+.pr-request-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.pr-request-heading h3{margin:0;font-size:17px}
+.pr-request-heading>span,.pr-request-meta{color:var(--portal-muted);font-size:12px}
+.pr-file-request{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:18px 0;border-top:1px solid var(--portal-line)}
+.pr-file-request:last-child{padding-bottom:0}
+.pr-request-copy{min-width:0;overflow-wrap:anywhere}
+.pr-request-copy>div{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pr-request-copy h4{margin:0;font-size:14px;font-weight:500;color:var(--portal-text)}
+.pr-request-copy p{margin:8px 0 0;white-space:pre-wrap;font-size:13px}
+.pr-request-copy small{display:block;margin-top:8px;color:var(--portal-muted);font-size:12px}
+.pr-request-status{padding:4px 8px;border-radius:6px;background:var(--portal-warning-soft);color:var(--portal-warning);font-size:11px}
+.pr-request-status.fulfilled{color:var(--portal-success);background:var(--portal-success-soft)}
+.pr label.pr-request-file{position:relative;display:inline-flex!important;align-items:center;gap:8px;flex:none;margin:0;min-height:40px;padding:9px 14px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-raised);color:var(--portal-text);font-size:13px;cursor:pointer;overflow:hidden}
+@media(max-width:1150px){.pr-list-head,.pr-card{grid-template-columns:minmax(150px,1fr) 110px 110px;gap:16px}
+.pr-list-head>:last-child{display:none}
+.pr-card>.pr-actions{grid-column:1/-1;justify-content:flex-start}
+.pr-heading{align-items:flex-start}
+.pr-money{gap:28px}
+.pr-money p{margin-left:0}}
+@media(max-width:700px){.pr h2{font-size:24px}
+.pr-heading{flex-wrap:wrap;gap:16px;margin-bottom:24px}
+.pr-heading-actions{width:100%}
+.pr-tabs{gap:6px}
+.pr-tabs button{font-size:12px;padding:8px 10px}
+.pr-toolbar{flex-wrap:wrap}
+.pr label.pr-search-box{max-width:none;flex:1}
+.pr-list-head{display:none}
+.pr-card{grid-template-columns:minmax(0,1fr) auto;padding:20px 16px;gap:14px}
+.pr-resource-name{grid-column:1/-1}
+.pr-date{text-align:right}
+.pr-card>.pr-actions{grid-column:1/-1}
+.pr-money{padding:20px;gap:24px}
+.pr-money strong{font-size:26px}
+.pr-money p{width:100%;max-width:none}
+.pr-upload{padding:24px 16px}
+.pr-editor{padding:20px 16px}
+.pr-fields{grid-template-columns:1fr;gap:0}
+.pr-actions{justify-content:flex-start}
+.pr-modal-backdrop{padding:12px}
+.pr-modal{padding:28px 20px;max-height:calc(100dvh - 24px)}
+.pr-modal h2{font-size:21px}
+.pr-modal .pr-actions>*{flex:1;white-space:normal;text-align:center}
+.pr-file-request{align-items:flex-start;flex-direction:column;gap:14px}
+.pr-file-requests{padding:20px 16px}
+.pr-journal article{flex-wrap:wrap;gap:8px}
+.pr-primary,.pr-secondary,.pr-danger{font-size:12px!important}}
 </style>

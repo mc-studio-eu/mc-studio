@@ -19,5 +19,31 @@ const changePassword = async () => {
   </section>
 </template>
 <style scoped>
-.account-panel{padding:24px;max-width:680px;color:var(--portal-text,#eee)}h1{font-size:22px;font-weight:500;margin:0 0 14px}h2{font-size:17px;font-weight:500;margin:0 0 18px}p{font-size:13px}.muted,small{color:var(--portal-muted,#999);line-height:1.6}form{padding:22px;margin-top:26px;border:1px solid var(--portal-line,#333);border-radius:10px;background:var(--portal-surface,#181818)}label{display:grid;gap:8px;margin:16px 0;font-size:13px}input{height:42px;border:1px solid var(--portal-line,#444);border-radius:6px;background:var(--portal-surface,#151515);color:inherit;padding:0 12px;font:inherit}button{padding:10px 16px;border:1px solid #d4ad5b;border-radius:99px;background:linear-gradient(#e5c46a,#c99b3d);color:#191919;cursor:pointer;font:inherit}button:disabled{opacity:.5;cursor:wait}.error-message{color:#ed9b8d}input:focus-visible,button:focus-visible{outline:2px solid #d4ad5b;outline-offset:3px}@media(max-width:700px){.account-panel{padding:20px 16px}form{padding:18px}}
+.account-panel{color:var(--portal-text,#eee)}
+h1{margin:0 0 14px}
+h2{margin:0 0 18px}
+.muted,small{color:var(--portal-muted,#999);line-height:1.6}
+form{border:1px solid var(--portal-line,#333)}
+label{display:grid;gap:8px}
+input{border:1px solid var(--portal-line,#444);color:inherit;padding:0 12px;font:inherit}
+button{border:1px solid var(--portal-accent);cursor:pointer;font:inherit}
+button:disabled{opacity:.5;cursor:wait}
+.error-message{color:var(--portal-danger)}
+input:focus-visible,button:focus-visible{outline:2px solid var(--portal-accent);outline-offset:3px}
+.account-panel{padding:32px;max-width:800px;font-size:14px}
+h1{font-size:28px;font-weight:600;margin-bottom:12px}
+h2{font-size:18px;font-weight:600}
+p{font-size:13px}
+.account-panel>p:first-of-type{font-size:15px;color:var(--portal-text)}
+form{padding:28px;margin-top:28px;background:var(--portal-surface);border-radius:8px;max-width:640px}
+label{margin:20px 0;font-size:13px}
+input{height:40px;background:var(--portal-raised);border-radius:8px}
+button{min-height:40px;border-radius:8px;background:var(--portal-accent);color:var(--portal-accent-ink,#fff);font-size:13px;font-weight:500;padding:9px 16px}
+button:hover:not(:disabled){background:var(--portal-accent-hover)}
+.error-message{padding:12px;border:1px solid var(--portal-danger);background:var(--portal-danger-soft);border-radius:8px}
+small{font-size:12px}
+input:focus-visible,button:focus-visible{outline-color:var(--portal-accent)}
+@media(max-width:700px){.account-panel{padding:24px 16px}
+h1{font-size:24px}
+form{padding:20px 16px}}
 </style>

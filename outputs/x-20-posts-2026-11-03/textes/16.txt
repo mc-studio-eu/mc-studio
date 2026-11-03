@@ -1,0 +1,7 @@
+Useful software can start with one question your business keeps asking.
+
+For Newlense: how did this customer find us?
+
+A kiosk collects answers. A dashboard groups them by channel. CSV export makes them usable elsewhere.
+
+What question would you build around?
