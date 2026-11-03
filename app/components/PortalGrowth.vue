@@ -90,11 +90,11 @@ const collectionDate=(v:any)=>v?`${String(v.day).padStart(2,'0')}/${String(v.mon
 .growth button:disabled{opacity:.5;cursor:default}
 .growth:focus-visible{outline:2px solid var(--portal-line, #ddd);outline-offset:3px}
 .view-bar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--portal-line, #333);margin-bottom:15px;gap:14px}
-.view-bar nav{display:flex;gap:24px}
-.view-bar nav button{border:0;border-bottom:2px solid transparent;background:none;border-radius:0;padding:14px 0;color:var(--portal-muted, #888)}
+.view-bar nav{display:flex;gap:24px;max-width:100%;overflow-x:auto}
+.view-bar nav button{white-space:nowrap;flex:none;border:0;border-bottom:2px solid transparent;background:none;border-radius:0;padding:14px 0;color:var(--portal-muted, #888)}
 .view-bar nav button.active{color:var(--portal-text, #eee);border-color:var(--portal-line, #eee)}
 .period-note{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--portal-muted, #777);margin:15px 0 20px}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--portal-line, #333);border-radius:8px;overflow:hidden;margin-bottom:18px;background:var(--portal-surface, #191919)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--portal-line, #333);border-radius:8px;overflow:hidden;margin-bottom:18px;background:var(--portal-surface, #191919)}
 .kpis article{border-right:1px solid var(--portal-line, #333);min-width:0}
 .kpis article:last-child{border:0}
 .kpis article>div{display:flex;justify-content:space-between;gap:8px;color:var(--portal-muted, #aaa)}
@@ -144,12 +144,12 @@ const collectionDate=(v:any)=>v?`${String(v.day).padStart(2,'0')}/${String(v.mon
 .tool-list small{display:block;font-size:12px;color:var(--portal-muted, #777);margin-top:4px}
 .freshness{color:var(--portal-muted, #6f6f6f);font-size:12px;margin-top:20px;line-height:1.7}
 .source-form{background:var(--portal-surface, #1d1d1d);border:1px solid var(--portal-line, #444);border-radius:8px;margin-bottom:24px}
-.source-form>header{display:flex;justify-content:space-between;align-items:center}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
-.fields label{display:grid;gap:6px;font-size:12px}
+.source-form>header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:24px 0;align-items:start}
+.fields label{display:grid;gap:8px;min-width:0;font-size:12px}
 .fields input{width:100%;border:1px solid var(--portal-line, #444);padding:10px}
-.fields small{color:var(--portal-muted, #888)}
-.setup-status{padding:15px;background:var(--portal-surface, #171717);border:1px solid var(--portal-line, #333);border-radius:8px;margin-bottom:18px}
+.fields small{line-height:1.6;color:var(--portal-muted, #888)}
+.setup-status{padding:15px;background:var(--portal-surface, #171717);border:1px solid var(--portal-line, #333);border-radius:8px;margin-bottom:24px}
 .setup-status p+p{margin-top:7px}
 .setup-status strong{font-weight:400;color:var(--portal-text, #ccc)}
 .setup-status details{margin-top:12px;color:var(--portal-muted, #aaa);font-size:12px}
@@ -183,7 +183,8 @@ const collectionDate=(v:any)=>v?`${String(v.day).padStart(2,'0')}/${String(v.mon
 .growth h3{font-size:14px}
 .growth p{font-size:13px}
 .growth button,.growth select,.growth a{min-height:40px;border-radius:8px;font-size:13px;padding:9px 12px}
-.growth input{min-height:40px}
+.growth input{min-height:44px}
+.source-form>.primary,.growth-head .primary{min-height:44px}
 .growth .primary{background:var(--portal-accent);border-color:var(--portal-accent);color:var(--portal-accent-ink,#fff)}
 .eyebrow{font-size:11px;letter-spacing:.08em}
 .kpis article{padding:24px}
@@ -218,7 +219,7 @@ const collectionDate=(v:any)=>v?`${String(v.day).padStart(2,'0')}/${String(v.mon
 .source-list small{font-size:12px}
 .notice{padding:14px 16px;color:var(--portal-danger)!important;background:var(--portal-danger-soft);border-color:var(--portal-danger)}
 .delete-confirm{padding:20px;background:var(--portal-danger-soft);border:1px solid var(--portal-danger);border-radius:8px;margin:20px 0}
-.delete-confirm p{color:var(--portal-danger)}
+.delete-confirm p{color:var(--portal-danger);margin-bottom:16px}
 @media(max-width:1100px){.kpis article{padding:20px}
 .dashboard-grid{grid-template-columns:1fr}
 .controls{width:100%}

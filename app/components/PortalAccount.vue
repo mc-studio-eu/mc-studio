@@ -19,31 +19,21 @@ const changePassword = async () => {
   </section>
 </template>
 <style scoped>
-.account-panel{color:var(--portal-text,#eee)}
-h1{margin:0 0 14px}
-h2{margin:0 0 18px}
-.muted,small{color:var(--portal-muted,#999);line-height:1.6}
-form{border:1px solid var(--portal-line,#333)}
-label{display:grid;gap:8px}
-input{border:1px solid var(--portal-line,#444);color:inherit;padding:0 12px;font:inherit}
-button{border:1px solid var(--portal-accent);cursor:pointer;font:inherit}
-button:disabled{opacity:.5;cursor:wait}
-.error-message{color:var(--portal-danger)}
-input:focus-visible,button:focus-visible{outline:2px solid var(--portal-accent);outline-offset:3px}
-.account-panel{padding:32px;max-width:800px;font-size:14px}
-h1{font-size:28px;font-weight:600;margin-bottom:12px}
-h2{font-size:18px;font-weight:600}
-p{font-size:13px}
+.account-panel{padding:32px;max-width:800px;color:var(--portal-text,#eee);font-size:14px;overflow-wrap:anywhere}
+h1{margin:0 0 12px;font-size:28px;font-weight:600}
+h2{margin:0;font-size:18px;font-weight:600}
+p{margin:0;font-size:13px;line-height:1.6}
+.account-panel>p+p{margin-top:8px}
 .account-panel>p:first-of-type{font-size:15px;color:var(--portal-text)}
-form{padding:28px;margin-top:28px;background:var(--portal-surface);border-radius:8px;max-width:640px}
-label{margin:20px 0;font-size:13px}
-input{height:40px;background:var(--portal-raised);border-radius:8px}
-button{min-height:40px;border-radius:8px;background:var(--portal-accent);color:var(--portal-accent-ink,#fff);font-size:13px;font-weight:500;padding:9px 16px}
-button:hover:not(:disabled){background:var(--portal-accent-hover)}
-.error-message{padding:12px;border:1px solid var(--portal-danger);background:var(--portal-danger-soft);border-radius:8px}
+.muted,small{color:var(--portal-muted,#999);line-height:1.6}
+form{display:grid;gap:24px;padding:28px;margin-top:28px;border:1px solid var(--portal-line,#333);background:var(--portal-surface);border-radius:8px;max-width:640px}
+label{display:grid;gap:8px;font-size:13px;min-width:0}
+input{width:100%;min-width:0;height:44px;border:1px solid var(--portal-line,#444);color:inherit;padding:0 12px;font:inherit;background:var(--portal-raised);border-radius:8px}
 small{font-size:12px}
-input:focus-visible,button:focus-visible{outline-color:var(--portal-accent)}
-@media(max-width:700px){.account-panel{padding:24px 16px}
-h1{font-size:24px}
-form{padding:20px 16px}}
+button{justify-self:start;min-height:44px;border:1px solid var(--portal-accent);border-radius:8px;background:var(--portal-accent);color:var(--portal-accent-ink,#fff);cursor:pointer;font:inherit;font-size:13px;font-weight:500;padding:9px 16px}
+button:hover:not(:disabled){background:var(--portal-accent-hover)}
+button:disabled{opacity:.5;cursor:wait}
+.error-message{padding:12px;border:1px solid var(--portal-danger);background:var(--portal-danger-soft);color:var(--portal-danger);border-radius:8px}
+input:focus-visible,button:focus-visible{outline:2px solid var(--portal-accent);outline-offset:3px}
+@media(max-width:700px){.account-panel{padding:24px 16px}h1{font-size:24px}form{padding:20px 16px}}
 </style>

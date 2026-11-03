@@ -29,6 +29,14 @@ html[data-portal-theme] {
   --portal-danger-fill: #b83c50;
   --portal-danger-ink: #ffffff;
   --portal-radius: 8px;
+  --portal-space-1: 4px;
+  --portal-space-2: 8px;
+  --portal-space-3: 12px;
+  --portal-space-4: 16px;
+  --portal-space-5: 24px;
+  --portal-space-6: 32px;
+  --portal-field-gap: var(--portal-space-2);
+  --portal-section-gap: var(--portal-space-5);
   --portal-shadow: 0 24px 80px #0007, 0 2px 8px #0003;
   color-scheme: dark;
   scrollbar-color: #45454b var(--portal-bg);
@@ -122,18 +130,18 @@ html[data-portal-theme] :is(.portal, .admin-space, .portal-login, .mk-viewer) :i
 }
 
 /* Current component class names and explicit utilities share the same hierarchy. */
-html[data-portal-theme] :is(.portal, .admin-space, .portal-login, .mk-viewer) :is(.portal-button, .portal-primary, .portal-secondary, .portal-danger, .create-button, .wa-button, .main-action, .pr-primary, .pr-secondary, .quiet-button, .login-submit) {
+html[data-portal-theme] :is(.portal, .admin-space, .portal-login, .mk-viewer) :is(.portal-button, .portal-primary, .portal-secondary, .portal-danger, .create-button, .wa-button, .main-action, .pr-primary, .pr-secondary, .quiet-button) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 40px;
-  padding: 9px 14px;
+  min-height: 44px;
+  padding: 10px 16px;
   border: 1px solid var(--portal-line);
   border-radius: var(--portal-radius);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.5;
   text-decoration: none;
   cursor: pointer;
 }
@@ -181,9 +189,9 @@ html[data-portal-theme] :is(.portal, .admin-space, .portal-login, .mk-viewer) :i
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   flex: 0 0 auto;
   padding: 0;
   border: 1px solid var(--portal-line);
@@ -218,18 +226,19 @@ html[data-portal-theme] .growth-chart rect { fill: var(--portal-accent); }
 html[data-portal-theme] .growth-chart rect:is(:hover, :focus) { fill: var(--portal-accent-hover); }
 html[data-portal-theme] .mk-viewer .pin:is(.selected, .draft) { background: var(--portal-accent); color: var(--portal-accent-ink); border-color: var(--portal-accent-hover); }
 
-/* Dialog overflow belongs to the panel so all actions remain reachable on mobile. */
+/* Legacy dialogs scroll as one panel; admin dialogs own their header/body/footer layout. */
 html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-backdrop, .pr-modal-backdrop, .delete-backdrop, .add-pages-backdrop) {
   background: #08080db8;
   backdrop-filter: blur(4px);
-  padding: 24px;
+  --portal-dialog-gutter: 24px;
+  padding: var(--portal-dialog-gutter);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 html[data-portal-theme="light"] :is(.portal, .admin-space, .mk-viewer) :is(.modal-backdrop, .pr-modal-backdrop, .delete-backdrop, .add-pages-backdrop) { background: #20203070; }
-html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.create-modal, .pr-modal, .delete-dialog, .add-pages-dialog) {
+html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.create-modal, .pr-modal, .delete-dialog, .add-pages-dialog):not([data-admin-dialog]) {
   width: min(560px, 100%);
-  max-height: calc(100dvh - 48px);
+  max-height: calc(100dvh - var(--portal-dialog-gutter, 24px) * 2);
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--portal-surface);
@@ -237,7 +246,7 @@ html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.create-modal
   border-radius: 12px;
   box-shadow: var(--portal-shadow);
 }
-html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-actions, .pr-modal-actions) { gap: 8px; }
+html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-actions, .pr-modal-actions) { gap: 12px; }
 html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-close, .pr-close, .discussion-close) { color: var(--portal-muted); border-radius: 6px; }
 html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-close, .pr-close, .discussion-close):hover { background: var(--portal-hover); color: var(--portal-text); }
 
@@ -247,8 +256,7 @@ html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-close,
 
 @media (max-width: 600px) {
   .portal-header-actions { gap: 8px; }
-  html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-backdrop, .pr-modal-backdrop, .delete-backdrop, .add-pages-backdrop) { padding: 12px; }
-  html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.create-modal, .pr-modal, .delete-dialog, .add-pages-dialog) { max-height: calc(100dvh - 24px); }
+  html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-backdrop, .pr-modal-backdrop, .delete-backdrop, .add-pages-backdrop) { --portal-dialog-gutter: 12px; }
   html[data-portal-theme] :is(.portal, .admin-space, .mk-viewer) :is(.modal-actions, .pr-modal-actions) { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -108,7 +108,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
   <section v-if="kind==='mockup' && reviewHistory.length" class="pr-review-history"><h3>Historique des décisions</h3><article v-for="decision in reviewHistory" :key="decision.id"><div><strong>{{decision.state==='approved'?'Validation':'Modifications demandées'}}</strong><span>{{resources.find(resource=>resource.id===decision.resourceId)?.title || 'Maquette'}}</span></div><p>{{decision.author}} · {{portalDate(decision.createdAt)}}</p><p v-if="decision.feedback">{{decision.feedback}}</p></article></section><template v-if="kind!=='mockup' || items.length">
   <div class="pr-heading"><div><h2>{{resourceLabels[kind]}}</h2><p>{{kind==='payment'?'Vos échéances et liens de règlement.':kind==='file'?'Les fichiers partagés et les éléments demandés par MC Studio.':kind==='wiki'?'Les guides pour avancer sereinement avec MC Studio.':kind==='analytics'?'Les performances de votre site, au même endroit.':'Tout ce dont vous avez besoin pour votre projet.'}}</p></div><div v-if="admin" class="pr-heading-actions"><button v-if="kind==='file'" class="pr-secondary" @click="showFileRequestForm=!showFileRequestForm"><UIcon name="i-tabler-file-plus"/>Demander un fichier</button><button class="pr-primary" @click="edit()"><UIcon name="i-tabler-plus"/>Ajouter</button></div></div>
   <p v-if="error" class="pr-error" role="alert">{{error}}</p><p v-if="success" class="pr-success" role="status">{{success}}</p>
-  <form v-if="kind==='file' && admin && showFileRequestForm" class="pr-editor" @submit.prevent="createFileRequest"><h3>Demander un fichier au client</h3><p>Le client recevra une demande avec un bouton pour déposer directement son fichier dans ce projet.</p><label>Fichier attendu<input v-model="requestTitle" required maxlength="160" placeholder="Ex. Logo en haute définition"></label><label>Consigne<textarea v-model="requestDescription" rows="3" maxlength="1000" placeholder="Format souhaité, dimensions ou informations utiles…"/></label><div class="pr-fields"><label>Responsable<select v-model="requestResponsible"><option value="">Équipe client</option><option v-for="member in (members || []).filter(m=>!m.suspended && m.memberRole!=='viewer')" :key="member.id" :value="member.id">{{member.name}}</option></select></label><label>Date attendue<input v-model="requestDueDate" type="date"></label></div><div class="pr-actions"><button type="button" class="pr-secondary" @click="showFileRequestForm=false">Annuler</button><button class="pr-primary" :disabled="busy">{{busy?'Envoi…':'Envoyer la demande'}}</button></div></form>
+  <form v-if="kind==='file' && admin && showFileRequestForm" class="pr-editor" @submit.prevent="createFileRequest"><header><h3>Demander un fichier au client</h3><p>Le client recevra une demande avec un bouton pour déposer directement son fichier dans ce projet.</p></header><label>Fichier attendu<input v-model="requestTitle" required maxlength="160" placeholder="Ex. Logo en haute définition"></label><label>Consigne<textarea v-model="requestDescription" rows="3" maxlength="1000" placeholder="Format souhaité, dimensions ou informations utiles…"/></label><div class="pr-fields"><label>Responsable<select v-model="requestResponsible"><option value="">Équipe client</option><option v-for="member in (members || []).filter(m=>!m.suspended && m.memberRole!=='viewer')" :key="member.id" :value="member.id">{{member.name}}</option></select></label><label>Date attendue<input v-model="requestDueDate" type="date"></label></div><div class="pr-actions"><button type="button" class="pr-secondary" @click="showFileRequestForm=false">Annuler</button><button class="pr-primary" :disabled="busy">{{busy?'Envoi…':'Envoyer la demande'}}</button></div></form>
   <form v-if="editing" class="pr-editor" @submit.prevent="save">
    <h3>{{editingId?'Modifier la ressource':'Nouvelle ressource'}}</h3>
    <label>Titre<input v-model="form.title" required maxlength="160" placeholder="Ex. Acompte de lancement"></label>
@@ -214,9 +214,9 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:20px}
 .pr-card>.pr-actions{margin:0}
 .pr-analytics{grid-column:1/-1;min-width:0}
-.pr-empty{padding:60px 24px;text-align:center;background:var(--portal-surface);border:1px dashed var(--portal-line);border-radius:8px}
+.pr-empty{padding:48px 24px;text-align:center;background:var(--portal-surface);border:1px dashed var(--portal-line);border-radius:8px}
 .pr-empty>.iconify{font-size:32px;color:var(--portal-muted)}
-.pr-empty h3{margin-top:20px}
+.pr-empty h3{margin:16px 0 8px}
 .pr-empty p{margin-bottom:0}
 .pr-money{display:flex;gap:48px;align-items:center;flex-wrap:wrap;padding:24px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-surface);margin-bottom:24px}
 .pr-money span{display:block;font-size:12px;color:var(--portal-muted)}
@@ -232,15 +232,21 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-upload input,.pr-request-file input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .pr-upload:focus-within,.pr-request-file:focus-within{outline:2px solid var(--portal-accent);outline-offset:3px}
 .pr-reader-note{font-size:12px;color:var(--portal-muted);padding:14px 16px;border:1px solid var(--portal-line);border-radius:8px;margin:16px 0;background:var(--portal-surface)}
-.pr-editor{padding:24px;border:1px solid var(--portal-line);background:var(--portal-surface);border-radius:8px;margin-bottom:24px}
-.pr label:not(.pr-upload,.pr-search-box,.pr-request-file){display:grid;gap:8px;margin-top:18px;font-size:13px}
-.pr label small{color:var(--portal-muted);font-size:12px}
-.pr-editor input,.pr-editor textarea,.pr-editor select,.pr-modal textarea{width:100%;min-height:40px;min-width:0;background:var(--portal-raised);border:1px solid var(--portal-line);color:var(--portal-text);border-radius:8px;padding:10px 12px;outline-offset:3px}
+.pr-editor{display:grid;gap:24px;padding:24px;border:1px solid var(--portal-line);background:var(--portal-surface);border-radius:8px;margin-bottom:24px}
+.pr label:not(.pr-upload,.pr-search-box,.pr-request-file){display:grid;gap:8px;margin-top:24px;font-size:13px}
+.pr label small{line-height:1.6;color:var(--portal-muted);font-size:12px}
+.pr-editor input,.pr-editor textarea,.pr-editor select,.pr-modal textarea{width:100%;min-height:44px;min-width:0;background:var(--portal-raised);border:1px solid var(--portal-line);color:var(--portal-text);border-radius:8px;padding:10px 12px;outline-offset:3px}
 .pr textarea{resize:vertical;line-height:1.6}
-.pr-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pr-editor>h3{margin:0}
+.pr-editor>header h3{margin:0 0 8px}
+.pr-editor>header p{margin:0}
+.pr-editor label:not(.pr-upload,.pr-search-box,.pr-request-file){margin:0}
+.pr-editor>.pr-actions{margin:0}
+.pr-editor .pr-primary,.pr-editor .pr-secondary,.pr-modal .pr-primary,.pr-modal .pr-secondary,.pr-modal .pr-danger{min-height:44px}
+.pr-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
 .pr label.pr-checkbox{display:flex!important;align-items:center}
 .pr-checkbox input{width:16px;min-height:16px;flex:none;accent-color:var(--portal-accent)}
-.pr-error,.pr-success{padding:14px 16px;border:1px solid var(--portal-danger);background:var(--portal-danger-soft);border-radius:8px;color:var(--portal-danger)!important;font-size:13px}
+.pr-error,.pr-success{margin:0 0 24px;padding:14px 16px;border:1px solid var(--portal-danger);background:var(--portal-danger-soft);border-radius:8px;color:var(--portal-danger)!important;font-size:13px}
 .pr-success{border-color:var(--portal-success);background:var(--portal-success-soft);color:var(--portal-success)!important}
 .pr-modal-backdrop{position:fixed;inset:0;background:#0009;z-index:100;display:grid;place-items:center;padding:24px;backdrop-filter:blur(4px)}
 .pr-modal{position:relative;width:min(680px,100%);max-height:calc(100dvh - 48px);overflow-y:auto;background:var(--portal-surface);border:1px solid var(--portal-line);border-radius:8px;padding:32px;box-shadow:0 24px 80px #0006;overflow-wrap:anywhere}
@@ -270,7 +276,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-request-copy small{display:block;margin-top:8px;color:var(--portal-muted);font-size:12px}
 .pr-request-status{padding:4px 8px;border-radius:6px;background:var(--portal-warning-soft);color:var(--portal-warning);font-size:11px}
 .pr-request-status.fulfilled{color:var(--portal-success);background:var(--portal-success-soft)}
-.pr label.pr-request-file{position:relative;display:inline-flex!important;align-items:center;gap:8px;flex:none;margin:0;min-height:40px;padding:9px 14px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-raised);color:var(--portal-text);font-size:13px;cursor:pointer;overflow:hidden}
+.pr label.pr-request-file{position:relative;display:inline-flex!important;align-items:center;gap:8px;flex:none;margin:0;min-height:44px;padding:9px 14px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-raised);color:var(--portal-text);font-size:13px;cursor:pointer;overflow:hidden}
 @media(max-width:1150px){.pr-list-head,.pr-card{grid-template-columns:minmax(150px,1fr) 110px 110px;gap:16px}
 .pr-list-head>:last-child{display:none}
 .pr-card>.pr-actions{grid-column:1/-1;justify-content:flex-start}
@@ -294,7 +300,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-money p{width:100%;max-width:none}
 .pr-upload{padding:24px 16px}
 .pr-editor{padding:20px 16px}
-.pr-fields{grid-template-columns:1fr;gap:0}
+.pr-fields{grid-template-columns:minmax(0,1fr)}
 .pr-actions{justify-content:flex-start}
 .pr-modal-backdrop{padding:12px}
 .pr-modal{padding:28px 20px;max-height:calc(100dvh - 24px)}

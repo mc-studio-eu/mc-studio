@@ -151,17 +151,17 @@ async function review(state:string){if(!canValidate.value)return;busy.value=true
 .mk:focus-visible{outline:2px solid var(--portal-line, #ddd);outline-offset:3px}
 .mk input:not([type=checkbox]),.mk textarea{border:1px solid var(--portal-line, #444);width:100%}
 .mk textarea{resize:vertical}
-.mk-heading,.importer header,.selection-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
-.mk-heading p{margin-top:6px}
+.mk-heading,.importer header,.selection-head{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:24px}
+.mk-heading p{margin-top:8px}
 .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .importer{background:var(--portal-surface, #1a1a1a);border:1px solid var(--portal-line, #333);border-radius:8px;margin-bottom:24px}
-.importer>label{display:block;margin-bottom:12px}
-.importer>label input{display:block;margin-top:8px}
+.importer>label{display:grid;gap:8px;margin:24px 0}
+.importer>label input{display:block;margin:0}
 .selection-head{margin:20px 0 10px}
 .screen-picker{max-height:320px;overflow:auto;border:1px solid var(--portal-line, #333);border-radius:8px}
 .screen-picker label{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--portal-line, #303030);cursor:pointer}
 .screen-picker small{display:block;color:var(--portal-muted, #888);margin-top:3px}
-.importer p{margin:15px 0}
+.importer p{margin:16px 0}
 .empty{text-align:center;padding:55px 20px;border-block:1px solid var(--portal-line, #333)}
 .empty>.iconify{font-size:30px;color:var(--portal-muted, #777)}
 .empty h3{margin:14px 0 8px}
@@ -197,8 +197,8 @@ async function review(state:string){if(!canValidate.value)return;busy.value=true
 .discussion>.notice{margin:12px}
 .discussion>button{margin:0 18px 18px}
 .comment-form{padding:18px;border-bottom:1px solid var(--portal-line, #444)}
-.comment-form label{display:block;margin:12px 0}
-.comment-form textarea{display:block;margin-top:6px}
+.comment-form label{display:grid;gap:8px;margin:16px 0}
+.comment-form textarea{display:block;margin:0}
 .comment{padding:18px;border-bottom:1px solid var(--portal-line, #303030)}
 .mk .comment-title{display:flex;align-items:center;gap:7px;width:100%;border:0;border-radius:0;background:none;padding:0;text-align:left}
 .comment-title small{margin-left:auto;color:var(--portal-muted, #888)}
@@ -207,7 +207,7 @@ async function review(state:string){if(!canValidate.value)return;busy.value=true
 .mk .text-button{padding:0;background:none;border:0;color:var(--portal-muted, #999)}
 .reply{border-left:1px solid var(--portal-line, #555);padding-left:10px;margin:15px 0}
 .reply small{margin-left:8px;color:var(--portal-muted, #777)}
-.comment .actions{justify-content:space-between;margin-top:8px}
+.comment .actions{justify-content:space-between;margin-top:16px}
 .discussion footer{margin-top:auto;padding:18px;border-top:1px solid var(--portal-line, #333)}
 .discussion footer p{margin-bottom:12px}
 .review-actions{display:grid;gap:8px}
@@ -331,13 +331,13 @@ async function review(state:string){if(!canValidate.value)return;busy.value=true
 .mk .page-order-actions button{display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:var(--portal-muted,#aaa)}
 .mk .page-order-actions button:disabled{opacity:.2}
 .add-pages-backdrop{position:absolute;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:#000b}
-.add-pages-dialog{display:flex;flex-direction:column;gap:14px;width:min(680px,100%);border:1px solid var(--portal-line,#444);background:var(--portal-surface,#171717);box-shadow:0 20px 80px #0008;overflow:auto}
+.add-pages-dialog{display:flex;flex-direction:column;gap:24px;width:min(680px,100%);border:1px solid var(--portal-line,#444);background:var(--portal-surface,#171717);box-shadow:0 20px 80px #0008;overflow:auto}
 .add-pages-dialog>header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
 .add-pages-dialog>header h2{margin:0;font-size:20px}
 .add-pages-dialog>header p:not(.assets-eyebrow){margin-top:6px}
 .add-pages-dialog>header>button{border:0;background:transparent;font-size:24px}
-.add-pages-dialog>label{display:grid;gap:6px;color:var(--portal-muted,#aaa)}
-.add-pages-dialog .selection-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.add-pages-dialog>label{display:grid;gap:8px;color:var(--portal-muted,#aaa)}
+.add-pages-dialog .selection-head{margin:0;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .add-pages-dialog .screen-picker{max-height:42vh;overflow:auto;border:1px solid var(--portal-line,#333);border-radius:8px}
 .add-pages-dialog .screen-picker label{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--portal-line,#2e2e2e)}
 .add-pages-dialog .screen-picker label:last-child{border-bottom:0}
@@ -351,7 +351,7 @@ async function review(state:string){if(!canValidate.value)return;busy.value=true
 .mk h3{font-size:15px;font-weight:500}
 .mk-heading p{font-size:13px;line-height:1.6}
 .mk button,.mk select{min-height:40px;border-radius:8px;padding:9px 12px;font-size:13px}
-.mk input:not([type=checkbox]),.mk textarea{min-height:40px;font-size:13px;background:var(--portal-raised);border-radius:8px;padding:10px 12px;line-height:1.6}
+.mk input:not([type=checkbox]),.mk textarea{min-height:44px;font-size:13px;background:var(--portal-raised);border-radius:8px;padding:10px 12px;line-height:1.6}
 .mk input[type=checkbox]{width:16px;height:16px;accent-color:var(--portal-accent);flex:none}
 .mk .primary,.mk-viewer .primary,.rename-form button.primary{background:var(--portal-accent);border-color:var(--portal-accent);color:var(--portal-accent-ink,#fff)}
 .mk .primary:hover:not(:disabled),.mk-viewer .primary:hover:not(:disabled){background:var(--portal-accent-hover)}
@@ -372,6 +372,7 @@ async function review(state:string){if(!canValidate.value)return;busy.value=true
 .importer{padding:24px}
 .importer header{flex-wrap:wrap}
 .importer>label{font-size:13px}
+.importer button,.mk-heading>.primary,.collection-actions .primary,.review-actions button,.add-pages-dialog .modal-actions button{min-height:44px}
 .selection-head{font-size:13px;flex-wrap:wrap}
 .screen-picker label>span{min-width:0;overflow-wrap:anywhere}
 .screen-picker small{font-size:12px}

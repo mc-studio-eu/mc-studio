@@ -140,12 +140,12 @@ onMounted(async()=>{
 .project-strip>*:last-child{border:0}
 .project-strip>button:hover{background:var(--portal-raised)}
 .project-strip span:not(.mini-progress,.iconify){display:block;font-size:12px;color:var(--portal-muted);margin-bottom:10px}
-.project-strip strong{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;white-space:nowrap}
+.project-strip strong{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;flex-wrap:wrap;overflow-wrap:anywhere}
 .project-strip .iconify{font-size:18px;color:var(--portal-muted)}
 .mini-progress{display:block;width:64px;height:5px;background:var(--portal-raised);border-radius:4px;overflow:hidden}
 .mini-progress i{display:block;height:100%;background:var(--portal-accent);border-radius:4px}
-.workspace-tabs{display:flex;gap:28px;padding:0 32px;border-bottom:1px solid var(--portal-line)}
-.workspace-tabs button{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 0 13px;background:none;border:0;border-bottom:2px solid transparent;color:var(--portal-muted);font-size:13px}
+.workspace-tabs{display:flex;gap:28px;overflow-x:auto;padding:0 32px;border-bottom:1px solid var(--portal-line)}
+.workspace-tabs button{white-space:nowrap;flex:none;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 0 13px;background:none;border:0;border-bottom:2px solid transparent;color:var(--portal-muted);font-size:13px}
 .workspace-tabs button.selected{color:var(--portal-text);border-bottom-color:var(--portal-accent)}
 .workspace-tabs button>span{background:var(--portal-raised);padding:1px 6px;border-radius:5px;font-size:11px;color:var(--portal-muted)}
 .table-toolbar{display:flex;align-items:center;gap:12px;padding:20px 32px;border-bottom:1px solid var(--portal-line)}
@@ -182,7 +182,7 @@ onMounted(async()=>{
 .empty-table{padding:60px 24px!important;color:var(--portal-muted);text-align:center;font-size:13px!important}
 .page-title{padding:32px 32px 12px}
 .page-title h1{font-size:28px;margin:8px 0}
-.page-title p{font-size:14px;color:var(--portal-muted);max-width:800px}
+.page-title p{margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--portal-muted);max-width:800px}
 .eyebrow{font-size:11px!important;letter-spacing:.08em;color:var(--portal-muted)!important}
 .timeline{margin:12px 32px 24px;border-top:1px solid var(--portal-line)}
 .timeline article{display:flex;gap:18px;padding:24px 0;border-bottom:1px solid var(--portal-line)}
@@ -192,8 +192,9 @@ onMounted(async()=>{
 .timeline h2{font-size:18px;margin:4px 0 8px}
 .timeline p{font-size:13px;color:var(--portal-muted);margin:0}
 .text-link{border:0;background:none;color:var(--portal-accent-text)!important;padding:0;margin-top:12px;font-size:13px!important}
-.updates{padding:0 32px}
-.updates h2{font-size:18px}
+.updates{padding:0 32px 32px}
+.updates h2{font-size:18px;margin:0 0 8px}
+.updates>p{margin:0;color:var(--portal-muted);font-size:13px;line-height:1.6}
 .updates article{display:flex;gap:12px;padding:20px 0;border-bottom:1px solid var(--portal-line)}
 .updates p{flex:1;margin:0;font-size:13px;color:var(--portal-text);white-space:pre-wrap;overflow-wrap:anywhere}
 .updates time{font-size:12px;color:var(--portal-muted);white-space:nowrap}
@@ -288,7 +289,7 @@ onMounted(async()=>{
 .table-summary{padding:16px;font-size:11px}
 .table-summary>span:last-child{display:none}
 .content>:deep(.pr){padding:24px 16px}
-.updates{padding:0 16px}
+.updates{padding:0 16px 24px}
 .updates article{flex-wrap:wrap}
 .updates time{margin-left:18px}
 .page-title{padding:24px 16px 8px}
