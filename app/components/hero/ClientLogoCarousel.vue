@@ -2,7 +2,7 @@
 interface ClientLogo {
   name: string
   src: string
-  kind: 'ra' | 'amg' | 'souji' | 'arises' | 'fontaines' | 'personal' | 'shika' | 'maison-awl'
+  kind: 'ra' | 'amg' | 'souji' | 'arises' | 'fontaines' | 'personal' | 'shika' | 'maison-awl' | 'abri-toi' | 'newlense'
 }
 
 const clients: ClientLogo[] = [
@@ -14,6 +14,8 @@ const clients: ClientLogo[] = [
   { name: 'Personal', src: '/img/clients/personal.svg', kind: 'personal' },
   { name: 'Shika Consulting', src: '/img/clients/shika-consulting.webp', kind: 'shika' },
   { name: 'Maison AWL', src: '/img/project/maison-awl/logo-black.png', kind: 'maison-awl' },
+  { name: 'Abri Toi', src: '/img/clients/abri-toi.png', kind: 'abri-toi' },
+  { name: 'Newlense', src: '/img/clients/newlense.webp', kind: 'newlense' },
 ]
 
 const activeOffset = ref(0)
@@ -61,7 +63,7 @@ onBeforeUnmount(() => {
           >
             <img
               :src="visibleClients[slotIndex - 1].src"
-              :alt="['fontaines', 'shika', 'maison-awl'].includes(visibleClients[slotIndex - 1].kind) ? visibleClients[slotIndex - 1].name : ''"
+              :alt="['fontaines', 'shika', 'maison-awl', 'abri-toi', 'newlense'].includes(visibleClients[slotIndex - 1].kind) ? visibleClients[slotIndex - 1].name : ''"
               class="client-logo-image shrink-0 object-contain"
               width="120"
               height="48"
@@ -69,7 +71,7 @@ onBeforeUnmount(() => {
               decoding="async"
             >
             <span
-              v-if="!['fontaines', 'shika', 'maison-awl'].includes(visibleClients[slotIndex - 1].kind)"
+              v-if="!['fontaines', 'shika', 'maison-awl', 'abri-toi', 'newlense'].includes(visibleClients[slotIndex - 1].kind)"
               class="client-logo-name"
             >
               {{ visibleClients[slotIndex - 1].name }}
@@ -177,6 +179,16 @@ onBeforeUnmount(() => {
 .client-logo--maison-awl .client-logo-image {
   max-height: 34px;
   max-width: 45px;
+}
+
+.client-logo--abri-toi .client-logo-image {
+  max-height: 28px;
+  max-width: 110px;
+}
+
+.client-logo--newlense .client-logo-image {
+  max-height: 32px;
+  max-width: 110px;
 }
 
 .client-logo-roll-enter-active,
