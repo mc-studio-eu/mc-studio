@@ -30,9 +30,11 @@ const heroReferences = [
   { name: 'Personal', image: '/img/clients/personal.svg', className: 'global-home__reference--personal' },
   { name: 'Arises', image: '/img/clients/arises.svg', className: 'global-home__reference--arises' },
   { name: 'Shika Consulting', image: '/img/clients/shika-consulting.webp', className: 'global-home__reference--shika', showLabel: false },
-  { name: 'Sotraya', image: '/img/clients/sotraya.svg', className: 'global-home__reference--sotraya' },
-  { name: 'Abri Toi', image: '/img/clients/abri-toi.png', className: 'global-home__reference--abri-toi', showLabel: false },
-  { name: 'Newlense', image: '/img/clients/newlense.webp', className: 'global-home__reference--newlense', showLabel: false }
+  { name: 'Sotraya', image: '/img/clients/sotraya.svg', className: 'global-home__reference--sotraya' }
+]
+const featuredReferences = [
+  { name: 'Abri Toi', image: '/img/clients/abri-toi.png', className: 'global-home__reference--abri-toi' },
+  { name: 'Newlense', image: '/img/clients/newlense.webp', className: 'global-home__reference--newlense' }
 ]
 
 onMounted(() => {
@@ -128,22 +130,34 @@ useSeoMeta({
 
       <div class="global-home__hero-references relative z-10 w-full shrink-0" :aria-label="t('globalHome.hero.references_label')">
         <p class="global-home__hero-reference-label">{{ t('globalHome.hero.references_label') }}</p>
-        <div class="global-home__hero-reference-marquee">
-          <div class="global-home__hero-reference-track">
+        <div class="global-home__hero-reference-row">
+          <div class="global-home__hero-reference-featured">
             <div
-              v-for="groupIndex in 2"
-              :key="groupIndex"
-              class="global-home__hero-reference-group"
-              :aria-hidden="groupIndex === 2"
+              v-for="reference in featuredReferences"
+              :key="reference.name"
+              class="global-home__reference"
+              :class="reference.className"
             >
+              <img :src="reference.image" :alt="reference.name" width="120" height="40">
+            </div>
+          </div>
+          <div class="global-home__hero-reference-marquee">
+            <div class="global-home__hero-reference-track">
               <div
-                v-for="reference in heroReferences"
-                :key="`${groupIndex}-${reference.name}`"
-                class="global-home__reference"
-                :class="reference.className"
+                v-for="groupIndex in 2"
+                :key="groupIndex"
+                class="global-home__hero-reference-group"
+                :aria-hidden="groupIndex === 2"
               >
-                <img :src="reference.image" :alt="reference.showLabel === false ? reference.name : ''" width="48" height="48">
-                <span v-if="reference.showLabel !== false">{{ reference.name }}</span>
+                <div
+                  v-for="reference in heroReferences"
+                  :key="`${groupIndex}-${reference.name}`"
+                  class="global-home__reference"
+                  :class="reference.className"
+                >
+                  <img :src="reference.image" :alt="reference.showLabel === false ? reference.name : ''" width="48" height="48">
+                  <span v-if="reference.showLabel !== false">{{ reference.name }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -186,7 +200,10 @@ useSeoMeta({
 .global-home__availability-dot { width: 10px; height: 10px; border: 2px solid #f8d699; border-radius: 50%; background: #f0bf6c; box-shadow: 0 0 0 4px rgba(240,191,108,.12); }
 .global-home__hero-references { animation: home-copy-in 900ms .42s cubic-bezier(.22,1,.36,1) both; }
 .global-home__hero-reference-label { margin: 0 0 20px; color: rgba(255,255,255,.4) !important; font: 600 10px/1 Inter, sans-serif !important; letter-spacing: .24em; text-transform: uppercase; }
-.global-home__hero-reference-marquee { width: 100%; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.global-home__hero-reference-row { display: flex; width: 100%; align-items: center; }
+.global-home__hero-reference-featured { display: flex; flex: none; align-items: center; gap: 8px; padding-right: 12px; }
+.global-home__hero-reference-featured .global-home__reference { width: 132px; }
+.global-home__hero-reference-marquee { min-width: 0; flex: 1; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
 .global-home__hero-reference-track { display: flex; width: max-content; will-change: transform; animation: hero-reference-marquee 28s linear infinite; }
 .global-home__hero-reference-marquee:hover .global-home__hero-reference-track { animation-play-state: paused; }
 .global-home__hero-reference-group { display: flex; flex: none; align-items: center; gap: 16px; padding-right: 16px; }
@@ -282,6 +299,7 @@ useSeoMeta({
   .global-home__reference img { width: 28px; height: 28px; flex-basis: 28px; }
   .global-home__reference--shika img { width: 68px; flex-basis: 68px; }
   .global-home__reference--abri-toi img, .global-home__reference--newlense img { width: 100px; height: 34px; flex-basis: 100px; }
+  .global-home__hero-reference-featured .global-home__reference { width: 100px; }
   .home-business-content__separator { margin-block: 24px; }
   .projects-showcase__link { width: fit-content; }
   .projects-showcase__frame { margin-top: 32px; border-radius: 20px; background-size: 32px 32px; }
