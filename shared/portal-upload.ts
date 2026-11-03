@@ -1,0 +1,3 @@
+export const PORTAL_FILE_MAX_BYTES = 50 * 1024 * 1024
+export const PORTAL_FILE_QUOTA_BYTES = 500 * 1024 * 1024
+export const PORTAL_ASSET_MAX_BYTES = 10 * 1024 * 1024

@@ -7,7 +7,7 @@ L’admin ouvre `/portal/admin`, crée une fiche client et son premier projet, p
 - Accueil : étape, progression, échéance, actions attendues et dernières nouvelles.
 - Suivi : quatre phases et journal des changements, dépôts et retours.
 - Paiements : liens HTTPS de tout prestataire (Stripe, etc.), montant en euros, échéance et statut confirmé manuellement par MC Studio. Aucun prélèvement ni vérification bancaire automatique. Un clic ne marque jamais un paiement comme réglé.
-- Fichiers : liens et vrais fichiers ajoutés par l’admin, dépôts du client, documents et téléchargements authentifiés. 10 Mo par fichier, 100 Mo par projet. Les fichiers archivés restent comptabilisés.
+- Fichiers : liens et vrais fichiers ajoutés par l’admin, dépôts du client, documents et téléchargements authentifiés. 50 Mo par fichier, 500 Mo par projet. Les fichiers archivés restent comptabilisés. La progression du transfert puis l’enregistrement sont affichés dans le portail ; voir [les détails du dépôt](portal-files.md).
 - Maquettes : liens externes, validation ou demande de modifications avec commentaire, historique par ressource dans le journal.
 - Liens utiles : URLs HTTPS par projet.
 - Wiki : articles texte et liens, spécifiques au projet ou partagés avec tous les clients. Trois guides de démarrage sont créés au premier accès admin, puis modifiables/archivables.
@@ -29,7 +29,7 @@ Le driver `pg` utilise un pool limité à cinq connexions par processus. Les tra
 
 ### Fichiers
 
-Cette première version conserve les petits fichiers en base (base64) pour rendre les dépôts persistants sans dépendre du disque d’un serveur. Le téléchargement passe par une API qui vérifie l’utilisateur et l’organisation. Aucun URL public de fichier n’est créé ; les fichiers sont servis en pièce jointe avec `nosniff`. Pour des vidéos et volumes importants, migrer les contenus vers un stockage objet privé et conserver les métadonnées dans Neon. La limite d’upload de l’hébergeur/proxy doit permettre au moins 11 Mo.
+Cette première version conserve les fichiers en base (base64) pour rendre les dépôts persistants sans dépendre du disque d’un serveur. Le téléchargement passe par une API qui vérifie l’utilisateur et l’organisation. Aucun URL public de fichier n’est créé ; les fichiers sont servis en pièce jointe avec `nosniff`. Pour des vidéos et volumes importants, migrer les contenus vers un stockage objet privé et conserver les métadonnées dans Neon. La limite d’upload de l’hébergeur/proxy doit permettre au moins 51 Mio. Les images de la médiathèque conservent une limite distincte de 10 Mo par image et 100 Mo par projet.
 
 ## Google Analytics
 
@@ -73,6 +73,10 @@ Une demande est **Ouverte** ou **Résolue**. Son auteur, tant qu’il dispose d�
 Les nouvelles demandes et réponses du client notifient l’administration. Les réponses de MC Studio et les changements d’état notifient les membres concernés, selon leurs préférences. Les notifications ouvrent la rubrique Demandes du projet.
 
 Les accès API vérifient l’organisation du projet et l’état actif du compte. Les tables `portal_requests` et `portal_request_messages` sont créées de manière additive et incluses dans la migration vers Neon.
+
+## Dossiers d’assets
+
+Dans **Assets**, l’administration peut créer un dossier de 1 à 80 caractères avec **Nouveau dossier**, puis le choisir lors d’un dépôt d’image. Les dossiers sont propres au projet, conservés dans `portal_asset_folders` et visibles par ses clients. Les cinq dossiers existants restent compatibles. Les noms en doublon sont refusés, indépendamment de la casse ; un dépôt ne peut pas cibler le dossier d’un autre projet. La table est créée de façon additive et incluse dans la migration SQLite → Neon. À l’ouverture de la rubrique, le premier dossier contenant des images est sélectionné.
 
 ## Notifications et relances
 

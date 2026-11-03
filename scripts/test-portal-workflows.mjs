@@ -23,6 +23,10 @@ const env = {
   ...process.env,
   DATABASE_URL: '',
   NUXT_DATABASE_URL: '',
+  R2_ENDPOINT: '',
+  R2_BUCKET: '',
+  R2_ACCESS_KEY_ID: '',
+  R2_SECRET_ACCESS_KEY: '',
   NUXT_PORTAL_DB_PATH: dbPath,
   NUXT_RESEND_API_KEY: '',
   PORTAL_EMAIL_DISABLED: '1',
@@ -138,6 +142,67 @@ async function run() {
     let contributor = await login('contributor@test.invalid')
     const viewer = await login('viewer@test.invalid')
     const outsider = await login('other@test.invalid')
+
+    await test('asset folders persist per project and accept uploads only into that project’s folders', async () => {
+      const createFolder = (cookie, projectId, label, headers = {}) => request('/api/portal/assets/folders', {
+        method: 'POST', cookie, body: { projectId, label }, headers
+      })
+      expectStatus(await createFolder(undefined, 'project-a', 'Illustrations'), 401, 'anonymous folder creation')
+      expectStatus(await createFolder(contributor, 'project-a', 'Illustrations'), 403, 'client folder creation')
+      expectStatus(await createFolder(viewer, 'project-a', 'Illustrations'), 403, 'viewer folder creation')
+      expectStatus(await createFolder(admin, 'missing-project', 'Illustrations'), 404, 'folder for missing project')
+      expectStatus(await createFolder(admin, 'project-a', 'Illustrations', { origin: 'https://foreign.invalid' }), 403, 'cross-origin folder creation')
+      for (const label of ['', '   ', 'x'.repeat(81), 'Dossier\u0000invalide']) {
+        expectStatus(await createFolder(admin, 'project-a', label), 400, 'invalid folder name')
+      }
+      expectStatus(await createFolder(admin, 'project-a', ' marques '), 409, 'default folder name collision')
+      const created = await createFolder(admin, 'project-a', '  Illustrations  ')
+      expectStatus(created, 200, 'admin creates folder')
+      const folderId = created.data.id
+      assert.equal(created.data.label, 'Illustrations')
+      assert.equal(db.prepare('SELECT project_id,label FROM portal_asset_folders WHERE id=?').get(folderId).project_id, 'project-a')
+      expectStatus(await createFolder(admin, 'project-a', 'ILLUSTRATIONS'), 409, 'case-insensitive duplicate folder')
+      const concurrent = await Promise.all([createFolder(admin, 'project-a', 'Éléments'), createFolder(admin, 'project-a', 'E\u0301le\u0301ments')])
+      assert.deepEqual(concurrent.map(result => result.status).sort(), [200, 409], 'equivalent Unicode names must create only one folder')
+      expectStatus(await createFolder(admin, 'project-b', 'Illustrations'), 200, 'same name in another project')
+      const initial = await request('/api/portal/assets?projectId=project-a', { cookie: contributor })
+      expectStatus(initial, 200, 'client reads own folders')
+      assert.ok(initial.data.folders.some(folder => folder.id === folderId && folder.label === 'Illustrations'))
+      const foreign = await request('/api/portal/assets?projectId=project-b', { cookie: contributor })
+      expectStatus(foreign, 404, 'cross-organization folder listing')
+      const otherProject = await request('/api/portal/assets?projectId=project-b', { cookie: admin })
+      assert.ok(!otherProject.data.folders.some(folder => folder.id === folderId), 'folder IDs are scoped to their project')
+      const postAsset = async (cookie, projectId, category) => {
+        const form = new FormData()
+        form.set('file', new Blob([Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aXwAAAABJRU5ErkJggg==', 'base64')], { type: 'image/png' }), 'folder-test.png')
+        form.set('title', 'Illustration de test')
+        form.set('category', category)
+        const response = await fetch(`${baseUrl}/api/portal/assets?projectId=${projectId}`, { method: 'POST', headers: { cookie: `mc_portal_session=${cookie}` }, body: form })
+        return { status: response.status, data: await response.json() }
+      }
+      const initAssetUpload = (cookie, projectId, category) => request('/api/portal/uploads/init', {
+        method: 'POST', cookie,
+        body: { projectId, kind: 'asset', clientKey: randomUUID(), fileName: 'folder-test.png', fileSize: 100, mimeType: 'image/png', title: 'Illustration de test', category }
+      })
+      expectStatus(await initAssetUpload(contributor, 'project-a', folderId), 403, 'client cannot initialize asset uploads')
+      expectStatus(await initAssetUpload(admin, 'project-b', folderId), 400, 'upload initialization rejects another project’s folder')
+      expectStatus(await initAssetUpload(admin, 'project-a', 'unknown-folder'), 400, 'upload initialization rejects nonexistent folders')
+      expectStatus(await initAssetUpload(admin, 'project-a', folderId), 200, 'upload initialization accepts a custom folder')
+      expectStatus(await initAssetUpload(admin, 'project-a', 'applications'), 200, 'upload initialization accepts default folders')
+      expectStatus(await postAsset(contributor, 'project-a', folderId), 403, 'client cannot upload assets')
+      expectStatus(await postAsset(admin, 'project-b', folderId), 400, 'another project cannot use the folder')
+      expectStatus(await postAsset(admin, 'project-a', 'unknown-folder'), 400, 'nonexistent upload folder')
+      const customUpload = await postAsset(admin, 'project-a', folderId)
+      expectStatus(customUpload, 200, 'upload into custom folder')
+      expectStatus(await postAsset(admin, 'project-a', 'applications'), 200, 'default folders stay compatible')
+      const reloaded = await request('/api/portal/assets?projectId=project-a', { cookie: contributor })
+      assert.ok(reloaded.data.folders.some(folder => folder.id === folderId), 'folder survives a fresh request')
+      assert.ok(reloaded.data.assets.some(asset => asset.id === customUpload.data.id && asset.category === folderId))
+      const download = await fetch(`${baseUrl}/api/portal/assets/${customUpload.data.id}`, { headers: { cookie: `mc_portal_session=${contributor}` } })
+      assert.equal(download.status, 200, 'client can download an asset from its custom folder')
+      const deniedDownload = await fetch(`${baseUrl}/api/portal/assets/${customUpload.data.id}`, { headers: { cookie: `mc_portal_session=${outsider}` } })
+      assert.equal(deniedDownload.status, 404, 'foreign organization cannot download custom-folder assets')
+    })
 
     await test('new requests support organization-scoped creation, replies, status changes, and validation', async () => {
       const created = await request('/api/portal/requests', {
@@ -347,21 +412,90 @@ async function run() {
       const before = await request('/api/portal/resources?projectId=project-a', { cookie: contributor })
       assert.ok(before.data.todos.some(item => item.id === requestId && item.kind === 'file'))
 
+      // Exercise payloads larger than the former 10 MiB cap and verify the stored bytes survive download.
+      const fileBytes = randomBytes(11 * 1024 * 1024)
       const form = new FormData()
-      form.set('file', new Blob(['synthetic portal test file'], { type: 'text/plain' }), 'brief.txt')
+      form.set('file', new Blob([fileBytes], { type: 'application/octet-stream' }), 'brief.bin')
       form.set('requestId', requestId)
       const uploaded = await fetch(`${baseUrl}/api/portal/files?projectId=project-a`, { method: 'POST', headers: { cookie: `mc_portal_session=${contributor}` }, body: form })
       const uploadBody = await uploaded.json()
       expectStatus({ status: uploaded.status, data: uploadBody }, 200, 'client file upload')
       assert.ok(uploadBody.id)
 
+      const downloaded = await fetch(`${baseUrl}/api/portal/files/${uploadBody.id}`, { headers: { cookie: `mc_portal_session=${contributor}` } })
+      assert.equal(downloaded.status, 200, `uploaded file download expected HTTP 200, got ${downloaded.status}`)
+      const downloadedBytes = Buffer.from(await downloaded.arrayBuffer())
+      assert.equal(downloadedBytes.length, fileBytes.length)
+      assert.equal(hash(downloadedBytes), hash(fileBytes), 'downloaded file must match the uploaded bytes')
+      const freshOutsider = await login('other@test.invalid', 'Portal-new-Password-2026!')
+      const hiddenFromOtherOrganization = await fetch(`${baseUrl}/api/portal/files/${uploadBody.id}`, { headers: { cookie: `mc_portal_session=${freshOutsider}` } })
+      assert.equal(hiddenFromOtherOrganization.status, 404, 'another organization cannot download the uploaded file')
+
       const requests = await request('/api/portal/files/requests?projectId=project-a', { cookie: admin })
       const fulfilled = requests.data.requests.find(item => item.id === requestId)
       assert.equal(fulfilled.status, 'fulfilled')
       assert.equal(fulfilled.uploadedBy, 'Contributeur test')
-      assert.equal(fulfilled.fileName, 'brief.txt')
+      assert.equal(fulfilled.fileName, 'brief.bin')
       const after = await request('/api/portal/resources?projectId=project-a', { cookie: contributor })
       assert.ok(!after.data.todos.some(item => item.id === requestId))
+    })
+
+    await test('file uploads enforce size, empty-file, role, organization, and request-conflict rules', async () => {
+      const activeViewer = await login('viewer@test.invalid', 'Portal-viewer-Password-2026!')
+      const postFile = async (cookie, projectId, bytes, filename = 'test.bin', requestId = '') => {
+        const form = new FormData()
+        form.set('file', new Blob([bytes], { type: 'application/octet-stream' }), filename)
+        if (requestId) form.set('requestId', requestId)
+        return fetch(`${baseUrl}/api/portal/files?projectId=${projectId}`, {
+          method: 'POST', headers: { cookie: `mc_portal_session=${cookie}` }, body: form
+        })
+      }
+
+      const tooLarge = await postFile(contributor, 'project-a', Buffer.alloc(50 * 1024 * 1024 + 1), 'over-limit.bin')
+      assert.equal(tooLarge.status, 413, `file over 50 MiB should return 413, got ${tooLarge.status}`)
+      const maxBytes = Buffer.alloc(50 * 1024 * 1024, 0x5a)
+      const maxUploadResponse = await postFile(contributor, 'project-a', maxBytes, 'limite-épreuve.bin')
+      const maxUpload = await maxUploadResponse.json()
+      expectStatus({ status: maxUploadResponse.status, data: maxUpload }, 200, 'file exactly at 50 MiB limit')
+      try {
+        const maxDownload = await fetch(`${baseUrl}/api/portal/files/${maxUpload.id}`, { headers: { cookie: `mc_portal_session=${contributor}` } })
+        assert.equal(maxDownload.status, 200, `50 MiB file download expected HTTP 200, got ${maxDownload.status}`)
+        const maxDownloadedBytes = Buffer.from(await maxDownload.arrayBuffer())
+        assert.equal(maxDownloadedBytes.length, maxBytes.length)
+        assert.equal(hash(maxDownloadedBytes), hash(maxBytes), '50 MiB download must match the uploaded bytes')
+        assert.match(maxDownload.headers.get('content-disposition') || '', /limite-%C3%A9preuve\.bin/i, 'download filename should preserve UTF-8')
+      } finally {
+        if (maxUpload.id) expectStatus(await request(`/api/portal/files/${maxUpload.id}`, { method: 'DELETE', cookie: admin }), 200, 'remove exact-limit test file')
+      }
+      const empty = await postFile(contributor, 'project-a', Buffer.alloc(0), 'empty.txt')
+      assert.equal(empty.status, 400, `empty file should return 400, got ${empty.status}`)
+      const reader = await postFile(activeViewer, 'project-a', Buffer.from('reader'), 'reader.txt')
+      assert.equal(reader.status, 403, `viewer upload should return 403, got ${reader.status}`)
+      const foreignProject = await postFile(contributor, 'project-b', Buffer.from('foreign'), 'foreign.txt')
+      assert.equal(foreignProject.status, 404, `cross-organization upload should return 404, got ${foreignProject.status}`)
+
+      const requested = await request('/api/portal/files/requests', {
+        method: 'POST', cookie: admin,
+        body: { projectId: 'project-a', title: 'Un seul fichier', description: '', responsibleId: 'contributor' }
+      })
+      expectStatus(requested, 200)
+      const requestId = requested.data.id
+      const race = await Promise.all([
+        postFile(contributor, 'project-a', Buffer.from('first'), 'first.txt', requestId),
+        postFile(contributor, 'project-a', Buffer.from('second'), 'second.txt', requestId)
+      ])
+      const statuses = race.map(response => response.status).sort((a, b) => a - b)
+      assert.deepEqual(statuses, [200, 409], `only one upload may fulfill a request, got HTTP ${statuses.join(', ')}`)
+
+      // Seed only the aggregate size to exercise quota rejection without storing a 500 MiB fixture.
+      db.prepare(`INSERT INTO resources(id,project_id,kind,title,file_name,file_size,created_by)
+        VALUES(?,?,?,?,?,?,?)`).run('quota-fixture', 'project-a', 'file', 'Quota fixture', 'quota.bin', 500 * 1024 * 1024, 'admin')
+      try {
+        const overQuota = await postFile(contributor, 'project-a', Buffer.from('x'), 'quota-test.txt')
+        assert.equal(overQuota.status, 413, `project over 500 MiB quota should return 413, got ${overQuota.status}`)
+      } finally {
+        db.prepare('DELETE FROM resources WHERE id=?').run('quota-fixture')
+      }
     })
 
     await test('notification preferences, read state, and reminder deduplication work', async () => {

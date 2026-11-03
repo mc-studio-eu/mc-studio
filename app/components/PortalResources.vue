@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { resourceLabels, resourceIcons, money, portalDate, type PortalResource, type ResourceKind, type PortalMember } from '~/types/portal'
+import { PORTAL_FILE_MAX_BYTES } from '#shared/portal-upload'
 const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'|'requests'; initialKind?:ResourceKind|'assets'|'requests'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
 const canWrite = computed(()=>Boolean(props.admin || props.canContribute))
 const canValidate = computed(()=>Boolean(props.admin || props.canReview))
@@ -15,6 +16,9 @@ watch(()=>props.initialKind,value=>{if(value)activeKind.value=value})
 const kind = computed(() => props.kind || activeKind.value)
 const items = computed(() => resources.value.filter(r=>r.kind===kind.value && (r.kind!=='mockup' || Number(r.versionCount || 0)===0)))
 const loading = ref(true), busy = ref(false), error = ref(''), success = ref(''), search = ref('')
+const { uploading, progress: uploadProgress, processing: uploadProcessing, send: sendUpload, reset: resetUpload } = usePortalUpload()
+const uploadProjectId = ref('')
+const projectUploading = computed(()=>uploading.value && uploadProjectId.value===props.projectId)
 const filtered = computed(() => items.value.filter(r=>(r.title+' '+r.description+' '+r.content).toLowerCase().includes(search.value.toLowerCase())))
 const editing = ref(false), editingId = ref(''), reading = ref<PortalResource|null>(null), reviewing = ref<PortalResource|null>(null), feedback = ref('')
 const emptyForm = () => ({title:'',description:'',url:'',content:'',amount:0,status:'available',dueDate:'',global:false})
@@ -85,10 +89,23 @@ const removeResource = async () => {
 }
 const upload = async (event:Event,requestId='') => {
  const input=event.target as HTMLInputElement, file=input.files?.[0];if(!file || !canWrite.value)return
- if(file.size>10*1024*1024){error.value='Le fichier dépasse la limite de 10 Mo.';input.value='';return}
- busy.value=true;error.value=''
- try{const body=new FormData();body.append('file',file);body.append('kind',kind.value);if(requestId)body.append('requestId',requestId);await $fetch('/api/portal/files',{method:'POST',query:{projectId:props.projectId},body});await load();success.value=requestId?'Fichier envoyé pour la demande.':'Fichier déposé.';emit('changed')}
- catch(e:any){error.value=e?.data?.statusMessage || 'Le dépôt a échoué.'}finally{busy.value=false;input.value=''}
+ if(busy.value)return
+ if(!file.size || file.size>PORTAL_FILE_MAX_BYTES){error.value=!file.size?'Choisissez un fichier non vide.':'Le fichier dépasse la limite de 50 Mo.';input.value='';return}
+ const projectId=props.projectId
+ uploadProjectId.value=projectId
+ busy.value=true;error.value='';success.value=''
+ try{
+  const body=new FormData();body.append('file',file);if(requestId)body.append('requestId',requestId)
+  await sendUpload(`/api/portal/files?${new URLSearchParams({projectId})}`,body)
+  if(props.projectId!==projectId)return
+  await load()
+  if(props.projectId!==projectId)return
+  success.value=requestId?'Fichier envoyé pour la demande.':'Fichier déposé.'
+  if(error.value)error.value='Le fichier est enregistré, mais la liste n’a pas pu être actualisée. Actualisez la page.'
+  emit('changed')
+ }
+ catch(e:any){if(props.projectId===projectId)error.value=e?.data?.statusMessage || 'Le dépôt a échoué. Vérifiez la liste avant de réessayer.'}
+ finally{busy.value=false;input.value='';resetUpload()}
 }
 const review = async (state:'approved'|'changes') => {
  if(!reviewing.value || !canValidate.value)return
@@ -121,7 +138,8 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
    <label v-if="kind==='wiki' && !editingId" class="pr-checkbox"><input v-model="form.global" type="checkbox">Partager cet article avec tous les clients</label>
    <div class="pr-actions"><button type="button" class="pr-secondary" @click="editing=false">Annuler</button><button class="pr-primary" :disabled="busy">{{busy?'Enregistrement…':'Enregistrer'}}</button></div>
   </form>
-  <p v-if="!canWrite && !admin" class="pr-reader-note">Votre accès est en lecture seule. Vous pouvez consulter et télécharger les ressources du projet.</p><label v-if="kind==='file' && canWrite" class="pr-upload"><UIcon name="i-tabler-cloud-upload"/><strong>{{busy?'Dépôt en cours…':'Déposer un fichier'}}</strong><span>10 Mo par fichier · espace privé du projet</span><input type="file" :disabled="busy" aria-label="Choisir un fichier à déposer" @change="upload"></label>
+  <p v-if="!canWrite && !admin" class="pr-reader-note">Votre accès est en lecture seule. Vous pouvez consulter et télécharger les ressources du projet.</p><label v-if="kind==='file' && canWrite" class="pr-upload"><UIcon name="i-tabler-cloud-upload"/><strong>{{projectUploading?'Dépôt en cours…':'Déposer un fichier'}}</strong><span>50 Mo par fichier · 500 Mo de stockage par projet</span><input type="file" :disabled="busy" aria-label="Choisir un fichier à déposer" @change="upload"></label>
+  <div v-if="kind==='file' && projectUploading" class="pr-upload-progress" role="status" aria-live="polite"><span>{{uploadProcessing?'Transfert terminé · enregistrement du fichier…':uploadProgress===null?'Préparation du transfert…':`Transfert : ${uploadProgress} %`}}</span><progress :value="uploadProgress ?? undefined" max="100" aria-label="Progression du transfert du fichier"/></div>
   <section v-if="kind==='file' && fileRequests.length" class="pr-file-requests"><div class="pr-request-heading"><h3>Demandes de fichiers</h3><span>{{fileRequests.filter(request=>request.status==='open').length}} en attente</span></div><article v-for="request in fileRequests" :key="request.id" class="pr-file-request"><div class="pr-request-copy"><div><h4>{{request.title}}</h4><span :class="['pr-request-status',request.status]">{{request.status==='open'?'À envoyer':'Reçu'}}</span></div><p v-if="request.description">{{request.description}}</p><small v-if="request.responsibleName || request.dueDate">{{request.responsibleName || 'Équipe client'}} · {{portalDate(request.dueDate || '')}}</small><small v-if="request.status==='fulfilled'">{{request.uploadedBy||'Client'}} · {{request.fileName||'Fichier envoyé'}}</small></div><label v-if="!admin && canWrite && request.status==='open'" class="pr-request-file"><UIcon name="i-tabler-cloud-upload"/><span>{{busy?'Envoi…':'Choisir le fichier'}}</span><input type="file" :disabled="busy" :aria-label="'Envoyer le fichier demandé : '+request.title" @change="upload($event,request.id)"></label><small v-else-if="admin && request.status==='open'" class="pr-request-meta">Demande envoyée le {{portalDate(request.createdAt)}}</small></article></section>
   <div v-if="kind==='payment' && items.length" class="pr-money"><div><span>À régler</span><strong>{{money(items.filter(r=>r.status==='due').reduce((s,r)=>s+r.amount,0))}}</strong></div><div><span>Déjà réglé</span><strong>{{money(items.filter(r=>r.status==='paid').reduce((s,r)=>s+r.amount,0))}}</strong></div><p>Le statut est confirmé par MC Studio après réception du règlement.</p></div>
   <div class="pr-toolbar"><span>{{items.length}} ressource{{items.length>1?'s':''}}</span><label class="pr-search-box"><UIcon name="i-tabler-search"/><input v-model="search" class="pr-search" aria-label="Rechercher une ressource" placeholder="Rechercher…"></label></div>
@@ -231,6 +249,8 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-upload span{font-size:12px;color:var(--portal-muted)}
 .pr-upload input,.pr-request-file input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .pr-upload:focus-within,.pr-request-file:focus-within{outline:2px solid var(--portal-accent);outline-offset:3px}
+.pr-upload-progress{display:grid;gap:8px;margin:-8px 0 24px;font-size:12px;color:var(--portal-muted)}
+.pr-upload-progress progress{width:100%;height:6px;accent-color:var(--portal-accent)}
 .pr-reader-note{font-size:12px;color:var(--portal-muted);padding:14px 16px;border:1px solid var(--portal-line);border-radius:8px;margin:16px 0;background:var(--portal-surface)}
 .pr-editor{display:grid;gap:24px;padding:24px;border:1px solid var(--portal-line);background:var(--portal-surface);border-radius:8px;margin-bottom:24px}
 .pr label:not(.pr-upload,.pr-search-box,.pr-request-file){display:grid;gap:8px;margin-top:24px;font-size:13px}

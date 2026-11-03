@@ -94,6 +94,13 @@ CREATE TABLE IF NOT EXISTS resources (
 
 );
 
+CREATE TABLE IF NOT EXISTS portal_asset_folders (
+ id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ label TEXT NOT NULL, name_key TEXT NOT NULL, created_by TEXT NOT NULL REFERENCES users(id),
+ created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE(project_id,name_key)
+);
+
 CREATE TABLE IF NOT EXISTS portal_assets (
  id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
  title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '', category TEXT NOT NULL,
@@ -277,5 +284,23 @@ CREATE TABLE IF NOT EXISTS portal_milestones (
 CREATE TABLE IF NOT EXISTS portal_file_request_assignments (
  request_id TEXT PRIMARY KEY REFERENCES portal_file_requests(id) ON DELETE CASCADE,
  responsible_id TEXT REFERENCES users(id), due_date TEXT NOT NULL DEFAULT ''
+);
+
+-- Additive object references preserve existing base64 files and assets.
+CREATE TABLE IF NOT EXISTS portal_uploads (
+ id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ kind TEXT NOT NULL CHECK(kind IN ('file','asset')), client_key TEXT NOT NULL,
+ staging_key TEXT NOT NULL UNIQUE, file_name TEXT NOT NULL, mime_type TEXT NOT NULL,
+ file_size INTEGER NOT NULL, metadata TEXT NOT NULL, expires_at TEXT NOT NULL,
+ result_id TEXT, created_at TEXT NOT NULL,
+ UNIQUE(user_id,client_key)
+);
+CREATE INDEX IF NOT EXISTS portal_uploads_project_idx ON portal_uploads(project_id,expires_at);
+CREATE TABLE IF NOT EXISTS portal_objects (
+ id TEXT PRIMARY KEY, object_key TEXT NOT NULL UNIQUE,
+ resource_id TEXT UNIQUE REFERENCES resources(id) ON DELETE SET NULL,
+ asset_id TEXT UNIQUE REFERENCES portal_assets(id) ON DELETE SET NULL,
+ created_at TEXT NOT NULL
 );
 `
