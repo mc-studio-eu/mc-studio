@@ -29,8 +29,10 @@ const heroReferences = [
   { name: 'Maison AWL', image: '/img/project/maison-awl/logo-black.png', className: 'global-home__reference--maison' },
   { name: 'Personal', image: '/img/clients/personal.svg', className: 'global-home__reference--personal' },
   { name: 'Arises', image: '/img/clients/arises.svg', className: 'global-home__reference--arises' },
-  { name: 'Shika Consulting', image: '/img/clients/shika-consulting.webp', className: 'global-home__reference--shika', showLabel: false }
-  ,{ name: 'Sotraya', image: '/img/clients/sotraya.svg', className: 'global-home__reference--sotraya' }
+  { name: 'Shika Consulting', image: '/img/clients/shika-consulting.webp', className: 'global-home__reference--shika', showLabel: false },
+  { name: 'Sotraya', image: '/img/clients/sotraya.svg', className: 'global-home__reference--sotraya' },
+  { name: 'Abri Toi', image: '/img/clients/abri-toi.png', className: 'global-home__reference--abri-toi', showLabel: false },
+  { name: 'Newlense', image: '/img/clients/newlense.webp', className: 'global-home__reference--newlense', showLabel: false }
 ]
 
 onMounted(() => {
@@ -196,6 +198,7 @@ useSeoMeta({
 .global-home__reference--personal img { border-radius: 7px; }
 .global-home__reference--arises img { filter: grayscale(1); }
 .global-home__reference--shika img { width: 82px; flex-basis: 82px; filter: brightness(0) invert(1); }
+.global-home__reference--abri-toi img, .global-home__reference--newlense img { width: 120px; height: 40px; flex-basis: 120px; }
 @keyframes hero-reference-marquee { to { transform: translateX(-50%); } }
 .global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: opacity 450ms ease, filter 450ms ease, transform 450ms cubic-bezier(.22,1,.36,1); }
 .global-home-hero-word-enter-from { opacity: 0; filter: blur(8px); transform: translateY(.65em); }
@@ -278,6 +281,7 @@ useSeoMeta({
   .global-home__reference { width: 160px; height: 58px; gap: 8px; font-size: 11px; }
   .global-home__reference img { width: 28px; height: 28px; flex-basis: 28px; }
   .global-home__reference--shika img { width: 68px; flex-basis: 68px; }
+  .global-home__reference--abri-toi img, .global-home__reference--newlense img { width: 100px; height: 34px; flex-basis: 100px; }
   .home-business-content__separator { margin-block: 24px; }
   .projects-showcase__link { width: fit-content; }
   .projects-showcase__frame { margin-top: 32px; border-radius: 20px; background-size: 32px 32px; }
