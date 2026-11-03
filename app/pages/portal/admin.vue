@@ -1,7 +1,10 @@
 <script setup lang="ts">
 
 type Project = { id: string; organizationId: string; name: string; description: string; currentPhase: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; dueDate: string; createdAt?: string; updatedAt?: string }
-type Client = { id: string; name: string; initials: string; contact: string; email: string; projects: Project[]; projectId: string; project: string; description?: string; currentPhase?: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; due: string; tone: string; invitedEmail?: string | null }
+type TeamMember = { id: string; name: string; email: string; createdAt: string }
+type TeamInvitation = { id: string; email: string; expiresAt: string }
+type InviteResult = { email: string; inviteUrl?: string; emailSent?: boolean; error?: string }
+type Client = { members: TeamMember[]; invitations: TeamInvitation[]; id: string; name: string; initials: string; contact: string; email: string; projects: Project[]; projectId: string; project: string; description?: string; currentPhase?: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; due: string; tone: string; invitedEmail?: string | null }
 
 const ready = ref(false)
 
@@ -40,9 +43,10 @@ const inviteClient = ref<Client | null>(null)
 
 const inviteEmail = ref('')
 
-const inviteUrl = ref('')
-
-const inviteSent = ref(false)
+const inviteResults = ref<InviteResult[]>([])
+const inviteError = ref('')
+const invitationActionBusy = ref('')
+const inviteProgress = ref(0)
 
 const inviteBusy = ref(false)
 
@@ -95,7 +99,7 @@ const loadClients = async () => {
     const latest = projects[0]
     return {
       ...row,
-      projects,
+      projects, members: row.members || [], invitations: row.invitations || [],
       initials: String(row.name).split(/\s+/).slice(0, 2).map((part: string) => part[0]).join('').toUpperCase(),
       contact: row.contact || 'Invitation en attente', email: row.email || '',
       projectId: latest?.id || '', project: latest?.name || 'Projet à créer', description: latest?.description || '', currentPhase: latest?.currentPhase || 'Cadrage', reviewState: latest?.reviewState, reviewFeedback: latest?.reviewFeedback,
@@ -103,6 +107,7 @@ const loadClients = async () => {
       tone: ['gold', 'blue', 'green'][index % 3]
     }
   })
+  if (selected.value) selected.value = clients.value.find(client => client.id === selected.value?.id) || null
 
 }
 
@@ -144,7 +149,7 @@ const addClient = async () => {
 
   section.value = 'clients'
 
-  if (newEmail.value.trim() && created) { inviteClient.value = created; inviteEmail.value = newEmail.value.trim(); showInvite.value = true }
+  if (newEmail.value.trim() && created) startInvite(created, newEmail.value.trim())
 
   newName.value = ''
 
@@ -154,29 +159,45 @@ const addClient = async () => {
 
 }
 
-const startInvite = (client: Client) => { inviteClient.value = client; inviteEmail.value = client.invitedEmail || ''; inviteUrl.value = ''; inviteSent.value = false; showInvite.value = true }
-
-const sendInvite = async () => {
-
-  if (!inviteClient.value || !inviteEmail.value.trim()) return
-
-  inviteBusy.value = true
-
-  try {
-
-    const result = await $fetch<{ inviteUrl: string; emailSent: boolean }>('/api/portal/admin/invitations', { method: 'POST', body: { organizationId: inviteClient.value.id, email: inviteEmail.value } })
-
-    inviteUrl.value = result.inviteUrl; inviteSent.value = result.emailSent
-
-    await loadClients()
-
-  } catch (error: any) { notice.value = error?.data?.statusMessage || 'Impossible de créer cette invitation.' }
-
-  finally { inviteBusy.value = false }
-
+const startInvite = (client: Client, email = '') => {
+  inviteClient.value = client; inviteEmail.value = email; inviteResults.value = []; inviteError.value = ''; inviteProgress.value = 0; showInvite.value = true
 }
-
-const copyInvite = async () => { await navigator.clipboard.writeText(inviteUrl.value); notice.value = 'Lien d’invitation copié.' }
+const sendInvite = async () => {
+  if (!inviteClient.value || inviteBusy.value) return
+  const emails = [...new Set(inviteEmail.value.split(/[\s,;]+/).map(email => email.trim().toLowerCase()).filter(Boolean))]
+  inviteError.value = ''
+  if (!emails.length || emails.length > 20 || emails.some(email => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254)) {
+    inviteError.value = 'Saisissez de 1 à 20 adresses e-mail valides, séparées par une virgule ou un retour à la ligne.'; return
+  }
+  inviteBusy.value = true; inviteResults.value = []; inviteProgress.value = 0
+  const clientId = inviteClient.value.id
+  try {
+    for (const email of emails) {
+      try {
+        const result = await $fetch<{ inviteUrl: string; emailSent: boolean }>('/api/portal/admin/invitations', { method: 'POST', body: { organizationId: clientId, email } })
+        inviteResults.value.push({ email, ...result })
+      } catch (error: any) { inviteResults.value.push({ email, error: error?.data?.statusMessage || 'Invitation impossible. Réessayez.' }) }
+      inviteProgress.value++
+    }
+    await loadClients()
+  } catch { inviteError.value = 'La liste des accès n’a pas pu être actualisée. Les résultats ci-dessous indiquent les invitations créées.' }
+  finally { inviteBusy.value = false }
+}
+const copyInvite = async (url: string) => {
+  try { await navigator.clipboard.writeText(url); notice.value = 'Lien d’invitation copié.' }
+  catch { inviteError.value = 'Copie impossible. Sélectionnez le lien pour le copier manuellement.' }
+}
+const revokeInvitation = async (invitation: TeamInvitation) => {
+  if (!selected.value || invitationActionBusy.value) return
+  invitationActionBusy.value = invitation.id
+  try {
+    await $fetch(`/api/portal/admin/invitations/${invitation.id}`, { method: 'DELETE', query: { organizationId: selected.value.id } })
+    await loadClients(); notice.value = 'Invitation annulée : le lien ne peut plus être utilisé.'
+  } catch (error: any) { notice.value = error?.data?.statusMessage || 'Impossible d’annuler cette invitation.' }
+  finally { invitationActionBusy.value = '' }
+}
+const invitationExpired = (expiresAt: string) => expiresAt <= new Date().toISOString()
+const retryInvites = () => { inviteEmail.value = inviteResults.value.filter(result => result.error).map(result => result.email).join('\n'); inviteResults.value = []; inviteError.value = '' }
 
 const openClient = (client: Client) => {
 
@@ -345,11 +366,11 @@ const saveProjectPrompt = async () => {
 
             <button class="back-to-clients" @click="selected = null"><UIcon name="i-tabler-arrow-left" /> Tous les clients</button>
 
-            <div class="admin-title-row"><div class="client-heading"><span :class="['client-logo', selected.tone]">{{ selected.initials }}</span><div><h1>{{ selected.name }}</h1><p class="subheading">Espace client sécurisé · {{ selected.projects.length }} projet{{ selected.projects.length > 1 ? 's' : '' }}</p></div></div><div class="detail-actions"><button class="create-button" @click="showAddProject = true"><UIcon name="i-tabler-plus" />Ajouter un projet</button><button class="wa-button" @click="startInvite(selected)"><UIcon name="i-tabler-mail-forward" />{{ selected.email ? 'Gérer l’accès' : 'Inviter le client' }}</button></div></div>
+            <div class="admin-title-row"><div class="client-heading"><span :class="['client-logo', selected.tone]">{{ selected.initials }}</span><div><h1>{{ selected.name }}</h1><p class="subheading">Espace client sécurisé · {{ selected.projects.length }} projet{{ selected.projects.length > 1 ? 's' : '' }}</p></div></div><div class="detail-actions"><button class="create-button" @click="showAddProject = true"><UIcon name="i-tabler-plus" />Ajouter un projet</button><button class="wa-button" @click="startInvite(selected)"><UIcon name="i-tabler-mail-forward" />Inviter des personnes</button></div></div>
 
             <section class="admin-card project-list-card"><div class="card-heading"><h2>Projets du client</h2></div><div v-if="selected.projects.length" class="client-project-list"><button v-for="project in selected.projects" :key="project.id" :class="['client-project-item', { selected: selectedProjectId === project.id }]" @click="selectedProjectId = project.id; syncProjectForm()"><span><strong>{{ project.name }}</strong><small>{{ project.status }} · {{ project.progress }} % · {{ project.dueDate || 'Livraison à définir' }}</small></span><UIcon name="i-tabler-chevron-right" /></button></div><p v-else class="empty-projects">Ce client n’a pas encore de projet.</p></section>
 
-            <template v-if="activeProject"><section class="client-detail-grid"><article class="admin-card"><h2>{{ selected.contact }}</h2><p v-if="selected.email">{{ selected.email }}</p><p v-else class="contact-note">Aucun compte client. Envoyez une invitation pour ouvrir l’accès.</p><button v-if="selected.invitedEmail" class="quiet-button" @click="startInvite(selected)">Invitation en attente · renvoyer</button><p class="contact-note">Le client ne verra que les projets de son organisation.</p><div class="client-review-note"><p>{{ activeProject.reviewFeedback || (activeProject.reviewState === 'approved' ? 'Dernière maquette validée.' : activeProject.reviewState === 'changes' ? 'Demande de modifications reçue.' : 'Aucun retour pour le moment.') }}</p></div></article><article class="admin-card"><span class="admin-status"><i></i>{{ activeProject.status }}</span><h2>{{ activeProject.name }}</h2><p class="project-type">Visible par le client après connexion</p><div class="admin-progress-meta"><span>Avancement</span><strong>{{ activeProject.progress }} %</strong></div><div class="admin-progress"><i :style="{ width: `${activeProject.progress}%` }" /></div><div class="due-row"><span>Livraison prévue</span><strong>{{ activeProject.dueDate || 'À définir' }}</strong></div></article></section>
+            <template v-if="activeProject"><section class="client-detail-grid"><article class="admin-card team-card"><div class="card-heading"><h2>Équipe du client <span class="team-count">{{ selected.members.length }}</span></h2><button class="quiet-button" @click="startInvite(selected)"><UIcon name="i-tabler-user-plus" />Inviter</button></div><p class="contact-note">Chaque personne dispose de son compte et accède aux projets de {{ selected.name }}.</p><div v-if="!selected.members.length" class="contact-note">Aucun compte activé pour le moment.</div><ul class="team-list"><li v-for="member in selected.members" :key="member.id"><span class="team-avatar">{{ member.name.slice(0,1).toUpperCase() }}</span><div><strong>{{ member.name }}</strong><small>{{ member.email }}</small></div><span class="team-badge">Actif</span></li></ul><template v-if="selected.invitations.length"><h3 class="team-pending-title">Invitations · {{ selected.invitations.length }}</h3><ul class="team-list"><li v-for="invitation in selected.invitations" :key="invitation.id"><div><strong>{{ invitation.email }}</strong><small>{{ invitationExpired(invitation.expiresAt) ? 'Expirée' : 'En attente · expire le '+new Date(invitation.expiresAt).toLocaleDateString('fr-FR') }}</small></div><div class="team-actions"><button class="quiet-button" :disabled="!!invitationActionBusy" @click="startInvite(selected,invitation.email)">Renvoyer</button><button class="quiet-button" :disabled="!!invitationActionBusy" @click="revokeInvitation(invitation)">{{ invitationActionBusy===invitation.id?'…':'Annuler' }}</button></div></li></ul></template><div class="client-review-note"><p>{{ activeProject.reviewFeedback || (activeProject.reviewState === 'approved' ? 'Dernière maquette validée.' : activeProject.reviewState === 'changes' ? 'Demande de modifications reçue.' : 'Aucun retour pour le moment.') }}</p></div></article><article class="admin-card"><span class="admin-status"><i></i>{{ activeProject.status }}</span><h2>{{ activeProject.name }}</h2><p class="project-type">Visible par le client après connexion</p><div class="admin-progress-meta"><span>Avancement</span><strong>{{ activeProject.progress }} %</strong></div><div class="admin-progress"><i :style="{ width: `${activeProject.progress}%` }" /></div><div class="due-row"><span>Livraison prévue</span><strong>{{ activeProject.dueDate || 'À définir' }}</strong></div></article></section>
 
             <section class="admin-card phases-card"><div class="card-heading"><div><h2>Modifier le projet</h2></div><button class="quiet-button delete-button" @click="requestDelete(selected, 'project')"><UIcon name="i-tabler-trash" />Supprimer ce projet</button></div><form class="project-edit" @submit.prevent="saveProject"><label>Nom du projet<input v-model="projectForm.name" required></label><label>Étape actuelle<select v-model="projectForm.currentPhase"><option>Cadrage</option><option>Design</option><option>Développement</option><option>Mise en ligne</option></select></label><label>Statut<select v-model="projectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select></label><label>Avancement (%)<input v-model.number="projectForm.progress" type="number" min="0" max="100" required></label><label>Date de livraison<input v-model="projectForm.dueDate" type="date"></label><label class="wide">Description visible par le client<textarea v-model="projectForm.description" rows="3" placeholder="Présentez brièvement le projet"></textarea></label><button class="create-button" :disabled="projectBusy">{{ projectBusy ? 'Enregistrement…' : 'Enregistrer le projet' }}</button></form></section></template>
 
@@ -391,7 +412,7 @@ const saveProjectPrompt = async () => {
 
       <div v-if="showAddProject" class="modal-backdrop" @click.self="!projectBusy && (showAddProject = false)"><form class="create-modal" @submit.prevent="addProject"><button type="button" class="modal-close" aria-label="Fermer" :disabled="projectBusy" @click="showAddProject = false">×</button><h2>Ajouter un projet</h2><p class="subheading">Nouveau projet pour {{ selected?.name }}. Il apparaîtra dans son espace client.</p><label for="new-project-name">Nom du projet</label><input id="new-project-name" v-model="newProjectForm.name" required minlength="2" maxlength="160" placeholder="Ex. Identité visuelle"><label for="new-project-description">Description visible par le client</label><textarea id="new-project-description" v-model="newProjectForm.description" rows="3" maxlength="1500" placeholder="Présentez brièvement le projet"></textarea><label for="new-project-phase">Étape actuelle</label><select id="new-project-phase" v-model="newProjectForm.currentPhase"><option>Cadrage</option><option>Design</option><option>Développement</option><option>Mise en ligne</option></select><label for="new-project-status">Statut</label><select id="new-project-status" v-model="newProjectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select><label for="new-project-progress">Avancement (%)</label><input id="new-project-progress" v-model.number="newProjectForm.progress" type="number" min="0" max="100" required><label for="new-project-due">Date de livraison</label><input id="new-project-due" v-model="newProjectForm.dueDate" type="date"><div class="modal-actions"><button class="quiet-button" type="button" :disabled="projectBusy" @click="showAddProject = false">Annuler</button><button class="create-button" type="submit" :disabled="projectBusy"><UIcon name="i-tabler-plus" />{{ projectBusy ? 'Création…' : 'Créer le projet' }}</button></div></form></div>
 
-      <div v-if="showInvite" class="modal-backdrop" @click.self="showInvite = false"><form class="create-modal" @submit.prevent="sendInvite"><button type="button" class="modal-close" aria-label="Fermer" @click="showInvite = false">×</button><h2>{{ inviteSent ? 'Invitation envoyée' : inviteUrl ? 'Lien prêt à partager' : 'Inviter un client' }}</h2><p class="subheading">{{ inviteClient?.name }} · le lien expire après 7 jours et ne peut être utilisé qu’une fois.</p><template v-if="!inviteUrl"><label for="invite-email">Adresse e-mail du client</label><input id="invite-email" v-model="inviteEmail" type="email" required placeholder="client@entreprise.fr"><div class="modal-actions"><button class="quiet-button" type="button" @click="showInvite = false">Annuler</button><button class="create-button" type="submit" :disabled="inviteBusy"><UIcon name="i-tabler-mail-forward" />{{ inviteBusy ? 'Envoi…' : 'Créer et envoyer le lien' }}</button></div></template><template v-else><p class="invite-result" role="status">{{ inviteSent ? 'E-mail envoyé. Vous pouvez aussi copier le lien pour le partager.' : 'E-mail non envoyé. Vérifiez la configuration Resend et partagez ce lien manuellement.' }}</p><input :value="inviteUrl" readonly aria-label="Lien d’invitation"><div class="modal-actions"><button class="quiet-button" type="button" @click="showInvite = false">Fermer</button><button class="create-button" type="button" @click="copyInvite"><UIcon name="i-tabler-copy" />Copier le lien</button></div></template></form></div>
+      <div v-if="showInvite" class="modal-backdrop" @click.self="!inviteBusy && (showInvite = false)"><form class="create-modal team-invite-modal" @submit.prevent="sendInvite"><button type="button" class="modal-close" aria-label="Fermer" :disabled="inviteBusy" @click="showInvite = false">×</button><h2>Inviter des personnes</h2><p class="subheading">{{ inviteClient?.name }} · un compte personnel par adresse, avec accès aux projets de ce client. Chaque lien est valable 7 jours et utilisable une fois.</p><p v-if="inviteError" class="team-error" role="alert">{{ inviteError }}</p><template v-if="!inviteResults.length && !inviteBusy"><label for="invite-emails">Adresses e-mail</label><textarea id="invite-emails" v-model="inviteEmail" rows="5" required placeholder="paul@entreprise.fr&#10;marie@entreprise.fr" aria-describedby="invite-help"/><p id="invite-help" class="contact-note">Jusqu’à 20 personnes. Séparez les adresses par une virgule, un espace ou un retour à la ligne.</p><div class="modal-actions"><button class="quiet-button" type="button" @click="showInvite = false">Annuler</button><button class="create-button" type="submit"><UIcon name="i-tabler-mail-forward" />Créer et envoyer les invitations</button></div></template><template v-else><p v-if="inviteBusy" class="contact-note" role="status" aria-live="polite">Création des invitations… {{ inviteProgress }} traitée(s).</p><div class="invite-results"><article v-for="result in inviteResults" :key="result.email"><strong>{{ result.email }}</strong><p :class="{'team-error':!!result.error}">{{ result.error || (result.emailSent ? 'E-mail envoyé.' : 'Lien créé. E-mail non envoyé : partagez le lien manuellement.') }}</p><template v-if="result.inviteUrl"><input :value="result.inviteUrl" readonly :aria-label="'Lien d’invitation pour '+result.email"><button class="quiet-button" type="button" @click="copyInvite(result.inviteUrl!)"><UIcon name="i-tabler-copy" />Copier le lien</button></template></article></div><div v-if="!inviteBusy" class="modal-actions"><button class="quiet-button" type="button" @click="showInvite = false">Fermer</button><button v-if="inviteResults.some(result=>result.error)" class="quiet-button" type="button" @click="retryInvites">Réessayer les adresses en erreur</button><button class="create-button" type="button" @click="startInvite(inviteClient!)">Inviter d’autres personnes</button></div></template></form></div>
 
       <div v-if="deleteTarget" class="modal-backdrop" @click.self="!deleteBusy && (deleteTarget = null)"><section class="create-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-title" aria-describedby="delete-description"><button type="button" class="modal-close" aria-label="Fermer" :disabled="deleteBusy" @click="deleteTarget = null">×</button><h2 id="delete-title">Supprimer {{ deleteKind === 'client' ? 'le client' : 'le projet' }} ?</h2><p id="delete-description" class="subheading">{{ deleteKind === 'client' ? `${deleteTarget.name} et tous ses projets, comptes clients, invitations, fichiers et historiques seront définitivement supprimés.` : `Le projet « ${activeProject?.name || deleteTarget.project} » et ses fichiers, maquettes, retours et historiques seront définitivement supprimés. Le client conservera ses autres projets et son compte.` }}</p><div class="modal-actions"><button class="quiet-button" type="button" :disabled="deleteBusy" @click="deleteTarget = null">Annuler</button><button class="create-button confirm-delete" type="button" :disabled="deleteBusy" @click="deleteRecord"><UIcon name="i-tabler-trash" />{{ deleteBusy ? 'Suppression…' : 'Supprimer définitivement' }}</button></div></section></div>
 
@@ -421,6 +442,7 @@ const saveProjectPrompt = async () => {
 
 @media(max-width:680px){.detail-actions{align-items:stretch;flex-direction:column-reverse}.admin-title-row:has(.detail-actions){align-items:flex-start}.admin-nav{width:100%;position:static;padding:16px 12px 0}.admin-main{margin:0}.admin-content{padding:20px 16px}.admin-title-row h1{font-size:21px}.client-list-card{margin:0 -16px}.list-heading{padding:0 16px 14px}.admin-stats article{padding:12px}.admin-stats article strong{font-size:20px}.admin-header{padding:0 16px}.admin-brand{padding:0 4px 14px}}
 
+
 </style>
 
 <style scoped>
@@ -443,4 +465,5 @@ const saveProjectPrompt = async () => {
 .sort-direction{min-width:48px;padding:0 9px;color:var(--portal-text,#ddd)}
 @media(max-width:1100px){.table-tools{justify-content:flex-start}.table-select span{display:none}}
 @media(max-width:680px){.table-tools{width:100%;justify-content:stretch}.table-tools .admin-search{width:100%;flex-basis:100%}.table-select{flex:1}.table-select select{width:100%}}
+.team-count{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;margin-left:6px;border:1px solid var(--portal-line,#383838);border-radius:99px;font-size:12px;color:var(--portal-muted,#999)}.team-list{list-style:none;padding:0;margin:14px 0}.team-list li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--portal-line,#303030)}.team-list li>div:first-of-type{flex:1;min-width:0}.team-list strong,.team-list small{display:block;overflow-wrap:anywhere}.team-list strong{font-size:13px;font-weight:500}.team-list small{font-size:11px;color:var(--portal-muted,#999);margin-top:3px}.team-avatar{display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;background:var(--portal-raised,#292929);font-size:12px}.team-badge{font-size:10px;color:var(--portal-muted,#aaa)}.team-pending-title{font-size:12px;font-weight:500;margin:20px 0 0}.team-actions{display:flex;gap:6px;flex-wrap:wrap}.team-actions .quiet-button{padding:6px 9px;font-size:11px}.team-invite-modal{max-height:85dvh;overflow-y:auto}.team-error{color:#eea295!important;font-size:12px}.invite-results{display:grid;gap:12px;margin-top:18px}.invite-results article{padding:14px;border:1px solid var(--portal-line,#383838);border-radius:8px}.invite-results strong{overflow-wrap:anywhere;font-size:13px}.invite-results p{font-size:12px;color:var(--portal-muted,#aaa);margin:8px 0}.invite-results input{font-size:11px;margin-bottom:10px}@media(max-width:700px){.team-list li{flex-wrap:wrap}.team-actions{width:100%;justify-content:flex-end}.team-card .card-heading{gap:10px}}
 </style>

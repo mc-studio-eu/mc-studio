@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const db = await portalDb()
   const org = await db.prepare('SELECT name FROM organizations WHERE id=?').get(organizationId) as { name: string } | undefined
   if (!org) throw createError({ statusCode: 404, statusMessage: 'Client introuvable.' })
-  const existing = await db.prepare('SELECT id,organization_id FROM users WHERE email=?').get(email) as any
+  const existing = await db.prepare('SELECT id,organization_id FROM users WHERE lower(email)=?').get(email) as any
   if (existing) throw createError({ statusCode: 409, statusMessage: existing.organization_id === organizationId ? 'Cette adresse a déjà accès à cet espace.' : 'Cette adresse est déjà associée à un autre espace client.' })
   const project = await db.prepare('SELECT id FROM projects WHERE organization_id=? ORDER BY updated_at DESC LIMIT 1').get(organizationId) as { id: string } | undefined
   if (!project) throw createError({ statusCode: 400, statusMessage: 'Ajoutez un projet avant d’inviter ce client.' })
@@ -28,9 +28,14 @@ export default defineEventHandler(async (event) => {
   }
   const rawToken = newToken()
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60_000).toISOString()
-  await db.prepare('DELETE FROM invitations WHERE organization_id=? AND email=? AND accepted_at IS NULL').run(organizationId, email)
-  await db.prepare(`INSERT INTO invitations(id,organization_id,project_id,email,token_hash,expires_at,created_by) VALUES(?,?,?,?,?,?,?)
-    ON CONFLICT DO NOTHING`).run(randomUUID(), organizationId, project.id, email, hashToken(rawToken), expiresAt, admin.id)
+  await db.transaction(async () => {
+    // Serialize replacements so each address has one current invitation per client.
+    if (db.dialect === 'postgres') await db.prepare('SELECT id FROM organizations WHERE id=? FOR UPDATE').get(organizationId)
+    if (await db.prepare('SELECT id FROM users WHERE lower(email)=?').get(email)) throw createError({ statusCode: 409, statusMessage: 'Cette adresse possède déjà un compte.' })
+    await db.prepare('DELETE FROM invitations WHERE organization_id=? AND lower(email)=? AND accepted_at IS NULL').run(organizationId, email)
+    await db.prepare('INSERT INTO invitations(id,organization_id,project_id,email,token_hash,expires_at,created_by) VALUES(?,?,?,?,?,?,?)')
+      .run(randomUUID(), organizationId, project.id, email, hashToken(rawToken), expiresAt, admin.id)
+  })
   const inviteUrl = `${String(baseUrl).replace(/\/$/, '')}/portal/accept?token=${encodeURIComponent(rawToken)}`
   const config = useRuntimeConfig(event)
   const apiKey = String(config.resendApiKey || '')

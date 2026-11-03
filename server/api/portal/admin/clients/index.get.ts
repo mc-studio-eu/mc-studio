@@ -19,8 +19,14 @@ export default defineEventHandler(async (event) => {
       (SELECT feedback FROM project_reviews WHERE project_id=p.id) AS reviewFeedback
     FROM projects p ORDER BY p.updated_at DESC,p.created_at DESC`).all() as any[]
 
+  const members = await db.prepare("SELECT id,organization_id AS organizationId,name,email,created_at AS createdAt FROM users WHERE role='client' ORDER BY created_at,id").all()
+  const invitations = await db.prepare(`SELECT id,organization_id AS organizationId,email,expires_at AS expiresAt,created_at AS createdAt
+    FROM invitations WHERE accepted_at IS NULL ORDER BY created_at DESC,id`).all()
+
   return { clients: organizations.map(org => ({
     ...org,
+    members: members.filter(member => member.organizationId === org.id),
+    invitations: invitations.filter(invitation => invitation.organizationId === org.id),
     projects: projects.filter(project => project.organizationId === org.id),
   })) }
 })

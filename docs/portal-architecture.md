@@ -2,7 +2,7 @@
 
 ## Parcours
 
-L’admin ouvre `/portal/admin`, crée une fiche client et son premier projet, puis peut ajouter d’autres projets depuis cette fiche. Les projets et leurs ressources sont gérés séparément. Il peut générer une invitation au niveau du client et copier son lien ou déclencher son envoi via Resend. Le client accepte l’invitation, crée son mot de passe et retrouve son espace sur `/portal`.
+L’admin ouvre `/portal/admin`, crée une fiche client et son premier projet, puis peut ajouter d’autres projets depuis cette fiche. Les projets et leurs ressources sont gérés séparément. Il peut inviter plusieurs personnes au niveau du client (jusqu’à 20 adresses à la fois), copier les liens individuels ou déclencher leur envoi via Resend. La fiche équipe affiche tous les membres et les invitations en attente ou expirées, avec renvoi et annulation. Chaque membre accède aux projets de son organisation. Le client accepte l’invitation, crée son mot de passe et retrouve son espace sur `/portal`.
 
 - Accueil : étape, progression, échéance, actions attendues et dernières nouvelles.
 - Suivi : quatre phases et journal des changements, dépôts et retours.
