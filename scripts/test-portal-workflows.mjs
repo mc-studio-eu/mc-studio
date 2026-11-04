@@ -202,6 +202,16 @@ async function run() {
       assert.equal(download.status, 200, 'client can download an asset from its custom folder')
       const deniedDownload = await fetch(`${baseUrl}/api/portal/assets/${customUpload.data.id}`, { headers: { cookie: `mc_portal_session=${outsider}` } })
       assert.equal(deniedDownload.status, 404, 'foreign organization cannot download custom-folder assets')
+      const assetId = customUpload.data.id
+      expectStatus(await request(`/api/portal/assets/${assetId}`, { method: 'DELETE', cookie: contributor }), 403, 'client cannot delete assets')
+      expectStatus(await request(`/api/portal/assets/${assetId}`, { method: 'DELETE', cookie: outsider }), 403, 'foreign client cannot delete assets')
+      expectStatus(await request(`/api/portal/assets/${assetId}`, { method: 'DELETE', cookie: admin, headers: { origin: 'https://untrusted.invalid' } }), 403, 'cross-origin deletion is rejected')
+      assert.ok(db.prepare('SELECT id FROM portal_assets WHERE id=?').get(assetId), 'denied deletion preserves the asset')
+      expectStatus(await request(`/api/portal/assets/${assetId}`, { method: 'DELETE', cookie: admin }), 200, 'admin can delete assets')
+      const afterDelete = await request('/api/portal/assets?projectId=project-a', { cookie: contributor })
+      assert.ok(!afterDelete.data.assets.some(asset => asset.id === assetId), 'deleted asset disappears for clients')
+      assert.ok(afterDelete.data.folders.some(folder => folder.id === folderId), 'deleting an asset preserves its folder')
+      expectStatus(await request(`/api/portal/assets/${assetId}`, { method: 'DELETE', cookie: admin }), 404, 'already deleted asset returns not found')
     })
 
     await test('new requests support organization-scoped creation, replies, status changes, and validation', async () => {

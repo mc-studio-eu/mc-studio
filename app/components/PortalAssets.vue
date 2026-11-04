@@ -62,10 +62,20 @@ const upload = async () => {
   finally { busy.value = false; resetUpload() }
 }
 const remove = async (asset:Asset) => {
-  if (!window.confirm(`Supprimer « ${asset.title} » de la médiathèque ?`)) return
-  busy.value=true; error.value=''
-  try { await $fetch(`/api/portal/assets/${asset.id}`, {method:'DELETE'}); focusAsset.value=null; await load(); success.value='L’image a été supprimée.' }
-  catch(e:any) { error.value=e?.data?.statusMessage || 'Suppression impossible.' }
+  if (!props.admin || busy.value) return
+  if (!window.confirm(`Supprimer « ${asset.title} » de la médiathèque ? Cette action est définitive.`)) return
+  const projectId = props.projectId
+  busy.value=true; error.value=''; success.value=''
+  try {
+    await $fetch(`/api/portal/assets/${asset.id}`, {method:'DELETE'})
+    if (props.projectId !== projectId) return
+    // Invalidate a pending list request so it cannot restore the deleted asset.
+    ++loadSequence; loading.value=false
+    assets.value=assets.value.filter(item => item.id !== asset.id)
+    if (focusAsset.value?.id === asset.id) focusAsset.value=null
+    success.value='L’élément a été supprimé.'
+  }
+  catch(e:any) { if (props.projectId === projectId) error.value=e?.data?.statusMessage || 'Suppression impossible.' }
   finally { busy.value=false }
 }
 const copyPrompt = async () => {
@@ -86,7 +96,7 @@ const copyPrompt = async () => {
       <section class="asset-content"><div class="asset-content-heading"><div><h2>{{currentCategory.label}}</h2><p>{{currentCategory.hint}}</p></div><label class="asset-search"><UIcon name="i-tabler-search"/><input v-model="search" aria-label="Rechercher dans les assets" placeholder="Rechercher"/></label></div>
         <p v-if="loading" class="asset-empty">Chargement des assets…</p>
         <div v-else-if="!categoryAssets.length" class="asset-empty"><UIcon name="i-tabler-photo"/><h3>{{search?'Aucun résultat':'Vos éléments arrivent bientôt'}}</h3><p>{{search?'Essayez un autre terme.':admin?'Ajoutez la première image de ce dossier.':'MC Studio ajoutera ici les éléments de votre identité visuelle.'}}</p></div>
-        <div v-else class="asset-grid"><article v-for="asset in categoryAssets" :key="asset.id" class="asset-card"><button class="asset-preview" :aria-label="`Prévisualiser ${asset.title}`" @click="focusAsset=asset"><img :src="`/api/portal/assets/${asset.id}`" :alt="asset.title" loading="lazy"/></button><div class="asset-caption"><div><h3>{{asset.title}}</h3><p v-if="asset.description">{{asset.description}}</p><small>{{(asset.fileSize/1024/1024).toFixed(2)}} Mo</small></div><a :href="`/api/portal/assets/${asset.id}`" :download="asset.fileName" :aria-label="`Télécharger ${asset.title}`"><UIcon name="i-tabler-download"/></a></div></article></div>
+        <div v-else class="asset-grid"><article v-for="asset in categoryAssets" :key="asset.id" class="asset-card"><button class="asset-preview" :aria-label="`Prévisualiser ${asset.title}`" @click="focusAsset=asset"><img :src="`/api/portal/assets/${asset.id}`" :alt="asset.title" loading="lazy"/></button><div class="asset-caption"><div><h3>{{asset.title}}</h3><p v-if="asset.description">{{asset.description}}</p><small>{{(asset.fileSize/1024/1024).toFixed(2)}} Mo</small></div><div class="asset-actions"><a :href="`/api/portal/assets/${asset.id}`" :download="asset.fileName" :aria-label="`Télécharger ${asset.title}`"><UIcon name="i-tabler-download"/></a><button v-if="admin" type="button" class="asset-delete" :disabled="busy" :aria-label="`Supprimer ${asset.title}`" @click="remove(asset)"><UIcon name="i-tabler-trash"/><span>Supprimer</span></button></div></div></article></div>
         <section class="prompt-card"><div class="prompt-heading"><div><h2>Prompt IA du projet</h2><p>Utilisez cette base pour générer des visuels fidèles à l’identité de ce projet.</p></div><button class="copy-prompt" :disabled="!prompt" @click="copyPrompt"><UIcon :name="copied?'i-tabler-check':'i-tabler-copy'"/>{{copied?'Copié':'Copier le prompt'}}</button></div><pre v-if="prompt">{{prompt}}</pre><p v-else class="prompt-placeholder">{{admin?'Ajoutez le prompt de ce projet dans Administration → Prompt IA.':'Le prompt de ce projet sera bientôt disponible.'}}</p></section>
       </section>
     </section>
@@ -122,10 +132,15 @@ const copyPrompt = async () => {
 .asset-preview{display:grid;place-items:center;width:100%;aspect-ratio:1.25/1;padding:18px;border:0;border-bottom:1px solid var(--line);background:var(--portal-raised,#242424);cursor:zoom-in}
 .asset-preview img{display:block;max-width:100%;max-height:100%;object-fit:contain}
 .asset-caption{display:flex;justify-content:space-between;gap:12px}
+.asset-caption>div:first-child{min-width:0;flex:1}
+.asset-actions{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.asset-delete{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:8px;border:1px solid var(--portal-danger);border-radius:8px;background:var(--portal-danger-soft);color:var(--portal-danger);font:12px Inter,Arial,sans-serif;cursor:pointer}
+.asset-delete:disabled{opacity:.5;cursor:wait}
+.asset-actions a:focus-visible,.asset-delete:focus-visible{outline:2px solid var(--portal-accent);outline-offset:2px}
 .asset-caption h3{margin:0;letter-spacing:-.01em}
 .asset-caption p{margin:4px 0;color:var(--muted);white-space:pre-wrap}
 .asset-caption small{display:block;margin-top:5px;color:var(--muted)}
-.asset-caption>a{display:grid;place-items:center;flex:none;border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.asset-actions>a{display:grid;place-items:center;flex:none;border:1px solid var(--line);color:var(--ink);text-decoration:none}
 .asset-empty{display:grid;justify-items:center;align-content:center;min-height:210px;padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:8px;background:var(--portal-surface,#181818)}
 .asset-empty>.iconify{font-size:25px}
 .asset-empty h3{margin:10px 0 3px;font-size:15px}
@@ -197,7 +212,7 @@ const copyPrompt = async () => {
 .asset-caption h3{font-size:14px;font-weight:500;overflow-wrap:anywhere}
 .asset-caption p{font-size:12px;overflow-wrap:anywhere;line-height:1.5}
 .asset-caption small{font-size:11px}
-.asset-caption>a{width:36px;height:36px;border-radius:8px}
+.asset-actions>a{width:36px;height:36px;border-radius:8px}
 .asset-card:nth-child(even) .asset-preview{background:var(--portal-bg)}
 .prompt-card{padding:24px}
 .prompt-heading h2{font-size:18px;font-weight:600}
