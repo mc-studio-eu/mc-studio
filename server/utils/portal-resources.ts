@@ -26,7 +26,6 @@ export function resourceInput(body: any) {
  const status = text(body.status, 30) || (kind === 'payment' ? 'due' : 'available')
  const allowed = kind === 'payment' ? ['due','paid','cancelled'] : kind === 'mockup' ? ['available','pending','approved','changes'] : ['available']
  if (!allowed.includes(status)) throw createError({ statusCode: 400, statusMessage: 'Statut invalide.' })
- if (kind === 'payment' && status === 'due' && !url) throw createError({ statusCode: 400, statusMessage: 'Ajoutez le lien de paiement.' })
  const dueDate = text(body.dueDate, 10)
  if (dueDate && (!/^\d{4}-\d{2}-\d{2}$/.test(dueDate) || isNaN(Date.parse(dueDate)))) throw createError({ statusCode: 400, statusMessage: 'Date invalide.' })
  return { kind, title, description: text(body.description, 3000), url, content: text(body.content, 40000), amount, status, dueDate }
