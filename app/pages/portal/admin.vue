@@ -9,7 +9,7 @@ type Client = { members: TeamMember[]; invitations: TeamInvitation[]; id: string
 
 const ready = ref(false)
 const route = useRoute()
-const resourceTab = ref<ResourceKind|'assets'|'requests'>('payment')
+const resourceTab = ref<ResourceKind|'assets'|'satisfaction'|'requests'>('payment')
 
 const section = ref<'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications'>(['growth','assets'].includes(String(useRoute().query.tab)) ? String(useRoute().query.tab) as 'growth'|'assets' : 'clients')
 

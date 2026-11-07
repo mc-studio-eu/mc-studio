@@ -130,7 +130,7 @@ async function run() {
     server = spawn(process.execPath, ['node_modules/nuxt/bin/nuxt.mjs', 'dev', '--host', '127.0.0.1', '--port', String(port), '--dotenv', dotenvPath], {
       cwd: root,
       env,
-      stdio: 'ignore'
+      stdio: process.env.PORTAL_TEST_DEBUG ? 'inherit' : 'ignore'
     })
     await waitForServer()
     const initialized = await request('/api/portal/auth/login', { method: 'POST', body: { email: 'schema-init@test.invalid', password: 'not-a-real-password' } })
@@ -142,6 +142,93 @@ async function run() {
     let contributor = await login('contributor@test.invalid')
     const viewer = await login('viewer@test.invalid')
     const outsider = await login('other@test.invalid')
+
+    await test('satisfaction questionnaires are editable, versioned, and isolated by project and role', async () => {
+      const url = '/api/portal/satisfaction?projectId=project-a'
+      expectStatus(await request(url), 401, 'anonymous survey read')
+      expectStatus(await request('/api/portal/satisfaction?projectId=project-b', { cookie: contributor }), 404, 'foreign survey read')
+      const initial = await request(url, { cookie: contributor })
+      expectStatus(initial, 200)
+      assert.equal(initial.data.revision, 0)
+      assert.equal(initial.data.response, null)
+      assert.equal(initial.data.project.name, 'Projet A')
+      assert.equal(initial.data.project.organizationName, 'Organisation A')
+      assert.equal(initial.data.respondent.name, 'Contributeur test')
+      assert.equal(initial.data.definition.sections.length, 7)
+      assert.equal(initial.data.definition.sections.flatMap(s => s.questions).length, 18)
+      assert.equal(initial.data.permissions.canSubmit, true)
+      const definition = structuredClone(initial.data.definition)
+      definition.title = 'Votre bilan du projet'
+      definition.description = 'Un questionnaire personnalisé pour ce projet.'
+      definition.sections.reverse()
+      definition.sections[0].questions.push({ id: 'custom', label: 'Votre précision', description: 'Une aide personnalisée', type: 'text', required: false, options: [] })
+      const save = (cookie, body, headers = {}) => request('/api/portal/satisfaction', { method: 'PUT', cookie, body, headers })
+      const payload = { projectId: 'project-a', revision: 0, definition }
+      expectStatus(await save(contributor, payload), 403, 'clients cannot edit definition')
+      expectStatus(await save(viewer, payload), 403, 'viewers cannot edit definition')
+      expectStatus(await save(admin, payload, { origin: 'https://foreign.invalid' }), 403, 'foreign origin cannot edit definition')
+      for (const invalid of [
+        { ...definition, title: '' },
+        { ...definition, googleReviewUrl: 'javascript:alert(1)' },
+        { ...definition, referralUrl: 'http://example.invalid' },
+        { ...definition, sections: [] },
+        { ...definition, sections: [definition.sections[0], definition.sections[0]] },
+        { ...definition, sections: [{ id: 'a', title: 'Test', description: '', questions: [{ id: 'b', label: 'Choix', description: '', type: 'choice', required: true, options: ['Oui', 'Oui'] }] }] }
+      ]) expectStatus(await save(admin, { ...payload, definition: invalid }), 400, 'invalid definition')
+      const edited = await save(admin, payload)
+      expectStatus(edited, 200, 'admin saves default-derived survey')
+      assert.equal(edited.data.revision, 1)
+      expectStatus(await save(admin, payload), 409, 'stale editor cannot overwrite newer definition')
+      const reloaded = await request(url, { cookie: contributor })
+      assert.deepEqual(reloaded.data.definition, definition)
+      const otherProject = await request('/api/portal/satisfaction?projectId=project-b', { cookie: admin })
+      assert.equal(otherProject.data.revision, 0)
+      assert.notEqual(otherProject.data.definition.title, definition.title)
+      const submit = (cookie, body, headers = {}) => request('/api/portal/satisfaction', { method: 'POST', cookie, body, headers })
+      const requiredAnswers = { experience: 9, result: 8, needs: 'Oui, totalement' }
+      const responseBody = { projectId: 'project-a', revision: 1, answers: requiredAnswers }
+      expectStatus(await submit(undefined, responseBody), 401)
+      expectStatus(await submit(admin, responseBody), 403, 'administrator cannot submit a client response')
+      expectStatus(await submit(viewer, responseBody), 403, 'viewer cannot submit')
+      expectStatus(await submit(outsider, responseBody), 404, 'foreign organization cannot submit')
+      expectStatus(await submit(contributor, responseBody, { origin: 'https://foreign.invalid' }), 403)
+      expectStatus(await submit(contributor, { ...responseBody, revision: 0 }), 409, 'stale form cannot submit')
+      expectStatus(await submit(contributor, { ...responseBody, answers: {} }), 400, 'required answers enforced')
+      for (const answers of [
+        { ...requiredAnswers, experience: 0 }, { ...requiredAnswers, experience: 11 },
+        { ...requiredAnswers, experience: '9' }, { ...requiredAnswers, experience: 3.5 },
+        { ...requiredAnswers, needs: 'An invented choice' }, { ...requiredAnswers, unknown: 'extra' },
+        { ...requiredAnswers, custom: 'x'.repeat(10001) }
+      ]) expectStatus(await submit(contributor, { ...responseBody, answers }), 400, 'invalid answer rejected')
+      const filled = { ...responseBody, answers: { ...requiredAnswers, custom: 'Mon retour personnalisé.' } }
+      const concurrent = await Promise.all([submit(contributor, filled), submit(contributor, filled)])
+      assert.deepEqual(concurrent.map(result => result.status).sort(), [200, 409], 'one immutable response per user/project')
+      const response = concurrent.find(result => result.status === 200).data.response
+      assert.equal(response.respondent.name, 'Contributeur test')
+      assert.deepEqual(response.answers, filled.answers)
+      assert.deepEqual(response.definition, definition)
+      const own = await request(url, { cookie: contributor })
+      assert.equal(own.data.response.id, response.id)
+      assert.equal(own.data.permissions.canSubmit, false)
+      const colleague = await request(url, { cookie: decider })
+      assert.equal(colleague.data.response, null, 'another client cannot read a colleague’s response')
+      expectStatus(await request('/api/portal/satisfaction/responses?projectId=project-a', { cookie: contributor }), 403)
+      const adminResponses = await request('/api/portal/satisfaction/responses?projectId=project-a', { cookie: admin })
+      expectStatus(adminResponses, 200)
+      assert.equal(adminResponses.data.responses.length, 1)
+      assert.equal(adminResponses.data.responses[0].id, response.id)
+      const next = structuredClone(definition)
+      next.title = 'Nouveau titre après réponse'
+      next.sections = [{ id: 'new-section', title: 'Nouvelle section', description: '', questions: [] }]
+      next.googleReviewUrl = ''
+      next.referralUrl = 'https://example.invalid/referral'
+      expectStatus(await save(admin, { projectId: 'project-a', revision: 1, definition: next }), 200)
+      const snapshot = await request(url, { cookie: contributor })
+      assert.equal(snapshot.data.definition.title, next.title)
+      assert.deepEqual(snapshot.data.response.definition, definition, 'saved response retains its original labels, order, options and links')
+      assert.deepEqual(snapshot.data.response.answers, filled.answers)
+      assert.equal(db.prepare('SELECT COUNT(*) AS total FROM portal_satisfaction_responses WHERE project_id=?').get('project-a').total, 1)
+    })
 
     await test('asset folders persist per project and accept uploads only into that project’s folders', async () => {
       const createFolder = (cookie, projectId, label, headers = {}) => request('/api/portal/assets/folders', {

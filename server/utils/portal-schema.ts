@@ -286,6 +286,20 @@ CREATE TABLE IF NOT EXISTS portal_file_request_assignments (
  responsible_id TEXT REFERENCES users(id), due_date TEXT NOT NULL DEFAULT ''
 );
 
+CREATE TABLE IF NOT EXISTS portal_satisfaction_surveys (
+ project_id TEXT PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE,
+ definition TEXT NOT NULL, revision INTEGER NOT NULL CHECK(revision>0),
+ updated_by TEXT REFERENCES users(id), updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS portal_satisfaction_responses (
+ id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+ user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ revision INTEGER NOT NULL CHECK(revision>=0), submitted_at TEXT NOT NULL,
+ respondent TEXT NOT NULL, definition TEXT NOT NULL, answers TEXT NOT NULL,
+ UNIQUE(project_id,user_id)
+);
+CREATE INDEX IF NOT EXISTS portal_satisfaction_responses_project_idx ON portal_satisfaction_responses(project_id,submitted_at);
+
 -- Additive object references preserve existing base64 files and assets.
 CREATE TABLE IF NOT EXISTS portal_uploads (
  id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
