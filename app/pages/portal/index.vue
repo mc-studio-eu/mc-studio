@@ -56,7 +56,7 @@ onMounted(async()=>{
 </script>
 <template>
  <main class="portal">
-  <aside class="sidebar"><div class="brand"><PortalBrand/><span>Espace de travail</span></div><div class="identity"><span>{{organization.slice(0,1) || 'M'}}</span><div><strong>{{organization || 'MC Studio'}}</strong><small>ESPACE CLIENT</small></div><UIcon name="i-tabler-lock"/></div><p class="nav-label">ESPACE CLIENT</p><nav aria-label="Espace client">
+  <aside class="sidebar"><div class="brand"><PortalBrand/></div><div class="identity"><span>{{organization.slice(0,1) || 'M'}}</span><div><strong>{{organization || 'MC Studio'}}</strong><small>ESPACE CLIENT</small></div><UIcon name="i-tabler-lock"/></div><p class="nav-label">ESPACE CLIENT</p><nav aria-label="Espace client">
    <button type="button" :class="{active:view==='home'}" :aria-current="view==='home'?'page':undefined" @click="navigate('home')"><UIcon name="i-tabler-home"/>Vue d’ensemble</button>
    <div v-for="group in navigationGroups" :key="group.id" class="nav-group">
     <button type="button" class="nav-group-toggle" :class="{'group-active':group.views.includes(view)}" :aria-expanded="expandedGroup===group.id" :aria-controls="'nav-group-'+group.id" @click="expandedGroup=expandedGroup===group.id?null:group.id">
@@ -113,9 +113,8 @@ onMounted(async()=>{
 .portal :focus-visible{outline:2px solid var(--portal-accent);outline-offset:3px}
 .portal button:disabled{opacity:.5;cursor:default}
 .sidebar{position:fixed;inset:0 auto 0 0;width:248px;background:var(--portal-surface);border-right:1px solid var(--portal-line);display:flex;flex-direction:column;z-index:5;overflow-y:auto}
-.brand{height:86px;padding:22px 24px;border-bottom:1px solid var(--portal-line)}
+.brand{height:72px;display:flex;align-items:center;padding:22px 24px;border-bottom:1px solid var(--portal-line)}
 .brand:deep(img){width:128px}
-.brand>span{display:block;color:var(--portal-muted);font-size:12px;margin-top:7px}
 .identity{display:flex;align-items:center;gap:10px;margin:20px 16px 4px;padding:11px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-raised)}
 .identity>span:not(.iconify){display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--portal-line);background:var(--portal-accent-soft);color:var(--portal-accent-text);border-radius:8px;font-size:14px;font-weight:600;flex:none}
 .identity>div{flex:1;min-width:0}
@@ -269,7 +268,7 @@ onMounted(async()=>{
 .resource-table th,.resource-table td{padding-left:18px;padding-right:18px}}
 @media(max-width:700px){.sidebar{position:static;width:100%;border-right:0;border-bottom:1px solid var(--portal-line)}
 .brand{height:auto;padding:18px 20px}
-.brand>span,.identity,.nav-label,.sidebar-bottom{display:none}
+.identity,.nav-label,.sidebar-bottom{display:none}
 .brand:deep(img){width:112px}
 .sidebar nav{display:grid;gap:3px;padding:0 12px 12px}
 .sidebar nav button{white-space:nowrap;font-size:12px;min-height:40px}
