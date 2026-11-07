@@ -17,6 +17,14 @@ const resourceSearch=ref(''), resourceFilter=ref('all'), resourceSort=ref('recen
 const statusLabels:Record<string,string>={available:'Disponible',due:'À régler',paid:'Réglé',cancelled:'Annulé',pending:'À valider',approved:'Validée',changes:'À modifier'}
 const visibleResources=computed(()=>resources.value.filter(r=>(resourceFilter.value==='all'||r.kind===resourceFilter.value)&&(r.title+' '+r.description).toLowerCase().includes(resourceSearch.value.toLowerCase())).slice().sort((a,b)=>resourceSort.value==='name'?a.title.localeCompare(b.title,'fr'):b.createdAt.localeCompare(a.createdAt)))
 const navigation=[{id:'home' as View,label:'Vue d’ensemble',icon:'i-tabler-home'},{id:'project' as View,label:'Suivi du projet',icon:'i-tabler-layout-board'},{id:'assets' as View,label:'Assets',icon:'i-tabler-photo'},...Object.entries(resourceLabels).map(([id,label])=>({id:id as View,label,icon:resourceIcons[id as ResourceKind]})),{id:'satisfaction' as View,label:'Satisfaction',icon:'i-tabler-heart-handshake'},{id:'notifications' as View,label:'Notifications',icon:'i-tabler-bell'},{id:'account' as View,label:'Mon compte',icon:'i-tabler-user-circle'}]
+const navigationGroups=[
+ {id:'project',label:'Projet',icon:'i-tabler-layout-board',views:['project','payment','analytics','satisfaction']},
+ {id:'resources',label:'Ressources',icon:'i-tabler-folders',views:['assets','file','mockup','link','wiki']},
+ {id:'personal',label:'Mon espace',icon:'i-tabler-user-circle',views:['notifications','account']},
+].map(group=>({...group,items:group.views.map(id=>navigation.find(item=>item.id===id)!)}))
+const expandedGroup=ref<string|null>(null)
+watch(view,tab=>{expandedGroup.value=navigationGroups.find(group=>group.views.includes(tab))?.id ?? null},{immediate:true})
+const navigationCount=(tab:View)=>tab==='payment'?payments.value.length:resources.value.filter(resource=>resource.kind===tab).length
 const onboardingDescriptions:Record<string,string>={satisfaction:'Partagez votre retour d’expérience sur le projet et la collaboration avec MC Studio.',home:'Retrouvez ici les informations clés, les dernières ressources partagées et les actualités de votre projet.',project:'Suivez les étapes, l’avancement et la prochaine livraison de votre projet.',assets:'Consultez les visuels de votre marque et copiez le prompt IA propre à ce projet.',payment:'Retrouvez vos échéances et ouvrez les liens de règlement transmis par MC Studio.',file:'Téléversez les fichiers demandés par MC Studio ou partagez un document utile au projet.',mockup:'Parcourez les maquettes, laissez vos commentaires directement sur les écrans et validez une version.',link:'Accédez rapidement aux sites et outils utiles à votre projet.',wiki:'Lisez les guides et les informations préparés par MC Studio.',notifications:'Retrouvez les nouveautés et choisissez vos notifications et la fréquence des relances.',account:'Modifiez votre mot de passe et retrouvez votre rôle dans l’équipe.',analytics:'Consultez les indicateurs de performance de votre site lorsqu’ils sont disponibles.'}
 const onboardingSteps=computed(()=>navigation.map(item=>({...item,description:onboardingDescriptions[item.id]||'Retrouvez les informations et ressources liées à cette rubrique.'})))
 const onboardingOpen=ref(false),onboardingIndex=ref(0),onboardingBusy=ref(false),onboardingError=ref(''),onboardingAvailable=ref(false)
@@ -48,7 +56,17 @@ onMounted(async()=>{
 </script>
 <template>
  <main class="portal">
-  <aside class="sidebar"><div class="brand"><PortalBrand/><span>Espace de travail</span></div><div class="identity"><span>{{organization.slice(0,1) || 'M'}}</span><div><strong>{{organization || 'MC Studio'}}</strong><small>ESPACE CLIENT</small></div><UIcon name="i-tabler-lock"/></div><p class="nav-label">ESPACE CLIENT</p><nav aria-label="Espace client"><button v-for="item in navigation" :key="item.id" :class="{active:view===item.id}" @click="navigate(item.id)"><UIcon :name="item.icon"/>{{item.label}}<span v-if="item.id==='payment'&&payments.length" class="count">{{payments.length}}</span><span v-if="Object.keys(resourceLabels).includes(item.id) && item.id!=='payment'" class="count">{{resources.filter(r=>r.kind===item.id).length}}</span></button></nav><div class="sidebar-bottom"><p class="nav-label">ASSISTANCE</p><a href="https://wa.me/33781724683" target="_blank" rel="noopener noreferrer">Contacter l’équipe<UIcon name="i-tabler-arrow-up-right"/></a><button @click="openOnboarding"><UIcon name="i-tabler-help-circle"/>Découvrir votre espace</button><button @click="signOut"><UIcon name="i-tabler-logout"/>Se déconnecter</button></div></aside>
+  <aside class="sidebar"><div class="brand"><PortalBrand/><span>Espace de travail</span></div><div class="identity"><span>{{organization.slice(0,1) || 'M'}}</span><div><strong>{{organization || 'MC Studio'}}</strong><small>ESPACE CLIENT</small></div><UIcon name="i-tabler-lock"/></div><p class="nav-label">ESPACE CLIENT</p><nav aria-label="Espace client">
+   <button type="button" :class="{active:view==='home'}" :aria-current="view==='home'?'page':undefined" @click="navigate('home')"><UIcon name="i-tabler-home"/>Vue d’ensemble</button>
+   <div v-for="group in navigationGroups" :key="group.id" class="nav-group">
+    <button type="button" class="nav-group-toggle" :class="{'group-active':group.views.includes(view)}" :aria-expanded="expandedGroup===group.id" :aria-controls="'nav-group-'+group.id" @click="expandedGroup=expandedGroup===group.id?null:group.id">
+     <UIcon :name="group.icon"/>{{group.label}}<UIcon name="i-tabler-chevron-down" class="nav-chevron" :class="{expanded:expandedGroup===group.id}"/>
+    </button>
+    <div v-show="expandedGroup===group.id" :id="'nav-group-'+group.id" class="nav-group-items">
+     <button v-for="item in group.items" :key="item.id" type="button" :class="{active:view===item.id}" :aria-current="view===item.id?'page':undefined" @click="navigate(item.id)"><UIcon :name="item.icon"/>{{item.label}}<span v-if="navigationCount(item.id)>0" class="count">{{navigationCount(item.id)}}</span></button>
+    </div>
+   </div>
+  </nav><div class="sidebar-bottom"><p class="nav-label">ASSISTANCE</p><a href="https://wa.me/33781724683" target="_blank" rel="noopener noreferrer">Contacter l’équipe<UIcon name="i-tabler-arrow-up-right"/></a><button @click="openOnboarding"><UIcon name="i-tabler-help-circle"/>Découvrir votre espace</button><button @click="signOut"><UIcon name="i-tabler-logout"/>Se déconnecter</button></div></aside>
   <div class="main"><header><div class="header-title">{{navigation.find(n=>n.id===view)?.label}} <span class="header-status"><i/>{{project.status || 'Espace privé'}}</span></div><div class="portal-header-actions"><PortalThemeToggle /><div class="user"><i>{{user.name.slice(0,1)}}</i><span>{{user.name}}</span><button class="account-shortcut" aria-label="Mon compte" @click="navigate('account')"><UIcon name="i-tabler-user-circle"/></button><button class="notification-shortcut" aria-label="Notifications" @click="navigate('notifications')"><UIcon name="i-tabler-bell"/></button><button class="mobile-exit" aria-label="Se déconnecter" @click="signOut"><UIcon name="i-tabler-logout"/></button></div></div></header>
    <div class="content">
     <p v-if="!ready || loading" class="loading" role="status">Ouverture de votre espace…</p>
@@ -111,6 +129,14 @@ onMounted(async()=>{
 .sidebar nav button.active{background:var(--portal-accent-soft);border-color:transparent;color:var(--portal-text)}
 .sidebar nav button.active>.iconify{color:var(--portal-accent-text)}
 .sidebar nav button:hover{color:var(--portal-text);background:var(--portal-raised)}
+.sidebar nav button{width:100%}
+.sidebar nav .nav-group-toggle.group-active{color:var(--portal-text)}
+.sidebar nav .nav-group-toggle.group-active>.iconify:first-child{color:var(--portal-accent-text)}
+.sidebar nav .nav-chevron{margin-left:auto;font-size:15px;transition:transform .2s}
+.sidebar nav .nav-chevron.expanded{transform:rotate(180deg)}
+.nav-group-items{display:grid;gap:3px;margin:4px 0 6px 21px;padding-left:8px;border-left:1px solid var(--portal-line)}
+.sidebar nav .nav-group-items button{padding:8px;font-size:12px;gap:8px;min-height:36px}
+.sidebar nav .nav-group-items button>.iconify{font-size:17px}
 .count{margin-left:auto;padding:1px 7px;background:var(--portal-raised);border-radius:6px;color:var(--portal-muted);font-size:11px;font-variant-numeric:tabular-nums}
 .sidebar-bottom{margin-top:auto;padding:20px 16px;border-top:1px solid var(--portal-line)}
 .sidebar-bottom .nav-label{margin:0 10px 10px}
@@ -245,9 +271,10 @@ onMounted(async()=>{
 .brand{height:auto;padding:18px 20px}
 .brand>span,.identity,.nav-label,.sidebar-bottom{display:none}
 .brand:deep(img){width:112px}
-.sidebar nav{display:flex;overflow-x:auto;gap:5px;padding:0 12px 12px}
+.sidebar nav{display:grid;gap:3px;padding:0 12px 12px}
 .sidebar nav button{white-space:nowrap;font-size:12px;min-height:40px}
-.sidebar nav .count{display:none}
+.nav-group-items{grid-template-columns:repeat(2,minmax(0,1fr));margin-left:20px}
+.sidebar nav .nav-group-items button{white-space:normal}
 .main{margin:0}
 .main>header{min-height:64px;padding:12px 16px}
 .header-title{font-size:14px;gap:8px;flex-wrap:wrap}
@@ -300,5 +327,5 @@ onMounted(async()=>{
 .onboarding-backdrop{inset:0;align-items:flex-end;justify-content:center;padding:12px;background:#0004}
 .onboarding-card{width:min(520px,100%);max-height:calc(100dvh - 24px);padding:20px}
 .onboarding-feature h2{font-size:20px}}
-@media(prefers-reduced-motion:reduce){.onboarding-progress i{transition:none}}
+@media(prefers-reduced-motion:reduce){.onboarding-progress i,.sidebar nav .nav-chevron{transition:none}}
 </style>
