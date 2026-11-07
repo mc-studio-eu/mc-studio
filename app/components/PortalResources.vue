@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { resourceLabels, resourceIcons, money, portalDate, type PortalResource, type ResourceKind, type PortalMember } from '~/types/portal'
 import { PORTAL_FILE_MAX_BYTES } from '#shared/portal-upload'
-const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'|'satisfaction'|'requests'; initialKind?:ResourceKind|'assets'|'satisfaction'|'requests'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
+const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'|'satisfaction'; initialKind?:ResourceKind|'assets'|'satisfaction'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
 const canWrite = computed(()=>Boolean(props.admin || props.canContribute))
 const canValidate = computed(()=>Boolean(props.admin || props.canReview))
 const emit = defineEmits<{changed:[]}>()
@@ -11,7 +11,7 @@ const reviewHistory=ref<ReviewDecision[]>([])
 const activity = ref<{id:string;message:string;createdAt:string}[]>([])
 type FileRequest={id:string;projectId:string;title:string;description:string;status:'open'|'fulfilled';resourceId?:string|null;fileName?:string|null;createdAt:string;fulfilledAt?:string|null;createdBy:string;responsibleId?:string;responsibleName?:string;dueDate?:string;uploadedBy?:string|null}
 const fileRequests=ref<FileRequest[]>([]),showFileRequestForm=ref(false),requestTitle=ref(''),requestDescription=ref(''),requestResponsible=ref(''),requestDueDate=ref('')
-const activeKind = ref<ResourceKind|'assets'|'satisfaction'|'requests'>(props.initialKind || 'payment')
+const activeKind = ref<ResourceKind|'assets'|'satisfaction'>(props.initialKind || 'payment')
 watch(()=>props.initialKind,value=>{if(value)activeKind.value=value})
 const kind = computed(() => props.kind || activeKind.value)
 const items = computed(() => resources.value.filter(r=>r.kind===kind.value && (r.kind!=='mockup' || Number(r.versionCount || 0)===0)))
@@ -117,9 +117,8 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 </script>
 <template>
  <section class="pr">
-  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" @click="activeKind=key"><UIcon :name="resourceIcons[key]"/>{{label}}</button><button :class="{active:kind==='assets'}" @click="activeKind='assets'"><UIcon name="i-tabler-photo"/>Assets</button><button :class="{active:kind==='requests'}" @click="activeKind='requests'"><UIcon name="i-tabler-messages"/>Demandes</button><button :class="{active:kind==='satisfaction'}" @click="activeKind='satisfaction'"><UIcon name="i-tabler-heart-handshake"/>Satisfaction</button></nav>
+  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" @click="activeKind=key"><UIcon :name="resourceIcons[key]"/>{{label}}</button><button :class="{active:kind==='assets'}" @click="activeKind='assets'"><UIcon name="i-tabler-photo"/>Assets</button><button :class="{active:kind==='satisfaction'}" @click="activeKind='satisfaction'"><UIcon name="i-tabler-heart-handshake"/>Satisfaction</button></nav>
   <PortalSatisfaction v-if="kind==='satisfaction'" :project-id="projectId" :admin="admin" @changed="emit('changed')"/>
-  <PortalRequests v-else-if="kind==='requests'" :project-id="projectId" :admin="admin" @changed="emit('changed')"/>
   <PortalAssets v-else-if="kind==='assets'" :project-id="projectId" :admin="admin"/>
   <template v-else>
   <PortalMockups v-if="kind==='mockup'" :project-id="projectId" :admin="admin" :can-contribute="canWrite" :can-review="canValidate" @changed="load();emit('changed')"/>

@@ -64,7 +64,9 @@ L’accueil présente **À faire pour vous**, calculé à partir des données du
 
 Le suivi comporte des jalons, livrables et éléments de checklist, chacun avec un responsable facultatif, une date, un état et une description du blocage. L’administration crée et modifie ces éléments ; le responsable client peut actualiser son état et son blocage. Les demandes de fichiers peuvent également recevoir un responsable et une date attendue.
 
-## Demandes du client
+## Demandes du client (ancienne rubrique)
+
+La page Demandes a été retirée de l’administration et de l’espace client. Les anciens liens ouvrent la vue d’ensemble ou le suivi du projet. Les données et API existantes sont conservées. Le fonctionnement historique ci-dessous reste documenté ; les demandes de fichiers restent disponibles dans Fichiers.
 
 La rubrique **Demandes** regroupe les demandes propres à chaque projet, séparément des annotations de maquettes. Un contributeur ou décideur peut créer une demande avec un titre et une description, puis échanger avec MC Studio dans son fil de discussion. Les membres de l’organisation peuvent consulter les demandes ; les lecteurs ne peuvent ni créer, ni répondre, ni changer leur état.
 

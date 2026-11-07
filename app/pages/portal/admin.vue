@@ -9,7 +9,7 @@ type Client = { members: TeamMember[]; invitations: TeamInvitation[]; id: string
 
 const ready = ref(false)
 const route = useRoute()
-const resourceTab = ref<ResourceKind|'assets'|'satisfaction'|'requests'>('payment')
+const resourceTab = ref<ResourceKind|'assets'|'satisfaction'>('payment')
 
 const section = ref<'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications'>(['growth','assets'].includes(String(useRoute().query.tab)) ? String(useRoute().query.tab) as 'growth'|'assets' : 'clients')
 
@@ -304,7 +304,7 @@ const updateMember=async(member:TeamMember,patch:{memberRole?:MemberRole;suspend
  catch(error:any){notice.value=error?.data?.statusMessage || 'Impossible de mettre à jour cet accès.';await loadClients()}
  finally{memberBusy.value=''}
 }
-const openNotificationProject=async(projectId:string,tab='project')=>{const client=clients.value.find(client=>client.projects.some(project=>project.id===projectId));if(client){openClient(client);selectedProjectId.value=projectId;syncProjectForm();section.value='clients';if(['requests','file','mockup'].includes(tab)){resourceTab.value=tab as ResourceKind|'requests';await nextTick();document.getElementById('admin-project-resources')?.scrollIntoView({behavior:'smooth',block:'start'})}}}
+const openNotificationProject=async(projectId:string,tab='project')=>{const client=clients.value.find(client=>client.projects.some(project=>project.id===projectId));if(client){openClient(client);selectedProjectId.value=projectId;syncProjectForm();section.value='clients';if(['file','mockup'].includes(tab)){resourceTab.value=tab as ResourceKind;await nextTick();document.getElementById('admin-project-resources')?.scrollIntoView({behavior:'smooth',block:'start'})}}}
 
 const signOut = async () => {
 
