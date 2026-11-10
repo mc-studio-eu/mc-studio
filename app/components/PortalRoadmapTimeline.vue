@@ -91,7 +91,7 @@ function barStyle(item: RoadmapPhase | RoadmapStep) {
 <template>
   <section class="rm-card rm-timeline" aria-label="Planning du projet">
     <div class="rm-timeline-heading">
-      <div><h2><UIcon name="i-tabler-chart-gantt"/> Planning du projet</h2><p>Dépliez les phases pour afficher leurs étapes.</p></div>
+      <div><h2>Planning du projet</h2><p>Dépliez les phases pour afficher leurs étapes.</p></div>
       <div v-if="calendar" class="rm-timeline-actions">
         <div class="rm-modes" role="group" aria-label="Échelle du planning">
           <button v-for="option in modes" :key="option.id" type="button" :aria-pressed="mode===option.id" @click="mode=option.id">{{ option.title }}</button>
@@ -143,8 +143,7 @@ function barStyle(item: RoadmapPhase | RoadmapStep) {
 <style scoped>
 .rm-timeline{--labels-width:clamp(160px,23%,255px);min-width:0;overflow:hidden}
 .rm-timeline-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 20px}
-.rm-timeline-heading h2{display:flex;align-items:center;gap:10px;font-size:16px;margin:0;font-weight:600}
-.rm-timeline-heading h2 .iconify{color:var(--portal-accent-text);font-size:19px}
+.rm-timeline-heading h2{font-size:16px;margin:0;font-weight:600}
 .rm-timeline-heading p,.rm-no-dates{font-size:12px;color:var(--portal-muted);margin:5px 0 0}
 .rm-no-dates{display:flex;align-items:center;gap:8px;padding:12px 20px;margin:0;border-top:1px solid var(--portal-line);background:var(--portal-accent-soft);color:var(--portal-accent-text)}
 .rm-timeline-actions,.rm-modes,.rm-paging{display:flex;align-items:center;gap:4px}
