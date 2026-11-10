@@ -33,6 +33,14 @@ async function roadmapPlan(db: PortalDatabase, projectId: string): Promise<Roadm
     s.responsible_id AS responsibleId,u.name AS responsibleName,s.blocker
     FROM portal_roadmap_steps s LEFT JOIN users u ON u.id=s.responsible_id
     WHERE s.project_id=? AND s.archived=0 ORDER BY s.position,s.id`).all(projectId)
+  const prerequisites = await db.prepare(`SELECT phase_id AS phaseId,step_id AS stepId
+    FROM portal_roadmap_phase_prerequisites WHERE project_id=? ORDER BY step_id`).all(projectId)
+  const prerequisiteIdsByPhase = new Map<string, string[]>()
+  for (const { phaseId, stepId } of prerequisites) {
+    const ids = prerequisiteIdsByPhase.get(phaseId) || []
+    ids.push(stepId)
+    prerequisiteIdsByPhase.set(phaseId, ids)
+  }
   const stepsByPhase = new Map<string, RoadmapStep[]>()
   for (const row of steps) {
     const step: RoadmapStep = {
@@ -46,7 +54,8 @@ async function roadmapPlan(db: PortalDatabase, projectId: string): Promise<Roadm
   }
   return phases.map(row => {
     const steps = stepsByPhase.get(row.id) || []
-    return { ...row, startDate: roadmapDate(row.startDate), endDate: roadmapDate(row.endDate), steps, progress: roadmapProgress(steps) }
+    return { ...row, startDate: roadmapDate(row.startDate), endDate: roadmapDate(row.endDate),
+      prerequisiteStepIds: prerequisiteIdsByPhase.get(row.id) || [], steps, progress: roadmapProgress(steps) }
   })
 }
 
@@ -87,7 +96,10 @@ export async function projectRoadmap(db: PortalDatabase, project: { id: string; 
 
 export async function syncRoadmapProject(db: PortalDatabase, projectId: string) {
   // Reopen a completed phase when active work is added or reopened in it.
-  await db.prepare(`UPDATE portal_roadmap_phases SET status='in_progress' WHERE project_id=? AND archived=0 AND status='done'
+  await db.prepare(`UPDATE portal_roadmap_phases SET status=CASE WHEN EXISTS (
+      SELECT 1 FROM portal_roadmap_phase_prerequisites r JOIN portal_roadmap_steps s ON s.id=r.step_id
+      WHERE r.project_id=portal_roadmap_phases.project_id AND r.phase_id=portal_roadmap_phases.id AND (s.archived=1 OR s.status<>'done')
+    ) THEN 'blocked' ELSE 'in_progress' END WHERE project_id=? AND archived=0 AND status='done'
     AND EXISTS (SELECT 1 FROM portal_roadmap_steps s WHERE s.phase_id=portal_roadmap_phases.id AND s.archived=0 AND s.status<>'done')`).run(projectId)
   const summary = roadmapSummary(await roadmapPlan(db, projectId))
   await db.prepare('UPDATE projects SET progress=?,current_phase=?,updated_at=? WHERE id=?')

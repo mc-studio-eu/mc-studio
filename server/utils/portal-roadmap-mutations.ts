@@ -88,6 +88,62 @@ async function roadmapItem(db: PortalDatabase, table: RoadmapTable, id: string) 
   return await db.prepare(`SELECT * FROM ${table} WHERE id=? AND archived=0`).get(id) || missing('Élément de feuille de route introuvable.')
 }
 
+function needsPrerequisites(status: string) {
+  return status === 'in_progress' || status === 'awaiting_validation' || status === 'done'
+}
+
+async function requirePhasePrerequisites(db: PortalDatabase, projectId: string, phaseId: string) {
+  const unfinished = await db.prepare(`SELECT s.title FROM portal_roadmap_phase_prerequisites r
+    JOIN portal_roadmap_steps s ON s.id=r.step_id
+    WHERE r.project_id=? AND r.phase_id=? AND (s.archived=1 OR s.status<>'done') ORDER BY s.title,s.id LIMIT 1`).get(projectId, phaseId)
+  if (unfinished) conflict(`Terminez le prérequis « ${unfinished.title} » pour avancer dans cette phase.`)
+}
+
+async function roadmapDependencyGraph(db: PortalDatabase, projectId: string) {
+  const steps = await db.prepare(`SELECT s.id,s.phase_id,s.dependency_ids FROM portal_roadmap_steps s
+    JOIN portal_roadmap_phases p ON p.id=s.phase_id WHERE s.project_id=? AND s.archived=0 AND p.archived=0`).all(projectId)
+  const prerequisites = await db.prepare('SELECT phase_id,step_id FROM portal_roadmap_phase_prerequisites WHERE project_id=?').all(projectId)
+  const phaseByStep = new Map<string, string>(steps.map(step => [step.id, step.phase_id]))
+  const links = new Map<string, string[]>()
+  for (const step of steps) {
+    const dependencyIds = JSON.parse(step.dependency_ids) as string[]
+    links.set(`step:${step.id}`, [`phase:${step.phase_id}`, ...dependencyIds.map(id => `step:${id}`)])
+  }
+  for (const { phase_id, step_id } of prerequisites) {
+    const phaseNode = `phase:${phase_id}`
+    const ids = links.get(phaseNode) || []
+    ids.push(`step:${step_id}`)
+    links.set(phaseNode, ids)
+  }
+  return { phaseByStep, links }
+}
+
+function rejectDependencyCycle(links: Map<string, string[]>, node: string, destinations: string[]) {
+  const visited = new Set<string>()
+  const pending = [...destinations]
+  while (pending.length) {
+    const id = pending.pop()!
+    if (id === node) invalid('Cette dépendance créerait un cycle.')
+    if (visited.has(id)) continue
+    visited.add(id)
+    for (const dependency of links.get(id) || []) pending.push(dependency)
+  }
+}
+
+async function setPhasePrerequisites(db: PortalDatabase, projectId: string, phaseId: string, ids: string[]) {
+  if (ids.length) {
+    const { phaseByStep, links } = await roadmapDependencyGraph(db, projectId)
+    if (ids.some(id => !phaseByStep.has(id) || phaseByStep.get(id) === phaseId)) {
+      invalid('Choisissez des étapes actives d’autres phases de ce projet comme prérequis.')
+    }
+    rejectDependencyCycle(links, `phase:${phaseId}`, ids.map(id => `step:${id}`))
+  }
+  await db.prepare('DELETE FROM portal_roadmap_phase_prerequisites WHERE project_id=? AND phase_id=?').run(projectId, phaseId)
+  for (const id of ids) {
+    await db.prepare('INSERT INTO portal_roadmap_phase_prerequisites(project_id,phase_id,step_id) VALUES(?,?,?)').run(projectId, phaseId, id)
+  }
+}
+
 async function withAdminItem(event: H3Event, table: RoadmapTable, action: (db: PortalDatabase, project: any, item: any, user: PortalUser) => Promise<void>) {
   assertSameOrigin(event)
   const user = await requirePortalUser(event, 'admin')
@@ -110,12 +166,17 @@ export async function createRoadmapPhase(event: H3Event) {
   const { db, user } = await accessibleProject(event, projectId)
   if (user.role !== 'admin') throw createError({ statusCode: 403, statusMessage: 'Accès refusé.' })
   const fields = itemFields(body)
+  const prerequisiteStepIds = inputIds(body.prerequisiteStepIds, 'Prérequis')
   const id = randomUUID()
   await db.transaction(async () => {
     await lockRoadmapProject(db, projectId)
     const position = await appendPosition(db, 'portal_roadmap_phases', projectId)
     await db.prepare('INSERT INTO portal_roadmap_phases(id,project_id,title,description,start_date,end_date,status,position) VALUES(?,?,?,?,?,?,?,?)')
       .run(id, projectId, fields.title, fields.description, fields.startDate, fields.endDate, fields.status, position)
+    if (prerequisiteStepIds.length) {
+      await setPhasePrerequisites(db, projectId, id, prerequisiteStepIds)
+      if (needsPrerequisites(fields.status)) await requirePhasePrerequisites(db, projectId, id)
+    }
     if (typeof body.position === 'number') await moveItem(db, 'portal_roadmap_phases', projectId, id, body.position)
     await syncRoadmapProject(db, projectId)
     await recordActivity(projectId, `Phase ajoutée : ${fields.title}.`)
@@ -130,27 +191,13 @@ export function updateRoadmapPhase(event: H3Event) {
     const steps = await db.prepare('SELECT start_date,end_date,status FROM portal_roadmap_steps WHERE phase_id=? AND archived=0').all(phase.id)
     if (fields.status === 'done' && steps.some(step => step.status !== 'done')) invalid('Terminez les étapes de la phase avant de la clôturer.')
     for (const step of steps) checkPhaseBounds({ start_date: fields.startDate, end_date: fields.endDate }, step.start_date, step.end_date)
+    if (body.prerequisiteStepIds !== undefined) await setPhasePrerequisites(db, project.id, phase.id, inputIds(body.prerequisiteStepIds, 'Prérequis'))
+    if (fields.status !== phase.status && needsPrerequisites(fields.status)) await requirePhasePrerequisites(db, project.id, phase.id)
     await db.prepare('UPDATE portal_roadmap_phases SET title=?,description=?,start_date=?,end_date=?,status=? WHERE id=?')
       .run(fields.title, fields.description, fields.startDate, fields.endDate, fields.status, phase.id)
     if (typeof body.position === 'number') await moveItem(db, 'portal_roadmap_phases', project.id, phase.id, body.position)
     await recordActivity(project.id, `Phase mise à jour : ${fields.title}.`)
   })
-}
-
-async function validateDependencies(db: PortalDatabase, projectId: string, stepId: string, ids: string[]) {
-  if (!ids.length) return
-  const rows = await db.prepare('SELECT id,dependency_ids FROM portal_roadmap_steps WHERE project_id=? AND archived=0').all(projectId)
-  const links = new Map<string, string[]>(rows.map(row => [row.id, JSON.parse(row.dependency_ids)]))
-  if (ids.some(id => id === stepId || !links.has(id))) invalid('Choisissez des étapes du même projet comme dépendances.')
-  const visited = new Set<string>()
-  const pending = [...ids]
-  while (pending.length) {
-    const id = pending.pop()!
-    if (id === stepId) invalid('Cette dépendance créerait un cycle.')
-    if (visited.has(id)) continue
-    visited.add(id)
-    for (const dependency of links.get(id) || []) pending.push(dependency)
-  }
 }
 
 async function stepFields(db: PortalDatabase, project: any, stepId: string, body: Input, previous?: any) {
@@ -172,7 +219,15 @@ async function stepFields(db: PortalDatabase, project: any, stepId: string, body
     const allowed = new Set(rows.map(row => row.id))
     if (resourceIds.some(id => !allowed.has(id))) invalid('Choisissez des livrables de ce projet.')
   }
-  if (body.dependencyIds !== undefined) await validateDependencies(db, project.id, stepId, dependencyIds)
+  const moved = previous && phaseId !== previous.phase_id
+  if (moved || (body.dependencyIds !== undefined && dependencyIds.length)) {
+    const { phaseByStep, links } = await roadmapDependencyGraph(db, project.id)
+    if (dependencyIds.some(id => id === stepId || !phaseByStep.has(id))) invalid('Choisissez des étapes du même projet comme dépendances.')
+    rejectDependencyCycle(links, `step:${stepId}`, [`phase:${phaseId}`, ...dependencyIds.map(id => `step:${id}`)])
+  }
+  if ((!previous || moved || fields.status !== previous.status) && needsPrerequisites(fields.status)) {
+    await requirePhasePrerequisites(db, project.id, phaseId)
+  }
   return { ...fields, phaseId, kind, requiresValidation, blocker, responsibleId, resourceIds, dependencyIds }
 }
 
@@ -245,6 +300,8 @@ async function archiveSteps(db: PortalDatabase, projectId: string, steps: { id: 
   if (!steps.length) return
   const ids = new Set(steps.map(step => step.id))
   for (const step of steps) {
+    const prerequisite = await db.prepare('SELECT 1 FROM portal_roadmap_phase_prerequisites WHERE project_id=? AND step_id=? LIMIT 1').get(projectId, step.id)
+    if (prerequisite) conflict('Retirez cette étape des prérequis de phase avant de la supprimer.')
     const validation = await latestValidation(db, step.id)
     if (validation?.status === 'pending') await saveDecision(db, validation.id, 'cancelled', 'Étape archivée par MC Studio.', user)
     await db.prepare('UPDATE portal_roadmap_steps SET archived=1,updated_at=? WHERE id=?').run(new Date().toISOString(), step.id)
@@ -261,6 +318,7 @@ export function deleteRoadmapPhase(event: H3Event) {
   return withAdminItem(event, 'portal_roadmap_phases', async (db, project, phase, user) => {
     const steps = await db.prepare('SELECT id FROM portal_roadmap_steps WHERE phase_id=? AND archived=0').all(phase.id)
     await archiveSteps(db, project.id, steps, user)
+    await db.prepare('DELETE FROM portal_roadmap_phase_prerequisites WHERE project_id=? AND phase_id=?').run(project.id, phase.id)
     await db.prepare('UPDATE portal_roadmap_phases SET archived=1 WHERE id=?').run(phase.id)
     await moveItem(db, 'portal_roadmap_phases', project.id, '', 0)
     await recordActivity(project.id, `Phase archivée : ${phase.title}.`)
@@ -298,6 +356,7 @@ export async function requestRoadmapValidation(event: H3Event) {
     const previous = await latestValidation(db, step.id)
     if (previous?.status === 'pending') conflict('Une validation est déjà en attente pour cette étape.')
     if (step.status === 'done') conflict('Rouvrez cette étape avant de demander une nouvelle validation.')
+    await requirePhasePrerequisites(db, project.id, step.phase_id)
     const decider = await db.prepare(`SELECT d.user_id AS id FROM portal_project_deciders d JOIN users u ON u.id=d.user_id
       JOIN portal_members m ON m.user_id=u.id WHERE d.project_id=? AND u.organization_id=? AND u.role='client' AND m.member_role='decision_maker' AND m.suspended=0`)
       .get(project.id, project.organization_id)
@@ -333,9 +392,10 @@ export async function decideRoadmapValidation(event: H3Event) {
   await db.transaction(async () => {
     await lockRoadmapProject(db, validation.project_id)
     await requireProjectDecider(db, user, validation.project_id)
-    const step = await db.prepare('SELECT id,status,archived FROM portal_roadmap_steps WHERE id=?').get(validation.step_id)
+    const step = await db.prepare('SELECT id,phase_id,status,archived FROM portal_roadmap_steps WHERE id=?').get(validation.step_id)
     const latest = await latestValidation(db, validation.step_id)
     if (!step || step.archived || step.status !== 'awaiting_validation' || latest?.id !== id || latest.status !== 'pending') conflict('Cette demande n’est plus en attente.')
+    await requirePhasePrerequisites(db, validation.project_id, step.phase_id)
     await saveDecision(db, id, decision, comment, user)
     await db.prepare('UPDATE portal_roadmap_steps SET status=?,updated_at=? WHERE id=?')
       .run(decision === 'approved' ? 'done' : 'in_progress', new Date().toISOString(), step.id)

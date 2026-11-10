@@ -16,7 +16,7 @@ try {
    const backup=sourcePath+'.backup-'+Date.now()
    source.exec(`VACUUM INTO '${backup.replace(/'/g,"''")}'`)
    const tables=['organizations','users','projects','invitations','sessions','project_reviews','resources','portal_asset_folders','portal_assets','portal_project_prompts','portal_settings','portal_file_requests','portal_requests','portal_request_messages','portal_user_preferences','activity','mockup_versions','mockup_screens','mockup_annotations','mockup_replies','growth_sites','portal_members','portal_project_deciders','portal_invitation_roles','portal_review_history','portal_password_resets','portal_notification_preferences','portal_notifications','portal_milestones','portal_roadmap_phases','portal_roadmap_steps','portal_roadmap_validations','portal_roadmap_decisions','portal_roadmap_migrations','portal_file_request_assignments','portal_satisfaction_surveys','portal_satisfaction_responses',
-    'portal_uploads','portal_objects','portal_r2_storage_budget','portal_r2_copy_credits','portal_r2_daily_operations']
+    'portal_roadmap_phase_prerequisites','portal_uploads','portal_objects','portal_r2_storage_budget','portal_r2_copy_credits','portal_r2_daily_operations']
    const keys: Record<string, string[]> = {
     sessions: ['token_hash'], portal_password_resets: ['token_hash'], portal_settings: ['key'],
     project_reviews: ['project_id'], portal_project_prompts: ['project_id'], portal_project_deciders: ['project_id'],
@@ -24,6 +24,7 @@ try {
     portal_user_preferences: ['user_id'], portal_members: ['user_id'], portal_notification_preferences: ['user_id'],
     portal_invitation_roles: ['invitation_id'], portal_file_request_assignments: ['request_id'],
     portal_roadmap_decisions: ['validation_id'], portal_r2_copy_credits: ['upload_id'],
+    portal_roadmap_phase_prerequisites: ['project_id','phase_id','step_id'],
     portal_r2_daily_operations: ['operation','utc_day']
    }
    await db.transaction(async()=>{

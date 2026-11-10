@@ -307,6 +307,13 @@ CREATE TABLE IF NOT EXISTS portal_roadmap_steps (
  CHECK(start_date IS NULL OR end_date IS NULL OR start_date<=end_date)
 );
 CREATE INDEX IF NOT EXISTS portal_roadmap_steps_project_idx ON portal_roadmap_steps(project_id,archived,phase_id,position);
+CREATE TABLE IF NOT EXISTS portal_roadmap_phase_prerequisites (
+ project_id TEXT NOT NULL, phase_id TEXT NOT NULL, step_id TEXT NOT NULL,
+ PRIMARY KEY(project_id,phase_id,step_id),
+ FOREIGN KEY(project_id,phase_id) REFERENCES portal_roadmap_phases(project_id,id) ON DELETE CASCADE,
+ FOREIGN KEY(project_id,step_id) REFERENCES portal_roadmap_steps(project_id,id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS portal_roadmap_phase_prerequisites_step_idx ON portal_roadmap_phase_prerequisites(project_id,step_id);
 CREATE TABLE IF NOT EXISTS portal_roadmap_validations (
  id TEXT PRIMARY KEY, project_id TEXT NOT NULL, step_id TEXT NOT NULL, attempt INTEGER NOT NULL,
  title TEXT NOT NULL, description TEXT NOT NULL, url TEXT NOT NULL DEFAULT '',

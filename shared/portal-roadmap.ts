@@ -46,6 +46,7 @@ export interface RoadmapStep extends RoadmapItem {
 
 export interface RoadmapPhase extends RoadmapItem {
   progress: number
+  prerequisiteStepIds: string[]
   steps: RoadmapStep[]
 }
 

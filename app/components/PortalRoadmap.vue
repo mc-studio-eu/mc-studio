@@ -61,14 +61,18 @@ const selectedId = ref('')
 const itemKind = ref<ItemKind>('phase')
 const selectedPhase = computed(() => phases.value.find(phase => phase.id === selectedId.value))
 const selectedStep = computed(() => steps.value.find(step => step.id === selectedId.value))
+const selectedPrerequisites = computed(() => phases.value.flatMap(phase => phase.steps
+  .filter(step => selectedPhase.value?.prerequisiteStepIds.includes(step.id))
+  .map(step => ({ step, phaseTitle: phase.title }))))
 const selectedItem = computed(() => itemKind.value === 'phase' ? selectedPhase.value : selectedStep.value)
 const selectedSiblings = computed(() => itemKind.value === 'phase' ? phases.value : phases.value.find(phase => phase.id === selectedStep.value?.phaseId)?.steps || [])
 const selectedPosition = computed(() => selectedSiblings.value.findIndex(item => item.id === selectedId.value))
 const editId = ref('')
+const prerequisitePhases = computed(() => phases.value.filter(phase => phase.id !== editId.value && phase.steps.length))
 const itemForm = reactive({
   title: '', description: '', status: 'planned' as RoadmapStatus, startDate: '', endDate: '',
   phaseId: '', kind: 'step' as RoadmapStepKind, responsibleId: '', blocker: '', requiresValidation: false,
-  resourceIds: [] as string[], dependencyIds: [] as string[],
+  resourceIds: [] as string[], dependencyIds: [] as string[], prerequisiteStepIds: [] as string[],
 })
 const validationForm = reactive({ description: '', url: '', resourceId: '', dueDate: '' })
 const decisionForm = reactive({ id: '', decision: 'approved' as 'approved' | 'changes', comment: '' })
@@ -139,6 +143,7 @@ function edit(kind: ItemKind, item?: RoadmapPhase | RoadmapStep, phaseId?: strin
     startDate: item?.startDate || '', endDate: item?.endDate || '', phaseId: step?.phaseId || phaseId || phases.value[0]?.id || '',
     kind: step?.kind || 'step', responsibleId: step?.responsibleId || '', blocker: step?.blocker || '',
     requiresValidation: step?.requiresValidation || false, resourceIds: [...(step?.resourceIds || [])], dependencyIds: [...(step?.dependencyIds || [])],
+    prerequisiteStepIds: item && 'prerequisiteStepIds' in item ? [...item.prerequisiteStepIds] : [],
   })
   changeDialog(kind)
 }
@@ -189,6 +194,7 @@ function saveItem() {
     phaseId: itemForm.phaseId, kind: itemForm.kind, responsibleId: itemForm.responsibleId || null,
     blocker: itemForm.blocker, requiresValidation: itemForm.requiresValidation, resourceIds: itemForm.resourceIds, dependencyIds: itemForm.dependencyIds,
   })
+  else body.prerequisiteStepIds = itemForm.prerequisiteStepIds
   const path = step ? '/steps' : '/phases'
   if (editId.value) mutate(`${path}/${editId.value}`, 'PATCH', body, 'Modifications enregistrées.')
   else mutate(path, 'POST', body, step ? 'Étape ajoutée.' : 'Phase ajoutée.', 'close')
@@ -381,6 +387,22 @@ onBeforeUnmount(() => { alive = false })
           <p v-if="selectedItem.description" class="rm-copy">{{ selectedItem.description }}</p>
           <p v-if="selectedStep?.blocker" class="rm-notice rm-error"><UIcon name="i-tabler-alert-circle"/> {{ selectedStep.blocker }}</p>
           <section v-if="selectedPhase" class="rm-detail-section">
+            <h3>Prérequis</h3>
+            <p v-if="!selectedPrerequisites.length" class="rm-muted">Aucun prérequis pour cette phase.</p>
+            <template v-else>
+              <p v-if="selectedPrerequisites.some(({ step }) => step.status !== 'done')" class="rm-muted">Terminez ces étapes pour avancer dans cette phase.</p>
+              <ul class="rm-items">
+                <li v-for="{ step, phaseTitle } in selectedPrerequisites" :key="step.id">
+                  <button type="button" class="rm-item" :class="step.status" @click="select(step.id,'step')">
+                    <span class="rm-item-symbol"><UIcon :name="step.status === 'done' ? 'i-tabler-check' : 'i-tabler-link'"/></span>
+                    <span><strong>{{ step.title }}</strong><small>{{ phaseTitle }} · {{ labels[step.status] }}</small></span>
+                    <UIcon name="i-tabler-chevron-right"/>
+                  </button>
+                </li>
+              </ul>
+            </template>
+          </section>
+          <section v-if="selectedPhase" class="rm-detail-section">
             <div class="rm-section-heading">
               <div><h3>Étapes de la phase</h3><p>{{ selectedPhase.progress }} % terminé</p></div>
               <button v-if="canEdit" type="button" class="rm-button" @click="edit('step',undefined,selectedPhase.id)"><UIcon name="i-tabler-plus"/> Ajouter une étape</button>
@@ -446,6 +468,17 @@ onBeforeUnmount(() => { alive = false })
             <label>Date de début<input v-model="itemForm.startDate" type="date" min="0001-01-01" max="9999-12-31"></label>
             <label>Date de fin<input v-model="itemForm.endDate" type="date" :min="itemForm.startDate || '0001-01-01'" max="9999-12-31"></label>
             <label>Statut<select v-model="itemForm.status"><option v-for="status in availableStatuses" :key="status" :value="status">{{ labels[status] }}</option></select></label>
+            <div v-if="dialogMode==='phase'" class="rm-wide rm-checkboxes" role="group" aria-label="Prérequis">
+              <p>Prérequis</p>
+              <p v-if="!prerequisitePhases.length">Aucune étape disponible dans les autres phases.</p>
+              <template v-for="phase in prerequisitePhases" :key="phase.id">
+                <p><strong>{{ phase.title }}</strong></p>
+                <label v-for="step in phase.steps" :key="step.id" class="rm-check">
+                  <input v-model="itemForm.prerequisiteStepIds" type="checkbox" :value="step.id">
+                  {{ step.title }} · {{ labels[step.status] }}
+                </label>
+              </template>
+            </div>
             <template v-if="dialogMode==='step'">
               <label>Responsable<select v-model="itemForm.responsibleId"><option value="">À attribuer</option><option v-if="selectedStep?.responsibleId && !members.some(member=>member.id===selectedStep?.responsibleId)" :value="selectedStep.responsibleId">{{ selectedStep.responsibleName || 'Responsable précédent' }}</option><option v-for="member in members" :key="member.id" :value="member.id">{{ member.name }}</option></select></label>
               <label class="rm-check rm-wide"><input v-model="itemForm.requiresValidation" type="checkbox" :disabled="Boolean(selectedStep?.validations.length)"> Approbation du client requise pour terminer cette étape</label>

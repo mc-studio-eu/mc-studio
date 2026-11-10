@@ -655,6 +655,63 @@ async function run() {
       assert.deepEqual(approvedStep.validations.map(item => item.status), ['changes', 'approved'])
     })
 
+    await test('phase prerequisites scope links, reject cycles, and gate roadmap transitions', async () => {
+      const write = (path, method, body, cookie = admin) => request(`/api/portal/roadmap${path}`, { method, cookie, body })
+      const addPhase = async (title, options) => {
+        const result = await write('/phases', 'POST', { projectId: 'project-a', title, ...options })
+        expectStatus(result, 200)
+        return `/phases/${result.data.id}`
+      }
+      const addStep = async (phase, title) => {
+        const result = await write('/steps', 'POST', { phaseId: phase.split('/').at(-1), title })
+        expectStatus(result, 200)
+        return result.data.id
+      }
+      const setup = await addPhase('Phase 1 · Cadrage')
+      const meeting = await addStep(setup, 'Réunion de démarrage')
+      const requirement = { prerequisiteStepIds: [meeting] }
+      const ux = await addPhase('Phase 2 · UX/UI', requirement)
+      const uxId = ux.split('/').at(-1)
+      const wireframes = await addStep(ux, 'Wireframes')
+      const foreign = await request('/api/portal/roadmap?projectId=project-b', { cookie: admin })
+      const foreignStep = foreign.data.phases.flatMap(phase => phase.steps)[0].id
+
+      expectStatus(await write('/phases', 'POST', { projectId: 'project-a', title: 'Démarrage anticipé', status: 'in_progress', ...requirement }), 409)
+      expectStatus(await write(ux, 'PATCH', requirement, decider), 403)
+      for (const id of [foreignStep, wireframes, 'unknown-step']) {
+        expectStatus(await write(ux, 'PATCH', { prerequisiteStepIds: [id] }), 400, 'prerequisites must come from an active step in another phase of the same project')
+      }
+      expectStatus(await write(setup, 'PATCH', { prerequisiteStepIds: [wireframes] }), 400, 'phase cycle')
+      expectStatus(await write(`/steps/${meeting}`, 'PATCH', { dependencyIds: [wireframes] }), 400, 'mixed cycle')
+      expectStatus(await write(`/steps/${meeting}`, 'PATCH', { phaseId: uxId }), 400, 'moving a prerequisite into its dependent phase creates a cycle')
+      expectStatus(await write(`/steps/${meeting}`, 'DELETE'), 409, 'archiving a linked step would silently unlock its dependent phase')
+      expectStatus(await write(setup, 'DELETE'), 409, 'archiving a phase also protects its linked steps')
+      const plan = await request('/api/portal/roadmap?projectId=project-a', { cookie: decider })
+      expectStatus(plan, 200)
+      assert.deepEqual(plan.data.phases.find(phase => phase.id === uxId).prerequisiteStepIds, [meeting], 'client reads the configured link after failed mutations')
+
+      expectStatus(await write(ux, 'PATCH', { status: 'in_progress' }), 409)
+      expectStatus(await write(ux, 'PATCH', { status: 'awaiting_validation' }), 409)
+      expectStatus(await write('/steps', 'POST', { phaseId: uxId, title: 'Étape anticipée', status: 'in_progress' }), 409)
+      expectStatus(await write(`/steps/${wireframes}`, 'PATCH', { status: 'done' }), 409)
+      expectStatus(await write(`/steps/${wireframes}/validation`, 'POST', { description: 'Maquettes à valider' }), 409)
+      expectStatus(await write(`/steps/${meeting}`, 'PATCH', { status: 'done' }), 200)
+      expectStatus(await write(ux, 'PATCH', { status: 'in_progress' }), 200)
+      const validation = await write(`/steps/${wireframes}/validation`, 'POST', { description: 'Maquettes à valider' })
+      expectStatus(validation, 200)
+      expectStatus(await write(`/steps/${meeting}`, 'PATCH', { status: 'planned' }), 200)
+      expectStatus(await write(ux, 'PATCH', { title: 'Phase 2 · Design UX/UI' }), 200, 'metadata can be updated while a prerequisite is reopened')
+      const approval = { decision: 'approved' }
+      expectStatus(await write(`/validations/${validation.data.id}/decision`, 'POST', approval, decider), 409)
+      expectStatus(await write(`/steps/${meeting}`, 'PATCH', { status: 'done' }), 200)
+      expectStatus(await write(`/validations/${validation.data.id}/decision`, 'POST', approval, decider), 200)
+      expectStatus(await write(ux, 'PATCH', { status: 'done' }), 200)
+      expectStatus(await write(ux, 'PATCH', { prerequisiteStepIds: [] }), 200)
+      expectStatus(await write(setup, 'DELETE'), 200)
+      expectStatus(await write(ux, 'PATCH', requirement), 400, 'an archived prerequisite cannot be linked again')
+      expectStatus(await write(ux, 'DELETE'), 200)
+    })
+
     await test('a client file upload fulfills its assigned request and removes the todo', async () => {
       const created = await request('/api/portal/files/requests', { method: 'POST', cookie: admin, body: { projectId: 'project-a', title: 'Brief de campagne', description: 'Ajouter le brief final.', responsibleId: 'contributor', dueDate: '2030-01-01' } })
       expectStatus(created, 200)
