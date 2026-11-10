@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { resourceLabels, resourceIcons, money, portalDate, type PortalResource, type ResourceKind, type PortalMember } from '~/types/portal'
-import { PORTAL_FILE_MAX_BYTES } from '#shared/portal-upload'
+import { PORTAL_FILE_MAX_BYTES, PORTAL_FILE_QUOTA_BYTES } from '#shared/portal-upload'
+const fileMaxMiB = PORTAL_FILE_MAX_BYTES / 1024 / 1024
+const projectQuotaMiB = PORTAL_FILE_QUOTA_BYTES / 1024 / 1024
 const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'|'satisfaction'; initialKind?:ResourceKind|'assets'|'satisfaction'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
 const canWrite = computed(()=>Boolean(props.admin || props.canContribute))
 const canValidate = computed(()=>Boolean(props.admin || props.canReview))
@@ -90,7 +92,7 @@ const removeResource = async () => {
 const upload = async (event:Event,requestId='') => {
  const input=event.target as HTMLInputElement, file=input.files?.[0];if(!file || !canWrite.value)return
  if(busy.value)return
- if(!file.size || file.size>PORTAL_FILE_MAX_BYTES){error.value=!file.size?'Choisissez un fichier non vide.':'Le fichier dépasse la limite de 50 Mo.';input.value='';return}
+ if(!file.size || file.size>PORTAL_FILE_MAX_BYTES){error.value=!file.size?'Choisissez un fichier non vide.':`Le fichier dépasse la limite de ${fileMaxMiB} Mo.`;input.value='';return}
  const projectId=props.projectId
  uploadProjectId.value=projectId
  busy.value=true;error.value='';success.value=''
@@ -138,7 +140,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
    <label v-if="kind==='wiki' && !editingId" class="pr-checkbox"><input v-model="form.global" type="checkbox">Partager cet article avec tous les clients</label>
    <div class="pr-actions"><button type="button" class="pr-secondary" @click="editing=false">Annuler</button><button class="pr-primary" :disabled="busy">{{busy?'Enregistrement…':'Enregistrer'}}</button></div>
   </form>
-  <p v-if="!canWrite && !admin" class="pr-reader-note">Votre accès est en lecture seule. Vous pouvez consulter et télécharger les ressources du projet.</p><label v-if="kind==='file' && canWrite" class="pr-upload"><UIcon name="i-tabler-cloud-upload"/><strong>{{projectUploading?'Dépôt en cours…':'Déposer un fichier'}}</strong><span>50 Mo par fichier · 500 Mo de stockage par projet</span><input type="file" :disabled="busy" aria-label="Choisir un fichier à déposer" @change="upload"></label>
+  <p v-if="!canWrite && !admin" class="pr-reader-note">Votre accès est en lecture seule. Vous pouvez consulter et télécharger les ressources du projet.</p><label v-if="kind==='file' && canWrite" class="pr-upload"><UIcon name="i-tabler-cloud-upload"/><strong>{{projectUploading?'Dépôt en cours…':'Déposer un fichier'}}</strong><span>{{fileMaxMiB}} Mo par fichier · {{projectQuotaMiB}} Mo de stockage par projet</span><input type="file" :disabled="busy" aria-label="Choisir un fichier à déposer" @change="upload"></label>
   <div v-if="kind==='file' && projectUploading" class="pr-upload-progress" role="status" aria-live="polite"><span>{{uploadProcessing?'Transfert terminé · enregistrement du fichier…':uploadProgress===null?'Préparation du transfert…':`Transfert : ${uploadProgress} %`}}</span><progress :value="uploadProgress ?? undefined" max="100" aria-label="Progression du transfert du fichier"/></div>
   <section v-if="kind==='file' && fileRequests.length" class="pr-file-requests"><div class="pr-request-heading"><h3>Demandes de fichiers</h3><span>{{fileRequests.filter(request=>request.status==='open').length}} en attente</span></div><article v-for="request in fileRequests" :key="request.id" class="pr-file-request"><div class="pr-request-copy"><div><h4>{{request.title}}</h4><span :class="['pr-request-status',request.status]">{{request.status==='open'?'À envoyer':'Reçu'}}</span></div><p v-if="request.description">{{request.description}}</p><small v-if="request.responsibleName || request.dueDate">{{request.responsibleName || 'Équipe client'}} · {{portalDate(request.dueDate || '')}}</small><small v-if="request.status==='fulfilled'">{{request.uploadedBy||'Client'}} · {{request.fileName||'Fichier envoyé'}}</small></div><label v-if="!admin && canWrite && request.status==='open'" class="pr-request-file"><UIcon name="i-tabler-cloud-upload"/><span>{{busy?'Envoi…':'Choisir le fichier'}}</span><input type="file" :disabled="busy" :aria-label="'Envoyer le fichier demandé : '+request.title" @change="upload($event,request.id)"></label><small v-else-if="admin && request.status==='open'" class="pr-request-meta">Demande envoyée le {{portalDate(request.createdAt)}}</small></article></section>
   <div v-if="kind==='payment' && items.length" class="pr-money"><div><span>À régler</span><strong>{{money(items.filter(r=>r.status==='due').reduce((s,r)=>s+r.amount,0))}}</strong></div><div><span>Déjà réglé</span><strong>{{money(items.filter(r=>r.status==='paid').reduce((s,r)=>s+r.amount,0))}}</strong></div><p>Le statut est confirmé par MC Studio après réception du règlement.</p></div>

@@ -3,6 +3,7 @@ import { assertSameOrigin } from '../../../utils/portal-auth'
 import { accessibleProject, recordActivity } from '../../../utils/portal-resources'
 import { assertAssetUploadFolder, lockUploadProject, assertUploadQuota, openUploadRequest, newPortalObjectKey } from '../../../utils/portal-direct-upload'
 import { headPortalObject, copyPortalObject, deletePortalObject } from '../../../utils/portal-object-store'
+import { assertPortalR2UploadsEnabled, consumePortalR2Operation, reservePortalR2Bytes } from '../../../utils/portal-r2-budget'
 
 export default defineEventHandler(async event => {
  assertSameOrigin(event)
@@ -13,6 +14,8 @@ export default defineEventHandler(async event => {
  if (upload.kind === 'asset' && user.role !== 'admin') throw createError({statusCode:403,statusMessage:'Accès réservé à MC Studio.'})
  if (upload.result_id) return {id:upload.result_id}
  if (upload.expires_at <= new Date().toISOString()) throw createError({statusCode:410,statusMessage:'Le dépôt a expiré. Recommencez le transfert.'})
+ assertPortalR2UploadsEnabled()
+ await consumePortalR2Operation(db,'head')
  let head
  try { head = await headPortalObject(upload.staging_key) }
  catch { throw createError({statusCode:409,statusMessage:'Le transfert R2 n’est pas terminé. Réessayez la confirmation.'}) }
@@ -20,14 +23,24 @@ export default defineEventHandler(async event => {
  // Each attempt owns a unique final key, so concurrent confirmations can never
  // overwrite a committed object. Keep unreferenced attempts for bounded cleanup.
  const objectId = randomUUID(), objectKey = newPortalObjectKey(project.id)
- await db.prepare('INSERT INTO portal_objects(id,object_key,created_at) VALUES(?,?,?)').run(objectId,objectKey,new Date().toISOString())
+ const existingResult = await db.transaction(async () => {
+  const current = await db.prepare('SELECT result_id,expires_at FROM portal_uploads WHERE id=?').get(upload.id)
+  if (current?.result_id) return current.result_id as string
+  if (!current || current.expires_at <= new Date().toISOString()) throw createError({statusCode:410,statusMessage:'Le dépôt a expiré. Recommencez le transfert.'})
+  const credit = await db.prepare('DELETE FROM portal_r2_copy_credits WHERE upload_id=?').run(upload.id)
+  if (!credit.changes) await reservePortalR2Bytes(db,Number(upload.file_size))
+  else if (!await db.prepare('SELECT id FROM portal_r2_storage_budget WHERE id=1').get()) throw createError({statusCode:503,statusMessage:'Le budget R2 doit être vérifié. Contactez MC Studio.'})
+  await consumePortalR2Operation(db,'copy')
+  await db.prepare('INSERT INTO portal_objects(id,object_key,created_at) VALUES(?,?,?)').run(objectId,objectKey,new Date().toISOString())
+ })
+ if (existingResult) return {id:existingResult}
  try { await copyPortalObject(upload.staging_key,objectKey,head.ETag,upload.mime_type) }
  catch { throw createError({statusCode:409,statusMessage:'Le fichier a changé pendant la confirmation. Réessayez le dépôt.'}) }
  const result = await db.transaction(async () => {
   await lockUploadProject(db,project.id)
   const current = await db.prepare('SELECT result_id,expires_at FROM portal_uploads WHERE id=?').get(upload.id)
-  if (current.result_id) return {id:current.result_id}
-  if (current.expires_at <= new Date().toISOString()) throw createError({statusCode:410,statusMessage:'Le dépôt a expiré. Recommencez le transfert.'})
+  if (current?.result_id) return {id:current.result_id}
+  if (!current || current.expires_at <= new Date().toISOString()) throw createError({statusCode:410,statusMessage:'Le dépôt a expiré. Recommencez le transfert.'})
   await assertUploadQuota(db,project.id,upload.kind,Number(upload.file_size),upload.id)
   const metadata = JSON.parse(upload.metadata), id = randomUUID()
   if (upload.kind === 'file') {

@@ -19,13 +19,14 @@ export default defineEventHandler(async event=>{
    if(!user.days)continue
    for(const todo of todos) {
     if(todo.responsibleId && todo.responsibleId!==user.id)continue
-    if(todo.kind==='mockup' && (!todo.responsibleId||user.role!=='decision_maker'))continue
-    if(todo.kind==='milestone' && todo.responsibleId!==user.id)continue
+    if(['mockup','roadmap'].includes(todo.kind) && (!todo.responsibleId||user.role!=='decision_maker'))continue
+    if(todo.kind==='roadmap_step' && todo.responsibleId!==user.id)continue
     if(now-Date.parse(todo.createdAt)<Number(user.days)*86400000)continue
-    const last=await db.prepare("SELECT created_at FROM portal_notifications WHERE user_id=? AND kind='reminder' AND dedupe_key LIKE ? ORDER BY created_at DESC LIMIT 1").get(user.id,`reminder:${todo.kind}:${todo.id}:%:${user.id}`)
+    const kind=['roadmap','roadmap_step'].includes(todo.kind)?'roadmap_reminder':'reminder'
+    const last=await db.prepare('SELECT created_at FROM portal_notifications WHERE user_id=? AND kind=? AND dedupe_key LIKE ? ORDER BY created_at DESC LIMIT 1').get(user.id,kind,`reminder:${todo.kind}:${todo.id}:%:${user.id}`)
     if(last && now-Date.parse(last.created_at)<Number(user.days)*86400000)continue
     const bucket=Math.floor(now/(Number(user.days)*86400000))
-    await notifyProject(project.id,'reminder',`Action attendue : ${todo.title}`,`Une action vous attend dans le projet ${project.name}${todo.dueDate?' pour le '+todo.dueDate:''}.`,undefined,`reminder:${todo.kind}:${todo.id}:${bucket}`,user.id)
+    await notifyProject(project.id,kind,`Action attendue : ${todo.title}`,`Une action vous attend dans le projet ${project.name}${todo.dueDate?' pour le '+todo.dueDate:''}.`,undefined,`reminder:${todo.kind}:${todo.id}:${bucket}`,user.id)
     queued++
    }
   }

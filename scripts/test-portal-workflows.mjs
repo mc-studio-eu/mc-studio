@@ -110,13 +110,22 @@ function seed() {
     .run('project-a', 'org-a', 'Projet A', '', 'En cours', 0, '2030-01-01', 'Cadrage')
   db.prepare('INSERT INTO projects(id,organization_id,name,description,status,progress,due_date,current_phase) VALUES(?,?,?,?,?,?,?,?)')
     .run('project-b', 'org-b', 'Projet B', '', 'En cours', 0, '2030-01-01', 'Cadrage')
+  db.prepare('INSERT INTO projects(id,organization_id,name,description,status,progress,due_date,current_phase) VALUES(?,?,?,?,?,?,?,?)')
+    .run('project-c', 'org-a', 'Projet sans roadmap', '', 'En cours', 0, '2030-01-01', '')
   db.prepare('INSERT INTO portal_project_deciders(project_id,user_id) VALUES(?,?)').run('project-a', 'decider')
   db.prepare(`INSERT INTO resources(id,project_id,kind,title,created_by)
     VALUES('mockup-a','project-a','mockup','Maquette A','admin')`).run()
   db.prepare(`INSERT INTO resources(id,project_id,kind,title,status,created_by)
     VALUES('mockup-versioned','project-a','mockup','Maquette versionnée','pending','admin')`).run()
+  db.prepare(`INSERT INTO resources(id,project_id,kind,title,created_by)
+    VALUES('mockup-b','project-b','mockup','Maquette B','admin')`).run()
   db.prepare(`INSERT INTO mockup_versions(id,resource_id,number,file_key,source_version,published_by,created_at)
     VALUES('version-a','mockup-versioned',1,'synthetic-figma-key','1','admin',?)`).run(new Date().toISOString())
+  const now = new Date().toISOString()
+  const legacy = db.prepare(`INSERT INTO portal_milestones(id,project_id,title,description,kind,status,due_date,responsible_id,blocker,created_by,created_at,updated_at)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`)
+  legacy.run('legacy-roadmap-done', 'project-a', 'Jalon historique terminé', 'Donnée conservée', 'deliverable', 'done', '2029-12-10', 'contributor', '', 'admin', now, now)
+  legacy.run('legacy-roadmap-blocked', 'project-a', 'Checklist historique bloquée', 'Blocage conservé', 'checklist', 'blocked', '2030-02-10', 'contributor', 'Attente du client', 'admin', now, now)
   return { defaultPassword }
 }
 async function login(email, password = 'Portal-test-Password-2026!') {
@@ -127,21 +136,81 @@ async function login(email, password = 'Portal-test-Password-2026!') {
 }
 async function run() {
   try {
-    server = spawn(process.execPath, ['node_modules/nuxt/bin/nuxt.mjs', 'dev', '--host', '127.0.0.1', '--port', String(port), '--dotenv', dotenvPath], {
+    const startServer = () => spawn(process.execPath, ['node_modules/nuxt/bin/nuxt.mjs', 'dev', '--host', '127.0.0.1', '--port', String(port), '--dotenv', dotenvPath], {
       cwd: root,
       env,
       stdio: process.env.PORTAL_TEST_DEBUG ? 'inherit' : 'ignore'
     })
+    const stopServer = async () => {
+      if (!server || server.exitCode !== null) return
+      const process = server
+      process.kill('SIGTERM')
+      await Promise.race([new Promise(resolve => process.once('exit', resolve)), new Promise(resolve => setTimeout(resolve, 5000))])
+      if (process.exitCode === null) {
+        process.kill('SIGKILL')
+        await new Promise(resolve => process.once('exit', resolve))
+      }
+    }
+    server = startServer()
     await waitForServer()
     const initialized = await request('/api/portal/auth/login', { method: 'POST', body: { email: 'schema-init@test.invalid', password: 'not-a-real-password' } })
     expectStatus(initialized, 401, 'initialize the isolated portal schema')
     seed()
+    // Migration runs at SQLite startup, so restart after seeding representative legacy rows.
+    await stopServer()
+    server = startServer()
+    await waitForServer()
 
     const admin = await login('admin@test.invalid')
     const decider = await login('decider@test.invalid')
     let contributor = await login('contributor@test.invalid')
     const viewer = await login('viewer@test.invalid')
     const outsider = await login('other@test.invalid')
+
+    await test('storage report is private and reserved for administrators', async () => {
+      const path = '/api/portal/admin/storage'
+      expectStatus(await request(path), 401)
+      expectStatus(await request(path, { cookie: contributor }), 403)
+      const report = await request(path, { cookie: admin })
+      expectStatus(report, 200)
+      assert.equal(report.headers.get('cache-control'), 'private, no-store')
+      assert.equal(report.data.r2Configured, false)
+      assert.equal(report.data.budget.reservedBytes, null)
+      assert.equal(report.data.inventory.r2Files.count, 0)
+    })
+
+    await test('roadmap migration preserves legacy milestones and remains idempotent', async () => {
+      const roadmap = await request('/api/portal/roadmap?projectId=project-a', { cookie: contributor })
+      expectStatus(roadmap, 200, 'client reads migrated roadmap')
+      assert.equal(roadmap.data.permissions.canEdit, false)
+      const legacyPhase = roadmap.data.phases.find(phase => phase.title === 'Étapes existantes')
+      assert.ok(legacyPhase, 'legacy milestones should be grouped into a historical phase')
+      assert.equal(legacyPhase.steps.length, 2)
+      const done = legacyPhase.steps.find(step => step.id === 'legacy-roadmap-done')
+      assert.equal(done.status, 'done')
+      assert.equal(done.kind, 'deliverable')
+      assert.equal(done.description, 'Donnée conservée')
+      assert.equal(done.endDate, '2029-12-10')
+      assert.equal(done.responsibleId, 'contributor')
+      const blocked = legacyPhase.steps.find(step => step.id === 'legacy-roadmap-blocked')
+      assert.equal(blocked.status, 'blocked')
+      assert.equal(blocked.blocker, 'Attente du client')
+      assert.equal(roadmap.data.summary.progress, 50, 'only completed steps count toward progress')
+      const count = db.prepare('SELECT COUNT(*) AS n FROM portal_roadmap_steps WHERE project_id=?').get('project-a').n
+      await stopServer()
+      server = startServer()
+      await waitForServer()
+      const afterRestart = await request('/api/portal/roadmap?projectId=project-a', { cookie: contributor })
+      expectStatus(afterRestart, 200, 'roadmap survives restart')
+      assert.equal(db.prepare('SELECT COUNT(*) AS n FROM portal_roadmap_steps WHERE project_id=?').get('project-a').n, count, 'startup migration must not duplicate imported rows')
+      assert.equal(afterRestart.data.phases.find(phase => phase.title === 'Étapes existantes').steps.length, 2)
+      expectStatus(await request('/api/portal/roadmap?projectId=project-b', { cookie: contributor }), 404, 'foreign roadmap read')
+      const empty = await request('/api/portal/roadmap?projectId=project-c', { cookie: contributor })
+      expectStatus(empty, 200, 'project without roadmap')
+      assert.equal(empty.data.phases.length, 0)
+      const legacyApi = await request('/api/portal/milestones', { cookie: admin })
+      assert.ok([404, 410].includes(legacyApi.status), `legacy API is retired, got HTTP ${legacyApi.status}`)
+    })
 
     await test('satisfaction questionnaires are editable, versioned, and isolated by project and role', async () => {
       const url = '/api/portal/satisfaction?projectId=project-a'
@@ -479,27 +548,111 @@ async function run() {
       assert.ok(await login('viewer@test.invalid', 'Portal-viewer-Password-2026!'))
     })
 
-    let milestoneId
-    await test('checklist milestones enforce validation, assignment, and responsible-user updates', async () => {
-      expectStatus(await request('/api/portal/milestones', { method: 'POST', cookie: contributor, body: { projectId: 'project-a', title: 'Checklist indisponible' } }), 403)
-      const checklist = await request('/api/portal/milestones', { method: 'POST', cookie: admin, body: { projectId: 'project-a', title: 'Checklist test', description: 'Étapes vérifiables', kind: 'checklist', status: 'todo', dueDate: '2030-01-01', responsibleId: 'contributor' } })
-      expectStatus(checklist, 200)
-      const created = await request('/api/portal/milestones', { method: 'POST', cookie: admin, body: { projectId: 'project-a', title: 'Jalon assigné', kind: 'milestone', dueDate: '2030-01-01', responsibleId: 'contributor' } })
-      expectStatus(created, 200)
-      milestoneId = created.data.id
-      assert.ok(milestoneId)
-      expectStatus(await request('/api/portal/milestones', { method: 'POST', cookie: admin, body: { projectId: 'project-a', title: 'Date invalide', dueDate: '2030-02-30' } }), 400)
-      expectStatus(await request('/api/portal/milestones', { method: 'POST', cookie: admin, body: { projectId: 'project-a', title: 'Mauvais responsable', responsibleId: 'other-org' } }), 400)
-      expectStatus(await request(`/api/portal/milestones/${milestoneId}`, { method: 'PATCH', cookie: decider, body: { status: 'done' } }), 403)
-      expectStatus(await request(`/api/portal/milestones/${milestoneId}`, { method: 'PATCH', cookie: contributor, body: { status: 'in_progress', blocker: 'Validation en cours' } }), 200)
-      const list = await request('/api/portal/resources?projectId=project-a', { cookie: contributor })
-      expectStatus(list, 200)
-      assert.ok(list.data.milestones.some(item => item.id === checklist.data.id && item.kind === 'checklist'))
-      assert.ok(list.data.milestones.some(item => item.id === milestoneId && item.status === 'in_progress'))
-      assert.ok(list.data.todos.some(item => item.id === milestoneId && item.responsibleId === 'contributor'))
-      expectStatus(await request(`/api/portal/milestones/${milestoneId}`, { method: 'PATCH', cookie: contributor, body: { title: 'Modification interdite' } }), 403)
-      expectStatus(await request(`/api/portal/milestones/${milestoneId}`, { method: 'DELETE', cookie: contributor }), 403)
-      expectStatus(await request(`/api/portal/milestones/${milestoneId}`, { method: 'DELETE', cookie: admin }), 200)
+    await test('roadmap phases and steps support scoped CRUD, ordering, dates, overlap, resources, and dependencies', async () => {
+      const activeViewer = await login('viewer@test.invalid', 'Portal-viewer-Password-2026!')
+      const phase = (cookie, body) => request('/api/portal/roadmap/phases', { method: 'POST', cookie, body })
+      const step = (cookie, body) => request('/api/portal/roadmap/steps', { method: 'POST', cookie, body })
+      expectStatus(await phase(contributor, { projectId: 'project-a', title: 'Client phase' }), 403)
+      expectStatus(await phase(activeViewer, { projectId: 'project-a', title: 'Reader phase' }), 403)
+      expectStatus(await phase(contributor, { projectId: 'project-b', title: 'Foreign phase' }), 404)
+      expectStatus(await phase(admin, { projectId: 'missing-project', title: 'Missing project' }), 404)
+
+      for (const [startDate, endDate] of [['2030-02-30', '2030-03-01'], ['2030-04-01', '2030-03-31']]) {
+        expectStatus(await phase(admin, { projectId: 'project-a', title: 'Invalid dates', startDate, endDate }), 400, 'phase rejects invalid and reversed dates')
+      }
+      const firstPhase = await phase(admin, { projectId: 'project-a', title: 'Cadrage', description: 'Phase initiale', startDate: '2030-03-01', endDate: '2030-04-30', status: 'in_progress' })
+      expectStatus(firstPhase, 200)
+      const secondPhase = await phase(admin, { projectId: 'project-a', title: 'UX/UI', startDate: '2030-04-15', endDate: '2030-05-31', status: 'planned' })
+      expectStatus(secondPhase, 200, 'overlapping phases are allowed')
+      const firstPhaseId = firstPhase.data.id
+      const secondPhaseId = secondPhase.data.id
+      expectStatus(await request(`/api/portal/roadmap/phases/${secondPhaseId}`, { method: 'PATCH', cookie: admin, body: { position: 0 } }), 200, 'admin reorders phases')
+      const removablePhase = await phase(admin, { projectId: 'project-a', title: 'Phase supprimable' })
+      expectStatus(removablePhase, 200)
+      expectStatus(await request(`/api/portal/roadmap/phases/${removablePhase.data.id}`, { method: 'DELETE', cookie: admin }), 200, 'admin can delete a phase')
+      expectStatus(await request(`/api/portal/roadmap/phases/${firstPhaseId}`, { method: 'PATCH', cookie: contributor, body: { title: 'Nope' } }), 403)
+      expectStatus(await request(`/api/portal/roadmap/phases/${firstPhaseId}`, { method: 'DELETE', cookie: decider }), 403)
+
+      for (const [startDate, endDate] of [['2030-02-30', '2030-03-01'], ['2030-04-20', '2030-04-19']]) {
+        expectStatus(await step(admin, { projectId: 'project-a', phaseId: firstPhaseId, title: 'Invalid step dates', startDate, endDate }), 400, 'step rejects invalid and reversed dates')
+      }
+      const firstStep = await step(admin, {
+        projectId: 'project-a', phaseId: firstPhaseId, title: 'Analyse des besoins', description: 'Étape historique non requise',
+        startDate: '2030-04-01', endDate: '2030-04-25', status: 'in_progress', resourceIds: ['mockup-a'], responsibleId: 'contributor'
+      })
+      expectStatus(firstStep, 200)
+      const secondStep = await step(admin, {
+        projectId: 'project-a', phaseId: secondPhaseId, title: 'Wireframes', startDate: '2030-04-20', endDate: '2030-05-10',
+        status: 'planned', dependencyIds: [firstStep.data.id]
+      })
+      expectStatus(secondStep, 200, 'overlapping steps and scoped dependencies are allowed')
+      expectStatus(await request(`/api/portal/roadmap/steps/${firstStep.data.id}`, { method: 'PATCH', cookie: admin, body: { dependencyIds: [secondStep.data.id] } }), 400, 'dependency cycles are rejected')
+      expectStatus(await request(`/api/portal/roadmap/steps/${firstStep.data.id}`, { method: 'PATCH', cookie: admin, body: { resourceIds: ['mockup-b'] } }), 400, 'step cannot link another project’s resource')
+      const foreignPhase = await phase(admin, { projectId: 'project-b', title: 'Projet B' })
+      expectStatus(foreignPhase, 200)
+      const foreignStep = await step(admin, { projectId: 'project-b', phaseId: foreignPhase.data.id, title: 'Étape externe' })
+      expectStatus(foreignStep, 200)
+      expectStatus(await request(`/api/portal/roadmap/steps/${firstStep.data.id}`, { method: 'PATCH', cookie: admin, body: { dependencyIds: [foreignStep.data.id] } }), 400, 'dependencies are limited to the same project')
+      expectStatus(await request(`/api/portal/roadmap/steps/${firstStep.data.id}`, { method: 'PATCH', cookie: activeViewer, body: { status: 'done' } }), 403)
+      const reloaded = await request('/api/portal/roadmap?projectId=project-a', { cookie: contributor })
+      expectStatus(reloaded, 200)
+      assert.equal(reloaded.data.phases[0].id, secondPhaseId, 'phase order is persisted')
+      assert.equal(reloaded.data.summary.progress, 25, 'planned and in-progress steps do not count as completed')
+      const loadedFirst = reloaded.data.phases.flatMap(item => item.steps).find(item => item.id === firstStep.data.id)
+      assert.deepEqual(loadedFirst.resourceIds, ['mockup-a'])
+      assert.deepEqual(reloaded.data.phases.flatMap(item => item.steps).find(item => item.id === secondStep.data.id).dependencyIds, [firstStep.data.id])
+      const reader = await request('/api/portal/roadmap?projectId=project-a', { cookie: activeViewer })
+      assert.equal(reader.data.permissions.canEdit, false)
+      expectStatus(await request(`/api/portal/roadmap/steps/${firstStep.data.id}`, { method: 'PATCH', cookie: contributor, body: { title: 'Direct edit' } }), 403)
+      expectStatus(await request(`/api/portal/roadmap/steps/${firstStep.data.id}`, { method: 'DELETE', cookie: contributor }), 403)
+      const removable = await step(admin, { projectId: 'project-a', phaseId: firstPhaseId, title: 'Retirable' })
+      expectStatus(removable, 200, 'admin can create a step')
+      expectStatus(await request(`/api/portal/roadmap/steps/${removable.data.id}`, { method: 'DELETE', cookie: admin }), 200, 'admin can delete a step')
+
+      const noDeciderPhase = await phase(admin, { projectId: 'project-c', title: 'Sans décideur' })
+      expectStatus(noDeciderPhase, 200)
+      const noDeciderStep = await step(admin, { projectId: 'project-c', phaseId: noDeciderPhase.data.id, title: 'Validation bloquée', requiresValidation: true })
+      expectStatus(noDeciderStep, 200)
+      expectStatus(await request(`/api/portal/roadmap/steps/${noDeciderStep.data.id}/validation`, { method: 'POST', cookie: admin, body: { description: 'Aucun décideur assigné' } }), 409, 'validation cannot be routed without a configured decision maker')
+    })
+
+    await test('roadmap validation supports requests, decisions, changes, resubmission, history, and stale rejection', async () => {
+      const createdStep = await request('/api/portal/roadmap/steps', {
+        method: 'POST', cookie: admin,
+        body: { projectId: 'project-a', phaseId: 'legacy-milestones:project-a', title: 'Livrable à valider', startDate: '2030-06-01', endDate: '2030-06-15', status: 'planned', requiresValidation: true, resourceIds: ['mockup-versioned'] }
+      })
+      expectStatus(createdStep, 200)
+      const stepId = createdStep.data.id
+      expectStatus(await request(`/api/portal/roadmap/steps/${stepId}/validation`, { method: 'POST', cookie: contributor, body: { description: 'Demande client interdite' } }), 403)
+      expectStatus(await request(`/api/portal/roadmap/steps/${stepId}/validation`, { method: 'POST', cookie: admin, body: { description: 'Lien vers un autre projet', resourceId: 'mockup-b' } }), 400, 'validation attachment must belong to the same project')
+      for (const dueDate of ['2030-02-30', '2029-12-01']) {
+        expectStatus(await request(`/api/portal/roadmap/steps/${stepId}/validation`, { method: 'POST', cookie: admin, body: { description: 'À vérifier', dueDate } }), 400, 'invalid validation deadline is rejected')
+      }
+      expectStatus(await request(`/api/portal/roadmap/steps/${stepId}`, { method: 'PATCH', cookie: admin, body: { status: 'done' } }), 400, 'required validation cannot be bypassed by marking done')
+      const pending = await request(`/api/portal/roadmap/steps/${stepId}/validation`, { method: 'POST', cookie: admin, body: { description: 'Merci de vérifier la maquette.', url: 'https://example.invalid/preview', resourceId: 'mockup-versioned', dueDate: '2030-06-20' } })
+      expectStatus(pending, 200)
+      assert.ok(pending.data.id)
+      const awaiting = await request('/api/portal/roadmap?projectId=project-a', { cookie: decider })
+      const currentStep = awaiting.data.phases.flatMap(item => item.steps).find(item => item.id === stepId)
+      assert.equal(currentStep.status, 'awaiting_validation')
+      assert.equal(currentStep.validations.at(-1).status, 'pending', 'no response never approves automatically')
+      expectStatus(await request(`/api/portal/roadmap/validations/${pending.data.id}/decision`, { method: 'POST', cookie: contributor, body: { decision: 'approved', comment: 'Interdit sans droit de décision' } }), 403)
+      expectStatus(await request(`/api/portal/roadmap/validations/${pending.data.id}/decision`, { method: 'POST', cookie: decider, body: { decision: 'invalid', comment: 'Choix invalide' } }), 400)
+      const changed = await request(`/api/portal/roadmap/validations/${pending.data.id}/decision`, { method: 'POST', cookie: decider, body: { decision: 'changes', comment: 'Merci d’ajuster le contraste.' } })
+      expectStatus(changed, 200)
+      expectStatus(await request(`/api/portal/roadmap/validations/${pending.data.id}/decision`, { method: 'POST', cookie: decider, body: { decision: 'approved', comment: 'Décision périmée' } }), 409, 'stale validation decision rejected')
+      const resubmitted = await request(`/api/portal/roadmap/steps/${stepId}/validation`, { method: 'POST', cookie: admin, body: { description: 'Nouvelle version avec contraste ajusté.', resourceId: 'mockup-versioned' } })
+      expectStatus(resubmitted, 200)
+      assert.notEqual(resubmitted.data.id, pending.data.id)
+      const history = await request('/api/portal/roadmap?projectId=project-a', { cookie: decider })
+      const validatedStep = history.data.phases.flatMap(item => item.steps).find(item => item.id === stepId)
+      assert.deepEqual(validatedStep.validations.map(item => item.status), ['changes', 'pending'])
+      assert.equal(validatedStep.validations[0].comment, 'Merci d’ajuster le contraste.')
+      expectStatus(await request(`/api/portal/roadmap/validations/${resubmitted.data.id}/decision`, { method: 'POST', cookie: decider, body: { decision: 'approved', comment: 'Validé.' } }), 200)
+      const approved = await request('/api/portal/roadmap?projectId=project-a', { cookie: contributor })
+      const approvedStep = approved.data.phases.flatMap(item => item.steps).find(item => item.id === stepId)
+      assert.equal(approvedStep.status, 'done')
+      assert.deepEqual(approvedStep.validations.map(item => item.status), ['changes', 'approved'])
     })
 
     await test('a client file upload fulfills its assigned request and removes the todo', async () => {
@@ -547,6 +700,22 @@ async function run() {
           method: 'POST', headers: { cookie: `mc_portal_session=${cookie}` }, body: form
         })
       }
+
+      const initFileUpload = fileSize => request('/api/portal/uploads/init', {
+        method: 'POST', cookie: contributor,
+        body: { projectId: 'project-a', kind: 'file', fileName: 'size-test.bin', fileSize, clientKey: randomUUID() }
+      })
+      const multipartMax = 50 * 1024 * 1024
+      const directMax = 250 * 1024 * 1024
+      const multipart = await initFileUpload(multipartMax)
+      expectStatus(multipart, 200, 'initialize a file at the local multipart limit')
+      assert.equal(multipart.data.transport, 'multipart')
+      for (const bytes of [multipartMax + 1, directMax]) {
+        expectStatus(await initFileUpload(bytes), 503, 'require R2 for a file within the direct upload limit')
+      }
+      const overDirectLimit = await initFileUpload(directMax + 1)
+      expectStatus(overDirectLimit, 413, 'reject a file one byte over the direct upload limit')
+      assert.match(overDirectLimit.data.statusMessage, /250 Mo/)
 
       const tooLarge = await postFile(contributor, 'project-a', Buffer.alloc(50 * 1024 * 1024 + 1), 'over-limit.bin')
       assert.equal(tooLarge.status, 413, `file over 50 MiB should return 413, got ${tooLarge.status}`)
@@ -596,6 +765,7 @@ async function run() {
     })
 
     await test('notification preferences, read state, and reminder deduplication work', async () => {
+      db.prepare("DELETE FROM portal_notifications WHERE user_id='decider'").run()
       db.prepare('INSERT INTO portal_notifications(id,user_id,project_id,kind,title,body,created_at,visible,email_status) VALUES(?,?,?,?,?,?,?,?,?)')
         .run('notification-a', 'decider', 'project-a', 'review', 'Validation requise', 'À examiner', new Date().toISOString(), 1, 'disabled')
       const before = await request('/api/portal/notifications', { cookie: decider })
@@ -609,39 +779,46 @@ async function run() {
       assert.equal(after.data.unreadCount, 0)
       assert.deepEqual(after.data.preferences, { inApp: true, email: false, reminderDays: 1 })
 
-      const due = db.prepare(`INSERT INTO portal_milestones(id,project_id,title,description,kind,status,due_date,responsible_id,blocker,created_by,created_at,updated_at)
-        VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`)
-      const now = new Date().toISOString()
+      const reminderStep = await request('/api/portal/roadmap/steps', {
+        method: 'POST', cookie: admin,
+        body: { projectId: 'project-a', phaseId: 'legacy-milestones:project-a', title: 'Validation à relancer', status: 'planned', requiresValidation: true }
+      })
+      expectStatus(reminderStep, 200)
+      const pendingReminder = await request(`/api/portal/roadmap/steps/${reminderStep.data.id}/validation`, {
+        method: 'POST', cookie: admin, body: { description: 'Merci de valider le livrable.', dueDate: '2030-01-01' }
+      })
+      expectStatus(pendingReminder, 200)
+      const roadmapTodos = await request('/api/portal/resources?projectId=project-a', { cookie: decider })
+      expectStatus(roadmapTodos, 200)
+      assert.ok(roadmapTodos.data.todos.some(item => item.kind === 'roadmap' && item.id === pendingReminder.data.id), 'pending roadmap validation appears as a client todo')
       const aged = new Date(Date.now() - 4 * 86400000).toISOString()
-      due.run('reminder-item', 'project-a', 'Action à relancer', '', 'milestone', 'todo', '2030-01-01', 'contributor', '', 'admin', now, now)
-      await request('/api/portal/notifications/preferences', { method: 'PUT', cookie: contributor, body: { inApp: true, email: false, reminderDays: 1 } })
+      await request('/api/portal/notifications/preferences', { method: 'PUT', cookie: decider, body: { inApp: true, email: false, reminderDays: 1 } })
       const headers = { authorization: 'Bearer portal-test-reminder-secret' }
       const tooSoon = await request('/api/portal/notifications/remind', { method: 'POST', headers, body: { projectId: 'project-a' } })
       expectStatus(tooSoon, 200)
-      assert.equal(db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='contributor' AND kind='reminder'").get().n, 0)
-      db.prepare('UPDATE portal_milestones SET created_at=?,updated_at=? WHERE id=?').run(aged, aged, 'reminder-item')
+      assert.equal(db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='decider' AND kind='reminder'").get().n, 0)
+      db.prepare('UPDATE portal_roadmap_validations SET requested_at=? WHERE id=?').run(aged, pendingReminder.data.id)
 
-      expectStatus(await request('/api/portal/notifications/preferences', { method: 'PUT', cookie: contributor, body: { inApp: false, email: false, reminderDays: 1 } }), 200)
+      expectStatus(await request('/api/portal/notifications/preferences', { method: 'PUT', cookie: decider, body: { inApp: false, email: false, reminderDays: 1 } }), 200)
       const disabled = await request('/api/portal/notifications/remind', { method: 'POST', headers, body: { projectId: 'project-a' } })
       expectStatus(disabled, 200)
       assert.equal(disabled.data.queued, 0)
-      assert.equal(db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='contributor' AND kind='reminder'").get().n, 0)
+      assert.equal(db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='decider' AND kind='reminder'").get().n, 0)
 
-      expectStatus(await request('/api/portal/notifications/preferences', { method: 'PUT', cookie: contributor, body: { inApp: true, email: false, reminderDays: 1 } }), 200)
+      expectStatus(await request('/api/portal/notifications/preferences', { method: 'PUT', cookie: decider, body: { inApp: true, email: false, reminderDays: 1 } }), 200)
 
       const first = await request('/api/portal/notifications/remind', { method: 'POST', headers, body: { projectId: 'project-a' } })
       expectStatus(first, 200)
       assert.ok(first.data.queued >= 1)
-      const reminderCount = db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='contributor' AND kind='reminder' AND dedupe_key LIKE 'reminder:milestone:reminder-item:%'").get().n
-      const reminder = db.prepare("SELECT title,body,email_status FROM portal_notifications WHERE user_id='contributor' AND kind='reminder' AND dedupe_key LIKE 'reminder:milestone:reminder-item:%'").get()
+      const reminderCount = db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='decider' AND kind='roadmap_reminder' AND dedupe_key LIKE ?").get(`reminder:roadmap:${pendingReminder.data.id}:%:decider`).n
+      const reminder = db.prepare("SELECT title,body,email_status FROM portal_notifications WHERE user_id='decider' AND kind='roadmap_reminder' AND dedupe_key LIKE ?").get(`reminder:roadmap:${pendingReminder.data.id}:%:decider`)
       assert.ok(reminder)
-      assert.equal(reminder.title, 'Action attendue : Action à relancer')
+      assert.equal(reminder.title, 'Action attendue : Validation à relancer')
       assert.ok(reminder.body.includes('projet Projet A') && reminder.body.includes('2030-01-01'))
-      assert.equal(reminder.body.includes('milestone:reminder-item'), false)
       assert.equal(reminder.email_status, 'disabled')
       const second = await request('/api/portal/notifications/remind', { method: 'POST', headers, body: { projectId: 'project-a' } })
       expectStatus(second, 200)
-      assert.equal(db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='contributor' AND kind='reminder' AND dedupe_key LIKE 'reminder:milestone:reminder-item:%'").get().n, reminderCount)
+      assert.equal(db.prepare("SELECT COUNT(*) AS n FROM portal_notifications WHERE user_id='decider' AND kind='roadmap_reminder' AND dedupe_key LIKE ?").get(`reminder:roadmap:${pendingReminder.data.id}:%:decider`).n, reminderCount)
       expectStatus(await request('/api/portal/notifications/remind', { method: 'POST', body: { projectId: 'project-a' } }), 401)
     })
 

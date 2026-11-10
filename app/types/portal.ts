@@ -12,5 +12,4 @@ export const portalDate = (value:string) => {
 export type MemberRole = 'decision_maker' | 'contributor' | 'viewer'
 export const memberRoleLabels: Record<string,string> = { decision_maker:'Décideur', contributor:'Contributeur', viewer:'Lecteur' }
 export type PortalMember = { id:string; name:string; email:string; memberRole:MemberRole; suspended:boolean }
-export type PortalMilestone = { id:string; projectId?:string; title:string; description:string; kind:'milestone'|'deliverable'|'checklist'; status:'todo'|'in_progress'|'done'|'blocked'; dueDate:string; responsibleId:string|null; responsibleName:string; blocker:string }
-export type PortalTodo = { id:string; kind:'file'|'mockup'|'payment'|'milestone'; title:string; projectId:string; responsibleId:string|null; responsibleName:string; dueDate:string; status:string; resourceId?:string }
+export type PortalTodo = { id:string; kind:'file'|'mockup'|'payment'|'milestone'|'roadmap'|'roadmap_step'; title:string; projectId:string; responsibleId:string|null; responsibleName:string; dueDate:string; status:string; resourceId?:string; stepId?:string }

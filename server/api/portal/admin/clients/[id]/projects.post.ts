@@ -1,22 +1,21 @@
 import { randomUUID } from 'node:crypto'
 import { assertSameOrigin, requirePortalUser } from '../../../../../utils/portal-auth'
+import { workflowDate } from '../../../../../utils/portal-workflow'
 import { portalDb } from '../../../../../utils/portal-db'
 
 export default defineEventHandler(async (event) => {
   assertSameOrigin(event)
   await requirePortalUser(event, 'admin')
   const organizationId = getRouterParam(event, 'id') || ''
-  const body = await readBody<{ name?: unknown; description?: unknown; status?: unknown; progress?: unknown; dueDate?: unknown; currentPhase?: unknown }>(event)
+  const body = await readBody<{ name?: unknown; description?: unknown; status?: unknown; dueDate?: unknown }>(event)
   const name = typeof body.name === 'string' ? body.name.trim().slice(0, 160) : ''
   const description = typeof body.description === 'string' ? body.description.trim().slice(0, 1500) : ''
   const status = typeof body.status === 'string' ? body.status.trim().slice(0, 50) : 'En cours'
-  const progress = body.progress === undefined ? 0 : Number(body.progress)
-  const dueDate = typeof body.dueDate === 'string' ? body.dueDate.trim().slice(0, 40) : ''
-  const currentPhase = typeof body.currentPhase === 'string' ? body.currentPhase : 'Cadrage'
+  const progress = 0
+  const dueDate = workflowDate(body.dueDate)
+  const currentPhase = ''
   if (!organizationId || name.length < 2) throw createError({ statusCode: 400, statusMessage: 'Le nom du projet est obligatoire.' })
   if (!['À cadrer', 'En cours', 'En validation', 'En attente client', 'Terminé'].includes(status)) throw createError({ statusCode: 400, statusMessage: 'Statut de projet invalide.' })
-  if (!['Cadrage', 'Design', 'Développement', 'Mise en ligne'].includes(currentPhase)) throw createError({ statusCode: 400, statusMessage: 'Étape de projet invalide.' })
-  if (!Number.isInteger(progress) || progress < 0 || progress > 100) throw createError({ statusCode: 400, statusMessage: 'Avancement invalide.' })
 
   const db = await portalDb()
   const organization = await db.prepare('SELECT id FROM organizations WHERE id=?').get(organizationId)

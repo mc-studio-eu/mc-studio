@@ -52,8 +52,10 @@ export async function flushNotificationEmails(event:any) {
   const claimed=await db.prepare('UPDATE portal_notifications SET email_status=? WHERE id=? AND email_status=?').run(claim,notification.id,notification.email_status)
   if(!claimed.changes)continue
   const requestNotification=['request_created','request_reply','request_status'].includes(notification.kind)
-  const path=requestNotification && notification.role==='admin'?'/portal/admin':'/portal'
-  const link=`${baseUrl}${path}?projectId=${encodeURIComponent(notification.project_id)}${requestNotification?'&tab=requests':''}`
+  const roadmapNotification=notification.kind.startsWith('roadmap_')
+  const tab=roadmapNotification?'roadmap':requestNotification?'requests':''
+  const path=tab && notification.role==='admin'?'/portal/admin':'/portal'
+  const link=`${baseUrl}${path}?projectId=${encodeURIComponent(notification.project_id)}${tab?'&tab='+tab:''}`
   const state=await sendPortalEmail(event,notification.email,`${notification.title} · MC Studio`,`${notification.body}\n\n${link}`,`portal-notification-${notification.id}`)
   await db.prepare('UPDATE portal_notifications SET email_status=? WHERE id=?').run(state==='failed'?`failed:${Date.now()}`:state,notification.id)
   if(state==='sent')sent++

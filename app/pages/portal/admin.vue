@@ -10,8 +10,19 @@ type Client = { members: TeamMember[]; invitations: TeamInvitation[]; id: string
 const ready = ref(false)
 const route = useRoute()
 const resourceTab = ref<ResourceKind|'assets'|'satisfaction'>('payment')
+type ProjectTab = 'roadmap' | 'settings' | 'resources'
+const projectTab = ref<ProjectTab>('roadmap')
+const projectTabs = [
+  { id: 'roadmap', label: 'Roadmap', icon: 'i-tabler-route' },
+  { id: 'settings', label: 'Paramètres', icon: 'i-tabler-settings' },
+  { id: 'resources', label: 'Ressources', icon: 'i-tabler-folders' },
+] as const
+const roadmapItem = ref('')
 
-const section = ref<'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications'>(['growth','assets'].includes(String(useRoute().query.tab)) ? String(useRoute().query.tab) as 'growth'|'assets' : 'clients')
+const initialSection = route.query.tab
+const section = ref<'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'>(
+  initialSection === 'growth' || initialSection === 'assets' || initialSection === 'storage' ? initialSection : 'clients'
+)
 
 const search = ref('')
 
@@ -58,7 +69,7 @@ const inviteBusy = ref(false)
 
 const projectBusy = ref(false)
 const showAddProject = ref(false)
-const newProjectForm = reactive({ name: '', description: '', status: 'En cours', progress: 0, dueDate: '', currentPhase: 'Cadrage' })
+const newProjectForm = reactive({ name: '', description: '', status: 'En cours', dueDate: '' })
 const projectRecords = computed(() => selected.value?.projects || [])
 const activeProject = computed(() => projectRecords.value.find(project => project.id === selectedProjectId.value) || projectRecords.value[0] || null)
 
@@ -70,7 +81,7 @@ const deleteBusy = ref(false)
 
 const adminName = ref('Administration'), adminEmail=ref('')
 
-const projectForm = reactive({ name: '', description: '', status: '', progress: 0, dueDate: '', currentPhase: 'Cadrage',decisionMakerId:'' })
+const projectForm = reactive({ name: '', description: '', status: '', dueDate: '',decisionMakerId:'' })
 const globalPrompt = ref(''), promptBusy = ref(false), promptProjectId = ref(''), promptLoading = ref(false)
 const promptProjects = computed(() => clients.value.flatMap(client => client.projects.map(project => ({...project, clientName:client.name}))))
 
@@ -108,7 +119,7 @@ const loadClients = async () => {
       projects, members: row.members || [], invitations: row.invitations || [],
       initials: String(row.name).split(/\s+/).slice(0, 2).map((part: string) => part[0]).join('').toUpperCase(),
       contact: row.contact || 'Invitation en attente', email: row.email || '',
-      projectId: latest?.id || '', project: latest?.name || 'Projet à créer', description: latest?.description || '', currentPhase: latest?.currentPhase || 'Cadrage', reviewState: latest?.reviewState, reviewFeedback: latest?.reviewFeedback,
+      projectId: latest?.id || '', project: latest?.name || 'Projet à créer', description: latest?.description || '', currentPhase: latest?.currentPhase || '', reviewState: latest?.reviewState, reviewFeedback: latest?.reviewFeedback,
       status: latest?.status || 'À cadrer', progress: latest?.progress ?? 0, due: latest?.dueDate || 'À définir',
       tone: ['gold', 'blue', 'green'][index % 3]
     }
@@ -128,7 +139,7 @@ onMounted(async () => {
     adminName.value = user.name; adminEmail.value=user.email
 
     await loadClients()
-    if(typeof route.query.projectId==='string')openNotificationProject(route.query.projectId,String(route.query.tab||''))
+    if(typeof route.query.projectId==='string')openNotificationProject(route.query.projectId,String(route.query.tab||''),typeof route.query.stepId==='string'?route.query.stepId:'')
 
     ready.value = true
 
@@ -213,6 +224,8 @@ const openClient = (client: Client) => {
 
   selected.value = client
   resourceTab.value = 'payment'
+  projectTab.value = 'roadmap'
+  roadmapItem.value = ''
   selectedProjectId.value = client.projects[0]?.id || ''
   syncProjectForm()
 
@@ -220,7 +233,7 @@ const openClient = (client: Client) => {
 
 const syncProjectForm = () => {
   const project = activeProject.value
-  Object.assign(projectForm, { name: project?.name || '', description: project?.description || '', status: project?.status || 'À cadrer', progress: project?.progress ?? 0, dueDate: project?.dueDate || '', currentPhase: project?.currentPhase || 'Cadrage',decisionMakerId:project?.decisionMakerId || '' })
+  Object.assign(projectForm, { name: project?.name || '', description: project?.description || '', status: project?.status || 'À cadrer', dueDate: project?.dueDate || '',decisionMakerId:project?.decisionMakerId || '' })
 }
 
 const addProject = async () => {
@@ -232,8 +245,10 @@ const addProject = async () => {
     await loadClients()
     selected.value = clients.value.find(client => client.id === selected.value?.id) || selected.value
     selectedProjectId.value = project.id
+    projectTab.value = 'roadmap'
+    roadmapItem.value = ''
     syncProjectForm()
-    Object.assign(newProjectForm, { name: '', description: '', status: 'En cours', progress: 0, dueDate: '', currentPhase: 'Cadrage' })
+    Object.assign(newProjectForm, { name: '', description: '', status: 'En cours', dueDate: '' })
     showAddProject.value = false
     notice.value = 'Le projet a été créé.'
   } catch (error: any) { modalError.value = error?.data?.statusMessage || 'Impossible de créer le projet.' }
@@ -304,7 +319,27 @@ const updateMember=async(member:TeamMember,patch:{memberRole?:MemberRole;suspend
  catch(error:any){notice.value=error?.data?.statusMessage || 'Impossible de mettre à jour cet accès.';await loadClients()}
  finally{memberBusy.value=''}
 }
-const openNotificationProject=async(projectId:string,tab='project')=>{const client=clients.value.find(client=>client.projects.some(project=>project.id===projectId));if(client){openClient(client);selectedProjectId.value=projectId;syncProjectForm();section.value='clients';if(['file','mockup'].includes(tab)){resourceTab.value=tab as ResourceKind;await nextTick();document.getElementById('admin-project-resources')?.scrollIntoView({behavior:'smooth',block:'start'})}}}
+const openProjectResource = (kind:ResourceKind) => {
+  resourceTab.value = kind
+  projectTab.value = 'resources'
+}
+const openNotificationProject = (projectId:string,tab='roadmap',stepId='') => {
+  const client = clients.value.find(client => client.projects.some(project => project.id === projectId))
+  if (!client) return
+  openClient(client)
+  selectedProjectId.value = projectId
+  roadmapItem.value = stepId
+  syncProjectForm()
+  section.value = 'clients'
+  if (tab === 'file' || tab === 'mockup') openProjectResource(tab)
+}
+const updateRoadmap = (summary:{progress:number;currentPhase:{title:string}|null},project:{id:string}) => {
+  const row = clients.value.flatMap(client => client.projects).find(item => item.id === project.id)
+  if (row) {
+    row.progress = summary.progress
+    row.currentPhase = summary.currentPhase?.title || ''
+  }
+}
 
 const signOut = async () => {
 
@@ -404,6 +439,8 @@ onBeforeUnmount(() => {
 
           <button :class="{ active: section === 'growth' }" @click="section = 'growth'; selected = null"><UIcon name="i-tabler-chart-line" />Croissance & performance</button>
 
+          <button :class="{ active: section === 'storage' }" :aria-current="section === 'storage' ? 'page' : undefined" @click="section = 'storage'; selected = null"><UIcon name="i-tabler-database" />Stockage</button>
+
           <button :class="{active:section==='notifications'}" @click="section='notifications';selected=null"><UIcon name="i-tabler-bell"/>Notifications</button><button :class="{active:section==='account'}" @click="section='account';selected=null"><UIcon name="i-tabler-user"/>Mon compte</button><button :class="{ active: section === 'assets' }" @click="section = 'assets'; selected = null"><UIcon name="i-tabler-photo" />Prompt IA</button>
 
         </nav>
@@ -428,6 +465,8 @@ onBeforeUnmount(() => {
 
           <PortalAccount v-if="section==='account' && !selected" :name="adminName" :email="adminEmail"/><PortalNotifications v-else-if="section==='notifications' && !selected" @open-project="openNotificationProject"/><PortalGrowth v-else-if="section==='growth' && !selected"/>
 
+          <PortalAdminStorage v-else-if="section==='storage' && !selected" />
+
           <section v-else-if="section==='assets' && !selected" class="admin-card prompt-settings"><p class="subheading">PROMPT DE GÉNÉRATION</p><h1>Un prompt par projet</h1><p class="subheading">Choisissez un client et un projet pour modifier le prompt visible dans sa médiathèque Assets.</p><form @submit.prevent="saveProjectPrompt"><label for="prompt-project">Projet client</label><select id="prompt-project" v-model="promptProjectId" required><option value="" disabled>Sélectionner un projet…</option><option v-for="project in promptProjects" :key="project.id" :value="project.id">{{project.clientName}} · {{project.name}}</option></select><template v-if="promptProjectId"><label for="project-ai-prompt">Prompt de génération d’image</label><textarea id="project-ai-prompt" v-model="globalPrompt" rows="14" maxlength="12000" :disabled="promptLoading" placeholder="Décrivez le style visuel, la palette, la lumière, la composition et les éléments à éviter…"/><div class="prompt-settings-footer"><small>{{globalPrompt.length}} / 12 000 caractères · propre à ce projet</small><button class="create-button" :disabled="promptBusy || promptLoading">{{promptBusy?'Enregistrement…':'Enregistrer le prompt'}}</button></div></template></form><p v-if="!promptProjects.length" class="subheading">Créez d’abord un projet dans la rubrique Clients.</p></section>
 
           <template v-else-if="selected">
@@ -436,8 +475,17 @@ onBeforeUnmount(() => {
 
             <div class="admin-title-row"><div class="client-heading"><span :class="['client-logo', selected.tone]">{{ selected.initials }}</span><div><h1>{{ selected.name }}</h1><p class="subheading">Espace client sécurisé · {{ selected.projects.length }} projet{{ selected.projects.length > 1 ? 's' : '' }}</p></div></div><div class="detail-actions"><button class="create-button" @click="showAddProject = true"><UIcon name="i-tabler-plus" />Ajouter un projet</button><button class="wa-button" @click="startInvite(selected)"><UIcon name="i-tabler-mail-forward" />Inviter des personnes</button></div></div>
 
-            <section class="admin-card project-list-card"><div class="card-heading"><h2>Projets du client</h2></div><div v-if="selected.projects.length" class="client-project-list"><button v-for="project in selected.projects" :key="project.id" :class="['client-project-item', { selected: selectedProjectId === project.id }]" @click="selectedProjectId = project.id; syncProjectForm()"><span><strong>{{ project.name }}</strong><small>{{ project.status }} · {{ project.progress }} % · {{ project.dueDate ? portalDate(project.dueDate) : 'Livraison à définir' }}</small></span><UIcon name="i-tabler-chevron-right" /></button></div><p v-else class="empty-projects">Ce client n’a pas encore de projet.</p></section>
+            <section class="admin-card project-list-card"><div class="card-heading"><h2>Projets du client</h2></div><div v-if="selected.projects.length" class="client-project-list"><button v-for="project in selected.projects" :key="project.id" :class="['client-project-item', { selected: selectedProjectId === project.id }]" @click="selectedProjectId = project.id; roadmapItem = ''; syncProjectForm()"><span><strong>{{ project.name }}</strong><small>{{ project.status }} · {{ project.progress }} % · {{ project.dueDate ? portalDate(project.dueDate) : 'Livraison à définir' }}</small></span><UIcon name="i-tabler-chevron-right" /></button></div><p v-else class="empty-projects">Ce client n’a pas encore de projet.</p></section>
 
+            <nav v-if="activeProject" class="admin-project-tabs" aria-label="Rubriques du projet">
+              <button v-for="tab in projectTabs" :key="tab.id" type="button" :aria-current="projectTab===tab.id?'page':undefined" @click="projectTab=tab.id; roadmapItem=''"><UIcon :name="tab.icon"/> {{ tab.label }}</button>
+            </nav>
+            <template v-if="activeProject && projectTab==='roadmap'">
+              <PortalRoadmap :key="activeProject.id" :project-id="activeProject.id" :item-id="roadmapItem" embedded @resource="openProjectResource" @changed="updateRoadmap"/>
+              <PortalReminders :key="activeProject.id" :project-id="activeProject.id"/>
+            </template>
+            <PortalResources v-else-if="activeProject && projectTab==='resources'" :key="activeProject.id" :initial-kind="resourceTab" :project-id="activeProject.id" :members="selected.members" admin/>
+            <template v-else>
             <section class="client-detail-grid"><article class="admin-card team-card"><div class="card-heading"><h2>Équipe du client <span class="team-count">{{ selected.members.length }}</span></h2><button class="quiet-button" @click="startInvite(selected)"><UIcon name="i-tabler-user-plus" />Inviter</button></div><p class="contact-note">Chaque personne dispose de son compte et accède aux projets de {{ selected.name }}. Un lecteur consulte sans contribuer. La suspension coupe immédiatement l’accès et les sessions, tout en conservant les contributions.</p><div v-if="!selected.members.length" class="contact-note">Aucun compte activé pour le moment.</div><ul class="team-list"><li v-for="member in selected.members" :key="member.id"><span class="team-avatar">{{ member.name.slice(0,1).toUpperCase() }}</span><div><strong>{{ member.name }}</strong><small>{{ member.email }}</small></div><div class="team-member-controls"><label :for="'role-'+member.id" class="sr-only">Rôle de {{member.name}}</label><select :id="'role-'+member.id" :value="member.memberRole" :disabled="!!memberBusy" @change="updateMember(member,{memberRole:($event.target as HTMLSelectElement).value as MemberRole})"><option v-for="(label,role) in memberRoleLabels" :key="role" :value="role">{{label}}</option></select><span class="team-badge">{{member.suspended?'Suspendu':'Actif'}}</span><button class="quiet-button" :disabled="!!memberBusy" @click="updateMember(member,{suspended:!member.suspended})">{{memberBusy===member.id?'…':member.suspended?'Réactiver':'Suspendre'}}</button></div></li></ul><template v-if="selected.invitations.length"><h3 class="team-pending-title">Invitations · {{ selected.invitations.length }}</h3><ul class="team-list"><li v-for="invitation in selected.invitations" :key="invitation.id"><div><strong>{{ invitation.email }}</strong><small>{{memberRoleLabels[invitation.memberRole || 'contributor']}} · {{ invitationExpired(invitation.expiresAt) ? 'Expirée' : 'En attente · expire le '+new Date(invitation.expiresAt).toLocaleDateString('fr-FR') }}</small></div><div class="team-actions"><button class="quiet-button" :disabled="!!invitationActionBusy" @click="startInvite(selected,invitation.email,invitation.memberRole || 'contributor')">Renvoyer</button><button class="quiet-button" :disabled="!!invitationActionBusy" @click="revokeInvitation(invitation)">{{ invitationActionBusy===invitation.id?'…':'Annuler' }}</button></div></li></ul></template><div v-if="activeProject" class="client-review-note"><p>{{ activeProject.reviewFeedback || (activeProject.reviewState === 'approved' ? 'Dernière maquette validée.' : activeProject.reviewState === 'changes' ? 'Demande de modifications reçue.' : 'Aucun retour pour le moment.') }}</p></div></article><article v-if="activeProject" class="admin-card"><span class="admin-status"><i></i>{{ activeProject.status }}</span><h2>{{ activeProject.name }}</h2><p class="project-type">Visible par le client après connexion</p><div class="admin-progress-meta"><span>Avancement</span><strong>{{ activeProject.progress }} %</strong></div><div class="admin-progress"><i :style="{ width: `${activeProject.progress}%` }" /></div><div class="due-row"><span>Livraison prévue</span><strong>{{ activeProject.dueDate ? portalDate(activeProject.dueDate) : 'À définir' }}</strong></div></article></section>
 
             <section v-if="activeProject" class="admin-card phases-card">
@@ -448,15 +496,14 @@ onBeforeUnmount(() => {
                   <label class="wide">Description visible par le client<textarea v-model="projectForm.description" rows="3" placeholder="Présentez brièvement le projet"></textarea></label>
                 </div></fieldset>
                 <fieldset class="project-fieldset"><legend>Suivi & livraison</legend><div class="field-grid">
-                  <label>Étape actuelle<select v-model="projectForm.currentPhase"><option>Cadrage</option><option>Design</option><option>Développement</option><option>Mise en ligne</option></select></label>
                   <label>Statut<select v-model="projectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select></label>
-                  <label>Avancement (%)<input v-model.number="projectForm.progress" type="number" min="0" max="100" required></label>
                   <label>Date de livraison<input v-model="projectForm.dueDate" type="date"></label>
-                  <label class="wide">Décideur du projet<select v-model="projectForm.decisionMakerId"><option value="">Aucun décideur désigné</option><option v-for="member in selected.members.filter(member=>!member.suspended && member.memberRole==='decision_maker')" :key="member.id" :value="member.id">{{member.name}}</option></select><small>Attribuez le rôle Décideur dans l’équipe, puis désignez la personne qui validera les maquettes.</small></label>
+                  <label class="wide">Décideur du projet<select v-model="projectForm.decisionMakerId"><option value="">Aucun décideur désigné</option><option v-for="member in selected.members.filter(member=>!member.suspended && member.memberRole==='decision_maker')" :key="member.id" :value="member.id">{{member.name}}</option></select><small>Attribuez le rôle Décideur dans l’équipe, puis désignez la personne qui répondra aux demandes de validation.</small></label>
                 </div></fieldset>
                 <div class="project-form-footer"><span>Les modifications sont visibles par le client.</span><button class="create-button" :disabled="projectBusy"><UIcon name="i-tabler-device-floppy" />{{ projectBusy ? 'Enregistrement…' : 'Enregistrer les modifications' }}</button></div>
               </form>
-            </section><PortalMilestones v-if="activeProject" :project-id="activeProject.id" :members="selected.members" admin/><PortalReminders v-if="activeProject" :project-id="activeProject.id"/>
+            </section>
+            </template>
 
           </template>
 
@@ -484,7 +531,6 @@ onBeforeUnmount(() => {
 
           <p v-if="notice" class="admin-notice" role="status"><UIcon name="i-tabler-info-circle" />{{ notice }}<button aria-label="Fermer la notification" @click="notice = ''">×</button></p>
 
-          <PortalResources v-if="activeProject" id="admin-project-resources" :key="activeProject.id" :initial-kind="resourceTab" :project-id="activeProject.id" :members="selected?.members" admin />
 
         <footer class="admin-footer">MC Studio · Espace interne sécurisé</footer>
 
@@ -507,7 +553,7 @@ onBeforeUnmount(() => {
           <header class="modal-heading"><span class="modal-heading-icon"><UIcon name="i-tabler-folder-plus" /></span><div><h2 id="create-project-title">Ajouter un projet</h2><p id="create-project-description">Un nouveau projet pour {{ selected?.name }}.</p></div><button type="button" class="modal-close" aria-label="Fermer" :disabled="projectBusy" @click="closeModal"><UIcon name="i-tabler-x" /></button></header>
           <div class="modal-body"><p v-if="modalError" class="team-error" role="alert">{{ modalError }}</p>
             <fieldset class="modal-fieldset"><legend>Informations générales</legend><div class="modal-fields"><div class="form-field"><label for="new-project-name">Nom du projet <span class="required-mark">*</span></label><input id="new-project-name" v-model="newProjectForm.name" required minlength="2" maxlength="160" placeholder="Ex. Identité visuelle"></div><div class="form-field"><label for="new-project-description">Description <span class="optional-label">Facultatif</span></label><textarea id="new-project-description" v-model="newProjectForm.description" rows="3" maxlength="1500" placeholder="Présentez brièvement le projet"></textarea><p class="field-help">Ces informations seront visibles dans l’espace client.</p></div></div></fieldset>
-            <fieldset class="modal-fieldset"><legend>Suivi & livraison</legend><div class="field-grid"><label for="new-project-phase">Étape actuelle<select id="new-project-phase" v-model="newProjectForm.currentPhase"><option>Cadrage</option><option>Design</option><option>Développement</option><option>Mise en ligne</option></select></label><label for="new-project-status">Statut<select id="new-project-status" v-model="newProjectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select></label><label for="new-project-progress">Avancement (%)<input id="new-project-progress" v-model.number="newProjectForm.progress" type="number" min="0" max="100" required></label><label for="new-project-due">Date de livraison<input id="new-project-due" v-model="newProjectForm.dueDate" type="date"></label></div></fieldset>
+            <fieldset class="modal-fieldset"><legend>Suivi & livraison</legend><div class="field-grid"><label for="new-project-status">Statut<select id="new-project-status" v-model="newProjectForm.status"><option>À cadrer</option><option>En cours</option><option>En validation</option><option>En attente client</option><option>Terminé</option></select></label><label for="new-project-due">Date de livraison<input id="new-project-due" v-model="newProjectForm.dueDate" type="date"></label></div></fieldset>
           </div><footer class="modal-actions"><button class="quiet-button" type="button" :disabled="projectBusy" @click="closeModal">Annuler</button><button class="create-button" type="submit" :disabled="projectBusy"><UIcon name="i-tabler-plus" />{{ projectBusy ? 'Création…' : 'Créer le projet' }}</button></footer>
         </form>
       </div>
@@ -560,7 +606,12 @@ onBeforeUnmount(() => {
 .field-grid label small { color: var(--muted); font-size: 13px; line-height: 1.6; }
 .project-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 24px; border-top: 1px solid var(--line); }
 .project-form-footer > span { color: var(--muted); font-size: 13px; line-height: 1.6; }
-.admin-content>:deep(.milestones){margin:20px 0}.prompt-settings{max-width:940px}.prompt-settings h1{font-size:24px;margin:10px 0}.prompt-settings form{display:grid;gap:8px;margin-top:24px}.prompt-settings form>label:not(:first-child){margin-top:16px}.prompt-settings label{font-size:13px}.prompt-settings-footer{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:8px}.prompt-settings-footer small{font-size:13px;color:var(--muted)}
+.admin-project-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:18px 0;border-bottom:1px solid var(--line)}
+.admin-project-tabs button{display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 12px;border-bottom:2px solid transparent;color:var(--muted);font-size:13px}
+.admin-project-tabs button[aria-current=page]{border-color:var(--portal-accent);color:var(--portal-accent-text)}
+.admin-project-tabs button:hover{color:var(--portal-text)}
+@media(max-width:400px){.admin-project-tabs{gap:2px}.admin-project-tabs button{padding:8px;font-size:12px}}
+.prompt-settings{max-width:940px}.prompt-settings h1{font-size:24px;margin:10px 0}.prompt-settings form{display:grid;gap:8px;margin-top:24px}.prompt-settings form>label:not(:first-child){margin-top:16px}.prompt-settings label{font-size:13px}.prompt-settings-footer{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:8px}.prompt-settings-footer small{font-size:13px;color:var(--muted)}
 .admin-space :is(input,select,textarea){max-width:100%;min-width:0;font:14px/1.5 Inter,Arial,sans-serif;color:var(--portal-text,#eee)}.project-edit input,.project-edit select,.project-edit textarea,.create-modal input,.create-modal select,.create-modal textarea,.team-member-controls select,.table-select select,.prompt-settings input,.prompt-settings select,.prompt-settings textarea{display:block;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--portal-control,#202020)}.admin-space select{appearance:none;padding-right:32px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m5 6 3 3 3-3' fill='none' stroke='%2394949f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:16px}.admin-space textarea{resize:vertical;min-height:90px}.admin-space input::placeholder,.admin-space textarea::placeholder{color:var(--muted);opacity:.75}.admin-notice{position:fixed;z-index:60;right:24px;bottom:24px;display:flex;align-items:center;gap:10px;max-width:min(440px,calc(100vw - 32px));margin:0;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--portal-raised,#242424);box-shadow:var(--portal-shadow,0 12px 35px #0005);font-size:12px}.admin-notice>.iconify{color:var(--portal-info,#83b5ff)}.admin-notice button{margin-left:auto;border:0;background:none;font-size:20px;line-height:1;color:var(--muted)}
 /* Only the body scrolls; the heading and actions keep their own padded rows. */
 .modal-backdrop { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: var(--portal-dialog-gutter, 24px); background: #0009; backdrop-filter: blur(6px); }

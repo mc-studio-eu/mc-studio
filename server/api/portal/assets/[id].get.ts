@@ -11,7 +11,7 @@ export default defineEventHandler(async event => {
   await accessibleProject(event, row.projectId)
   setHeader(event,'Cache-Control','private, no-store')
   setHeader(event,'Referrer-Policy','no-referrer')
-  if (row.objectKey) return sendRedirect(event,await signPortalDownload(row.objectKey,row.fileName,row.mimeType,true),302)
+  if (row.objectKey) return sendRedirect(event,await signPortalDownload(db,row.objectKey,row.fileName,row.mimeType,true),302)
   setResponseHeaders(event, { 'Content-Type': row.mimeType, 'Content-Disposition': `inline; filename*=UTF-8''${encodeURIComponent(row.fileName).replace(/'/g, '%27')}`, 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' })
   return Buffer.from(row.fileData, 'base64')
 })

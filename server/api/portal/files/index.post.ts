@@ -2,12 +2,15 @@ import { randomUUID } from 'node:crypto'
 import { assertSameOrigin } from '../../../utils/portal-auth'
 import { accessibleProject, recordActivity } from '../../../utils/portal-resources'
 import { readPortalUpload, portalUploadFile, portalUploadText } from '../../../utils/portal-upload'
-import { PORTAL_FILE_MAX_BYTES, PORTAL_FILE_QUOTA_BYTES } from '#shared/portal-upload'
+import { portalObjectStoreConfigured } from '../../../utils/portal-object-store'
+import { assertPortalR2UploadsEnabled } from '../../../utils/portal-r2-budget'
+import { PORTAL_MULTIPART_FILE_MAX_BYTES, PORTAL_FILE_QUOTA_BYTES } from '#shared/portal-upload'
 export default defineEventHandler(async event => {
  assertSameOrigin(event)
  const { user, db, project } = await accessibleProject(event, String(getQuery(event).projectId || '') || undefined)
- const form = await readPortalUpload(event, PORTAL_FILE_MAX_BYTES)
- const file = portalUploadFile(form, PORTAL_FILE_MAX_BYTES)
+ assertPortalR2UploadsEnabled(portalObjectStoreConfigured())
+ const form = await readPortalUpload(event, PORTAL_MULTIPART_FILE_MAX_BYTES)
+ const file = portalUploadFile(form, PORTAL_MULTIPART_FILE_MAX_BYTES)
  const requestId = portalUploadText(form, 'requestId')
  const name = file.name.replace(/[\x00-\x1f\x7f/\\]/g, '_').slice(0, 180)
  const data = Buffer.from(await file.arrayBuffer()).toString('base64')

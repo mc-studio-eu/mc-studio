@@ -17,7 +17,7 @@ export default defineEventHandler(async event=>{
   if(suspended || role!=='decision_maker')await db.prepare('DELETE FROM portal_project_deciders WHERE user_id=?').run(id)
   if(suspended || role==='viewer') {
    await db.prepare('UPDATE portal_file_request_assignments SET responsible_id=NULL WHERE responsible_id=?').run(id)
-   await db.prepare('UPDATE portal_milestones SET responsible_id=NULL,updated_at=CURRENT_TIMESTAMP WHERE responsible_id=?').run(id)
+   await db.prepare('UPDATE portal_roadmap_steps SET responsible_id=NULL,updated_at=CURRENT_TIMESTAMP WHERE responsible_id=? AND archived=0').run(id)
   }
   if(suspended) {
    await db.prepare('DELETE FROM sessions WHERE user_id=?').run(id)

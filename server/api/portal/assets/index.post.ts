@@ -2,7 +2,9 @@ import { randomUUID } from 'node:crypto'
 import { assertSameOrigin } from '../../../utils/portal-auth'
 import { accessibleProject, recordActivity } from '../../../utils/portal-resources'
 import { readPortalUpload, portalUploadFile, portalUploadText } from '../../../utils/portal-upload'
-import { PORTAL_ASSET_MAX_BYTES } from '#shared/portal-upload'
+import { portalObjectStoreConfigured } from '../../../utils/portal-object-store'
+import { assertPortalR2UploadsEnabled } from '../../../utils/portal-r2-budget'
+import { PORTAL_ASSET_MAX_BYTES, PORTAL_ASSET_QUOTA_BYTES } from '#shared/portal-upload'
 import { PORTAL_ASSET_DEFAULT_FOLDERS } from '#shared/portal-assets'
 
 const types: Record<string, string> = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.avif': 'image/avif' }
@@ -10,6 +12,7 @@ export default defineEventHandler(async event => {
   assertSameOrigin(event)
   const { user, db, project } = await accessibleProject(event, String(getQuery(event).projectId || '') || undefined)
   if (user.role !== 'admin') throw createError({ statusCode: 403, statusMessage: 'Accès réservé à MC Studio.' })
+  assertPortalR2UploadsEnabled(portalObjectStoreConfigured())
   const form = await readPortalUpload(event, PORTAL_ASSET_MAX_BYTES)
   const file = portalUploadFile(form, PORTAL_ASSET_MAX_BYTES)
   const title = portalUploadText(form, 'title').slice(0, 160)
@@ -27,7 +30,7 @@ export default defineEventHandler(async event => {
   await db.transaction(async () => {
     if (db.dialect === 'postgres') await db.prepare('SELECT id FROM projects WHERE id=? FOR UPDATE').get(project.id)
     const usage = await db.prepare('SELECT COALESCE(SUM(file_size),0) AS total FROM portal_assets WHERE project_id=?').get(project.id)
-    if (Number(usage.total) + file.size > 100 * 1024 * 1024) throw createError({ statusCode: 413, statusMessage: 'La médiathèque de ce projet a atteint 100 Mo.' })
+    if (Number(usage.total) + file.size > PORTAL_ASSET_QUOTA_BYTES) throw createError({ statusCode: 413, statusMessage: 'La médiathèque de ce projet a atteint 100 Mo.' })
     await db.prepare('INSERT INTO portal_assets(id,project_id,title,description,category,file_name,mime_type,file_size,file_data,created_by) VALUES(?,?,?,?,?,?,?,?,?,?)').run(id, project.id, title, description, category, name, mimeType, file.size, data, user.id)
     await recordActivity(project.id, `MC Studio a ajouté un asset : ${title}`)
   })

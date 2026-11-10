@@ -5,9 +5,9 @@
 L’admin ouvre `/portal/admin`, crée une fiche client et son premier projet, puis peut ajouter d’autres projets depuis cette fiche. Les projets et leurs ressources sont gérés séparément. Il peut inviter plusieurs personnes au niveau du client (jusqu’à 20 adresses à la fois), copier les liens individuels ou déclencher leur envoi via Resend. La fiche équipe affiche tous les membres et les invitations en attente ou expirées, avec renvoi et annulation. Chaque membre accède aux projets de son organisation. Le client accepte l’invitation, crée son mot de passe et retrouve son espace sur `/portal`.
 
 - Accueil : étape, progression, échéance, actions attendues et dernières nouvelles.
-- Suivi : quatre phases et journal des changements, dépôts et retours.
+- Roadmap : phases et étapes configurables, calendrier semaine/mois/global, validations et journal des changements.
 - Paiements : liens HTTPS de tout prestataire (Stripe, etc.), montant en euros, échéance et statut confirmé manuellement par MC Studio. Aucun prélèvement ni vérification bancaire automatique. Un clic ne marque jamais un paiement comme réglé.
-- Fichiers : liens et vrais fichiers ajoutés par l’admin, dépôts du client, documents et téléchargements authentifiés. 50 Mo par fichier, 500 Mo par projet. Les fichiers archivés restent comptabilisés. La progression du transfert puis l’enregistrement sont affichés dans le portail ; voir [les détails du dépôt](portal-files.md).
+- Fichiers : liens et fichiers ajoutés par l’admin, dépôts du client, documents et téléchargements authentifiés. Avec R2, la limite est de 250 Mio par fichier et 500 Mio par projet, archives incluses. Le portail affiche la progression du transfert puis confirme l’enregistrement. Voir [les détails du dépôt](portal-files.md).
 - Maquettes : liens externes, validation ou demande de modifications avec commentaire, historique par ressource dans le journal.
 - Liens utiles : URLs HTTPS par projet.
 - Wiki : articles texte et liens, spécifiques au projet ou partagés avec tous les clients. Trois guides de démarrage sont créés au premier accès admin, puis modifiables/archivables.
@@ -29,7 +29,7 @@ Le driver `pg` utilise un pool limité à cinq connexions par processus. Les tra
 
 ### Fichiers
 
-Cette première version conserve les fichiers en base (base64) pour rendre les dépôts persistants sans dépendre du disque d’un serveur. Le téléchargement passe par une API qui vérifie l’utilisateur et l’organisation. Aucun URL public de fichier n’est créé ; les fichiers sont servis en pièce jointe avec `nosniff`. Pour des vidéos et volumes importants, migrer les contenus vers un stockage objet privé et conserver les métadonnées dans Neon. La limite d’upload de l’hébergeur/proxy doit permettre au moins 51 Mio. Les images de la médiathèque conservent une limite distincte de 10 Mo par image et 100 Mo par projet.
+Avec R2 configuré, le navigateur envoie les fichiers directement vers un bucket privé et la base conserve leurs métadonnées. L’API vérifie l’utilisateur et l’organisation avant de renvoyer une URL de téléchargement signée. Sans R2, le portail conserve le dépôt multipart en base64, jusqu’à 50 Mio par fichier en développement et 3 Mio en production. La médiathèque accepte jusqu’à 10 Mio par image et 100 Mio par projet avec R2.
 
 ## Google Analytics
 
@@ -60,9 +60,9 @@ L’administration attribue à chaque membre client un rôle **lecteur**, **cont
 
 La suspension d’un membre révoque ses sessions et ses liens de réinitialisation, empêche une nouvelle connexion et conserve ses commentaires. La suspension ou le passage en lecteur libère ses demandes de fichiers et ses livrables affectés ; l’administration peut les réattribuer. La suspension ou la perte du rôle décideur retire sa désignation. La réactivation exige une nouvelle connexion et une nouvelle désignation si nécessaire.
 
-L’accueil présente **À faire pour vous**, calculé à partir des données du projet : demandes de fichiers ouvertes, maquettes à valider par le décideur, paiements attendus et jalons affectés au membre. Ces actions sont indépendantes de la limite du journal d’activité. Les lecteurs peuvent consulter le projet sans effectuer de mutations métier.
+L’accueil présente **À faire pour vous**, calculé à partir des données du projet : demandes de fichiers ouvertes, maquettes et étapes à valider par le décideur, paiements attendus et étapes pertinentes de la Roadmap. Ces actions sont indépendantes de la limite du journal d’activité. Les lecteurs peuvent consulter le projet sans effectuer de mutations métier.
 
-Le suivi comporte des jalons, livrables et éléments de checklist, chacun avec un responsable facultatif, une date, un état et une description du blocage. L’administration crée et modifie ces éléments ; le responsable client peut actualiser son état et son blocage. Les demandes de fichiers peuvent également recevoir un responsable et une date attendue.
+La **Roadmap** remplace les anciens jalons et les quatre phases fixes. L’administration gère les phases et étapes, leurs dates, responsables, dépendances, livrables et blocages. Le client consulte la planification sans pouvoir la modifier ; le décideur répond aux demandes de validation avec un historique conservé. La progression est calculée sur les étapes terminées. Les anciens jalons sont repris sans effacer leur table historique. Voir [le fonctionnement et la migration Roadmap](portal-roadmap.md). Les demandes de fichiers conservent leur responsable et leur date attendue.
 
 ## Demandes du client (ancienne rubrique)
 

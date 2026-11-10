@@ -1,50 +1,86 @@
 <script setup lang="ts">
-import { resourceLabels,resourceIcons,money,portalDate,memberRoleLabels,type PortalMember,type PortalTodo,type ResourceKind,type PortalResource } from '~/types/portal'
-type View='home'|'project'|'assets'|'satisfaction'|'account'|'notifications'|ResourceKind
+import { resourceLabels,resourceIcons,money,portalDate,type PortalMember,type PortalTodo,type ResourceKind,type PortalResource } from '~/types/portal'
+type View='home'|'roadmap'|'assets'|'satisfaction'|'account'|'notifications'|ResourceKind
 const route=useRoute(), router=useRouter()
-const view=computed<View>(()=>['home','project','assets','satisfaction','account','notifications',...Object.keys(resourceLabels)].includes(String(route.query.tab))?String(route.query.tab) as View:'home')
-const navigate=(tab:View)=>router.replace({query:{...route.query,tab,requestId:undefined}})
+const view=computed<View>(()=>{
+ const tab=String(route.query.tab)
+ if (tab==='project' || tab==='milestones') return 'roadmap'
+ return ['home','roadmap','assets','satisfaction','account','notifications',...Object.keys(resourceLabels)].includes(tab)?tab as View:'home'
+})
+const navigate=(tab:View,itemId?:string)=>router.replace({query:{...route.query,tab,requestId:undefined,stepId:tab==='roadmap'?itemId:undefined}})
+const roadmapItem=computed(()=>typeof route.query.stepId==='string'?route.query.stepId:undefined)
 const user=ref({id:'',name:'',email:'',role:'',memberRole:''}),organization=ref(''),ready=ref(false),loading=ref(false),error=ref('')
-const project=ref({id:'',name:'',description:'',status:'',progress:0,dueDate:'',currentPhase:'Cadrage',decisionMakerId:null as string|null,decisionMakerName:''})
+const emptyProject={id:'',name:'',description:'',status:'',progress:0,dueDate:'',currentPhase:'',decisionMakerId:null as string|null,decisionMakerName:''}
+const project=ref({...emptyProject})
 const projects=ref<{id:string;name:string}[]>([]), resources=ref<PortalResource[]>([]), activity=ref<{id:string;message:string;createdAt:string}[]>([])
 const members=ref<PortalMember[]>([]), todos=ref<PortalTodo[]>([]), permissions=ref({canContribute:false,canReview:false})
-const phaseNames=['Cadrage','Design','Développement','Mise en ligne']
-const phaseIndex=computed(()=>Math.max(0,phaseNames.indexOf(project.value.currentPhase)))
 const payments=computed(()=>resources.value.filter(r=>r.kind==='payment'&&r.status==='due'))
+const pendingRoadmap=computed(()=>todos.value.find(item=>item.kind==='roadmap'))
 const reviews=computed(()=>resources.value.filter(r=>r.kind==='mockup'&&r.status==='pending'))
 const overviewTab=ref<'resources'|'activity'>('resources')
 const resourceSearch=ref(''), resourceFilter=ref('all'), resourceSort=ref('recent')
 const statusLabels:Record<string,string>={available:'Disponible',due:'À régler',paid:'Réglé',cancelled:'Annulé',pending:'À valider',approved:'Validée',changes:'À modifier'}
 const visibleResources=computed(()=>resources.value.filter(r=>(resourceFilter.value==='all'||r.kind===resourceFilter.value)&&(r.title+' '+r.description).toLowerCase().includes(resourceSearch.value.toLowerCase())).slice().sort((a,b)=>resourceSort.value==='name'?a.title.localeCompare(b.title,'fr'):b.createdAt.localeCompare(a.createdAt)))
-const navigation=[{id:'home' as View,label:'Vue d’ensemble',icon:'i-tabler-home'},{id:'project' as View,label:'Suivi du projet',icon:'i-tabler-layout-board'},{id:'assets' as View,label:'Assets',icon:'i-tabler-photo'},...Object.entries(resourceLabels).map(([id,label])=>({id:id as View,label,icon:resourceIcons[id as ResourceKind]})),{id:'satisfaction' as View,label:'Satisfaction',icon:'i-tabler-heart-handshake'},{id:'notifications' as View,label:'Notifications',icon:'i-tabler-bell'},{id:'account' as View,label:'Mon compte',icon:'i-tabler-user-circle'}]
+const navigation=[{id:'home' as View,label:'Vue d’ensemble',icon:'i-tabler-home'},{id:'roadmap' as View,label:'Roadmap',icon:'i-tabler-route'},{id:'assets' as View,label:'Assets',icon:'i-tabler-photo'},...Object.entries(resourceLabels).map(([id,label])=>({id:id as View,label,icon:resourceIcons[id as ResourceKind]})),{id:'satisfaction' as View,label:'Satisfaction',icon:'i-tabler-heart-handshake'},{id:'notifications' as View,label:'Notifications',icon:'i-tabler-bell'},{id:'account' as View,label:'Mon compte',icon:'i-tabler-user-circle'}]
 const navigationGroups=[
- {id:'project',label:'Projet',icon:'i-tabler-layout-board',views:['project','payment','analytics','satisfaction']},
+ {id:'project',label:'Projet',icon:'i-tabler-layout-board',views:['roadmap','payment','analytics','satisfaction']},
  {id:'resources',label:'Ressources',icon:'i-tabler-folders',views:['assets','file','mockup','link','wiki']},
  {id:'personal',label:'Mon espace',icon:'i-tabler-user-circle',views:['notifications','account']},
 ].map(group=>({...group,items:group.views.map(id=>navigation.find(item=>item.id===id)!)}))
 const expandedGroup=ref<string|null>(null)
 watch(view,tab=>{expandedGroup.value=navigationGroups.find(group=>group.views.includes(tab))?.id ?? null},{immediate:true})
-const navigationCount=(tab:View)=>tab==='payment'?payments.value.length:resources.value.filter(resource=>resource.kind===tab).length
-const onboardingDescriptions:Record<string,string>={satisfaction:'Partagez votre retour d’expérience sur le projet et la collaboration avec MC Studio.',home:'Retrouvez ici les informations clés, les dernières ressources partagées et les actualités de votre projet.',project:'Suivez les étapes, l’avancement et la prochaine livraison de votre projet.',assets:'Consultez les visuels de votre marque et copiez le prompt IA propre à ce projet.',payment:'Retrouvez vos échéances et les coordonnées bancaires pour régler MC Studio par virement.',file:'Téléversez les fichiers demandés par MC Studio ou partagez un document utile au projet.',mockup:'Parcourez les maquettes, laissez vos commentaires directement sur les écrans et validez une version.',link:'Accédez rapidement aux sites et outils utiles à votre projet.',wiki:'Lisez les guides et les informations préparés par MC Studio.',notifications:'Retrouvez les nouveautés et choisissez vos notifications et la fréquence des relances.',account:'Modifiez votre mot de passe et retrouvez votre rôle dans l’équipe.',analytics:'Consultez les indicateurs de performance de votre site lorsqu’ils sont disponibles.'}
+const navigationCount=(tab:View)=>tab==='payment'?payments.value.length:tab==='roadmap'?todos.value.filter(item=>item.kind==='roadmap').length:resources.value.filter(resource=>resource.kind===tab).length
+const onboardingDescriptions:Record<string,string>={satisfaction:'Partagez votre retour d’expérience sur le projet et la collaboration avec MC Studio.',home:'Retrouvez ici les informations clés, les dernières ressources partagées et les actualités de votre projet.',roadmap:'Suivez le planning, les prochaines étapes et les validations du projet.',assets:'Consultez les visuels de votre marque et copiez le prompt IA propre à ce projet.',payment:'Retrouvez vos échéances et les coordonnées bancaires pour régler MC Studio par virement.',file:'Téléversez les fichiers demandés par MC Studio ou partagez un document utile au projet.',mockup:'Parcourez les maquettes, laissez vos commentaires directement sur les écrans et validez une version.',link:'Accédez rapidement aux sites et outils utiles à votre projet.',wiki:'Lisez les guides et les informations préparés par MC Studio.',notifications:'Retrouvez les nouveautés et choisissez vos notifications et la fréquence des relances.',account:'Modifiez votre mot de passe et retrouvez votre rôle dans l’équipe.',analytics:'Consultez les indicateurs de performance de votre site lorsqu’ils sont disponibles.'}
 const onboardingSteps=computed(()=>navigation.map(item=>({...item,description:onboardingDescriptions[item.id]||'Retrouvez les informations et ressources liées à cette rubrique.'})))
 const onboardingOpen=ref(false),onboardingIndex=ref(0),onboardingBusy=ref(false),onboardingError=ref(''),onboardingAvailable=ref(false)
 const currentOnboardingStep=computed(()=>onboardingSteps.value[onboardingIndex.value]||onboardingSteps.value[0])
 watch(onboardingIndex,index=>{const step=onboardingSteps.value[index];if(onboardingOpen.value&&step&&view.value!==step.id)navigate(step.id)})
 watch(view,tab=>{if(onboardingOpen.value){const index=onboardingSteps.value.findIndex(step=>step.id===tab);if(index>=0)onboardingIndex.value=index}})
+let projectSequence=0, refreshSequence=0
 const refresh=async()=>{
- const projectId=project.value.id;if(!projectId)return
- try{const data=await $fetch<{resources:PortalResource[];activity:typeof activity.value;todos:PortalTodo[]}>('/api/portal/resources',{query:{projectId}});if(project.value.id!==projectId)return;resources.value=data.resources;activity.value=data.activity;todos.value=data.todos || []}
- catch(cause:any){error.value=cause?.data?.statusMessage || 'Impossible d’actualiser votre projet.'}
+ const projectId=project.value.id
+ if(!projectId)return
+ const sequence=++refreshSequence
+ try {
+  const data=await $fetch<{resources:PortalResource[];activity:typeof activity.value;todos:PortalTodo[]}>('/api/portal/resources',{query:{projectId}})
+  if(project.value.id!==projectId || sequence!==refreshSequence)return
+  resources.value=data.resources; activity.value=data.activity; todos.value=data.todos || []
+ } catch(cause:any) {
+  if(project.value.id===projectId && sequence===refreshSequence)error.value=cause?.data?.statusMessage || 'Impossible d’actualiser votre projet.'
+ }
 }
 const loadProject=async(id?:string)=>{
- loading.value=true;error.value=''
- try{const data=await $fetch<{project:typeof project.value|null;projects:typeof projects.value;members:PortalMember[];permissions:typeof permissions.value}>('/api/portal/client/project',{query:id?{projectId:id}:{}});projects.value=data.projects;members.value=data.members || [];permissions.value=data.permissions || {canContribute:false,canReview:false};resources.value=[];todos.value=[];activity.value=[];if(data.project){project.value=data.project;await refresh()}else{project.value={id:'',name:'',description:'',status:'',progress:0,dueDate:'',currentPhase:'Cadrage',decisionMakerId:null,decisionMakerName:''}}}
- catch(e:any){error.value=e?.data?.statusMessage || 'Impossible de charger votre espace.'}
- finally{loading.value=false}
+ const sequence=++projectSequence
+ refreshSequence++
+ loading.value=true; error.value=''
+ try {
+  const data=await $fetch<{project:typeof project.value|null;projects:typeof projects.value;members:PortalMember[];permissions:typeof permissions.value}>('/api/portal/client/project',{query:id?{projectId:id}:{}})
+  if(sequence!==projectSequence)return
+  projects.value=data.projects
+  members.value=data.members || []
+  permissions.value=data.permissions || {canContribute:false,canReview:false}
+  resources.value=[]; todos.value=[]; activity.value=[]
+  project.value=data.project || {...emptyProject}
+  if(data.project)await refresh()
+ } catch(cause:any) {
+  if(sequence===projectSequence){project.value={...emptyProject};error.value=cause?.data?.statusMessage || 'Impossible de charger votre espace.'}
+ } finally {
+  if(sequence===projectSequence)loading.value=false
+ }
 }
-const openNotificationProject=async(projectId:string,tab:string)=>{await router.replace({query:{...route.query,projectId,requestId:undefined,tab:['file','mockup','project'].includes(tab)?tab:'project'}})}
-watch(()=>route.query.projectId,id=>{if(ready.value && typeof id==='string' && id!==project.value.id)loadProject(id)})
-const chooseProject=async(id:string)=>{await router.replace({query:{...route.query,projectId:id,requestId:undefined}})}
+const updateRoadmap=async(summary:{progress:number;currentPhase:{title:string}|null},roadmapProject:{id:string})=>{
+ if(project.value.id!==roadmapProject.id)return
+ project.value.progress=summary.progress
+ project.value.currentPhase=summary.currentPhase?.title || ''
+ await refresh()
+}
+const openNotificationProject=async(projectId:string,tab:string)=>{
+ await router.replace({query:{...route.query,projectId,requestId:undefined,stepId:undefined,tab:['file','mockup'].includes(tab)?tab:'roadmap'}})
+}
+watch(()=>route.query.projectId,id=>{
+ if(ready.value && (loading.value || id!==project.value.id))loadProject(typeof id==='string'?id:undefined)
+})
+const chooseProject=async(id:string)=>{await router.replace({query:{...route.query,projectId:id,requestId:undefined,stepId:undefined}})}
 const signOut=async()=>{await $fetch('/api/portal/auth/logout',{method:'POST'});await navigateTo('/portal/login')}
 const openOnboarding=()=>{onboardingIndex.value=Math.max(0,onboardingSteps.value.findIndex(step=>step.id===view.value));onboardingError.value='';onboardingOpen.value=true}
 const finishOnboarding=async()=>{onboardingOpen.value=false;if(!onboardingAvailable.value)return;onboardingBusy.value=true;onboardingError.value='';try{await $fetch('/api/portal/client/onboarding',{method:'POST'})}catch(e:any){onboardingError.value=e?.data?.statusMessage||'Impossible d’enregistrer la fin de la visite.'}finally{onboardingBusy.value=false}}
@@ -74,8 +110,8 @@ onMounted(async()=>{
     <template v-if="ready && !loading">
      <label v-if="projects.length>1" class="project-picker">Votre projet<select :value="project.id" @change="chooseProject(($event.target as HTMLSelectElement).value)"><option v-for="p in projects" :key="p.id" :value="p.id">{{p.name}}</option></select></label>
      <PortalAccount v-if="view==='account'" :name="user.name" :email="user.email" :member-role="user.memberRole"/><PortalNotifications v-else-if="view==='notifications'" @open-project="openNotificationProject"/><p v-else-if="!project.id" class="loading">Votre équipe n’a pas encore de projet. Vous retrouverez ici les projets partagés par MC Studio.</p><template v-else-if="view==='home'">
-      <div class="workspace-heading"><div><h1>{{project.name}}</h1><p>{{organization}} <span>·</span> Votre espace partagé avec MC Studio</p></div><button class="main-action" @click="navigate(reviews.length?'mockup':'project')"><UIcon :name="reviews.length?'i-tabler-check':'i-tabler-arrow-up-right'"/>{{reviews.length?(permissions.canReview?'Valider les maquettes':'Consulter les maquettes'):'Voir le projet'}}</button></div>
-      <div class="project-strip"><div><span>Étape actuelle</span><strong><UIcon name="i-tabler-layout-board"/>{{project.currentPhase}}</strong></div><div><span>Avancement</span><strong><span class="mini-progress"><i :style="{width:project.progress+'%'}"/></span>{{project.progress}} %</strong></div><div><span>Livraison prévue</span><strong><UIcon name="i-tabler-calendar"/>{{portalDate(project.dueDate)}}</strong></div><button @click="navigate('payment')"><span>À régler</span><strong>{{money(payments.reduce((sum,p)=>sum+p.amount,0))}}<UIcon name="i-tabler-arrow-up-right"/></strong></button></div>
+      <div class="workspace-heading"><div><h1>{{project.name}}</h1><p>{{organization}} <span>·</span> Votre espace partagé avec MC Studio</p></div><button class="main-action" @click="navigate(pendingRoadmap?'roadmap':reviews.length?'mockup':'roadmap',pendingRoadmap?.stepId)"><UIcon :name="pendingRoadmap || reviews.length?'i-tabler-check':'i-tabler-arrow-up-right'"/>{{pendingRoadmap?'Examiner la validation':reviews.length?(permissions.canReview?'Valider les maquettes':'Consulter les maquettes'):'Voir la roadmap'}}</button></div>
+      <div class="project-strip"><div><span>Phase actuelle</span><strong><UIcon name="i-tabler-layout-board"/>{{project.currentPhase || (project.progress===100 ? 'Terminé' : 'À définir')}}</strong></div><div><span>Avancement</span><strong><span class="mini-progress"><i :style="{width:project.progress+'%'}"/></span>{{project.progress}} %</strong></div><div><span>Livraison prévue</span><strong><UIcon name="i-tabler-calendar"/>{{portalDate(project.dueDate)}}</strong></div><button @click="navigate('payment')"><span>À régler</span><strong>{{money(payments.reduce((sum,p)=>sum+p.amount,0))}}<UIcon name="i-tabler-arrow-up-right"/></strong></button></div>
       <PortalTodos :items="todos" :user-id="user.id" :can-contribute="permissions.canContribute" :can-review="permissions.canReview" @navigate="navigate"/><nav class="workspace-tabs" aria-label="Vue d’ensemble"><button :class="{selected:overviewTab==='resources'}" @click="overviewTab='resources'">Ressources <span>{{resources.length}}</span></button><button :class="{selected:overviewTab==='activity'}" @click="overviewTab='activity'">Activité <span>{{activity.length}}</span></button></nav>
       <template v-if="overviewTab==='resources'">
        <div class="table-toolbar"><label class="filter-pill"><span>Type</span><select v-model="resourceFilter" aria-label="Filtrer les ressources par type"><option value="all">Toutes les ressources</option><option v-for="(label,key) in resourceLabels" :key="key" :value="key">{{label}}</option></select></label><label class="filter-pill"><span>Trier par</span><select v-model="resourceSort" aria-label="Trier les ressources"><option value="recent">Plus récent</option><option value="name">Nom</option></select></label><label class="table-search"><UIcon name="i-tabler-search"/><input v-model="resourceSearch" placeholder="Rechercher…" aria-label="Rechercher dans le projet"></label></div>
@@ -84,7 +120,7 @@ onMounted(async()=>{
       </template>
       <section v-else class="updates"><div v-if="!activity.length" class="empty-updates">Aucune activité pour le moment.</div><article v-for="item in activity" :key="item.id"><span class="activity-dot"/><p>{{item.message}}</p><time>{{portalDate(item.createdAt)}}</time></article></section>
      </template>
-    <template v-else-if="view==='project'"><div class="page-title"><h1>{{project.name}}</h1><p>{{project.description}}</p></div><p class="project-access">Votre rôle : {{memberRoleLabels[user.memberRole] || 'Contributeur'}} · Décideur du projet : {{project.decisionMakerName || 'À désigner par MC Studio'}}</p><PortalMilestones :project-id="project.id" :members="members" :user-id="user.id" :can-contribute="permissions.canContribute" @changed="refresh"/><section class="timeline"><article v-for="(phase,i) in phaseNames" :key="phase" :class="{current:i===phaseIndex,done:i<phaseIndex}"><span>{{i<phaseIndex?'✓':String(i+1).padStart(2,'0')}}</span><div><small>{{i<phaseIndex?'TERMINÉ':i===phaseIndex?'EN COURS':'À VENIR'}}</small><h2>{{phase}}</h2><p>{{['Nous définissons ensemble les objectifs, les contenus et le périmètre du projet.','Nous donnons forme à votre identité et préparons les maquettes à valider.','Nous construisons votre site ou application et intégrons vos contenus.','Nous préparons la livraison et vous accompagnons dans la prise en main.'][i]}}</p><button v-if="phase==='Design'" class="text-link" @click="navigate('mockup')">Consulter les maquettes →</button></div></article></section><section class="updates"><h2>Journal du projet</h2><p v-if="!activity.length">Les nouvelles étapes seront consignées ici.</p><article v-for="item in activity" :key="item.id"><span class="activity-dot"/><p>{{item.message}}</p><time>{{portalDate(item.createdAt)}}</time></article></section></template>
+    <PortalRoadmap v-else-if="view==='roadmap'" :key="project.id" :project-id="project.id" :item-id="roadmapItem" @changed="updateRoadmap" @resource="navigate"/>
     <PortalAssets v-else-if="view==='assets'" :project-id="project.id" />
     <PortalSatisfaction v-else-if="view==='satisfaction'" :key="project.id" :project-id="project.id" @changed="refresh"/>
      <PortalResources v-else :key="project.id" :project-id="project.id" :kind="view as ResourceKind" :can-contribute="permissions.canContribute" :can-review="permissions.canReview" :members="members" @changed="refresh"/>
@@ -204,18 +240,7 @@ onMounted(async()=>{
 .table-summary{display:flex;justify-content:space-between;gap:16px;padding:16px 32px;border-bottom:1px solid var(--portal-line);color:var(--portal-muted);font-size:12px}
 .table-summary>span:last-child{display:flex;align-items:center;gap:6px}
 .empty-table{padding:60px 24px!important;color:var(--portal-muted);text-align:center;font-size:13px!important}
-.page-title{padding:32px 32px 12px}
-.page-title h1{font-size:28px;margin:8px 0}
-.page-title p{margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--portal-muted);max-width:800px}
 .eyebrow{font-size:11px!important;letter-spacing:.08em;color:var(--portal-muted)!important}
-.timeline{margin:12px 32px 24px;border-top:1px solid var(--portal-line)}
-.timeline article{display:flex;gap:18px;padding:24px 0;border-bottom:1px solid var(--portal-line)}
-.timeline article>span{display:grid;place-items:center;flex-shrink:0;width:36px;height:36px;border:1px solid var(--portal-line);border-radius:8px;font-size:12px;color:var(--portal-muted)}
-.timeline .current>span{background:var(--portal-accent-soft);color:var(--portal-accent-text);border-color:var(--portal-accent)}
-.timeline small{font-size:11px;color:var(--portal-muted);letter-spacing:.05em}
-.timeline h2{font-size:18px;margin:4px 0 8px}
-.timeline p{font-size:13px;color:var(--portal-muted);margin:0}
-.text-link{border:0;background:none;color:var(--portal-accent-text)!important;padding:0;margin-top:12px;font-size:13px!important}
 .updates{padding:0 32px 32px}
 .updates h2{font-size:18px;margin:0 0 8px}
 .updates>p{margin:0;color:var(--portal-muted);font-size:13px;line-height:1.6}
@@ -227,7 +252,6 @@ onMounted(async()=>{
 .content>:deep(.pr){padding:32px}
 .project-picker{display:flex;align-items:center;gap:12px;padding:16px 32px;color:var(--portal-muted);font-size:13px}
 .project-picker select{min-height:40px;max-width:100%;background:var(--portal-raised);border:1px solid var(--portal-line);color:var(--portal-text);border-radius:8px;padding:8px 12px}
-.project-access{margin:8px 32px;color:var(--portal-muted);font-size:12px}
 .error,.loading{margin:20px 32px;padding:18px 20px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-surface);color:var(--portal-muted)}
 .error{color:var(--portal-danger);background:var(--portal-danger-soft);border-color:var(--portal-danger)}
 .error button{margin-left:8px;background:transparent;border:1px solid currentColor;border-radius:8px;padding:6px 10px;font-size:12px}
@@ -317,11 +341,7 @@ onMounted(async()=>{
 .updates{padding:0 16px 24px}
 .updates article{flex-wrap:wrap}
 .updates time{margin-left:18px}
-.page-title{padding:24px 16px 8px}
-.page-title h1{font-size:24px}
-.timeline{margin:12px 16px 24px}
 .project-picker{padding:16px;flex-wrap:wrap}
-.project-access{margin:8px 16px}
 .error,.loading{margin:16px}
 .onboarding-backdrop{inset:0;align-items:flex-end;justify-content:center;padding:12px;background:#0004}
 .onboarding-card{width:min(520px,100%);max-height:calc(100dvh - 24px);padding:20px}

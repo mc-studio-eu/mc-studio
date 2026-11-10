@@ -12,6 +12,7 @@ export function usePortalUpload() {
   active = xhr
   xhr.open(method,url)
   if (mime) xhr.setRequestHeader('Content-Type',mime)
+  if (method === 'PUT') xhr.setRequestHeader('x-amz-storage-class','STANDARD')
   xhr.responseType = method === 'POST' ? 'json' : 'text'
   xhr.timeout = 15*60*1000
   const fail = (message: string) => reject({data:{statusMessage:message}})
