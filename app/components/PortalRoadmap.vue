@@ -287,7 +287,6 @@ onBeforeUnmount(() => { alive = false })
     <template v-if="data">
       <header class="rm-heading">
         <div>
-          <p class="rm-kicker"><UIcon name="i-tabler-route"/> Roadmap du projet</p>
           <h1>{{ data.project.name }}</h1>
           <p class="rm-description">{{ data.project.description || 'Suivez le planning, les prochaines étapes et les décisions du projet.' }}</p>
         </div>
