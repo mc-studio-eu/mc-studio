@@ -87,7 +87,7 @@ useSeoMeta({
             {{ t('hero.availability', { month: availabilityMonth }) }}
           </p>
         </div>
-        <h1 class="max-w-[1120px] whitespace-pre-line text-balance font-manrope text-[clamp(40px,5.1vw,78px)] font-medium leading-[1.02] tracking-[-0.045em] text-white max-sm:text-[clamp(34px,10.4vw,54px)]">
+        <h1 class="global-home__hero-title--two-lines max-w-[1120px] whitespace-pre-line text-balance font-manrope text-[clamp(40px,5.1vw,78px)] font-medium leading-[1.02] tracking-[-0.045em] text-white max-sm:text-[clamp(34px,10.4vw,54px)]">
           <span class="sr-only">{{ t('globalHome.hero.title') }}{{ city ? ` ${locale === 'fr' ? 'à' : 'in'} ${city}` : '' }}</span>
           <span class="global-home__hero-title-visual" aria-hidden="true">
             <span class="global-home__hero-title-prefix">{{ t('globalHome.hero.title_prefix') }}</span><span class="global-home__hero-title-spacer">&nbsp;</span><span class="global-home__hero-word-rotator">
@@ -290,6 +290,10 @@ useSeoMeta({
 }
 
 @media (min-width: 1024px) {
+  .global-home__hero h1.global-home__hero-title--two-lines { max-width: 1280px; font-size: clamp(40px,4.4vw,68px); }
+  .global-home__hero-title--two-lines .global-home__hero-title-prefix { display: block; white-space: nowrap; }
+  .global-home__hero-title--two-lines .global-home__hero-title-spacer { display: none; }
+  .global-home__hero-title--two-lines .global-home__hero-word-rotator { white-space: nowrap; }
   .world-card__title { min-height: 2.88em; }
   .world-card__body { min-height: 3.5rem; }
 }
