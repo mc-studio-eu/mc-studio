@@ -64,9 +64,9 @@ L’accueil présente **À faire pour vous**, calculé à partir des données du
 
 La **Roadmap** remplace les anciens jalons et les quatre phases fixes. L’administration gère les phases et étapes, leurs dates, responsables, dépendances, livrables et blocages. Le client consulte la planification sans pouvoir la modifier ; le décideur répond aux demandes de validation avec un historique conservé. La progression est calculée sur les étapes terminées. Les anciens jalons sont repris sans effacer leur table historique. Voir [le fonctionnement et la migration Roadmap](portal-roadmap.md). Les demandes de fichiers conservent leur responsable et leur date attendue.
 
-## Demandes du client (ancienne rubrique)
+## Demandes du client
 
-La page Demandes a été retirée de l’administration et de l’espace client. Les anciens liens ouvrent la vue d’ensemble ou le suivi du projet. Les données et API existantes sont conservées. Le fonctionnement historique ci-dessous reste documenté ; les demandes de fichiers restent disponibles dans Fichiers.
+La rubrique **Demandes** est accessible directement dans le menu client et dans les onglets du projet côté administration. Les liens avec `tab=requests` ouvrent la liste ; `requestId` permet de retrouver une discussion précise, y compris après rechargement. Les demandes de fichiers restent disponibles dans Fichiers.
 
 La rubrique **Demandes** regroupe les demandes propres à chaque projet, séparément des annotations de maquettes. Un contributeur ou décideur peut créer une demande avec un titre et une description, puis échanger avec MC Studio dans son fil de discussion. Les membres de l’organisation peuvent consulter les demandes ; les lecteurs ne peuvent ni créer, ni répondre, ni changer leur état.
 

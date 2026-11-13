@@ -11,12 +11,13 @@ const ready = ref(false)
 const loadError = ref('')
 const route = useRoute(), router = useRouter(), localePath = useLocalePath()
 type AdminSection = 'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'
-type ProjectTab = 'roadmap' | 'settings' | 'resources'
+type ProjectTab = 'roadmap' | 'requests' | 'settings' | 'resources'
 type AdminResource = ResourceKind | 'assets' | 'satisfaction'
 const adminSections: readonly string[] = ['clients', 'projects', 'growth', 'assets', 'account', 'notifications', 'storage']
 const isResourceTab = (value: unknown): value is AdminResource => typeof value === 'string' && (value === 'assets' || value === 'satisfaction' || Object.hasOwn(resourceLabels, value))
 const projectTabs = [
   { id: 'roadmap', label: 'Roadmap', icon: 'i-tabler-route' },
+  { id: 'requests', label: 'Demandes', icon: 'i-tabler-messages' },
   { id: 'settings', label: 'Paramètres', icon: 'i-tabler-settings' },
   { id: 'resources', label: 'Ressources', icon: 'i-tabler-folders' },
 ] as const
@@ -26,8 +27,9 @@ const section = computed<AdminSection>(() => {
   const tab = route.query.tab
   return !requestedClientId.value && !requestedProjectId.value && typeof tab === 'string' && adminSections.includes(tab) ? tab as AdminSection : 'clients'
 })
-const projectTab = computed<ProjectTab>(() => route.query.tab === 'settings' ? 'settings' : route.query.tab === 'resources' || isResourceTab(route.query.tab) ? 'resources' : 'roadmap')
+const projectTab = computed<ProjectTab>(() => route.query.tab === 'requests' ? 'requests' : route.query.tab === 'settings' ? 'settings' : route.query.tab === 'resources' || isResourceTab(route.query.tab) ? 'resources' : 'roadmap')
 const resourceTab = computed<AdminResource>(() => isResourceTab(route.query.resource) ? route.query.resource : isResourceTab(route.query.tab) ? route.query.tab : 'payment')
+const requestItem = computed(() => projectTab.value === 'requests' && typeof route.query.requestId === 'string' ? route.query.requestId : undefined)
 const roadmapItem = computed(() => activeProject.value?.id === requestedProjectId.value && projectTab.value === 'roadmap' && typeof route.query.stepId === 'string' ? route.query.stepId : '')
 
 const search = ref('')
@@ -261,9 +263,13 @@ const goToProject = (clientId: string, projectId?: string, tab: ProjectTab = 'ro
   const location = { query: { ...route.query, tab: projectId ? tab : undefined, clientId, projectId, stepId: undefined, resource: tab === 'resources' && resource !== 'payment' ? resource : undefined, requestId: undefined } }
   return replace ? router.replace(location) : router.push(location)
 }
+const selectRequest = (id: string) => {
+  if (!selected.value || !activeProject.value) return
+  return router.push({ query: { ...route.query, clientId: selected.value.id, projectId: activeProject.value.id, tab: 'requests', requestId: id || undefined, stepId: undefined, resource: undefined } })
+}
 const openClient = (client: Client) => goToProject(client.id, client.projects[0]?.id)
 const openProjectTab = (tab: ProjectTab, resource = resourceTab.value) => {
-  if (selected.value && activeProject.value && (tab !== projectTab.value || roadmapItem.value || (tab === 'resources' && resource !== resourceTab.value))) {
+  if (selected.value && activeProject.value && (tab !== projectTab.value || roadmapItem.value || requestItem.value || (tab === 'resources' && resource !== resourceTab.value))) {
     return goToProject(selected.value.id, activeProject.value.id, tab, resource)
   }
 }
@@ -359,7 +365,7 @@ const updateMember=async(member:TeamMember,patch:{memberRole?:MemberRole;suspend
 const openProjectResource = (kind:AdminResource) => openProjectTab('resources', kind)
 const openNotificationProject = (projectId:string,tab:string) => {
   const client = clients.value.find(client => client.projects.some(project => project.id === projectId))
-  if (client) return goToProject(client.id, projectId, isResourceTab(tab) ? 'resources' : 'roadmap', isResourceTab(tab) ? tab : undefined)
+  if (client) return goToProject(client.id, projectId, tab === 'requests' ? 'requests' : isResourceTab(tab) ? 'resources' : 'roadmap', isResourceTab(tab) ? tab : undefined)
   notice.value = 'Ce projet n’est plus disponible.'
 }
 const updateRoadmap = (summary:{progress:number;currentPhase:{title:string}|null},project:{id:string}) => {
@@ -513,6 +519,7 @@ onBeforeUnmount(() => {
               <PortalRoadmap :key="`${activeProject.id}:${roadmapItem}`" :project-id="activeProject.id" :item-id="roadmapItem" embedded @resource="openProjectResource" @changed="updateRoadmap"/>
               <PortalReminders :key="activeProject.id" :project-id="activeProject.id"/>
             </template>
+            <PortalRequests v-else-if="activeProject && projectTab==='requests'" :key="activeProject.id" :project-id="activeProject.id" :request-id="requestItem" admin @select="selectRequest"/>
             <PortalResources v-else-if="activeProject && projectTab==='resources'" :key="activeProject.id" :kind="resourceTab" :project-id="activeProject.id" :members="selected.members" admin @update:kind="openProjectResource"/>
             <template v-else>
             <section class="client-detail-grid"><article class="admin-card team-card"><div class="card-heading"><h2>Équipe du client <span class="team-count">{{ selected.members.length }}</span></h2><button class="quiet-button" @click="startInvite(selected)"><UIcon name="i-tabler-user-plus" />Inviter</button></div><p class="contact-note">Chaque personne dispose de son compte et accède aux projets de {{ selected.name }}. Un lecteur consulte sans contribuer. La suspension coupe immédiatement l’accès et les sessions, tout en conservant les contributions.</p><div v-if="!selected.members.length" class="contact-note">Aucun compte activé pour le moment.</div><ul class="team-list"><li v-for="member in selected.members" :key="member.id"><span class="team-avatar">{{ member.name.slice(0,1).toUpperCase() }}</span><div><strong>{{ member.name }}</strong><small>{{ member.email }}</small></div><div class="team-member-controls"><label :for="'role-'+member.id" class="sr-only">Rôle de {{member.name}}</label><select :id="'role-'+member.id" :value="member.memberRole" :disabled="!!memberBusy" @change="updateMember(member,{memberRole:($event.target as HTMLSelectElement).value as MemberRole})"><option v-for="(label,role) in memberRoleLabels" :key="role" :value="role">{{label}}</option></select><span class="team-badge">{{member.suspended?'Suspendu':'Actif'}}</span><button class="quiet-button" :disabled="!!memberBusy" @click="updateMember(member,{suspended:!member.suspended})">{{memberBusy===member.id?'…':member.suspended?'Réactiver':'Suspendre'}}</button></div></li></ul><template v-if="selected.invitations.length"><h3 class="team-pending-title">Invitations · {{ selected.invitations.length }}</h3><ul class="team-list"><li v-for="invitation in selected.invitations" :key="invitation.id"><div><strong>{{ invitation.email }}</strong><small>{{memberRoleLabels[invitation.memberRole || 'contributor']}} · {{ invitationExpired(invitation.expiresAt) ? 'Expirée' : 'En attente · expire le '+new Date(invitation.expiresAt).toLocaleDateString('fr-FR') }}</small></div><div class="team-actions"><button class="quiet-button" :disabled="!!invitationActionBusy" @click="startInvite(selected,invitation.email,invitation.memberRole || 'contributor')">Renvoyer</button><button class="quiet-button" :disabled="!!invitationActionBusy" @click="revokeInvitation(invitation)">{{ invitationActionBusy===invitation.id?'…':'Annuler' }}</button></div></li></ul></template><div v-if="activeProject" class="client-review-note"><p>{{ activeProject.reviewFeedback || (activeProject.reviewState === 'approved' ? 'Dernière maquette validée.' : activeProject.reviewState === 'changes' ? 'Demande de modifications reçue.' : 'Aucun retour pour le moment.') }}</p></div></article><article v-if="activeProject" class="admin-card"><span class="admin-status"><i></i>{{ activeProject.status }}</span><h2>{{ activeProject.name }}</h2><p class="project-type">Visible par le client après connexion</p><div class="admin-progress-meta"><span>Avancement</span><strong>{{ activeProject.progress }} %</strong></div><div class="admin-progress"><i :style="{ width: `${activeProject.progress}%` }" /></div><div class="due-row"><span>Livraison prévue</span><strong>{{ activeProject.dueDate ? portalDate(activeProject.dueDate) : 'À définir' }}</strong></div></article></section>
