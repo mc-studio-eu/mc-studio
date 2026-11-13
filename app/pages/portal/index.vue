@@ -2,12 +2,17 @@
 import { resourceLabels,resourceIcons,money,portalDate,type PortalMember,type PortalTodo,type ResourceKind,type PortalResource } from '~/types/portal'
 type View='home'|'roadmap'|'assets'|'satisfaction'|'account'|'notifications'|ResourceKind
 const route=useRoute(), router=useRouter()
+const localePath=useLocalePath()
+const requestedProjectId=computed(()=>typeof route.query.projectId==='string'?route.query.projectId:undefined)
 const view=computed<View>(()=>{
- const tab=String(route.query.tab)
- if (tab==='project' || tab==='milestones') return 'roadmap'
- return ['home','roadmap','assets','satisfaction','account','notifications',...Object.keys(resourceLabels)].includes(tab)?tab as View:'home'
+ const tab=route.query.tab
+ if (tab==='project' || tab==='milestones' || tab==='requests') return 'roadmap'
+ return typeof tab==='string' && ['home','roadmap','assets','satisfaction','account','notifications',...Object.keys(resourceLabels)].includes(tab)?tab as View:'home'
 })
-const navigate=(tab:View,itemId?:string)=>router.replace({query:{...route.query,tab,requestId:undefined,stepId:tab==='roadmap'?itemId:undefined}})
+const navigate=(tab:View,itemId?:string)=>{
+ if(tab===view.value && itemId===roadmapItem.value)return
+ return router.push({query:{...route.query,tab:tab==='home'?undefined:tab,projectId:requestedProjectId.value || (itemId?project.value.id:undefined),requestId:undefined,stepId:tab==='roadmap'?itemId:undefined}})
+}
 const roadmapItem=computed(()=>typeof route.query.stepId==='string'?route.query.stepId:undefined)
 const user=ref({id:'',name:'',email:'',role:'',memberRole:''}),organization=ref(''),ready=ref(false),loading=ref(false),error=ref('')
 const emptyProject={id:'',name:'',description:'',status:'',progress:0,dueDate:'',currentPhase:'',decisionMakerId:null as string|null,decisionMakerName:''}
@@ -32,10 +37,13 @@ watch(view,tab=>{expandedGroup.value=navigationGroups.find(group=>group.views.in
 const navigationCount=(tab:View)=>tab==='payment'?payments.value.length:tab==='roadmap'?todos.value.filter(item=>item.kind==='roadmap').length:resources.value.filter(resource=>resource.kind===tab).length
 const onboardingDescriptions:Record<string,string>={satisfaction:'Partagez votre retour d’expérience sur le projet et la collaboration avec MC Studio.',home:'Retrouvez ici les informations clés, les dernières ressources partagées et les actualités de votre projet.',roadmap:'Suivez le planning, les prochaines étapes et les validations du projet.',assets:'Consultez les visuels de votre marque et copiez le prompt IA propre à ce projet.',payment:'Retrouvez vos échéances et les coordonnées bancaires pour régler MC Studio par virement.',file:'Téléversez les fichiers demandés par MC Studio ou partagez un document utile au projet.',mockup:'Parcourez les maquettes, laissez vos commentaires directement sur les écrans et validez une version.',link:'Accédez rapidement aux sites et outils utiles à votre projet.',wiki:'Lisez les guides et les informations préparés par MC Studio.',notifications:'Retrouvez les nouveautés et choisissez vos notifications et la fréquence des relances.',account:'Modifiez votre mot de passe et retrouvez votre rôle dans l’équipe.',analytics:'Consultez les indicateurs de performance de votre site lorsqu’ils sont disponibles.'}
 const onboardingSteps=computed(()=>navigation.map(item=>({...item,description:onboardingDescriptions[item.id]||'Retrouvez les informations et ressources liées à cette rubrique.'})))
-const onboardingOpen=ref(false),onboardingIndex=ref(0),onboardingBusy=ref(false),onboardingError=ref(''),onboardingAvailable=ref(false)
+const onboardingOpen=ref(false),onboardingBusy=ref(false),onboardingError=ref(''),onboardingAvailable=ref(false)
+const onboardingIndex=computed(()=>Math.max(0,onboardingSteps.value.findIndex(step=>step.id===view.value)))
 const currentOnboardingStep=computed(()=>onboardingSteps.value[onboardingIndex.value]||onboardingSteps.value[0])
-watch(onboardingIndex,index=>{const step=onboardingSteps.value[index];if(onboardingOpen.value&&step&&view.value!==step.id)navigate(step.id)})
-watch(view,tab=>{if(onboardingOpen.value){const index=onboardingSteps.value.findIndex(step=>step.id===tab);if(index>=0)onboardingIndex.value=index}})
+const moveOnboarding=(direction:number)=>{
+ const step=onboardingSteps.value[onboardingIndex.value+direction]
+ if(step)return navigate(step.id)
+}
 let projectSequence=0, refreshSequence=0
 const refresh=async()=>{
  const projectId=project.value.id
@@ -74,19 +82,17 @@ const updateRoadmap=async(summary:{progress:number;currentPhase:{title:string}|n
  project.value.currentPhase=summary.currentPhase?.title || ''
  await refresh()
 }
-const openNotificationProject=async(projectId:string,tab:string)=>{
- await router.replace({query:{...route.query,projectId,requestId:undefined,stepId:undefined,tab:['file','mockup'].includes(tab)?tab:'roadmap'}})
-}
-watch(()=>route.query.projectId,id=>{
- if(ready.value && (loading.value || id!==project.value.id))loadProject(typeof id==='string'?id:undefined)
+const openNotificationProject=(projectId:string,tab:string)=>router.push({query:{...route.query,projectId,requestId:undefined,stepId:undefined,tab:['file','mockup'].includes(tab)?tab:'roadmap'}})
+watch(requestedProjectId,id=>{
+ if(user.value.id && (loading.value || id!==project.value.id))loadProject(id)
 })
-const chooseProject=async(id:string)=>{await router.replace({query:{...route.query,projectId:id,requestId:undefined,stepId:undefined}})}
-const signOut=async()=>{await $fetch('/api/portal/auth/logout',{method:'POST'});await navigateTo('/portal/login')}
-const openOnboarding=()=>{onboardingIndex.value=Math.max(0,onboardingSteps.value.findIndex(step=>step.id===view.value));onboardingError.value='';onboardingOpen.value=true}
+const chooseProject=(id:string)=>router.push({query:{...route.query,projectId:id,requestId:undefined,stepId:undefined}})
+const signOut=async()=>{await $fetch('/api/portal/auth/logout',{method:'POST'});await navigateTo(localePath('/portal/login'),{replace:true})}
+const openOnboarding=()=>{onboardingError.value='';onboardingOpen.value=true}
 const finishOnboarding=async()=>{onboardingOpen.value=false;if(!onboardingAvailable.value)return;onboardingBusy.value=true;onboardingError.value='';try{await $fetch('/api/portal/client/onboarding',{method:'POST'})}catch(e:any){onboardingError.value=e?.data?.statusMessage||'Impossible d’enregistrer la fin de la visite.'}finally{onboardingBusy.value=false}}
 useHead({title:computed(()=>`${organization.value || 'Votre projet'} · MC Studio`),meta:[{name:'robots',content:'noindex,nofollow'}]})
 onMounted(async()=>{
- try{const me=await $fetch<{user:typeof user.value|null;organization?:{name:string}}>('/api/portal/auth/me');if(!me.user){await navigateTo('/portal/login');return}if(me.user.role==='admin'){await navigateTo('/portal/admin');return}user.value=me.user;organization.value=me.organization?.name || 'Votre espace';await loadProject(typeof route.query.projectId==='string'?route.query.projectId:undefined);try{const onboarding=await $fetch<{completed:boolean}>('/api/portal/client/onboarding');onboardingAvailable.value=true;if(!onboarding.completed)onboardingOpen.value=true}catch{}}
+ try{const me=await $fetch<{user:typeof user.value|null;organization?:{name:string}}>('/api/portal/auth/me');if(!me.user){await navigateTo(localePath('/portal/login'),{replace:true});return}if(me.user.role==='admin'){await navigateTo(localePath('/portal/admin'),{replace:true});return}user.value=me.user;organization.value=me.organization?.name || 'Votre espace';await loadProject(requestedProjectId.value);try{const onboarding=await $fetch<{completed:boolean}>('/api/portal/client/onboarding');onboardingAvailable.value=true;if(!onboarding.completed)onboardingOpen.value=true}catch{}}
  catch{error.value='Impossible de charger votre compte. Réessayez.'}finally{ready.value=true}
 })
 </script>
@@ -106,7 +112,7 @@ onMounted(async()=>{
   <div class="main"><header><div class="header-title">{{navigation.find(n=>n.id===view)?.label}} <span class="header-status"><i/>{{project.status || 'Espace privé'}}</span></div><div class="portal-header-actions"><PortalThemeToggle /><div class="user"><i>{{user.name.slice(0,1)}}</i><span>{{user.name}}</span><button class="account-shortcut" aria-label="Mon compte" @click="navigate('account')"><UIcon name="i-tabler-user-circle"/></button><button class="notification-shortcut" aria-label="Notifications" @click="navigate('notifications')"><UIcon name="i-tabler-bell"/></button><button class="mobile-exit" aria-label="Se déconnecter" @click="signOut"><UIcon name="i-tabler-logout"/></button></div></div></header>
    <div class="content">
     <p v-if="!ready || loading" class="loading" role="status">Ouverture de votre espace…</p>
-    <p v-if="error && !['account','notifications'].includes(view)" class="error" role="alert">{{error}} <button @click="loadProject(typeof route.query.projectId==='string'?route.query.projectId:undefined)">Réessayer</button></p>
+    <p v-if="error && !['account','notifications'].includes(view)" class="error" role="alert">{{error}} <button @click="loadProject(requestedProjectId)">Réessayer</button></p>
     <template v-if="ready && !loading">
      <label v-if="projects.length>1" class="project-picker">Votre projet<select :value="project.id" @change="chooseProject(($event.target as HTMLSelectElement).value)"><option v-for="p in projects" :key="p.id" :value="p.id">{{p.name}}</option></select></label>
      <PortalAccount v-if="view==='account'" :name="user.name" :email="user.email" :member-role="user.memberRole"/><PortalNotifications v-else-if="view==='notifications'" @open-project="openNotificationProject"/><p v-else-if="!project.id" class="loading">Votre équipe n’a pas encore de projet. Vous retrouverez ici les projets partagés par MC Studio.</p><template v-else-if="view==='home'">
@@ -120,7 +126,7 @@ onMounted(async()=>{
       </template>
       <section v-else class="updates"><div v-if="!activity.length" class="empty-updates">Aucune activité pour le moment.</div><article v-for="item in activity" :key="item.id"><span class="activity-dot"/><p>{{item.message}}</p><time>{{portalDate(item.createdAt)}}</time></article></section>
      </template>
-    <PortalRoadmap v-else-if="view==='roadmap'" :key="project.id" :project-id="project.id" :item-id="roadmapItem" @changed="updateRoadmap" @resource="navigate"/>
+    <PortalRoadmap v-else-if="view==='roadmap'" :key="`${project.id}:${roadmapItem || ''}`" :project-id="project.id" :item-id="roadmapItem" @changed="updateRoadmap" @resource="navigate"/>
     <PortalAssets v-else-if="view==='assets'" :project-id="project.id" />
     <PortalSatisfaction v-else-if="view==='satisfaction'" :key="project.id" :project-id="project.id" @changed="refresh"/>
      <PortalResources v-else :key="project.id" :project-id="project.id" :kind="view as ResourceKind" :can-contribute="permissions.canContribute" :can-review="permissions.canReview" :members="members" @changed="refresh"/>
@@ -134,7 +140,7 @@ onMounted(async()=>{
     <div class="onboarding-step-count">RUBRIQUE {{String(onboardingIndex+1).padStart(2,'0')}} / {{String(onboardingSteps.length).padStart(2,'0')}}</div>
     <div class="onboarding-feature"><span><UIcon :name="currentOnboardingStep.icon"/></span><div><h2 id="onboarding-title">{{currentOnboardingStep.label}}</h2><p>{{currentOnboardingStep.description}}</p></div></div>
     <p class="onboarding-note">Vous pourrez revenir à cette visite depuis le menu d’assistance.</p><p v-if="onboardingError" class="onboarding-error" role="alert">{{onboardingError}}</p>
-    <footer><button class="onboarding-skip" @click="finishOnboarding">Passer la visite</button><div><button class="onboarding-secondary" :disabled="onboardingIndex===0" @click="onboardingIndex--">Précédent</button><button class="onboarding-primary" @click="onboardingIndex===onboardingSteps.length-1?finishOnboarding():onboardingIndex++">{{onboardingIndex===onboardingSteps.length-1?'Terminer':'Suivant'}}<UIcon :name="onboardingIndex===onboardingSteps.length-1?'i-tabler-check':'i-tabler-arrow-right'"/></button></div></footer>
+    <footer><button class="onboarding-skip" @click="finishOnboarding">Passer la visite</button><div><button class="onboarding-secondary" :disabled="onboardingIndex===0" @click="moveOnboarding(-1)">Précédent</button><button class="onboarding-primary" @click="onboardingIndex===onboardingSteps.length-1?finishOnboarding():moveOnboarding(1)">{{onboardingIndex===onboardingSteps.length-1?'Terminer':'Suivant'}}<UIcon :name="onboardingIndex===onboardingSteps.length-1?'i-tabler-check':'i-tabler-arrow-right'"/></button></div></footer>
    </section>
   </div>
  </main>

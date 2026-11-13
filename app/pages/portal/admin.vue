@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { memberRoleLabels, portalDate, type MemberRole, type PortalMember, type ResourceKind } from '~/types/portal'
+import { memberRoleLabels, portalDate, resourceLabels, type MemberRole, type PortalMember, type ResourceKind } from '~/types/portal'
 
 type Project = { id: string; organizationId: string; name: string; description: string; currentPhase: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; dueDate: string; createdAt?: string; updatedAt?: string; decisionMakerId?:string|null;decisionMakerName?:string }
 type TeamMember = PortalMember & { createdAt: string }
@@ -8,21 +8,27 @@ type InviteResult = { email: string; inviteUrl?: string; emailSent?: boolean; er
 type Client = { members: TeamMember[]; invitations: TeamInvitation[]; id: string; name: string; initials: string; contact: string; email: string; projects: Project[]; projectId: string; project: string; description?: string; currentPhase?: string; reviewState?: string | null; reviewFeedback?: string | null; status: string; progress: number; due: string; tone: string; invitedEmail?: string | null }
 
 const ready = ref(false)
-const route = useRoute()
-const resourceTab = ref<ResourceKind|'assets'|'satisfaction'>('payment')
+const loadError = ref('')
+const route = useRoute(), router = useRouter(), localePath = useLocalePath()
+type AdminSection = 'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'
 type ProjectTab = 'roadmap' | 'settings' | 'resources'
-const projectTab = ref<ProjectTab>('roadmap')
+type AdminResource = ResourceKind | 'assets' | 'satisfaction'
+const adminSections: readonly string[] = ['clients', 'projects', 'growth', 'assets', 'account', 'notifications', 'storage']
+const isResourceTab = (value: unknown): value is AdminResource => typeof value === 'string' && (value === 'assets' || value === 'satisfaction' || Object.hasOwn(resourceLabels, value))
 const projectTabs = [
   { id: 'roadmap', label: 'Roadmap', icon: 'i-tabler-route' },
   { id: 'settings', label: 'Paramètres', icon: 'i-tabler-settings' },
   { id: 'resources', label: 'Ressources', icon: 'i-tabler-folders' },
 ] as const
-const roadmapItem = ref('')
-
-const initialSection = route.query.tab
-const section = ref<'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'>(
-  initialSection === 'growth' || initialSection === 'assets' || initialSection === 'storage' ? initialSection : 'clients'
-)
+const requestedClientId = computed(() => typeof route.query.clientId === 'string' ? route.query.clientId : '')
+const requestedProjectId = computed(() => typeof route.query.projectId === 'string' ? route.query.projectId : '')
+const section = computed<AdminSection>(() => {
+  const tab = route.query.tab
+  return !requestedClientId.value && !requestedProjectId.value && typeof tab === 'string' && adminSections.includes(tab) ? tab as AdminSection : 'clients'
+})
+const projectTab = computed<ProjectTab>(() => route.query.tab === 'settings' ? 'settings' : route.query.tab === 'resources' || isResourceTab(route.query.tab) ? 'resources' : 'roadmap')
+const resourceTab = computed<AdminResource>(() => isResourceTab(route.query.resource) ? route.query.resource : isResourceTab(route.query.tab) ? route.query.tab : 'payment')
+const roadmapItem = computed(() => activeProject.value?.id === requestedProjectId.value && projectTab.value === 'roadmap' && typeof route.query.stepId === 'string' ? route.query.stepId : '')
 
 const search = ref('')
 
@@ -32,8 +38,36 @@ const sortBy = ref<'name' | 'contact' | 'project' | 'status' | 'progress' | 'due
 
 const sortDirection = ref<'asc' | 'desc'>('asc')
 
-const selected = ref<Client | null>(null)
-const selectedProjectId = ref('')
+let filtersStorageKey = ''
+const restoreClientFilters = (userId: string) => {
+  const key = `mc-portal-client-filters:${userId}`
+  if (filtersStorageKey === key) return
+  filtersStorageKey = ''
+  search.value = ''
+  statusFilter.value = 'all'
+  sortBy.value = 'name'
+  sortDirection.value = 'asc'
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || 'null')
+    if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+      if (typeof saved.search === 'string') search.value = saved.search
+      if (typeof saved.status === 'string' && saved.status) statusFilter.value = saved.status
+      if (['name', 'contact', 'project', 'status', 'progress', 'due'].includes(saved.sortBy)) sortBy.value = saved.sortBy
+      if (saved.direction === 'asc' || saved.direction === 'desc') sortDirection.value = saved.direction
+    }
+  } catch {
+    // Keep the list usable when browser storage is unavailable or malformed.
+  }
+  filtersStorageKey = key
+}
+watch([search, statusFilter, sortBy, sortDirection], () => {
+  if (!filtersStorageKey) return
+  try {
+    localStorage.setItem(filtersStorageKey, JSON.stringify({ search: search.value, status: statusFilter.value, sortBy: sortBy.value, direction: sortDirection.value }))
+  } catch {
+    // Filtering still works when the browser cannot save preferences.
+  }
+}, { flush: 'sync' })
 
 const showCreate = ref(false)
 const createBusy = ref(false)
@@ -52,6 +86,7 @@ const newDue = ref('')
 const newEmail = ref('')
 
 const clients = ref<Client[]>([])
+const selected = computed(() => clients.value.find(client => requestedClientId.value ? client.id === requestedClientId.value : client.projects.some(project => project.id === requestedProjectId.value)) || null)
 
 const showInvite = ref(false)
 
@@ -71,11 +106,12 @@ const projectBusy = ref(false)
 const showAddProject = ref(false)
 const newProjectForm = reactive({ name: '', description: '', status: 'En cours', dueDate: '' })
 const projectRecords = computed(() => selected.value?.projects || [])
-const activeProject = computed(() => projectRecords.value.find(project => project.id === selectedProjectId.value) || projectRecords.value[0] || null)
+const activeProject = computed(() => projectRecords.value.find(project => project.id === requestedProjectId.value) || projectRecords.value[0] || null)
 
 const deleteTarget = ref<Client | null>(null)
 
 const deleteKind = ref<'client' | 'project'>('client')
+const deleteProject = ref<Project | null>(null)
 
 const deleteBusy = ref(false)
 
@@ -124,28 +160,27 @@ const loadClients = async () => {
       tone: ['gold', 'blue', 'green'][index % 3]
     }
   })
-  if (selected.value) selected.value = clients.value.find(client => client.id === selected.value?.id) || null
-
 }
 
-onMounted(async () => {
+const openAdministration = async () => {
+  loadError.value = ''
 
   try {
 
-    const { user } = await $fetch<{ user: { role: string; name: string; email:string } | null }>('/api/portal/auth/me')
+    const { user } = await $fetch<{ user: { id: string; role: string; name: string; email:string } | null }>('/api/portal/auth/me')
 
-    if (!user || user.role !== 'admin') { await navigateTo('/portal/login'); return }
+    if (!user || user.role !== 'admin') { await navigateTo(localePath(user ? '/portal' : '/portal/login'), { replace: true }); return }
 
     adminName.value = user.name; adminEmail.value=user.email
+    restoreClientFilters(user.id)
 
     await loadClients()
-    if(typeof route.query.projectId==='string')openNotificationProject(route.query.projectId,String(route.query.tab||''),typeof route.query.stepId==='string'?route.query.stepId:'')
-
     ready.value = true
 
-  } catch { await navigateTo('/portal/login') }
+  } catch { loadError.value = 'Impossible de charger l’administration.' }
 
-})
+}
+onMounted(openAdministration)
 
 const addClient = async () => {
 
@@ -163,11 +198,9 @@ const addClient = async () => {
 
   const created = clients.value.find(row => row.id === client.id)
 
-  if (created) openClient(created)
+  if (created) await openClient(created)
 
   showCreate.value = false
-
-  section.value = 'clients'
 
   if (newEmail.value.trim() && created) startInvite(created, newEmail.value.trim())
 
@@ -220,34 +253,40 @@ const revokeInvitation = async (invitation: TeamInvitation) => {
 const invitationExpired = (expiresAt: string) => expiresAt <= new Date().toISOString()
 const retryInvites = () => { inviteEmail.value = inviteResults.value.filter(result => result.error).map(result => result.email).join('\n'); inviteResults.value = []; inviteError.value = '' }
 
-const openClient = (client: Client) => {
-
-  selected.value = client
-  resourceTab.value = 'payment'
-  projectTab.value = 'roadmap'
-  roadmapItem.value = ''
-  selectedProjectId.value = client.projects[0]?.id || ''
-  syncProjectForm()
-
+const goToSection = (tab: AdminSection, replace = false) => {
+  const location = { query: { ...route.query, tab: tab === 'clients' ? undefined : tab, clientId: undefined, projectId: undefined, stepId: undefined, resource: undefined, requestId: undefined } }
+  return replace ? router.replace(location) : router.push(location)
+}
+const goToProject = (clientId: string, projectId?: string, tab: ProjectTab = 'roadmap', resource?: AdminResource, replace = false) => {
+  const location = { query: { ...route.query, tab: projectId ? tab : undefined, clientId, projectId, stepId: undefined, resource: tab === 'resources' && resource !== 'payment' ? resource : undefined, requestId: undefined } }
+  return replace ? router.replace(location) : router.push(location)
+}
+const openClient = (client: Client) => goToProject(client.id, client.projects[0]?.id)
+const openProjectTab = (tab: ProjectTab, resource = resourceTab.value) => {
+  if (selected.value && activeProject.value && (tab !== projectTab.value || roadmapItem.value || (tab === 'resources' && resource !== resourceTab.value))) {
+    return goToProject(selected.value.id, activeProject.value.id, tab, resource)
+  }
+}
+const chooseProject = (projectId: string) => {
+  if (selected.value && projectId !== activeProject.value?.id) return goToProject(selected.value.id, projectId, projectTab.value, resourceTab.value)
 }
 
 const syncProjectForm = () => {
   const project = activeProject.value
   Object.assign(projectForm, { name: project?.name || '', description: project?.description || '', status: project?.status || 'À cadrer', dueDate: project?.dueDate || '',decisionMakerId:project?.decisionMakerId || '' })
 }
+watch(() => activeProject.value?.id, syncProjectForm)
+watch(() => selected.value?.id, () => { if (!projectBusy.value) showAddProject.value = false })
 
 const addProject = async () => {
   if (!selected.value || projectBusy.value) return
+  const clientId = selected.value.id
   modalError.value = ''
   projectBusy.value = true
   try {
-    const { project } = await $fetch<{ project: Project }>(`/api/portal/admin/clients/${selected.value.id}/projects`, { method: 'POST', body: newProjectForm })
+    const { project } = await $fetch<{ project: Project }>(`/api/portal/admin/clients/${clientId}/projects`, { method: 'POST', body: newProjectForm })
     await loadClients()
-    selected.value = clients.value.find(client => client.id === selected.value?.id) || selected.value
-    selectedProjectId.value = project.id
-    projectTab.value = 'roadmap'
-    roadmapItem.value = ''
-    syncProjectForm()
+    if (selected.value?.id === clientId) await goToProject(clientId, project.id)
     Object.assign(newProjectForm, { name: '', description: '', status: 'En cours', dueDate: '' })
     showAddProject.value = false
     notice.value = 'Le projet a été créé.'
@@ -264,8 +303,7 @@ const saveProject = async () => {
   try {
 
     await $fetch(`/api/portal/admin/projects/${activeProject.value.id}`, { method: 'PATCH', body: {...projectForm,decisionMakerId:projectForm.decisionMakerId || null} })
-    const organizationId = selected.value?.id
-    await loadClients(); selected.value = clients.value.find(row => row.id === organizationId) || selected.value
+    await loadClients()
     syncProjectForm()
 
     notice.value = 'Le projet a été mis à jour.'
@@ -279,11 +317,14 @@ const saveProject = async () => {
 const requestDelete = (client: Client, kind: 'client' | 'project') => {
   deleteTarget.value = client
   deleteKind.value = kind
+  deleteProject.value = kind === 'project' ? activeProject.value : null
 }
 
 const deleteRecord = async () => {
   const target = deleteTarget.value
   if (!target || deleteBusy.value) return
+  const project = deleteProject.value
+  const sectionUrl = route.fullPath
 
   modalError.value = ''
   deleteBusy.value = true
@@ -291,19 +332,15 @@ const deleteRecord = async () => {
     if (deleteKind.value === 'client') {
       await $fetch(`/api/portal/admin/clients/${target.id}`, { method: 'DELETE' })
       notice.value = `Le client ${target.name} et ses données associées ont été supprimés.`
-      selected.value = null
-    } else {
-      const projectId = selectedProjectId.value
-      const projectName = activeProject.value?.name || target.project
-      await $fetch(`/api/portal/admin/projects/${projectId}`, { method: 'DELETE' })
-      notice.value = `Le projet ${projectName} et ses données associées ont été supprimés.`
+    } else if (project) {
+      await $fetch(`/api/portal/admin/projects/${project.id}`, { method: 'DELETE' })
+      notice.value = `Le projet ${project.name} et ses données associées ont été supprimés.`
     }
     deleteTarget.value = null
     await loadClients()
-    if (deleteKind.value === 'project' && selected.value) {
-      selected.value = clients.value.find(row => row.id === selected.value?.id) || null
-      selectedProjectId.value = selected.value?.projects[0]?.id || ''
-      syncProjectForm()
+    if (route.fullPath === sectionUrl) {
+      if (project && selected.value?.id === target.id && requestedProjectId.value === project.id) await goToProject(target.id, selected.value.projects[0]?.id, 'roadmap', undefined, true)
+      else if (!project && (requestedClientId.value === target.id || target.projects.some(item => item.id === requestedProjectId.value))) await goToSection('clients', true)
     }
   } catch (error: any) {
     modalError.value = error?.data?.statusMessage || `Impossible de supprimer ce ${deleteKind.value === 'client' ? 'client' : 'projet'}.`
@@ -319,19 +356,11 @@ const updateMember=async(member:TeamMember,patch:{memberRole?:MemberRole;suspend
  catch(error:any){notice.value=error?.data?.statusMessage || 'Impossible de mettre à jour cet accès.';await loadClients()}
  finally{memberBusy.value=''}
 }
-const openProjectResource = (kind:ResourceKind) => {
-  resourceTab.value = kind
-  projectTab.value = 'resources'
-}
-const openNotificationProject = (projectId:string,tab='roadmap',stepId='') => {
+const openProjectResource = (kind:AdminResource) => openProjectTab('resources', kind)
+const openNotificationProject = (projectId:string,tab:string) => {
   const client = clients.value.find(client => client.projects.some(project => project.id === projectId))
-  if (!client) return
-  openClient(client)
-  selectedProjectId.value = projectId
-  roadmapItem.value = stepId
-  syncProjectForm()
-  section.value = 'clients'
-  if (tab === 'file' || tab === 'mockup') openProjectResource(tab)
+  if (client) return goToProject(client.id, projectId, isResourceTab(tab) ? 'resources' : 'roadmap', isResourceTab(tab) ? tab : undefined)
+  notice.value = 'Ce projet n’est plus disponible.'
 }
 const updateRoadmap = (summary:{progress:number;currentPhase:{title:string}|null},project:{id:string}) => {
   const row = clients.value.flatMap(client => client.projects).find(item => item.id === project.id)
@@ -345,7 +374,7 @@ const signOut = async () => {
 
   await $fetch('/api/portal/auth/logout', { method: 'POST' })
 
-  await navigateTo('/portal/login')
+  await navigateTo(localePath('/portal/login'), { replace: true })
 
 }
 
@@ -435,13 +464,13 @@ onBeforeUnmount(() => {
 
         <nav aria-label="Administration">
 
-          <button :class="{ active: section === 'clients' && !selected }" @click="section = 'clients'; selected = null"><UIcon name="i-tabler-users" />Clients</button>
+          <button :class="{ active: section === 'clients' && !selected }" :aria-current="section === 'clients' && !selected ? 'page' : undefined" @click="goToSection('clients')"><UIcon name="i-tabler-users" />Clients</button>
 
-          <button :class="{ active: section === 'growth' }" @click="section = 'growth'; selected = null"><UIcon name="i-tabler-chart-line" />Croissance & performance</button>
+          <button :class="{ active: section === 'growth' }" :aria-current="section === 'growth' ? 'page' : undefined" @click="goToSection('growth')"><UIcon name="i-tabler-chart-line" />Croissance & performance</button>
 
-          <button :class="{ active: section === 'storage' }" :aria-current="section === 'storage' ? 'page' : undefined" @click="section = 'storage'; selected = null"><UIcon name="i-tabler-database" />Stockage</button>
+          <button :class="{ active: section === 'storage' }" :aria-current="section === 'storage' ? 'page' : undefined" @click="goToSection('storage')"><UIcon name="i-tabler-database" />Stockage</button>
 
-          <button :class="{active:section==='notifications'}" @click="section='notifications';selected=null"><UIcon name="i-tabler-bell"/>Notifications</button><button :class="{active:section==='account'}" @click="section='account';selected=null"><UIcon name="i-tabler-user"/>Mon compte</button><button :class="{ active: section === 'assets' }" @click="section = 'assets'; selected = null"><UIcon name="i-tabler-photo" />Prompt IA</button>
+          <button :class="{active:section==='notifications'}" :aria-current="section === 'notifications' ? 'page' : undefined" @click="goToSection('notifications')"><UIcon name="i-tabler-bell"/>Notifications</button><button :class="{active:section==='account'}" :aria-current="section === 'account' ? 'page' : undefined" @click="goToSection('account')"><UIcon name="i-tabler-user"/>Mon compte</button><button :class="{ active: section === 'assets' }" :aria-current="section === 'assets' ? 'page' : undefined" @click="goToSection('assets')"><UIcon name="i-tabler-photo" />Prompt IA</button>
 
         </nav>
 
@@ -471,20 +500,20 @@ onBeforeUnmount(() => {
 
           <template v-else-if="selected">
 
-            <button class="back-to-clients" @click="selected = null"><UIcon name="i-tabler-arrow-left" /> Tous les clients</button>
+            <button class="back-to-clients" @click="goToSection('clients')"><UIcon name="i-tabler-arrow-left" /> Tous les clients</button>
 
             <div class="admin-title-row"><div class="client-heading"><span :class="['client-logo', selected.tone]">{{ selected.initials }}</span><div><h1>{{ selected.name }}</h1><p class="subheading">Espace client sécurisé · {{ selected.projects.length }} projet{{ selected.projects.length > 1 ? 's' : '' }}</p></div></div><div class="detail-actions"><button class="create-button" @click="showAddProject = true"><UIcon name="i-tabler-plus" />Ajouter un projet</button><button class="wa-button" @click="startInvite(selected)"><UIcon name="i-tabler-mail-forward" />Inviter des personnes</button></div></div>
 
-            <section class="admin-card project-list-card"><div class="card-heading"><h2>Projets du client</h2></div><div v-if="selected.projects.length" class="client-project-list"><button v-for="project in selected.projects" :key="project.id" :class="['client-project-item', { selected: selectedProjectId === project.id }]" @click="selectedProjectId = project.id; roadmapItem = ''; syncProjectForm()"><span><strong>{{ project.name }}</strong><small>{{ project.status }} · {{ project.progress }} % · {{ project.dueDate ? portalDate(project.dueDate) : 'Livraison à définir' }}</small></span><UIcon name="i-tabler-chevron-right" /></button></div><p v-else class="empty-projects">Ce client n’a pas encore de projet.</p></section>
+            <section class="admin-card project-list-card"><div class="card-heading"><h2>Projets du client</h2></div><div v-if="selected.projects.length" class="client-project-list"><button v-for="project in selected.projects" :key="project.id" :class="['client-project-item', { selected: activeProject?.id === project.id }]" @click="chooseProject(project.id)"><span><strong>{{ project.name }}</strong><small>{{ project.status }} · {{ project.progress }} % · {{ project.dueDate ? portalDate(project.dueDate) : 'Livraison à définir' }}</small></span><UIcon name="i-tabler-chevron-right" /></button></div><p v-else class="empty-projects">Ce client n’a pas encore de projet.</p></section>
 
             <nav v-if="activeProject" class="admin-project-tabs" aria-label="Rubriques du projet">
-              <button v-for="tab in projectTabs" :key="tab.id" type="button" :aria-current="projectTab===tab.id?'page':undefined" @click="projectTab=tab.id; roadmapItem=''"><UIcon :name="tab.icon"/> {{ tab.label }}</button>
+              <button v-for="tab in projectTabs" :key="tab.id" type="button" :aria-current="projectTab===tab.id?'page':undefined" @click="openProjectTab(tab.id)"><UIcon :name="tab.icon"/> {{ tab.label }}</button>
             </nav>
             <template v-if="activeProject && projectTab==='roadmap'">
-              <PortalRoadmap :key="activeProject.id" :project-id="activeProject.id" :item-id="roadmapItem" embedded @resource="openProjectResource" @changed="updateRoadmap"/>
+              <PortalRoadmap :key="`${activeProject.id}:${roadmapItem}`" :project-id="activeProject.id" :item-id="roadmapItem" embedded @resource="openProjectResource" @changed="updateRoadmap"/>
               <PortalReminders :key="activeProject.id" :project-id="activeProject.id"/>
             </template>
-            <PortalResources v-else-if="activeProject && projectTab==='resources'" :key="activeProject.id" :initial-kind="resourceTab" :project-id="activeProject.id" :members="selected.members" admin/>
+            <PortalResources v-else-if="activeProject && projectTab==='resources'" :key="activeProject.id" :kind="resourceTab" :project-id="activeProject.id" :members="selected.members" admin @update:kind="openProjectResource"/>
             <template v-else>
             <section class="client-detail-grid"><article class="admin-card team-card"><div class="card-heading"><h2>Équipe du client <span class="team-count">{{ selected.members.length }}</span></h2><button class="quiet-button" @click="startInvite(selected)"><UIcon name="i-tabler-user-plus" />Inviter</button></div><p class="contact-note">Chaque personne dispose de son compte et accède aux projets de {{ selected.name }}. Un lecteur consulte sans contribuer. La suspension coupe immédiatement l’accès et les sessions, tout en conservant les contributions.</p><div v-if="!selected.members.length" class="contact-note">Aucun compte activé pour le moment.</div><ul class="team-list"><li v-for="member in selected.members" :key="member.id"><span class="team-avatar">{{ member.name.slice(0,1).toUpperCase() }}</span><div><strong>{{ member.name }}</strong><small>{{ member.email }}</small></div><div class="team-member-controls"><label :for="'role-'+member.id" class="sr-only">Rôle de {{member.name}}</label><select :id="'role-'+member.id" :value="member.memberRole" :disabled="!!memberBusy" @change="updateMember(member,{memberRole:($event.target as HTMLSelectElement).value as MemberRole})"><option v-for="(label,role) in memberRoleLabels" :key="role" :value="role">{{label}}</option></select><span class="team-badge">{{member.suspended?'Suspendu':'Actif'}}</span><button class="quiet-button" :disabled="!!memberBusy" @click="updateMember(member,{suspended:!member.suspended})">{{memberBusy===member.id?'…':member.suspended?'Réactiver':'Suspendre'}}</button></div></li></ul><template v-if="selected.invitations.length"><h3 class="team-pending-title">Invitations · {{ selected.invitations.length }}</h3><ul class="team-list"><li v-for="invitation in selected.invitations" :key="invitation.id"><div><strong>{{ invitation.email }}</strong><small>{{memberRoleLabels[invitation.memberRole || 'contributor']}} · {{ invitationExpired(invitation.expiresAt) ? 'Expirée' : 'En attente · expire le '+new Date(invitation.expiresAt).toLocaleDateString('fr-FR') }}</small></div><div class="team-actions"><button class="quiet-button" :disabled="!!invitationActionBusy" @click="startInvite(selected,invitation.email,invitation.memberRole || 'contributor')">Renvoyer</button><button class="quiet-button" :disabled="!!invitationActionBusy" @click="revokeInvitation(invitation)">{{ invitationActionBusy===invitation.id?'…':'Annuler' }}</button></div></li></ul></template><div v-if="activeProject" class="client-review-note"><p>{{ activeProject.reviewFeedback || (activeProject.reviewState === 'approved' ? 'Dernière maquette validée.' : activeProject.reviewState === 'changes' ? 'Demande de modifications reçue.' : 'Aucun retour pour le moment.') }}</p></div></article><article v-if="activeProject" class="admin-card"><span class="admin-status"><i></i>{{ activeProject.status }}</span><h2>{{ activeProject.name }}</h2><p class="project-type">Visible par le client après connexion</p><div class="admin-progress-meta"><span>Avancement</span><strong>{{ activeProject.progress }} %</strong></div><div class="admin-progress"><i :style="{ width: `${activeProject.progress}%` }" /></div><div class="due-row"><span>Livraison prévue</span><strong>{{ activeProject.dueDate ? portalDate(activeProject.dueDate) : 'À définir' }}</strong></div></article></section>
 
@@ -575,13 +604,14 @@ onBeforeUnmount(() => {
       <div v-if="deleteTarget" class="modal-backdrop" @click.self="closeModal">
         <section class="create-modal delete-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-title" aria-describedby="delete-description" data-admin-dialog tabindex="-1" :aria-busy="deleteBusy">
           <header class="modal-heading"><span class="modal-heading-icon danger-icon"><UIcon name="i-tabler-trash" /></span><div><h2 id="delete-title">Supprimer {{ deleteKind === 'client' ? 'le client' : 'le projet' }} ?</h2><p>Cette action est définitive.</p></div><button type="button" class="modal-close" aria-label="Fermer" :disabled="deleteBusy" @click="closeModal"><UIcon name="i-tabler-x" /></button></header>
-          <div class="modal-body"><p v-if="modalError" class="team-error" role="alert">{{ modalError }}</p><p id="delete-description" class="delete-description">{{ deleteKind === 'client' ? `${deleteTarget.name} et tous ses projets, comptes clients, invitations, fichiers et historiques seront définitivement supprimés.` : `Le projet « ${activeProject?.name || deleteTarget.project} » et ses fichiers, maquettes, retours et historiques seront définitivement supprimés. Le client conservera ses autres projets et son compte.` }}</p></div>
+          <div class="modal-body"><p v-if="modalError" class="team-error" role="alert">{{ modalError }}</p><p id="delete-description" class="delete-description">{{ deleteKind === 'client' ? `${deleteTarget.name} et tous ses projets, comptes clients, invitations, fichiers et historiques seront définitivement supprimés.` : `Le projet « ${deleteProject?.name || deleteTarget.project} » et ses fichiers, maquettes, retours et historiques seront définitivement supprimés. Le client conservera ses autres projets et son compte.` }}</p></div>
           <footer class="modal-actions"><button class="quiet-button" type="button" data-modal-autofocus :disabled="deleteBusy" @click="closeModal">Annuler</button><button class="create-button confirm-delete" type="button" :disabled="deleteBusy" @click="deleteRecord"><UIcon name="i-tabler-trash" />{{ deleteBusy ? 'Suppression…' : 'Supprimer définitivement' }}</button></footer>
         </section>
       </div>
 
     </template>
 
+    <p v-else-if="loadError" class="loading-admin" role="alert">{{ loadError }} <button type="button" class="quiet-button" @click="openAdministration">Réessayer</button></p>
     <p v-else class="loading-admin" role="status">Ouverture de l’administration…</p>
 
   </main>

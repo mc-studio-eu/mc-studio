@@ -5,6 +5,7 @@ const remember = ref(true)
 const revealPassword = ref(false)
 const error = ref('')
 const submitting = ref(false)
+const localePath = useLocalePath()
 
 useHead({ title: 'Connexion · MC Studio' })
 
@@ -17,7 +18,7 @@ const signIn = async () => {
   submitting.value = true
   try {
     const { user } = await $fetch<{ user: { role: string } }>('/api/portal/auth/login', { method: 'POST', body: { email: email.value, password: password.value, remember: remember.value } })
-    await navigateTo(user.role === 'admin' ? '/portal/admin' : '/portal')
+    await navigateTo(localePath(user.role === 'admin' ? '/portal/admin' : '/portal'), { replace: true })
   } catch (cause: any) {
     error.value = cause?.data?.statusMessage || 'Connexion impossible. Vérifiez vos identifiants.'
   } finally { submitting.value = false }

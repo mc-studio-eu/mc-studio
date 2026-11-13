@@ -1,0 +1,22 @@
+// Captures originales du portfolio MC Studio (public/). Rien n'est recréé.
+export const realAssets = {
+  raSite: 'img/project/hero-raenergy.png',
+  shika: 'img/project/shika-consulting/homepage.webp',
+  personal: 'img/project/personal/hero.png',
+  amg: 'img/project/amg-promotion-showroom.png',
+  crm: 'img/project/crm-ra/crm-dashboard.png',
+  crmMobile: 'img/project/crm-ra/crm-mobile-dashboard.png',
+  feed: 'img/project/personal/feed.webp',
+  awl: 'assets/creator/maison-awl-marketplace.png',
+  arises: 'img/project/arises-saas.png',
+  arisesLogin: 'img/project/arises-login-screen.png',
+  alertes: 'img/project/alertes-infos.png',
+  association: 'img/project/association-management.png',
+  automation: 'img/project/automation-integrations-ai-screen.png',
+  sotraya: 'img/project/sotraya/hero-screen.png',
+  sotrayaAbout: 'img/project/sotraya/about.png',
+  awlLanding: 'assets/creator/maison-awl-landing.png',
+  crmCarte: 'img/project/crm-ra/crm-carte.png',
+  fontaines: 'img/project/live-screens/fontaines-vtc.png',
+  personalLogin: 'img/project/personal/login.webp',
+} as const

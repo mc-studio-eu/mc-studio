@@ -5,9 +5,12 @@ import { Reframe } from './Reframe'
 import { FPS } from './theme'
 import { McStudioCreator, CREATOR_FRAMES } from './creator/CreatorVideo'
 import { McStudioBusinessProcess, BUSINESS_FRAMES } from './business/BusinessProcess'
+import { McStudioReal, REAL_FRAMES } from './real/RealFilm'
 
 export const RemotionRoot: React.FC = () => (
   <>
+    {/* Vertical 9:16 — produits réels sur appareils réalistes */}
+    <Composition id="McStudioReal" component={McStudioReal} durationInFrames={REAL_FRAMES} fps={FPS} width={1080} height={1920} />
     <Composition id="McStudioBusinessProcess" component={McStudioBusinessProcess} durationInFrames={BUSINESS_FRAMES} fps={FPS} width={1920} height={1080} />
     <Composition id="McStudioCreator" component={McStudioCreator} durationInFrames={CREATOR_FRAMES} fps={FPS} width={1920} height={1080} />
     {/* Master — website hero, YouTube, LinkedIn */}

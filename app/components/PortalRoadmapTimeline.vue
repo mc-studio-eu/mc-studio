@@ -91,7 +91,7 @@ function barStyle(item: RoadmapPhase | RoadmapStep) {
 <template>
   <section class="rm-card rm-timeline" aria-label="Planning du projet">
     <div class="rm-timeline-heading">
-      <div><h2>Planning du projet</h2><p>Dépliez les phases pour afficher leurs étapes.</p></div>
+      <div><h2>Planning du projet</h2><p>Dépliez les phases pour afficher leurs étapes.</p><p>Ce planning est prévisionnel et peut évoluer selon l’avancement des phases.</p></div>
       <div v-if="calendar" class="rm-timeline-actions">
         <div class="rm-modes" role="group" aria-label="Échelle du planning">
           <button v-for="option in modes" :key="option.id" type="button" :aria-pressed="mode===option.id" @click="mode=option.id">{{ option.title }}</button>

@@ -6,7 +6,7 @@ const projectQuotaMiB = PORTAL_FILE_QUOTA_BYTES / 1024 / 1024
 const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'|'satisfaction'; initialKind?:ResourceKind|'assets'|'satisfaction'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
 const canWrite = computed(()=>Boolean(props.admin || props.canContribute))
 const canValidate = computed(()=>Boolean(props.admin || props.canReview))
-const emit = defineEmits<{changed:[]}>()
+const emit = defineEmits<{changed:[];'update:kind':[kind:ResourceKind|'assets'|'satisfaction']}>()
 const resources = ref<PortalResource[]>([])
 type ReviewDecision={id:string;resourceId:string;versionId:string|null;state:string;feedback:string;author:string;createdAt:string}
 const reviewHistory=ref<ReviewDecision[]>([])
@@ -16,6 +16,10 @@ const fileRequests=ref<FileRequest[]>([]),showFileRequestForm=ref(false),request
 const activeKind = ref<ResourceKind|'assets'|'satisfaction'>(props.initialKind || 'payment')
 watch(()=>props.initialKind,value=>{if(value)activeKind.value=value})
 const kind = computed(() => props.kind || activeKind.value)
+const openKind = (next: ResourceKind|'assets'|'satisfaction') => {
+ if(!props.kind)activeKind.value=next
+ emit('update:kind',next)
+}
 const items = computed(() => resources.value.filter(r=>r.kind===kind.value && (r.kind!=='mockup' || Number(r.versionCount || 0)===0)))
 const loading = ref(true), busy = ref(false), error = ref(''), success = ref(''), search = ref('')
 const { uploading, progress: uploadProgress, processing: uploadProcessing, send: sendUpload, reset: resetUpload } = usePortalUpload()
@@ -119,7 +123,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 </script>
 <template>
  <section class="pr">
-  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" @click="activeKind=key"><UIcon :name="resourceIcons[key]"/>{{label}}</button><button :class="{active:kind==='assets'}" @click="activeKind='assets'"><UIcon name="i-tabler-photo"/>Assets</button><button :class="{active:kind==='satisfaction'}" @click="activeKind='satisfaction'"><UIcon name="i-tabler-heart-handshake"/>Satisfaction</button></nav>
+  <nav v-if="admin" class="pr-tabs" aria-label="Ressources du client"><button v-for="(label,key) in resourceLabels" :key="key" :class="{active:kind===key}" :aria-current="kind===key?'page':undefined" @click="openKind(key)"><UIcon :name="resourceIcons[key]"/>{{label}}</button><button :class="{active:kind==='assets'}" :aria-current="kind==='assets'?'page':undefined" @click="openKind('assets')"><UIcon name="i-tabler-photo"/>Assets</button><button :class="{active:kind==='satisfaction'}" :aria-current="kind==='satisfaction'?'page':undefined" @click="openKind('satisfaction')"><UIcon name="i-tabler-heart-handshake"/>Satisfaction</button></nav>
   <PortalSatisfaction v-if="kind==='satisfaction'" :project-id="projectId" :admin="admin" @changed="emit('changed')"/>
   <PortalAssets v-else-if="kind==='assets'" :project-id="projectId" :admin="admin"/>
   <template v-else>
