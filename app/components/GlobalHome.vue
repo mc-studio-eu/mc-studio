@@ -290,7 +290,7 @@ useSeoMeta({
 }
 
 @media (min-width: 1024px) {
-  .global-home__hero h1.global-home__hero-title--two-lines { max-width: 1280px; font-size: clamp(40px,4.4vw,68px); }
+  .global-home__hero h1.global-home__hero-title--two-lines { max-width: 1280px; font-size: clamp(36px,3.8vw,58px); }
   .global-home__hero-title--two-lines .global-home__hero-title-prefix { display: block; white-space: nowrap; }
   .global-home__hero-title--two-lines .global-home__hero-title-spacer { display: none; }
   .global-home__hero-title--two-lines .global-home__hero-word-rotator { white-space: nowrap; }
