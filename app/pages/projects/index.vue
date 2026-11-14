@@ -2,6 +2,7 @@
 const { t } = useI18n()
 
 const galleryProjects = [
+  { title: 'Abri Toi — articles', image: '/img/project/abri-toi-articles.png' },
   { title: 'Automatisation, intégrations et IA', image: '/img/project/automation-integrations-ai-screen.png' },
   { title: 'Sotraya — écran d’accueil', image: '/img/project/sotraya/hero-screen.png' },
   { title: 'Sotraya — écran de lancement', image: '/img/project/sotraya/splash.png' },
