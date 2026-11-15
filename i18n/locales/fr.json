@@ -823,16 +823,16 @@
   },
   "globalHome": {
     "seo": {
-      "title": "MC Studio — Des sites web qui convertissent pour les SaaS",
-      "description": "MC Studio combine stratégie, copywriting, design et développement pour créer des sites SaaS qui génèrent plus d’inscriptions et de démos."
+      "title": "MC Studio — Des applications qui deviennent indispensables",
+      "description": "MC Studio combine stratégie, design et développement pour créer des applications utiles qui fidélisent leurs utilisateurs."
     },
     "hero": {
-      "title": "Des sites web qui convertissent. Des applications qui deviennent indispensables.",
-      "title_prefix": "Des sites web qui convertissent.",
+      "title": "Des applications qui deviennent indispensables.",
+      "title_prefix": "Des applications",
       "rotating_words": [
-        "Des applications qui deviennent indispensables."
+        "qui deviennent indispensables."
       ],
-      "subtitle": "Stratégie, design et développement pour lancer votre site web ou votre application, convertir vos visiteurs et fidéliser vos utilisateurs.",
+      "subtitle": "Stratégie, design et développement pour lancer votre application et fidéliser vos utilisateurs.",
       "cta_primary": "Réserver un appel",
       "cta_secondary": "Voir nos réalisations",
       "references_label": "Ils nous font confiance"
