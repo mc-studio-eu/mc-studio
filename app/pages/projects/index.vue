@@ -2,7 +2,6 @@
 const { t } = useI18n()
 
 const galleryProjects = [
-  { title: 'Abri Toi — articles', image: '/img/project/abri-toi-articles.png' },
   { title: 'Automatisation, intégrations et IA', image: '/img/project/automation-integrations-ai-screen.png' },
   { title: 'Sotraya — écran d’accueil', image: '/img/project/sotraya/hero-screen.png' },
   { title: 'Sotraya — écran de lancement', image: '/img/project/sotraya/splash.png' },
@@ -19,6 +18,7 @@ const galleryProjects = [
   { title: 'Gestion d’association — vue d’ensemble', image: '/img/project/association-management.png' },
   { title: 'Shika Consulting', image: '/img/project/shika-consulting/homepage.webp' },
   { title: 'AMG Promotion — showroom', image: '/img/project/amg-promotion-showroom.png' },
+  { title: 'Abri Toi — articles', image: '/img/project/abri-toi-articles.png' },
 ]
 
 useSeoMeta({
