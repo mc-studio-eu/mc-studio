@@ -4,7 +4,7 @@ import { expertises } from '~/data/expertises'
 import '~/assets/css/studio-pages.css'
 const localePath = useLocalePath()
 useStudioSeo(
-  'Applications métier, SaaS & IA | MC Studio',
+  'Conception d’applications sur mesure | MC Studio',
   'Trois expertises pour construire votre logiciel : applications métier sur mesure, SaaS et intégrations IA. Du cadrage au lancement avec MC Studio.',
 )
 </script>
@@ -15,7 +15,7 @@ useStudioSeo(
     <main class="studio-page__wrap">
       <header class="studio-page__hero">
         <p class="studio-page__eyebrow">Nos expertises</p>
-        <h1>Votre métier.<br />Votre produit.<br />Le bon logiciel.</h1>
+        <h1>Une application conçue<br />pour vos usages.</h1>
         <p class="studio-page__lead">
           Un outil pour vos équipes, un SaaS à lancer, une application qui
           intègre l’IA : nous réunissons stratégie, design produit et

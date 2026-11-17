@@ -83,9 +83,9 @@ onMounted(() => {
 onBeforeUnmount(() => productObserver?.disconnect())
 
 const title = computed(() => props.city
-  ? `Développement logiciel sur mesure à ${props.city} | MC Studio`
-  : 'MC Studio — Développement logiciel sur mesure, SaaS et IA')
-const description = computed(() => `MC Studio conçoit et développe des applications métier, des SaaS et des solutions IA pour les entreprises et les fondateurs${props.city ? ` à ${props.city}` : ''}.`)
+  ? `Développement d’applications sur mesure à ${props.city} | MC Studio`
+  : 'MC Studio — Studio d’applications sur mesure')
+const description = computed(() => `MC Studio conçoit des applications sur mesure, des outils métier aux plateformes clients pour les entreprises et les fondateurs${props.city ? ` à ${props.city}` : ''}.`)
 useStudioSeo(title, description)
 useHead({
   htmlAttrs: { lang: 'fr' },
@@ -106,29 +106,20 @@ useHead({
     <StudioNavbar />
     <main id="contenu" tabindex="-1">
       <section class="flagship-hero" aria-labelledby="studio-title">
-        <img
-          class="flagship-hero__image"
-          src="/img/studio/clouds-1280.webp"
-          srcset="/img/studio/clouds-640.webp 640w, /img/studio/clouds-1280.webp 1280w"
-          sizes="100vw"
-          width="1280"
-          height="549"
-          fetchpriority="high"
-          alt=""
-        >
+        <div class="flagship-hero__sculpture" aria-hidden="true"><ApplicationSculpture /></div>
         <div class="flagship__shell flagship-hero__inner">
           <div class="flagship-hero__content">
-            <p class="flagship__kicker">Studio indépendant de développement logiciel<span v-if="city"> à {{ city }}</span></p>
-            <h1 id="studio-title">Le logiciel,<br><em>à votre mesure.</em></h1>
-            <p class="flagship-hero__lead">Nous concevons et développons des applications métier, des SaaS et des solutions IA pour les entreprises et les fondateurs qui veulent franchir un cap.</p>
+            <p class="flagship__kicker">MC Studio · Design & ingénierie<span v-if="city"> à {{ city }}</span></p>
+            <h1 id="studio-title">Applications<br><em>sur mesure.</em></h1>
+            <p class="flagship-hero__lead">Du CRM de terrain à la plateforme de réservation, nous concevons et développons les applications dont vos équipes et vos clients ont besoin.</p>
             <div class="flagship__actions">
               <NuxtLink class="flagship__button" :to="localePath('/contact')">Parlons de votre projet <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
               <a class="flagship__text-link" href="#realisations">Voir les réalisations <UIcon name="i-tabler-arrow-down" aria-hidden="true" /></a>
             </div>
           </div>
-          <div class="flagship-hero__rail">
-            <span>Stratégie produit</span><span>Design</span><span>Ingénierie</span>
-          </div>
+          <nav class="flagship-hero__rail" aria-label="Explorer l’accueil">
+            <a href="#realisations">Les applications ↓</a><a href="#personal-title">Dans Personal ↓</a><a href="#founder-title">Le fondateur ↓</a>
+          </nav>
         </div>
       </section>
 
@@ -136,9 +127,9 @@ useHead({
         <header class="flagship__section-head">
           <div>
             <p class="flagship__kicker">Réalisations</p>
-            <h2 id="work-title">Deux métiers.<br>Deux logiciels.</h2>
+            <h2 id="work-title">Deux applications.<br>Deux terrains.</h2>
           </div>
-          <p>Un outil commercial pour des équipes de terrain. Une place de marché pour une communauté. Deux façons de partir des usages pour concevoir le bon produit.</p>
+          <p>Un outil commercial pour des équipes de terrain. Une place de marché pour une communauté. Découvrez comment ces contraintes ont guidé les choix de conception.</p>
         </header>
         <div class="flagship-work">
           <article v-for="item in work" :key="item.slug" class="flagship-work__item">
@@ -168,7 +159,7 @@ useHead({
           <header class="flagship__section-head">
             <div>
               <p class="flagship__kicker">Expertises</p>
-              <h2 id="expertise-title">Qu’est-ce que votre logiciel doit accomplir ?</h2>
+              <h2 id="expertise-title">Que doit faire votre application ?</h2>
             </div>
             <p>Nous réunissons la stratégie produit, le design et l’ingénierie pour passer d’un problème bien posé à une application en production.</p>
           </header>
@@ -297,7 +288,7 @@ useHead({
 
       <section class="flagship-closing" aria-labelledby="closing-title">
         <div class="flagship__shell">
-          <h2 id="closing-title">Quel logiciel vous ferait avancer ?</h2>
+          <h2 id="closing-title">Quelle application vous manque ?</h2>
           <div>
             <p>Parlez-nous du produit que vous voulez lancer ou du travail que vous aimeriez simplifier. Nous commencerons par comprendre le besoin.</p>
             <NuxtLink class="flagship__button" :to="localePath('/contact')">Parlons de votre projet <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>

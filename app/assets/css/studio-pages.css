@@ -194,3 +194,27 @@
     transition: none !important;
   }
 }
+
+/* A quieter version of the home sculpture's metal strata on interior pages. */
+.studio-page__hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.studio-page__hero:not(.founder-intro)::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: min(44vw, 630px);
+  height: 115%;
+  right: -9%;
+  top: -8%;
+  opacity: .38;
+  transform: rotate(-19deg);
+  background: repeating-radial-gradient(ellipse at 100% 47%, transparent 0 10px, #cacad377 12px, #8c9daf1c 14px, transparent 17px);
+  mask-image: linear-gradient(105deg, transparent 20%, #000 72%, transparent);
+}
+@media(max-width: 760px) {
+  .studio-page__hero:not(.founder-intro)::after { width: 70%; opacity: .18; right: -28%; }
+}

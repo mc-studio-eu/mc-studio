@@ -18,7 +18,7 @@ const error = ref('')
 const status = ref<HTMLElement | null>(null)
 const showCalendar = ref(false)
 useStudioSeo(
-  'Parlons de votre projet logiciel | MC Studio',
+  'Parlons de votre application | MC Studio',
   'Décrivez votre application métier, votre SaaS ou votre projet IA. Échangez directement avec Mohamed Chettah, fondateur de MC Studio.',
 )
 async function submit() {
@@ -62,7 +62,7 @@ async function submit() {
     <StudioNavbar tone="dark" />
     <main class="studio-page__wrap">
       <header class="studio-page__hero">
-        <p class="studio-page__eyebrow">Votre prochain logiciel commence ici</p>
+        <p class="studio-page__eyebrow">Votre application sur mesure</p>
         <h1>Parlons de ce que<br />vous voulez construire.</h1>
         <p class="studio-page__lead">
           Une idée à cadrer, un outil qui vous freine ou un produit à faire

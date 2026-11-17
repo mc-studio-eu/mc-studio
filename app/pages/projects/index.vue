@@ -6,20 +6,22 @@ import '~/assets/css/studio-pages.css'
 
 const localePath = useLocalePath()
 const products = ['personal', 'arises']
-const priority = ['crm-ra-energy', 'maison-awl', 'shika-consulting']
+const priority = ['crm-ra-energy', 'maison-awl']
 const groups = [
   {
-    title: 'Missions clients',
+    title: 'Applications clients',
     items: [
       ...priority.map((slug) => projects.find((p) => p.slug === slug)!),
-      ...projects.filter(
-        (p) => !priority.includes(p.slug) && !products.includes(p.slug),
-      ),
+
     ],
   },
   {
     title: 'Produits du studio',
     items: projects.filter((p) => products.includes(p.slug)),
+  },
+  {
+    title: 'Autres réalisations',
+    items: projects.filter((p) => !priority.includes(p.slug) && !products.includes(p.slug)),
   },
 ]
 const covers: Record<string, string> = {
@@ -37,7 +39,7 @@ useStudioSeo(
     <StudioNavbar />
     <main class="studio-page__wrap">
       <header class="studio-page__hero">
-        <h1>Réalisations.</h1>
+        <h1>Des applications<br />sur le terrain.</h1>
         <p class="studio-page__lead">
           Découvrez comment un besoin se traduit en logiciel, depuis la
           vérification d’un rendez-vous commercial jusqu’au paiement d’une

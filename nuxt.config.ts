@@ -32,16 +32,16 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      title: "MC Studio | Applications métier, SaaS & IA",
+      title: "MC Studio | Applications sur mesure",
       htmlAttrs: {
         lang: 'fr'
       },
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: "Le studio logiciel fondé par Mohamed Chettah. Applications métier, SaaS et solutions IA : du cadrage produit au lancement." },
+        { name: 'description', content: "Applications sur mesure pour les entreprises et les fondateurs. MC Studio conçoit et développe votre outil métier ou votre plateforme client." },
         { name: 'format-detection', content: 'telephone=no' },
-        { property: 'og:title', content: "MC Studio | Applications métier, SaaS & IA" },
+        { property: 'og:title', content: "MC Studio | Applications sur mesure" },
         { property: 'og:type', content: 'website' },
         { property: 'og:url', content: 'https://www.mc-studio.eu' },
         { property: 'og:image', content: 'https://www.mc-studio.eu/hero.png' },

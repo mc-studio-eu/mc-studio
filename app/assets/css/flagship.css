@@ -212,3 +212,58 @@
   .flagship * { transition: none !important; }
   .flagship a:hover :is(img, span) { transform: none !important; scale: none !important; }
 }
+
+/* The sculpture occupies its own stage. All copy and navigation stay in flow. */
+.flagship-hero {
+  background: #08090c;
+  min-height: clamp(610px, calc(100svh - 76px), 980px);
+}
+.flagship-hero::after { display: none; }
+.flagship-hero__sculpture {
+  position: absolute;
+  inset: -3% -5% 3% 28%;
+  z-index: -1;
+  pointer-events: none;
+}
+.flagship-hero__sculpture > * { width: 100%; height: 100%; }
+.flagship-hero__inner { justify-content: flex-end; padding-top: clamp(140px, 23vh, 310px); }
+.flagship-hero__content { padding-bottom: clamp(34px, 6vh, 90px); }
+.flagship-hero h1 { font-size: clamp(4rem, 8.2vw, 9.2rem); line-height: .91; letter-spacing: -.074em; }
+.flagship-hero h1 em { color: #f7ddad; }
+.flagship-hero__lead { max-width: 43ch; }
+.flagship-hero__rail { justify-content: space-between; font: 500 .72rem/1.5 ui-monospace, monospace; }
+.flagship-hero__rail a { padding: 4px 0; text-decoration: none; color: #ddd6c9; }
+.flagship-hero__rail a:hover { color: var(--gold); }
+@media(min-width: 980px) {
+  #realisations { display: grid; grid-template-columns: minmax(240px, .68fr) minmax(0, 1.32fr); column-gap: 7%; }
+  #realisations .flagship__section-head { position: sticky; top: 125px; display: block; align-self: start; }
+  #realisations .flagship__section-head h2 { font-size: clamp(3.3rem, 5.1vw, 6rem); }
+  #realisations .flagship__section-head > p { margin-top: 2rem; max-width: 36ch; }
+  #realisations .flagship-work { display: flex; flex-direction: column; gap: 12vh; }
+  #realisations .flagship-work__item { width: 100%; padding: 0; }
+  #realisations .flagship-work__media img { aspect-ratio: 1.45; }
+  #realisations .flagship__work-actions { grid-column: 2; }
+}
+@media(max-width: 720px) {
+  .flagship-hero { min-height: auto; }
+  .flagship-hero__sculpture { inset: -30px -12% auto 0; height: clamp(215px, 63vw, 350px); }
+  .flagship-hero__inner { padding-top: clamp(200px, 56vw, 310px); }
+  .flagship-hero h1 { font-size: clamp(3.35rem, 12.8vw, 5.8rem); }
+  .flagship-hero__rail { gap: 10px; font-size: .59rem; letter-spacing: .045em; }
+}
+
+.flagship { --ink: #090a0c; --paper: #f4f3ee; --muted: #bcbcc0; }
+.flagship-expertise {
+  --gold: #654518;
+  --muted: #3c4248;
+  --line: #272d3538;
+  color: #171a1d;
+  background-color: #d9dcdd;
+  background-image: linear-gradient(115deg, #e6e7e4, #ced1d4 62%, #e4dfd5);
+}
+.flagship-closing {
+  background: radial-gradient(ellipse at 92% 120%, #342e24, transparent 60%), #0e1013;
+  border-color: #ffffff29;
+}
+.flagship-work__media { border: 1px solid #ffffff26; }
+.flagship__kicker { font-family: ui-monospace, monospace; font-weight: 500; }

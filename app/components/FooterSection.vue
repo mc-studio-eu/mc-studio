@@ -18,7 +18,7 @@ const links = computed(() => [
           <NuxtLink :to="localePath('/')">
             <img src="/img/logo/mc-studio.svg" alt="MC Studio" width="148" height="27" loading="lazy">
           </NuxtLink>
-          <p>{{ isFrench ? 'Studio indépendant de développement logiciel.' : 'Independent software development studio.' }}</p>
+          <p>{{ isFrench ? 'Studio de conception d’applications sur mesure.' : 'Independent software development studio.' }}</p>
           <a href="mailto:contact@mc-studio.eu">contact@mc-studio.eu</a>
         </div>
         <nav class="studio-footer__links" :aria-label="isFrench ? 'Navigation de pied de page' : 'Footer navigation'">
