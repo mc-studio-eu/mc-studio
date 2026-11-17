@@ -482,13 +482,17 @@
     "google_label": "Avis Google",
     "google_rating_value": "5,0",
     "google_rating_label": "Noté 5 sur 5 sur Google",
-    "google_trust_text": "6 témoignages clients à découvrir",
+    "google_trust_text": "7 témoignages clients à découvrir",
     "google_review": "Avis Google",
     "five_stars": "5 étoiles sur 5",
     "previous": "Avis précédent",
     "next": "Avis suivant",
     "go_to_review": "Aller à l'avis {number}",
     "items": {
+      "maison_awl": {
+        "content": "J'ai travailler avec MC STUDIO pour le dev d'une plateforme je suis très satisfait du travail je recommande.",
+        "role": "Avis Google · 5/5"
+      },
       "shika_consulting": {
         "content": "Très content de mon site internet réalisé avec MC STUDIO !\nJe recommande à 200%!",
         "role": "Fondateur, Shika Consulting"

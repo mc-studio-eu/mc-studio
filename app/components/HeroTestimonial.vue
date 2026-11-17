@@ -2,6 +2,7 @@
 const { t } = useI18n()
 
 const reviews = computed(() => [
+  { name: 'Maison AWL', avatar: '/img/project/maison-awl/logo-black.png', quote: t('testimonials.items.maison_awl.content') },
   { name: 'Nouri Yahi', avatar: '/img/testimonials/nouri-shika-consulting.png', quote: t('testimonials.items.shika_consulting.content') },
   { name: 'Yazid C.', avatar: '/img/testimonials/yazid-ra-energy.jpeg', quote: t('testimonials.items.ra_energy.content') },
   { name: 'Nelson M.', avatar: '/img/testimonials/nelson-souji-nova.jpg', quote: t('testimonials.items.souji_nova.content') },
@@ -41,7 +42,7 @@ onUnmounted(() => {
       <figure :key="activeIndex" class="hero-testimonial__review">
         <blockquote class="hero-testimonial__quote">“{{ activeReview.quote }}”</blockquote>
         <figcaption class="hero-testimonial__author">
-          <img :src="activeReview.avatar" :alt="activeReview.name" width="30" height="30">
+          <img :class="{ 'bg-white p-1': activeReview.name === 'Maison AWL' }" :src="activeReview.avatar" :alt="activeReview.name" width="30" height="30">
           <span class="hero-testimonial__name">{{ activeReview.name }}</span>
           <span class="hero-testimonial__divider" aria-hidden="true" />
           <span class="hero-testimonial__stars" :aria-label="t('testimonials.five_stars')">★★★★★</span>

@@ -21,6 +21,15 @@ defineProps({
 
 const testimonials = computed<Testimonial[]>(() => [
   {
+    id: 7,
+    content: t('testimonials.items.maison_awl.content'),
+    author: {
+      name: 'Maison AWL',
+      role: t('testimonials.items.maison_awl.role'),
+      avatar: '/img/project/maison-awl/logo-black.png'
+    },
+  },
+  {
     id: 1,
     content: t('testimonials.items.shika_consulting.content'),
     author: {
@@ -126,7 +135,7 @@ const rows = computed(() => {
 
           <!-- Author Info -->
           <div class="flex items-center gap-3 border-t border-white/10 pt-5">
-            <NuxtImg :src="testimonial.author.avatar" :alt="testimonial.author.name" class="w-11 h-11 rounded-full bg-gradient-to-br from-[var(--color-gold)] to-[#e8a84c] object-cover shrink-0 ring-2 ring-[#f0bf6c]/25"/>
+            <NuxtImg :style="testimonial.author.name === 'Maison AWL' ? { background: 'white', padding: '6px' } : undefined" :src="testimonial.author.avatar" :alt="testimonial.author.name" class="w-11 h-11 rounded-full bg-gradient-to-br from-[var(--color-gold)] to-[#e8a84c] object-cover shrink-0 ring-2 ring-[#f0bf6c]/25"/>
             <div class="flex flex-col gap-[2px]">
               <span class="font-inter text-sm font-semibold text-white">{{ testimonial.author.name }}</span>
               <span class="font-inter text-xs text-white/50">{{ testimonial.author.role }}</span>
