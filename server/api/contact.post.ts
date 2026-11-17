@@ -1,3 +1,5 @@
+import { capturePortalContact } from '../utils/portal-contact-intake'
+
 interface ContactPayload {
   audience?: unknown
   name?: unknown
@@ -86,7 +88,16 @@ export default defineEventHandler(async (event) => {
   )
   const contactTo = String(config.contactTo || 'contact@mc-studio.eu')
 
-  if (!resendApiKey) {
+  let captured: Awaited<ReturnType<typeof capturePortalContact>> | null = null
+  try {
+    captured = await capturePortalContact({ name, email, company, phone, audience, social, projectType, message })
+  } catch {
+    // Preserve the existing email fallback if the portal database is unavailable.
+    console.error('Contact CRM capture failed; attempting email delivery')
+  }
+  if (captured?.duplicate) return { ok: true }
+  if (!resendApiKey || ['1', 'true'].includes(process.env.PORTAL_EMAIL_DISABLED || '')) {
+    if (captured) return { ok: true }
     console.error('Resend API key is not configured')
     throw createError({
       statusCode: 503,
@@ -110,7 +121,8 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(captured ? { 'Idempotency-Key': `contact-${captured.id}` } : {})
       },
       body: {
         from: contactFrom,
@@ -154,6 +166,7 @@ export default defineEventHandler(async (event) => {
     })
   } catch {
     console.error('Resend delivery failed')
+    if (captured) return { ok: true }
     throw createError({
       statusCode: 502,
       statusMessage: 'Contact message delivery failed'

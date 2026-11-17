@@ -26,3 +26,6 @@ logs
 # Remotion motion project
 motion/node_modules
 motion/out
+.vercel
+.env*
+!.env.example

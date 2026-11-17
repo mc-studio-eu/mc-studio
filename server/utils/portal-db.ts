@@ -3,6 +3,10 @@ import { dirname, resolve } from 'node:path'
 import { AsyncLocalStorage } from 'node:async_hooks'
 import { Pool, type PoolClient } from 'pg'
 import { portalRoadmapMigration, portalSchema } from './portal-schema.ts'
+import { portalOperationsSchema } from './portal-operations-schema.ts'
+import { portalStudioSchema } from './portal-studio-schema.ts'
+import { portalCommercialSchema } from './portal-commercial-schema.ts'
+import { portalContactIntakeSchema } from './portal-contact-intake-schema.ts'
 
 const transactionContext = new AsyncLocalStorage<PoolClient>()
 let database: Promise<PortalDatabase> | undefined
@@ -34,6 +38,10 @@ async function connect(): Promise<PortalDatabase> {
    await client.query('SET LOCAL search_path TO mc_portal')
    await client.query(portalSchema)
    await client.query(portalRoadmapMigration)
+   await client.query(portalOperationsSchema)
+   await client.query(portalStudioSchema)
+   await client.query(portalCommercialSchema)
+   await client.query(portalContactIntakeSchema)
    await client.query("UPDATE resources SET kind='file' WHERE kind='document'")
    await client.query("UPDATE resources SET archived=1,updated_at=CURRENT_TIMESTAMP WHERE id IN ('mc-wiki-welcome','mc-wiki-feedback','mc-wiki-files') AND archived=0")
    await client.query("UPDATE resources SET url='https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0a?pvs=74',updated_at=CURRENT_TIMESTAMP WHERE id='mc-wiki-client-documentation' AND url<>'https://mc-studio.notion.site/Client-Documentation-3b7bde6abe06805fb2c1c15e50d14a0a?pvs=74'")
@@ -76,7 +84,15 @@ async function connect(): Promise<PortalDatabase> {
  const sqlite = new DatabaseSync(file); chmodSync(file, 0o600)
  sqlite.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;')
  sqlite.exec('BEGIN IMMEDIATE')
- try { sqlite.exec(portalSchema); sqlite.exec(portalRoadmapMigration); sqlite.exec('COMMIT') }
+ try {
+  sqlite.exec(portalSchema)
+  sqlite.exec(portalRoadmapMigration)
+  sqlite.exec(portalOperationsSchema)
+  sqlite.exec(portalStudioSchema)
+  sqlite.exec(portalCommercialSchema)
+  sqlite.exec(portalContactIntakeSchema)
+  sqlite.exec('COMMIT')
+ }
  catch (error) { sqlite.exec('ROLLBACK'); sqlite.close(); throw error }
  sqlite.prepare("UPDATE resources SET kind='file' WHERE kind='document'").run()
  sqlite.prepare("UPDATE resources SET archived=1,updated_at=CURRENT_TIMESTAMP WHERE id IN ('mc-wiki-welcome','mc-wiki-feedback','mc-wiki-files') AND archived=0").run()

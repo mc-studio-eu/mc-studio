@@ -68,6 +68,7 @@ async function waitForServer() {
 }
 async function request(path, { method = 'GET', body, cookie, headers = {} } = {}) {
   const response = await fetch(`${baseUrl}${path}`, {
+    signal: AbortSignal.timeout(45_000),
     method,
     headers: {
       ...(body === undefined ? {} : { 'content-type': 'application/json' }),
@@ -138,7 +139,7 @@ async function run() {
   try {
     const startServer = () => spawn(process.execPath, ['node_modules/nuxt/bin/nuxt.mjs', 'dev', '--host', '127.0.0.1', '--port', String(port), '--dotenv', dotenvPath], {
       cwd: root,
-      env,
+      env: { ...env, HOST: '127.0.0.1', PORT: String(port), NITRO_HOST: '127.0.0.1', NITRO_PORT: String(port) },
       stdio: process.env.PORTAL_TEST_DEBUG ? 'inherit' : 'ignore'
     })
     const stopServer = async () => {

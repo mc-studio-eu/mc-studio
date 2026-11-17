@@ -10,10 +10,10 @@ type Client = { members: TeamMember[]; invitations: TeamInvitation[]; id: string
 const ready = ref(false)
 const loadError = ref('')
 const route = useRoute(), router = useRouter(), localePath = useLocalePath()
-type AdminSection = 'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'
+type AdminSection = 'today' | 'commercial' | 'operations' | 'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'
 type ProjectTab = 'roadmap' | 'requests' | 'settings' | 'resources'
 type AdminResource = ResourceKind | 'assets' | 'satisfaction'
-const adminSections: readonly string[] = ['clients', 'projects', 'growth', 'assets', 'account', 'notifications', 'storage']
+const adminSections: readonly string[] = ['today', 'commercial', 'operations', 'clients', 'projects', 'growth', 'assets', 'account', 'notifications', 'storage']
 const isResourceTab = (value: unknown): value is AdminResource => typeof value === 'string' && (value === 'assets' || value === 'satisfaction' || Object.hasOwn(resourceLabels, value))
 const projectTabs = [
   { id: 'roadmap', label: 'Roadmap', icon: 'i-tabler-route' },
@@ -25,7 +25,8 @@ const requestedClientId = computed(() => typeof route.query.clientId === 'string
 const requestedProjectId = computed(() => typeof route.query.projectId === 'string' ? route.query.projectId : '')
 const section = computed<AdminSection>(() => {
   const tab = route.query.tab
-  return !requestedClientId.value && !requestedProjectId.value && typeof tab === 'string' && adminSections.includes(tab) ? tab as AdminSection : 'clients'
+  if (requestedClientId.value || requestedProjectId.value) return 'clients'
+  return typeof tab === 'string' && adminSections.includes(tab) ? tab as AdminSection : 'today'
 })
 const projectTab = computed<ProjectTab>(() => route.query.tab === 'requests' ? 'requests' : route.query.tab === 'settings' ? 'settings' : route.query.tab === 'resources' || isResourceTab(route.query.tab) ? 'resources' : 'roadmap')
 const resourceTab = computed<AdminResource>(() => isResourceTab(route.query.resource) ? route.query.resource : isResourceTab(route.query.tab) ? route.query.tab : 'payment')
@@ -256,11 +257,11 @@ const invitationExpired = (expiresAt: string) => expiresAt <= new Date().toISOSt
 const retryInvites = () => { inviteEmail.value = inviteResults.value.filter(result => result.error).map(result => result.email).join('\n'); inviteResults.value = []; inviteError.value = '' }
 
 const goToSection = (tab: AdminSection, replace = false) => {
-  const location = { query: { ...route.query, tab: tab === 'clients' ? undefined : tab, clientId: undefined, projectId: undefined, stepId: undefined, resource: undefined, requestId: undefined } }
+  const location = { query: { ...route.query, tab, clientId: undefined, projectId: undefined, stepId: undefined, resource: undefined, requestId: undefined, onboardingProjectId: undefined, invoiceId: undefined, opportunityId: undefined } }
   return replace ? router.replace(location) : router.push(location)
 }
 const goToProject = (clientId: string, projectId?: string, tab: ProjectTab = 'roadmap', resource?: AdminResource, replace = false) => {
-  const location = { query: { ...route.query, tab: projectId ? tab : undefined, clientId, projectId, stepId: undefined, resource: tab === 'resources' && resource !== 'payment' ? resource : undefined, requestId: undefined } }
+  const location = { query: { ...route.query, tab: projectId ? tab : undefined, clientId, projectId, stepId: undefined, resource: tab === 'resources' && resource !== 'payment' ? resource : undefined, requestId: undefined, onboardingProjectId: undefined, invoiceId: undefined, opportunityId: undefined } }
   return replace ? router.replace(location) : router.push(location)
 }
 const selectRequest = (id: string) => {
@@ -470,6 +471,12 @@ onBeforeUnmount(() => {
 
         <nav aria-label="Administration">
 
+          <button :class="{ active: section === 'today' }" :aria-current="section === 'today' ? 'page' : undefined" @click="goToSection('today')"><UIcon name="i-tabler-layout-dashboard" />Aujourd’hui</button>
+
+          <button :class="{ active: section === 'commercial' }" :aria-current="section === 'commercial' ? 'page' : undefined" @click="goToSection('commercial')"><UIcon name="i-tabler-briefcase" />CRM & finances</button>
+
+          <button :class="{ active: section === 'operations' }" :aria-current="section === 'operations' ? 'page' : undefined" @click="goToSection('operations')"><UIcon name="i-tabler-automation" />Automatisations</button>
+
           <button :class="{ active: section === 'clients' && !selected }" :aria-current="section === 'clients' && !selected ? 'page' : undefined" @click="goToSection('clients')"><UIcon name="i-tabler-users" />Clients</button>
 
           <button :class="{ active: section === 'growth' }" :aria-current="section === 'growth' ? 'page' : undefined" @click="goToSection('growth')"><UIcon name="i-tabler-chart-line" />Croissance & performance</button>
@@ -498,7 +505,10 @@ onBeforeUnmount(() => {
 
         <div class="admin-content">
 
-          <PortalAccount v-if="section==='account' && !selected" :name="adminName" :email="adminEmail"/><PortalNotifications v-else-if="section==='notifications' && !selected" @open-project="openNotificationProject"/><PortalGrowth v-else-if="section==='growth' && !selected"/>
+          <PortalStudio v-if="section==='today' && !selected" :clients="clients" @project-created="loadClients" @invite="id => { const client = clients.find(client => client.id === id); if (client) startInvite(client) }" />
+          <PortalCommercial v-else-if="section==='commercial' && !selected" @changed="loadClients" />
+          <PortalOperations v-else-if="section==='operations' && !selected" />
+          <PortalAccount v-else-if="section==='account' && !selected" :name="adminName" :email="adminEmail"/><PortalNotifications v-else-if="section==='notifications' && !selected" @open-project="openNotificationProject"/><PortalGrowth v-else-if="section==='growth' && !selected"/>
 
           <PortalAdminStorage v-else-if="section==='storage' && !selected" />
 
