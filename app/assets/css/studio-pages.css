@@ -1,0 +1,196 @@
+.studio-page {
+  background: #0f0f0f;
+  color: #f5f3ee;
+  min-height: 100vh;
+  font-family: 'Host Grotesk', sans-serif;
+  --text-primary: #f5f3ee;
+  --text-secondary: #b8b5ae;
+  --bg-primary: #0f0f0f;
+  --bg-secondary: #191919;
+  --border-subtle: #ffffff26;
+}
+.studio-page__wrap {
+  width: min(1280px, calc(100% - 64px));
+  margin: auto;
+}
+.studio-page__hero {
+  padding: 90px 0 88px;
+  border-bottom: 1px solid #ffffff26;
+}
+.studio-page__eyebrow {
+  color: #f0bf6c;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0 0 28px;
+}
+.studio-page h1 {
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(44px, 6.4vw, 92px);
+  font-weight: 450;
+  line-height: 1.04;
+  letter-spacing: -0.055em;
+  max-width: 1050px;
+  background: none;
+  color: #f5f3ee;
+  -webkit-text-fill-color: currentColor;
+  margin: 0 0 32px;
+}
+.studio-page__lead {
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.7;
+  color: #b8b5ae;
+  max-width: 740px;
+  margin: 0 0 32px;
+}
+.studio-page__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 50px;
+  padding: 14px 22px;
+  background: #f0bf6c;
+  color: #161410;
+  border: 1px solid #f0bf6c;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.studio-page__button:hover {
+  background: #ffdaa0;
+}
+.studio-page a:focus-visible,
+.studio-page button:focus-visible,
+.studio-page input:focus-visible,
+.studio-page textarea:focus-visible,
+.studio-page select:focus-visible {
+  outline: 2px solid #f0bf6c;
+  outline-offset: 5px;
+}
+.studio-page__section {
+  padding: 80px 0;
+  border-bottom: 1px solid #ffffff26;
+}
+.studio-page__section h2 {
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  font-weight: 450;
+  margin: 0 0 28px;
+}
+.studio-page__split {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 80px;
+}
+.studio-page__body {
+  color: #b8b5ae;
+  font-size: 17px;
+  line-height: 1.8;
+}
+.studio-page__body p {
+  margin: 0 0 24px;
+}
+.studio-page__row {
+  display: grid;
+  grid-template-columns: 70px 1fr 1fr;
+  gap: 28px;
+  padding: 40px 0;
+  border-top: 1px solid #ffffff26;
+}
+.studio-page__row h2,
+.studio-page__row h3 {
+  font-size: clamp(23px, 2.6vw, 36px);
+  line-height: 1.15;
+  font-weight: 450;
+  letter-spacing: -0.035em;
+  margin: 0 0 22px;
+}
+.studio-page__row p {
+  color: #b8b5ae;
+  line-height: 1.7;
+  margin: 0 0 22px;
+}
+.studio-page__number {
+  color: #f0bf6c;
+  font-size: 14px;
+}
+.studio-page__text-link {
+  display: inline-flex;
+  gap: 20px;
+  align-items: center;
+  min-height: 44px;
+  color: #f5f3ee;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+.studio-page__proof {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  border-radius: 6px;
+  margin: 0 0 24px;
+}
+.studio-page__list {
+  padding: 0;
+  list-style: none;
+  margin: 28px 0 0;
+}
+.studio-page__list li {
+  padding: 18px 0;
+  border-top: 1px solid #ffffff26;
+  color: #e5e2dc;
+}
+.studio-page__closing {
+  padding: 90px 0;
+}
+.studio-page__closing h2 {
+  font-size: clamp(34px, 4.7vw, 66px);
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  max-width: 850px;
+  margin: 0 0 32px;
+  font-weight: 450;
+}
+@media (max-width: 760px) {
+  .studio-page__wrap {
+    width: calc(100% - 40px);
+  }
+  .studio-page__hero {
+    padding: 56px 0;
+  }
+  .studio-page__section,
+  .studio-page__closing {
+    padding: 56px 0;
+  }
+  .studio-page__split {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .studio-page__row {
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+  }
+  .studio-page__row > p {
+    grid-column: 2;
+  }
+  .studio-page__row > div:last-child {
+    grid-column: 2;
+  }
+  .studio-page__lead {
+    font-size: 17px;
+  }
+  .studio-page h1 {
+    font-size: clamp(38px, 10.5vw, 66px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-page * {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+}

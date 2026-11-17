@@ -1,490 +1,218 @@
 <script setup lang="ts">
-import { findProjectBySlug, projects } from '../../data/projects'
-import type { Project } from '../../data/projects'
-import { findCaseStudyBySlug } from '../../data/caseStudies'
-import type { CaseStudy } from '../../data/caseStudies'
-
-type LocaleKey = 'fr' | 'en'
-
-const PAGE_LABELS = {
-  fr: {
-    back: 'Retour aux projets',
-    visitWebsite: 'Visiter le site',
-    bookCall: 'Réserver un appel',
-    client: 'Client',
-    problem: 'Problème',
-    solution: 'Solution',
-    result: 'Résultats',
-    screen: 'Écran',
-    moreProjects: 'Autres projets',
-  },
-  en: {
-    back: 'Back to projects',
-    visitWebsite: 'Visit website',
-    bookCall: 'Book a call',
-    client: 'Client',
-    problem: 'Problem',
-    solution: 'Solution',
-    result: 'Results',
-    screen: 'Screen',
-    moreProjects: 'More projects',
-  },
-} satisfies Record<LocaleKey, Record<string, string>>
+import { findProjectBySlug, projects } from '~/data/projects'
+import { findCaseStudyBySlug } from '~/data/caseStudies'
 
 const route = useRoute()
 const localePath = useLocalePath()
 const { locale, t } = useI18n()
+const lang = computed(() => locale.value === 'en' ? 'en' : 'fr')
 
-const currentLocale = computed<LocaleKey>(() => (locale.value === 'en' ? 'en' : 'fr'))
-const labels = computed(() => PAGE_LABELS[currentLocale.value])
-const projectSlug = computed(() => String(route.params.slug ?? ''))
-const project = computed<Project | undefined>(() => findProjectBySlug(projectSlug.value))
-const localizedCaseStudy = computed(() => findCaseStudyBySlug(projectSlug.value))
+const labels = computed(() => lang.value === 'fr' ? {
+  back: 'Toutes les réalisations', client: 'Client', challenge: 'L’enjeu', solution: 'Le produit',
+  result: 'Résultat', gallery: 'Le projet en images', screen: 'Écran', quote: 'Retour client',
+  more: 'À découvrir aussi', visit: 'Voir le site', contact: 'Parlons de votre projet',
+  closing: 'Vous avez un produit à construire ?', own: 'Produit du studio',
+} : {
+  back: 'All work', client: 'Client', challenge: 'The challenge', solution: 'The product',
+  result: 'Outcome', gallery: 'A closer look', screen: 'Screen', quote: 'Client feedback',
+  more: 'More work', visit: 'Visit website', contact: 'Let’s talk about your project',
+  closing: 'Have a product to build?', own: 'Studio product',
+})
 
-if (!project.value || !localizedCaseStudy.value) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Project not found',
-  })
+const slug = computed(() => String(route.params.slug ?? ''))
+const project = computed(() => findProjectBySlug(slug.value))
+const caseData = computed(() => findCaseStudyBySlug(slug.value))
+
+if (!project.value || !caseData.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Project not found' })
 }
 
-const localizedProject = computed(() => project.value!)
-const caseStudy = computed<CaseStudy>(() => localizedCaseStudy.value![currentLocale.value])
+const current = computed(() => project.value!)
+const study = computed(() => caseData.value![lang.value])
+const isStudioProduct = computed(() => ['personal', 'arises'].includes(current.value.slug))
+const optimizedCovers: Record<string, { basename: string; width: number; height: number } | undefined> = {
+  'crm-ra-energy': { basename: 'crm-ra', width: 1254, height: 1254 },
+  'maison-awl': { basename: 'maison-awl', width: 1280, height: 960 },
+  personal: { basename: 'personal', width: 1280, height: 729 },
+}
+const optimizedCover = computed(() => optimizedCovers[current.value.slug])
 
-const overview = computed(() => [
-  { label: caseStudy.value.clientLabel ?? labels.value.client, text: caseStudy.value.client },
-  { label: labels.value.problem, text: caseStudy.value.problem },
-  { label: labels.value.solution, text: caseStudy.value.solution },
+const details = computed(() => [
+  { label: study.value.clientLabel ?? (isStudioProduct.value ? labels.value.own : labels.value.client), text: study.value.client },
+  { label: labels.value.challenge, text: study.value.problem },
+  { label: labels.value.solution, text: study.value.solution },
+  ...(study.value.result ? [{ label: labels.value.result, text: study.value.result }] : []),
 ])
 
-const result = computed(() => caseStudy.value.result)
+const images = computed(() => [...new Set([
+  ...current.value.screenshots.desktop,
+  ...current.value.screenshots.mobile,
+])].filter(src => src !== current.value.image))
 
-const backToProjectsLink = computed(() => localePath('/projects'))
-const contactLink = computed(() => localePath('/contact'))
-const bookCallButton = ref<HTMLElement | { $el: HTMLElement } | null>(null)
-const bookCallText = ref<HTMLElement | null>(null)
-const visitWebsiteButton = ref<HTMLElement | null>(null)
-const visitWebsiteText = ref<HTMLElement | null>(null)
-
-useTextSlideAnimation(bookCallButton, bookCallText)
-useTextSlideAnimation(visitWebsiteButton, visitWebsiteText)
-
-const galleryImages = computed(() => {
-  const heroImage = localizedProject.value.image
-  const images = [
-    ...localizedProject.value.screenshots.desktop,
-    ...localizedProject.value.screenshots.mobile,
-  ]
-
-  return [...new Set(images)].filter((src) => Boolean(src) && src !== heroImage)
-})
-
-type GalleryItem = { key: string; src: string; span: 5 | 10 }
-
-const galleryItems = computed<GalleryItem[]>(() => {
-  const images = galleryImages.value
-  const items: GalleryItem[] = []
-  let index = 0
-  let wantsPair = true
-
-  while (index < images.length) {
-    const size = wantsPair ? 2 : 1
-    const chunk = images.slice(index, index + size)
-    const span = chunk.length === 2 ? 5 : 10
-
-    chunk.forEach((src) => items.push({ key: src, src, span }))
-
-    index += chunk.length
-    wantsPair = !wantsPair
-  }
-
-  return items
-})
-
-const projectTestimonial = computed(() => {
-  const currentProject = project.value!
-
-  if (!currentProject.testimonial) {
-    return undefined
-  }
-
+const testimonial = computed(() => {
+  const item = current.value.testimonial
+  if (!item) return
   return {
-    review: t(`projects.items.${currentProject.i18nKey}.testimonial.review`),
-    job: t(`projects.items.${currentProject.i18nKey}.testimonial.job`),
-    name: currentProject.testimonial.name,
-    avatar: currentProject.testimonial.avatar,
+    ...item,
+    role: t(`projects.items.${current.value.i18nKey}.testimonial.job`),
+    text: study.value.testimonialHighlight ?? t(`projects.items.${current.value.i18nKey}.testimonial.review`),
   }
 })
 
-const categoryLabelKey = (category: string) => category.replace('-', '_')
-const categoryLabel = (category: string) => t(`projects.filters.${categoryLabelKey(category)}`)
-
-const moreProjects = computed(() => {
-  const currentIndex = projects.findIndex((item) => item.slug === localizedProject.value.slug)
-
-  if (currentIndex < 0) {
-    return []
-  }
-
-  const others: Project[] = []
-
-  for (let offset = 1; offset < projects.length && others.length < 3; offset++) {
-    others.push(projects[(currentIndex + offset) % projects.length]!)
-  }
-
-  return others
+const related = computed(() => {
+  const slugs = [study.value.link?.slug, 'crm-ra-energy', 'maison-awl', 'personal', ...projects.map(item => item.slug)]
+  return Array.from(new Set(slugs))
+    .filter((item): item is string => typeof item === 'string' && item !== current.value.slug)
+    .slice(0, 3)
+    .map(item => findProjectBySlug(item)!)
 })
 
-useSeoMeta({
-  title: () => `${localizedProject.value.title} | MC Studio`,
-  description: () => caseStudy.value.headline,
-  ogTitle: () => `${localizedProject.value.title} | MC Studio`,
-  ogDescription: () => caseStudy.value.headline,
-})
+useStudioSeo(() => `${current.value.title} | MC Studio`, () => study.value.headline)
+useHead(() => ({ htmlAttrs: { lang: lang.value } }))
+useSeoMeta({ ogImage: () => `https://www.mc-studio.eu${optimizedCover.value ? `/img/studio/${optimizedCover.value.basename}-1280.webp` : current.value.image}` })
 </script>
 
 <template>
-  <main class="project-detail-page min-h-screen bg-[#0f0f0f] text-white">
-    <StudioNavbar tone="dark" />
-
-    <div class="mx-auto w-[min(1240px,calc(100%-48px))] pb-24 sm:pb-36">
-      <article class="relative py-[clamp(34px,6vw,72px)]">
-        <header>
-          <NuxtLink
-            :to="backToProjectsLink"
-            class="inline-flex items-center gap-2 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
-            :aria-label="labels.back"
-          >
-            <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
-            <span>{{ labels.back }}</span>
-          </NuxtLink>
-
+  <div class="studio-page project-case">
+    <StudioNavbar />
+    <main>
+      <article>
+        <header class="studio-page__hero">
+          <div class="studio-page__wrap">
+            <NuxtLink class="project-case__back" :to="localePath('/projects')">
+              <UIcon name="i-tabler-arrow-left" aria-hidden="true" /> {{ labels.back }}
+            </NuxtLink>
+            <p class="studio-page__eyebrow">{{ isStudioProduct ? labels.own : current.categories.map(category => t(`projects.filters.${category.replace('-', '_')}`)).join(' · ') }}</p>
+            <h1>{{ current.title }}</h1>
+            <p class="studio-page__lead">{{ study.headline }}</p>
+            <a v-if="current.slug !== 'crm-ra-energy'" class="studio-page__text-link" :href="current.externalLink" target="_blank" rel="noopener noreferrer">
+              {{ labels.visit }} <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" />
+            </a>
+          </div>
         </header>
 
-        <div class="project-case-layout mt-10 sm:mt-12">
-          <div class="project-case-copy">
-            <h1 class="case-study-title m-0 text-balance font-manrope font-medium tracking-[-0.07em] text-white">
-              {{ localizedProject.title }}
-            </h1>
-            <p class="case-study-headline m-0 mt-5 text-balance font-manrope font-medium tracking-[-0.03em] text-white/75">
-              {{ caseStudy.headline }}
-            </p>
+        <figure class="studio-page__wrap project-case__cover" :class="`project-case__cover--${current.slug}`">
+          <img
+            v-if="optimizedCover"
+            :src="`/img/studio/${optimizedCover.basename}-1280.webp`"
+            :srcset="`/img/studio/${optimizedCover.basename}-640.webp 640w, /img/studio/${optimizedCover.basename}-1280.webp ${optimizedCover.width}w`"
+            sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 1344px) calc(100vw - 64px), 1280px"
+            :width="optimizedCover.width" :height="optimizedCover.height"
+            :alt="current.title" fetchpriority="high"
+          >
+          <NuxtImg
+            v-else :src="current.image" :alt="current.title" format="webp"
+            sizes="100vw md:95vw xl:1280px" fetchpriority="high"
+          />
+        </figure>
 
-            <div class="mt-7 flex flex-wrap items-center gap-3">
-              <NuxtLink
-                ref="bookCallButton"
-                :to="contactLink"
-                class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0f0f0f] no-underline"
-              >
-                <span class="sr-only">{{ labels.bookCall }}</span>
-                <span class="button-text-slide" aria-hidden="true">
-                  <span ref="bookCallText" class="button-text-slide__track">
-                    <span class="button-text-slide__line">{{ labels.bookCall }}</span>
-                    <span class="button-text-slide__line">{{ labels.bookCall }}</span>
-                  </span>
-                </span>
-                <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
-              </NuxtLink>
-
-              <a
-                ref="visitWebsiteButton"
-                :href="localizedProject.externalLink"
-                target="_blank"
-                rel="noreferrer"
-                class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-center text-sm font-medium text-white/75 no-underline"
-              >
-                <span class="sr-only">{{ labels.visitWebsite }}</span>
-                <span class="button-text-slide" aria-hidden="true">
-                  <span ref="visitWebsiteText" class="button-text-slide__track">
-                    <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
-                    <span class="button-text-slide__line">{{ labels.visitWebsite }}</span>
-                  </span>
-                </span>
-                <UIcon name="i-lucide-arrow-up-right" class="h-3.5 w-3.5" />
-              </a>
-            </div>
-
-            <dl class="m-0 mt-10 space-y-8">
-              <div v-for="item in overview" :key="item.label" class="border-t border-white/15 pt-4">
-                <dt class="text-[11px] uppercase tracking-[0.16em] text-white/45">{{ item.label }}</dt>
-                <dd class="m-0 mt-3 whitespace-pre-line font-manrope text-base leading-relaxed text-white/80">{{ item.text }}</dd>
-              </div>
-              <div v-if="result" class="border-t border-white/15 pt-4">
-                <dt class="text-[11px] uppercase tracking-[0.16em] text-white/45">{{ labels.result }}</dt>
-                <dd class="m-0 mt-3 whitespace-pre-line font-manrope text-base leading-relaxed text-white/80">{{ result }}</dd>
+        <section class="studio-page__section">
+          <div class="studio-page__wrap">
+            <dl class="project-case__facts">
+              <div v-for="item in details" :key="item.label">
+                <dt class="studio-page__eyebrow">{{ item.label }}</dt>
+                <dd>{{ item.text }}</dd>
               </div>
             </dl>
-
             <NuxtLink
-              v-if="caseStudy.link"
-              :to="localePath(`/projects/${caseStudy.link.slug}`)"
-              class="case-study-link mt-8"
+              v-if="study.link" :to="localePath(`/projects/${study.link.slug}`)"
+              class="studio-page__text-link project-case__related-link"
             >
-              {{ caseStudy.link.label }}
-              <UIcon name="i-lucide-arrow-right" class="h-4 w-4" />
+              {{ study.link.label }} <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" />
             </NuxtLink>
           </div>
+        </section>
 
-          <section v-if="galleryImages.length" class="project-case-gallery" :aria-label="`${localizedProject.title} screenshots`">
-            <div class="project-case-gallery__viewport">
-              <div class="project-case-gallery__track">
-                <div v-for="copy in 2" :key="copy" class="project-case-gallery__group" :aria-hidden="copy === 2 ? 'true' : undefined">
-                  <figure v-for="(src, index) in galleryImages" :key="`${copy}-${src}`" class="m-0 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
-                    <NuxtImg
-                      :src="src"
-                      :alt="copy === 1 ? `${localizedProject.title} — ${labels.screen} ${index + 1}` : ''"
-                      class="block h-auto w-full"
-                      :loading="index > 1 || copy === 2 ? 'lazy' : 'eager'"
-                    />
-                  </figure>
-                </div>
-              </div>
+        <section v-if="images.length" class="studio-page__section" aria-labelledby="gallery-title">
+          <div class="studio-page__wrap">
+            <h2 id="gallery-title">{{ labels.gallery }}</h2>
+            <div class="project-case__gallery">
+              <figure v-for="(image, index) in images" :key="image">
+                <NuxtImg
+                  :src="image" :alt="`${current.title} — ${labels.screen} ${index + 1}`" format="webp"
+                  sizes="100vw md:48vw xl:635px" loading="lazy" decoding="async"
+                />
+              </figure>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
 
-        <figure
-          v-if="projectTestimonial"
-          class="m-0 mt-[clamp(56px,8vw,96px)] max-w-[760px] border-l-2 border-white/30 py-1 pl-6 sm:pl-8"
-        >
-          <p v-if="caseStudy.testimonialContext" class="m-0 mb-4 text-[11px] uppercase tracking-[0.16em] text-white/45">
-            {{ caseStudy.testimonialContext }}
-          </p>
-          <blockquote class="m-0 text-balance font-manrope text-2xl font-medium leading-tight tracking-[-0.03em] text-white sm:text-3xl">
-            « {{ caseStudy.testimonialHighlight ?? projectTestimonial.review }} »
-          </blockquote>
-          <figcaption class="mt-6 flex items-center gap-3">
-            <NuxtImg
-              :src="projectTestimonial.avatar"
-              :alt="projectTestimonial.name"
-              class="h-11 w-11 shrink-0 rounded-full bg-white/10 object-cover"
-            />
-            <span class="flex flex-col gap-[2px]">
-              <span class="font-inter text-sm font-semibold text-white">{{ projectTestimonial.name }}</span>
-              <span class="font-inter text-xs text-white/50">{{ projectTestimonial.job }}</span>
-            </span>
-          </figcaption>
-        </figure>
-
-        <figure
-          v-else-if="caseStudy.quote"
-          class="m-0 mt-[clamp(56px,8vw,96px)] max-w-[760px] border-l-2 border-white/30 py-1 pl-6 sm:pl-8"
-        >
-          <blockquote class="m-0 text-balance font-manrope text-2xl font-medium leading-tight tracking-[-0.03em] text-white sm:text-3xl">
-            « {{ caseStudy.quote }} »
-          </blockquote>
-          <figcaption class="mt-5 font-inter text-sm text-white/50">{{ localizedProject.title }}</figcaption>
-        </figure>
+        <section v-if="testimonial" class="studio-page__section project-case__quote">
+          <div class="studio-page__wrap">
+            <p class="studio-page__eyebrow">{{ study.testimonialContext ?? labels.quote }}</p>
+            <figure>
+              <blockquote>« {{ testimonial.text }} »</blockquote>
+              <figcaption>
+                <img :src="testimonial.avatar" width="48" height="48" alt="" loading="lazy">
+                <span><strong>{{ testimonial.name }}</strong><br>{{ testimonial.role }}</span>
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+        <section v-else-if="study.quote" class="studio-page__section project-case__quote">
+          <div class="studio-page__wrap">
+            <figure>
+              <blockquote>« {{ study.quote }} »</blockquote>
+              <figcaption>{{ current.title }}</figcaption>
+            </figure>
+          </div>
+        </section>
       </article>
 
-      <section
-        v-if="moreProjects.length"
-        class="more-projects mx-auto w-full border-t border-white/15 pt-12 sm:pt-16"
-      >
-        <div class="flex items-baseline justify-between gap-4">
-          <h2 class="case-study-heading !mb-0">{{ labels.moreProjects }}</h2>
-          <NuxtLink
-            :to="localePath('/projects')"
-            class="shrink-0 text-sm text-white/50 no-underline transition-colors duration-200 hover:text-white"
-          >
-            {{ t('projects.show_more') }}
-          </NuxtLink>
-        </div>
-
-        <div class="mt-8 grid gap-x-5 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
-          <NuxtLink
-            v-for="item in moreProjects"
-            :key="item.slug"
-            :to="localePath(`/projects/${item.slug}`)"
-            class="more-project-card group"
-            :aria-label="`${item.title} — ${t('projects.cta')}`"
-          >
-            <div class="more-project-card__media">
-              <NuxtImg
-                :src="item.image"
-                :alt="item.title"
-                class="h-full w-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div class="mt-4 flex items-baseline justify-between gap-3 border-t border-white/15 pt-3">
-              <h3 class="font-manrope text-xl tracking-[-0.03em] text-white">{{ item.title }}</h3>
-              <span class="shrink-0 text-[10px] uppercase tracking-[0.14em] text-white/40">
-                {{ categoryLabel(item.categories[0]) }}
-              </span>
-            </div>
-          </NuxtLink>
+      <section v-if="related.length" class="studio-page__section" aria-labelledby="related-title">
+        <div class="studio-page__wrap">
+          <h2 id="related-title">{{ labels.more }}</h2>
+          <div class="project-case__more">
+            <NuxtLink v-for="item in related" :key="item.slug" :to="localePath(`/projects/${item.slug}`)">
+              <NuxtImg :src="item.image" alt="" format="webp" sizes="100vw sm:50vw md:33vw xl:425px" loading="lazy" decoding="async" />
+              <span>{{ item.title }} <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></span>
+            </NuxtLink>
+          </div>
         </div>
       </section>
-    </div>
 
+      <section class="studio-page__closing">
+        <div class="studio-page__wrap">
+          <h2>{{ labels.closing }}</h2>
+          <NuxtLink class="studio-page__button" :to="localePath('/contact')">{{ labels.contact }} <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
+        </div>
+      </section>
+    </main>
     <FooterSection />
-    <ScrollToTop />
-  </main>
+  </div>
 </template>
 
+<style src="~/assets/css/studio-pages.css"></style>
 <style scoped>
-.case-study-title {
-  overflow-wrap: anywhere;
-  font-size: clamp(2.8rem, 5vw, 5.5rem);
-  line-height: 0.98;
-  /* Override the site-wide h1 gold gradient for case-study titles. */
-  background: none;
-  color: #fff;
-  -webkit-background-clip: border-box;
-  -webkit-text-fill-color: #fff;
-}
-
-.case-study-headline {
-  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
-  line-height: 1.15;
-}
-
-.project-case-layout {
-  display: grid;
-  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.22fr);
-  align-items: start;
-  gap: clamp(36px, 6vw, 88px);
-}
-
-.project-case-copy {
-  position: sticky;
-  top: 32px;
-  align-self: start;
-}
-
-.project-case-gallery {
-  position: sticky;
-  top: 0;
-  height: calc(100vh - 48px);
-  overflow: hidden;
-  border-radius: 18px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 1%, #000 99%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 1%, #000 99%, transparent);
-}
-
-.project-case-gallery__track {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  animation: project-gallery-scroll 24s linear infinite;
-  will-change: transform;
-}
-
-.project-case-gallery__group {
-  display: grid;
-  flex: 0 0 auto;
-  gap: 18px;
-  padding-bottom: 18px;
-}
-
-.project-case-gallery:hover .project-case-gallery__track,
-.project-case-gallery:focus-within .project-case-gallery__track {
-  animation-play-state: paused;
-}
-
-@keyframes project-gallery-scroll {
-  to { transform: translateY(-50%); }
-}
-
-.case-study-heading {
-  margin: 0 0 14px;
-  font-family: Manrope, sans-serif;
-  font-size: clamp(1.7rem, 3vw, 3rem);
-  font-weight: 500;
-  line-height: 1.12;
-  text-wrap: balance;
-  color: white;
-}
-
-.case-study-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #f0bf6c;
-  text-decoration: none;
-  transition: gap 200ms ease;
-}
-
-.case-study-link:hover {
-  gap: 12px;
-}
-
-.button-text-slide {
-  display: block;
-  height: 1.25rem;
-  overflow: hidden;
-}
-
-.button-text-slide__track {
-  display: flex;
-  flex-direction: column;
-}
-
-.button-text-slide__line {
-  display: block;
-  height: 1.25rem;
-  line-height: 1.25rem;
-}
-
-@media (max-width: 800px) {
-  .project-case-layout {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 36px;
-  }
-
-  .project-case-copy {
-    position: static;
-  }
-
-  .project-case-gallery {
-    position: relative;
-    top: auto;
-    height: min(72vh, 680px);
-  }
-}
-
-@media (max-width: 640px) {
-  .case-study-title {
-    font-size: clamp(3.2rem, 16vw, 5.4rem);
-  }
-}
-
-.more-project-card {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-  transition: transform 300ms cubic-bezier(.22, 1, .36, 1);
-}
-
-.more-project-card__media {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 18px;
-  background: #191919;
-}
-
-.more-project-card:focus-visible {
-  outline: 2px solid #f0bf6c;
-  outline-offset: 7px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-case-gallery__track {
-    animation: none;
-    will-change: auto;
-  }
-
-  .more-project-card,
-  .more-project-card__media img {
-    transition: none;
-  }
-
-  .more-project-card:hover {
-    transform: none;
-  }
+.project-case .studio-page__hero { border-bottom: 0; padding: clamp(44px, 7vw, 94px) 0 38px; }
+.project-case .studio-page__hero h1 { font-size: clamp(3rem, 8vw, 8.2rem); line-height: .95; overflow-wrap: anywhere; }
+.project-case .studio-page__lead { margin-bottom: 14px; }
+.project-case__back { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; margin-bottom: 32px; color: #b8b5ae; }
+.project-case__back:hover { color: #f0bf6c; }
+.project-case__cover { overflow: hidden; background: #1d1b16; }
+.project-case__cover img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: center; }
+.project-case__cover--crm-ra-energy img { object-position: center 42%; }
+.project-case__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 5vw, 65px) clamp(22px, 6vw, 80px); }
+.project-case__facts > div { padding-top: 22px; border-top: 1px solid #ffffff26; }
+.project-case__facts dt { margin-bottom: 14px; }
+.project-case__facts dd { margin: 0; color: #e2dfd7; font-size: clamp(1.03rem, 1.6vw, 1.32rem); line-height: 1.55; white-space: pre-line; }
+.project-case__related-link { margin-top: 30px; }
+.project-case__gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2vw, 26px); }
+.project-case__gallery figure { display: grid; align-items: center; overflow: hidden; background: #24221e; }
+.project-case__gallery img { display: block; width: 100%; height: auto; }
+.project-case__gallery figure:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.project-case__quote { background: #1c1914; }
+.project-case__quote blockquote { max-width: 960px; font-size: clamp(1.7rem, 4vw, 3.6rem); font-weight: 450; line-height: 1.08; letter-spacing: -.045em; }
+.project-case__quote figcaption { display: flex; align-items: center; gap: 14px; margin-top: 25px; color: #c4beb4; font-size: .9rem; }
+.project-case__quote figcaption img { border-radius: 50%; object-fit: cover; }
+.project-case__more { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 26px); }
+.project-case__more a { display: block; overflow: hidden; }
+.project-case__more img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.project-case__more a > span { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 14px; }
+.project-case__more a:hover { color: #f0bf6c; }
+@media (max-width: 720px) {
+  .project-case__facts, .project-case__gallery { grid-template-columns: minmax(0, 1fr); }
+  .project-case__more { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .project-case__cover img { aspect-ratio: 4 / 3; }
 }
 </style>

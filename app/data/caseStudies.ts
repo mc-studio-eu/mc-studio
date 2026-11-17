@@ -27,15 +27,15 @@ export interface CaseStudy {
 export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
   'maison-awl': {
     fr: {
-      headline: 'Transformer une audience de 180 000 personnes en un produit qui lui appartient.',
-      client: "Maison AWL, l'univers home organizing de Célia : 180 000 abonnés et un réseau de prestataires formés à sa méthode.",
+      headline: 'Réunir une communauté et ses prestataires dans une marketplace.',
+      client: "Maison AWL, l'univers home organizing de Célia : une communauté et un réseau de prestataires formés à sa méthode.",
       problem: 'La demande de la communauté grandissait, mais aucun espace ne permettait de réserver, payer et garantir la qualité des prestations.',
       solution: 'Une marketplace sur mesure : recherche de prestataires, messagerie, propositions, paiement via Stripe Connect, avis et gestion des litiges.',
       result: 'Maison AWL dispose désormais d’un espace dédié où sa communauté peut trouver un prestataire, organiser une mission et payer en toute confiance.',
     },
     en: {
-      headline: 'Turning an audience of 180,000 people into a product it owns.',
-      client: 'Maison AWL, Célia’s home organizing world: 180,000 followers and a network of professionals trained in her method.',
+      headline: 'Connecting a community with service providers through a marketplace.',
+      client: 'Maison AWL, Célia’s home organizing world: a community and a network of professionals trained in her method.',
       problem: 'Demand from the community kept growing, but there was no place to book, pay and guarantee the quality of each job.',
       solution: 'A custom marketplace: provider search, messaging, proposals, payments via Stripe Connect, reviews and dispute handling.',
       result: 'Maison AWL now has a dedicated space where its community can find a provider, organise a job and pay with confidence.',
@@ -47,7 +47,7 @@ export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
       headline: 'Remplacer les fichiers Excel par un CRM qui vérifie chaque rendez-vous.',
       client: 'R&A Energy, courtier en énergie B2B. Une équipe de 10 à 20 personnes, déjà cliente pour son site.',
       problem: 'Une prospection sur Excel : doublons, rendez-vous intenables faute de temps de trajet, données sensibles visibles par tous.',
-      solution: 'Un CRM Nuxt + Supabase : fiches enrichies automatiquement, RDV vérifiés via Google Calendar et temps de trajet, carte des tournées, 5 rôles cloisonnés.',
+      solution: 'Un CRM Nuxt + Supabase : fiches enrichies automatiquement, RDV vérifiés via Google Calendar et temps de trajet, carte des tournées, droits adaptés à chaque rôle.',
       link: { slug: 'ra-energy', label: 'Voir le site R&A Energy' },
       testimonialContext: 'Sur notre premier projet ensemble',
     },
@@ -55,7 +55,7 @@ export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
       headline: 'Replacing spreadsheets with a CRM that checks every meeting.',
       client: 'R&A Energy, a B2B energy broker. A team of 10 to 20 people, already a client for its website.',
       problem: 'Prospecting in Excel: duplicates, meetings impossible to keep because of travel time, sensitive data visible to everyone.',
-      solution: 'A Nuxt + Supabase CRM: auto-enriched records, meetings checked against Google Calendar and travel time, a route map, 5 partitioned roles.',
+      solution: 'A Nuxt + Supabase CRM: auto-enriched records, meetings checked against Google Calendar and travel time, a route map, role-based access.',
       link: { slug: 'ra-energy', label: 'See the R&A Energy website' },
       testimonialContext: 'On our first project together',
     },
@@ -78,12 +78,14 @@ export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
 
   personal: {
     fr: {
+      clientLabel: 'Produit du studio',
       headline: 'Aider les créateurs à publier mieux, sans devenir des machines à contenu.',
       client: 'Personal, un SaaS IA pour les créateurs qui veulent publier régulièrement sans perdre leur voix.',
       problem: 'Les outils IA produisent le même contenu pour tout le monde. Pour un créateur, le générique ne crée aucun attachement.',
       solution: 'Une marque, un site et une app bilingue : feed des contenus qui performent, Remix à partir du vécu du créateur, brouillons jamais publiés sans lui.',
     },
     en: {
+      clientLabel: 'Studio product',
       headline: 'Helping creators publish better, without becoming content machines.',
       client: 'Personal, an AI SaaS for creators who want to publish consistently without losing their voice.',
       problem: 'AI tools produce the same content for everyone. For a creator, generic content builds no attachment.',
@@ -144,12 +146,14 @@ export const caseStudies: Record<string, LocalizedValue<CaseStudy>> = {
 
   arises: {
     fr: {
+      clientLabel: 'Produit du studio',
       headline: "Un SaaS IA dont on comprend la valeur avant même de s'inscrire.",
       client: 'Arises, un SaaS IA qui transforme un calendrier chaotique en planning équilibré entre travail et vie perso.',
       problem: "Un produit IA en lancement, sans notoriété : si la valeur n'est pas claire en quelques minutes, l'utilisateur ne revient pas.",
       solution: "Une marque, une landing centrée sur l'avant/après et un parcours d'activation qui mène droit au premier planning.",
     },
     en: {
+      clientLabel: 'Studio product',
       headline: 'An AI SaaS whose value is clear before you even sign up.',
       client: 'Arises, an AI SaaS that turns a chaotic calendar into a schedule balanced between work and personal life.',
       problem: 'An AI product at launch with no reputation: if the value is not clear within minutes, users do not come back.',

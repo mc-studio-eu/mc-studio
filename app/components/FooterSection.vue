@@ -1,93 +1,70 @@
-<script setup>
+<script setup lang="ts">
 const localePath = useLocalePath()
-const { t } = useI18n()
+const { locale, t } = useI18n()
+const isFrench = computed(() => locale.value === 'fr')
+const links = computed(() => [
+  { path: '/projects', label: isFrench.value ? 'Réalisations' : 'Work' },
+  { path: '/expertises', label: isFrench.value ? 'Expertises' : 'Expertise' },
+  { path: '/a-propos', label: isFrench.value ? 'Le studio' : 'The studio' },
+  { path: '/contact', label: 'Contact' },
+])
 </script>
 
 <template>
-  <footer id="footer" class="overflow-hidden bg-[#111111] text-white">
-    <div class="px-[clamp(20px,2.05vw,42px)]">
-      
-      <!-- Main Footer Content -->
-      <div class="py-16 md:py-20">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
-          
-          <!-- Brand Column -->
-          <div class="md:col-span-5">
-            <div class="flex items-center mb-6">
-              <NuxtImg src="/img/logo/mc-studio.svg" alt="MC Studio Logo" class="w-[100px] h-auto" />
-            </div>
-            <p class="font-inter text-[15px] text-white/60 leading-relaxed max-w-[340px]">
-              {{ t('footer.tagline') }}
-            </p>
-            <p class="mt-8 font-inter text-xs text-white/40">
-              &copy; {{ new Date().getFullYear() }} {{ t('footer.copyright') }}
-            </p>
-          </div>
-
-          <!-- Navigation Column -->
-          <div class="md:col-span-3">
-            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.navigation_title') }}</h4>
-            <nav class="flex flex-col gap-3">
-              <NuxtLink :to="localePath('/projects')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Projects</NuxtLink>
-              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Contact</NuxtLink>
-              <NuxtLink :to="localePath('/privacy')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ $t('legal.links.privacy') }}</NuxtLink>
-              <NuxtLink :to="localePath('/terms')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ $t('legal.links.terms') }}</NuxtLink>
-            </nav>
-          </div>
-
-          <!-- Socials Column -->
-          <div class="md:col-span-2">
-            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.socials_title') }}</h4>
-            <nav class="flex flex-col gap-3">
-              <a href="https://www.linkedin.com/in/mohamed-chettah/" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">LinkedIn</a>
-              <a href="https://www.instagram.com/mc_studio_eu/" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">Instagram</a>
-              <a href="https://x.com/MohameDevWeb" target="_blank" rel="noopener noreferrer" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">X (Twitter)</a>
-            </nav>
-          </div>
-
-          <!-- Contact Column -->
-          <div class="md:col-span-2">
-            <h4 class="font-inter text-xs font-semibold uppercase tracking-wider text-white/40 mb-5">{{ t('footer.contact_title') }}</h4>
-            <nav class="flex flex-col gap-3">
-              <a href="https://api.whatsapp.com/send/?phone=%2B33781724683" target="_blank" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">WhatsApp</a>
-              <NuxtLink :to="localePath('/contact')" class="font-inter text-sm text-white/70 hover:text-white transition-colors no-underline">{{ t('nav.book_call') }}</NuxtLink>
-            </nav>
-          </div>
+  <footer id="footer" class="studio-footer">
+    <div class="studio-footer__inner">
+      <div class="studio-footer__main">
+        <div class="studio-footer__brand">
+          <NuxtLink :to="localePath('/')">
+            <img src="/img/logo/mc-studio.svg" alt="MC Studio" width="148" height="27" loading="lazy">
+          </NuxtLink>
+          <p>{{ isFrench ? 'Studio indépendant de développement logiciel.' : 'Independent software development studio.' }}</p>
+          <a href="mailto:contact@mc-studio.eu">contact@mc-studio.eu</a>
         </div>
+        <nav class="studio-footer__links" :aria-label="isFrench ? 'Navigation de pied de page' : 'Footer navigation'">
+          <NuxtLink v-for="link in links" :key="link.path" :to="localePath(link.path)">
+            {{ link.label }}
+          </NuxtLink>
+        </nav>
+        <nav class="studio-footer__links" :aria-label="isFrench ? 'Réseaux sociaux' : 'Social media'">
+          <a href="https://www.linkedin.com/in/mohamed-chettah/" target="_blank" rel="noopener noreferrer">LinkedIn <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></a>
+          <a href="https://www.instagram.com/mc_studio_eu/" target="_blank" rel="noopener noreferrer">Instagram <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></a>
+          <a href="https://x.com/MohameDevWeb" target="_blank" rel="noopener noreferrer">X <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></a>
+        </nav>
       </div>
-
-    </div>
-
-    <div class="footer-signature" aria-hidden="true">
-      <img src="/img/logo/mc-studio.svg" alt="">
+      <img class="studio-footer__signature" src="/img/logo/mc-studio.svg" alt="" width="1260" height="230" loading="lazy" aria-hidden="true">
+      <div class="studio-footer__legal">
+        <span>© {{ new Date().getFullYear() }} MC Studio</span>
+        <NuxtLink :to="localePath('/privacy')">{{ t('legal.links.privacy') }}</NuxtLink>
+        <NuxtLink :to="localePath('/terms')">{{ t('legal.links.terms') }}</NuxtLink>
+      </div>
     </div>
   </footer>
 </template>
 
 <style scoped>
-.footer-signature {
-  display: flex;
-  justify-content: center;
-  padding-top: clamp(3.5rem, 8vw, 9rem);
-  margin-bottom: -0.15rem;
-  pointer-events: none;
+.studio-footer { background: #0d0d0c; border-top: 1px solid #ffffff25; color: #f5f3ee; font-family: 'Host Grotesk', sans-serif; }
+.studio-footer__inner { width: min(1320px, calc(100% - 80px)); margin-inline: auto; }
+.studio-footer__main { display: grid; grid-template-columns: 2fr 1fr .65fr; gap: 42px; padding-block: clamp(54px, 7vw, 95px); }
+.studio-footer__brand p { margin: 20px 0 10px; color: #c0bcb4; font-size: .875rem; }
+.studio-footer__brand > a:last-child { display: inline-flex; align-items: center; min-height: 44px; }
+.studio-footer__brand img { height: auto; }
+.studio-footer__links { display: grid; align-content: start; }
+.studio-footer__links a { display: inline-flex; align-items: center; gap: 8px; width: fit-content; min-height: 44px; }
+.studio-footer__links span { width: .8rem; height: .8rem; color: #f0bf6c; }
+.studio-footer a { transition: color .2s ease; }
+.studio-footer a:hover { color: #f0bf6c; }
+.studio-footer a:focus-visible { outline: 2px solid #f0bf6c; outline-offset: 4px; }
+.studio-footer__signature { width: 100%; height: auto; opacity: .13; margin-bottom: clamp(22px, 3vw, 42px); }
+.studio-footer__legal { display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; border-top: 1px solid #ffffff25; padding-block: 11px; color: #b0aca5; font-size: .8rem; }
+.studio-footer__legal span { margin-right: auto; }
+.studio-footer__legal a { display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-width: 700px) {
+  .studio-footer__inner { width: calc(100% - 40px); }
+  .studio-footer__main { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .studio-footer__brand { grid-column: 1 / -1; }
+  .studio-footer__legal { gap: 0 16px; }
+  .studio-footer__legal span { flex-basis: 100%; padding-top: 9px; }
 }
-
-.footer-signature img {
-  display: block;
-  width: min(94vw, 1560px);
-  max-width: none;
-  height: auto;
-  opacity: 0.14;
-}
-
-@media (max-width: 640px) {
-  .footer-signature {
-    padding-top: 4.5rem;
-  }
-
-  .footer-signature img {
-    width: 100%;
-  }
-}
+@media (prefers-reduced-motion: reduce) { .studio-footer a { transition: none; } }
 </style>

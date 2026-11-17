@@ -89,7 +89,8 @@ const titleWithBreaks = (key: string) => {
 
                 <div class="min-w-0">
                   <p class="font-inter text-sm font-semibold text-[var(--text-primary)] leading-tight truncate">
-                    {{ member.name }}
+                    <a v-if="member.id === 1" href="https://www.linkedin.com/in/mohamed-chettah/" class="underline underline-offset-4" aria-label="Mohamed Chettah sur LinkedIn">{{ member.name }} ↗</a>
+                    <span v-else>{{ member.name }}</span>
                   </p>
                   <p class="font-inter text-[11px] text-[var(--text-secondary)] leading-tight truncate">
                     {{ member.role }}

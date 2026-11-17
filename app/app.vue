@@ -11,7 +11,8 @@ useHead(() => ({
   meta: [
     { name: 'description', content: computed(() => t('meta.description')) },
     { property: 'og:title', content: computed(() => t('meta.title')) },
-    { property: 'og:description', content: computed(() => t('meta.description')) }
+    { property: 'og:description', content: computed(() => t('meta.description')) },
+    { property: 'og:url', content: `https://www.mc-studio.eu${route.path === '/' ? '' : route.path}` }
   ],
   script: isPortal.value ? [] : [
     {

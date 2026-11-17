@@ -1,309 +1,312 @@
 <script setup lang="ts">
+import { findProjectBySlug } from '~/data/projects'
+import { findCaseStudyBySlug } from '~/data/caseStudies'
+import { expertises } from '~/data/expertises'
+
 const props = defineProps<{ city?: string }>()
-const { locale, rt, t, tm } = useI18n()
 const localePath = useLocalePath()
-const currentHeroWordIndex = ref(0)
-const heroPrimaryCta = ref<HTMLElement | { $el: HTMLElement } | null>(null)
-const heroPrimaryCtaText = ref<HTMLElement | null>(null)
-const heroSecondaryCta = ref<HTMLElement | { $el: HTMLElement } | null>(null)
-const heroSecondaryCtaText = ref<HTMLElement | null>(null)
 
-useTextSlideAnimation(heroPrimaryCta, heroPrimaryCtaText)
-useTextSlideAnimation(heroSecondaryCta, heroSecondaryCtaText)
-
-let heroWordRotationTimer: ReturnType<typeof setInterval> | undefined
-
-const heroWords = computed(() => {
-  const words = tm('globalHome.hero.rotating_words')
-
-  return Array.isArray(words) ? words.map(word => rt(word)) : []
-})
-
-const currentHeroWord = computed(() => heroWords.value[currentHeroWordIndex.value] ?? '')
-const heroWordPlaceholder = computed(() => heroWords.value[0] ?? currentHeroWord.value)
-const availabilityMonth = computed(() => new Intl.DateTimeFormat(locale.value, { month: 'long' }).format(new Date()))
-const heroReferences = [
-  { name: 'R&A Energy', image: '/img/clients/ra-energy.svg', className: 'global-home__reference--ra' },
-  { name: 'AMG Promotion', image: '/img/clients/amg-promotion.svg', className: 'global-home__reference--amg' },
-  { name: 'Souji Nova', image: '/img/clients/souji-nova.png', className: 'global-home__reference--souji' },
-  { name: 'Maison AWL', image: '/img/project/maison-awl/logo-black.png', className: 'global-home__reference--maison' },
-  { name: 'Personal', image: '/img/clients/personal.svg', className: 'global-home__reference--personal' },
-  { name: 'Arises', image: '/img/clients/arises.svg', className: 'global-home__reference--arises' },
-  { name: 'Shika Consulting', image: '/img/clients/shika-consulting.webp', className: 'global-home__reference--shika', showLabel: false },
-  { name: 'Sotraya', image: '/img/clients/sotraya.svg', className: 'global-home__reference--sotraya' },
-  { name: 'Abri Toi', image: '/img/clients/abri-toi.png', className: 'global-home__reference--abri-toi', showLabel: false },
-  { name: 'Newlense', image: '/img/clients/newlense.webp', className: 'global-home__reference--newlense', showLabel: false }
+const work = [
+  {
+    slug: 'crm-ra-energy', name: 'CRM R&A Energy', image: 'crm-ra', width: 1254, height: 1254,
+    category: 'Application métier', alt: 'Tableau de bord du CRM R&A Energy sur écran',
+    headline: 'Du tableur au terrain.',
+    text: 'Un CRM qui réunit prospects, planning et tournées, et vérifie les rendez-vous en tenant compte des temps de trajet.',
+  },
+  {
+    slug: 'maison-awl', name: 'Maison AWL', image: 'maison-awl', width: 1280, height: 960,
+    category: 'Marketplace', alt: 'Place de marché Maison AWL sur un ordinateur de bureau',
+    headline: 'De la recherche au paiement.',
+    text: 'Une place de marché où les particuliers trouvent un prestataire, échangent avec lui et règlent leur mission.',
+  },
 ]
 
+const expertiseSummaries = [
+  'Vos équipes retrouvent leurs données, leurs rendez-vous et leurs décisions au même endroit. CRM, portails et outils internes conçus autour de leur façon de travailler.',
+  'Donnez une forme testable à votre idée, puis un socle solide au produit. Nous concevons et développons des MVP, plateformes et applications SaaS.',
+  'Confiez une tâche précise à l’IA, avec des critères pour juger la qualité du résultat. Assistants, traitement de documents et automatisation de vos flux.',
+]
+
+const phases = [
+  { title: 'Découverte', text: 'Nous observons les usages, les outils en place et les points où votre équipe ou vos clients perdent du temps.' },
+  { title: 'Stratégie', text: 'Nous choisissons le premier périmètre, les critères de réussite et les étapes de livraison.' },
+  { title: 'Design', text: 'Nous donnons forme aux parcours prioritaires dans un prototype que vous pouvez tester.' },
+  { title: 'Développement', text: 'Nous construisons par étapes, avec des versions à essayer et des décisions techniques que nous vous expliquons.' },
+  { title: 'Lancement', text: 'Nous vérifions les parcours, préparons la mise en ligne et documentons la prise en main.' },
+  { title: 'Évolution', text: 'Les retours d’usage guident les prochaines versions et les intégrations à développer.' },
+]
+
+const posts = [
+  {
+    title: 'Premier projet avec une créatrice de contenu',
+    context: 'Retour sur une collaboration entre produit et communauté.',
+    network: 'LinkedIn',
+    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7464933521166585856/',
+  },
+  {
+    title: 'Remise des diplômes',
+    context: 'Une étape dans mon parcours d’ingénierie web.',
+    network: 'LinkedIn',
+    href: 'https://www.linkedin.com/feed/update/urn:li:activity:7467107715304022016/',
+  },
+  {
+    title: 'Mon parcours scolaire',
+    context: 'Le chemin qui m’a conduit au développement logiciel.',
+    network: 'X',
+    href: 'https://x.com/MohameDevWeb/status/1975230337425805704',
+  },
+]
+
+const client = findProjectBySlug('ra-energy')!
+const clientQuote = findCaseStudyBySlug(client.slug)!.fr.testimonialHighlight
+const productSteps = [
+  { image: '/img/studio/personal-1280.webp', small: '/img/studio/personal-640.webp', width: 1280, height: 729, alt: 'Page d’accueil du produit Personal', title: 'Trouver ce qui mérite d’être raconté', text: 'Personal rapproche des formats qui ont fait leurs preuves des expériences que le créateur souhaite partager.' },
+  { image: '/img/project/personal/feed.webp', width: 3024, height: 1724, alt: 'Interface du fil de contenus de Personal', title: 'Affiner une idée avec l’IA', text: 'Le créateur choisit une piste et l’enrichit de son vécu. Personal l’aide à en faire un brouillon fidèle à sa voix.' },
+  { image: '/img/project/personal/closing.webp', width: 3024, height: 1726, alt: 'Écran de présentation de Personal', title: 'Garder la main jusqu’à la publication', text: 'Le texte reste un brouillon que le créateur peut relire, modifier et décider de publier.' },
+]
+const activeProductStep = ref(0)
+const hasProductObserver = ref(false)
+const productRoot = ref<HTMLElement>()
+let productObserver: IntersectionObserver | undefined
+
 onMounted(() => {
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!productRoot.value || !('IntersectionObserver' in window) || !window.matchMedia('(min-width: 781px) and (prefers-reduced-motion: no-preference)').matches) return
+  productObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) activeProductStep.value = Number((entry.target as HTMLElement).dataset.step)
+    }
+  }, { rootMargin: '-36% 0px -40% 0px' })
 
-  if (!prefersReducedMotion && heroWords.value.length > 1) {
-    heroWordRotationTimer = window.setInterval(() => {
-      currentHeroWordIndex.value = (currentHeroWordIndex.value + 1) % heroWords.value.length
-    }, 1800)
-  }
+  hasProductObserver.value = true
+  productRoot.value.querySelectorAll('[data-step]').forEach(step => productObserver?.observe(step))
 })
+onBeforeUnmount(() => productObserver?.disconnect())
 
-onUnmounted(() => {
-  if (heroWordRotationTimer) window.clearInterval(heroWordRotationTimer)
-})
-
-useSeoMeta({
-  title: () => props.city
-    ? locale.value === 'fr' ? `Sites web SaaS à ${props.city} | MC Studio` : `SaaS websites in ${props.city} | MC Studio`
-    : t('globalHome.seo.title'),
-  description: () => props.city
-    ? `${t('globalHome.seo.description')} ${locale.value === 'fr' ? `Sites web SaaS pour les entreprises à ${props.city}.` : `SaaS websites for businesses in ${props.city}.`}`
-    : t('globalHome.seo.description'),
-  ogTitle: () => props.city
-    ? locale.value === 'fr' ? `Sites web SaaS à ${props.city} | MC Studio` : `SaaS websites in ${props.city} | MC Studio`
-    : t('globalHome.seo.title'),
-  ogDescription: () => props.city
-    ? `${t('globalHome.seo.description')} ${locale.value === 'fr' ? `Sites web SaaS pour les entreprises à ${props.city}.` : `SaaS websites for businesses in ${props.city}.`}`
-    : t('globalHome.seo.description')
+const title = computed(() => props.city
+  ? `Développement logiciel sur mesure à ${props.city} | MC Studio`
+  : 'MC Studio — Développement logiciel sur mesure, SaaS et IA')
+const description = computed(() => `MC Studio conçoit et développe des applications métier, des SaaS et des solutions IA pour les entreprises et les fondateurs${props.city ? ` à ${props.city}` : ''}.`)
+useStudioSeo(title, description)
+useHead({
+  htmlAttrs: { lang: 'fr' },
+  script: [{
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'Organization', name: 'MC Studio', url: 'https://www.mc-studio.eu/',
+      logo: 'https://www.mc-studio.eu/img/logo/mc-studio.svg',
+      founder: { '@type': 'Person', name: 'Mohamed Chettah', url: 'https://mohamedchettah.fr/', sameAs: ['https://www.linkedin.com/in/mohamed-chettah/'] },
+    }),
+  }],
 })
 </script>
 
 <template>
-  <main class="global-home min-h-screen bg-[#0f0f0f] text-white">
-    <StudioNavbar tone="dark" />
-
-    <section
-      class="global-home__hero relative flex min-h-[calc(100svh-88px)] w-full flex-col items-center overflow-hidden px-5 pb-5 pt-[clamp(44px,7svh,80px)] text-center sm:px-8 sm:pb-7"
-    >
-      <img
-        class="global-home__hero-clouds"
-        src="/img/main/home-clouds-sunset.png"
-        alt=""
-        aria-hidden="true"
-      >
-      <div class="global-home__hero-vignette" aria-hidden="true" />
-      <div class="global-home__hero-orb" aria-hidden="true" />
-      <div class="global-home__hero-main relative z-10 flex w-full flex-1 flex-col items-center justify-center">
-        <div class="global-home__hero-proof mb-5">
-          <p class="global-home__availability">
-            <span class="global-home__availability-dot" aria-hidden="true" />
-            {{ t('hero.availability', { month: availabilityMonth }) }}
-          </p>
+  <div class="flagship">
+    <a class="flagship__skip" href="#contenu">Aller au contenu</a>
+    <StudioNavbar />
+    <main id="contenu" tabindex="-1">
+      <section class="flagship-hero" aria-labelledby="studio-title">
+        <img
+          class="flagship-hero__image"
+          src="/img/studio/clouds-1280.webp"
+          srcset="/img/studio/clouds-640.webp 640w, /img/studio/clouds-1280.webp 1280w"
+          sizes="100vw"
+          width="1280"
+          height="549"
+          fetchpriority="high"
+          alt=""
+        >
+        <div class="flagship__shell flagship-hero__inner">
+          <div class="flagship-hero__content">
+            <p class="flagship__kicker">Studio indépendant de développement logiciel<span v-if="city"> à {{ city }}</span></p>
+            <h1 id="studio-title">Le logiciel,<br><em>à votre mesure.</em></h1>
+            <p class="flagship-hero__lead">Nous concevons et développons des applications métier, des SaaS et des solutions IA pour les entreprises et les fondateurs qui veulent franchir un cap.</p>
+            <div class="flagship__actions">
+              <NuxtLink class="flagship__button" :to="localePath('/contact')">Parlons de votre projet <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
+              <a class="flagship__text-link" href="#realisations">Voir les réalisations <UIcon name="i-tabler-arrow-down" aria-hidden="true" /></a>
+            </div>
+          </div>
+          <div class="flagship-hero__rail">
+            <span>Stratégie produit</span><span>Design</span><span>Ingénierie</span>
+          </div>
         </div>
-        <h1 class="global-home__hero-title--two-lines max-w-[1120px] whitespace-pre-line text-balance font-manrope text-[clamp(40px,5.1vw,78px)] font-medium leading-[1.02] tracking-[-0.045em] text-white max-sm:text-[clamp(34px,10.4vw,54px)]">
-          <span class="sr-only">{{ t('globalHome.hero.title') }}{{ city ? ` ${locale === 'fr' ? 'à' : 'in'} ${city}` : '' }}</span>
-          <span class="global-home__hero-title-visual" aria-hidden="true">
-            <span class="global-home__hero-title-prefix">{{ t('globalHome.hero.title_prefix') }}</span><span class="global-home__hero-title-spacer">&nbsp;</span><span class="global-home__hero-word-rotator">
-              <span class="global-home__hero-word-placeholder">{{ heroWordPlaceholder }}</span>
-              <Transition name="global-home-hero-word">
-                <span :key="currentHeroWord" class="global-home__hero-word">{{ currentHeroWord }}</span>
-              </Transition>
-            </span>
-            <span v-if="city" class="global-home__city-title">{{ locale === 'fr' ? 'à' : 'in' }} {{ city }}</span>
-          </span>
-        </h1>
-        <p class="mt-5 max-w-[760px] text-balance font-inter text-[clamp(15px,1.2vw,18px)] leading-[1.55] text-white/58 max-sm:mt-5 max-sm:max-w-[520px] max-sm:text-[15px]">
-          {{ t('globalHome.hero.subtitle') }}
-        </p>
+      </section>
 
-        <div class="global-home__hero-actions mt-6 flex flex-wrap items-center justify-center gap-3 max-sm:mt-7 max-sm:w-full max-sm:flex-col">
-          <NuxtLink ref="heroPrimaryCta" class="global-home__hero-cta global-home__hero-cta--primary" :to="localePath('/contact')">
-            <span class="sr-only">{{ t('globalHome.hero.cta_primary') }}</span>
-            <span class="global-home__hero-cta-text-window" aria-hidden="true">
-              <span ref="heroPrimaryCtaText" class="global-home__hero-cta-text-track">
-                <span class="global-home__hero-cta-text">{{ t('globalHome.hero.cta_primary') }}</span>
-                <span class="global-home__hero-cta-text">{{ t('globalHome.hero.cta_primary') }}</span>
-              </span>
-            </span>
-          </NuxtLink>
-          <NuxtLink ref="heroSecondaryCta" class="global-home__hero-cta global-home__hero-cta--secondary" :to="localePath('/projects')">
-            <span class="sr-only">{{ t('globalHome.hero.cta_secondary') }}</span>
-            <span class="global-home__hero-cta-text-window" aria-hidden="true">
-              <span ref="heroSecondaryCtaText" class="global-home__hero-cta-text-track">
-                <span class="global-home__hero-cta-text">{{ t('globalHome.hero.cta_secondary') }}</span>
-                <span class="global-home__hero-cta-text">{{ t('globalHome.hero.cta_secondary') }}</span>
-              </span>
-            </span>
-          </NuxtLink>
-          <HeroTestimonial class="global-home__hero-testimonial" />
+      <section id="realisations" class="flagship__section flagship__shell" aria-labelledby="work-title">
+        <header class="flagship__section-head">
+          <div>
+            <p class="flagship__kicker">Réalisations</p>
+            <h2 id="work-title">Deux métiers.<br>Deux logiciels.</h2>
+          </div>
+          <p>Un outil commercial pour des équipes de terrain. Une place de marché pour une communauté. Deux façons de partir des usages pour concevoir le bon produit.</p>
+        </header>
+        <div class="flagship-work">
+          <article v-for="item in work" :key="item.slug" class="flagship-work__item">
+            <NuxtLink :to="localePath(`/projects/${item.slug}`)" class="flagship-work__link">
+              <div class="flagship-work__media">
+                <img :src="`/img/studio/${item.image}-1280.webp`"
+                  :srcset="`/img/studio/${item.image}-640.webp 640w, /img/studio/${item.image}-1280.webp ${item.width}w`"
+                  sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 1440px) 50vw, 700px"
+                  :alt="item.alt" :width="item.width" :height="item.height" loading="lazy" decoding="async">
+                <span class="flagship-work__arrow"><UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></span>
+              </div>
+              <div class="flagship-work__caption">
+                <p>{{ item.name }} <span>·</span> {{ item.category }}</p>
+                <h3>{{ item.headline }}</h3>
+              </div>
+            </NuxtLink>
+            <p class="flagship-work__description">{{ item.text }}</p>
+          </article>
         </div>
-      </div>
+        <div class="flagship__actions flagship__work-actions">
+          <NuxtLink class="flagship__text-link" :to="localePath('/projects')">Toutes les réalisations <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
+        </div>
+      </section>
 
-      <div class="global-home__hero-references relative z-10 w-full shrink-0" :aria-label="t('globalHome.hero.references_label')">
-        <p class="global-home__hero-reference-label">{{ t('globalHome.hero.references_label') }}</p>
-        <div class="global-home__hero-reference-marquee">
-          <div class="global-home__hero-reference-track">
-            <div
-              v-for="groupIndex in 2"
-              :key="groupIndex"
-              class="global-home__hero-reference-group"
-              :aria-hidden="groupIndex === 2"
-            >
-              <div
-                v-for="reference in heroReferences"
-                :key="`${groupIndex}-${reference.name}`"
-                class="global-home__reference"
-                :class="reference.className"
-              >
-                <img :src="reference.image" :alt="reference.showLabel === false ? reference.name : ''" width="48" height="48">
-                <span v-if="reference.showLabel !== false">{{ reference.name }}</span>
+      <section class="flagship__section flagship-expertise" aria-labelledby="expertise-title">
+        <div class="flagship__shell">
+          <header class="flagship__section-head">
+            <div>
+              <p class="flagship__kicker">Expertises</p>
+              <h2 id="expertise-title">Qu’est-ce que votre logiciel doit accomplir ?</h2>
+            </div>
+            <p>Nous réunissons la stratégie produit, le design et l’ingénierie pour passer d’un problème bien posé à une application en production.</p>
+          </header>
+          <div class="flagship-expertise__rows">
+            <NuxtLink v-for="(item, index) in expertises" :key="item.slug" :to="localePath(`/expertises/${item.slug}`)" class="flagship-expertise__row">
+              <h3>{{ item.title }}</h3>
+              <p>{{ expertiseSummaries[index] }}</p>
+              <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" />
+            </NuxtLink>
+          </div>
+        </div>
+      </section>
+
+      <section ref="productRoot" class="flagship__section flagship__shell flagship-product" aria-labelledby="personal-title">
+        <header class="flagship__section-head">
+          <div>
+            <p class="flagship__kicker">Un produit du studio</p>
+            <h2 id="personal-title">Personal<span>.</span></h2>
+          </div>
+          <p>Notre SaaS IA aide les créateurs à passer d’une idée à un contenu qui leur ressemble. Nous l’avons conçu de bout en bout, du cadrage du MVP à l’intégration des modèles et aux itérations d’interface.</p>
+        </header>
+        <div class="flagship-product__journey" :class="{ 'is-enhanced': hasProductObserver }">
+          <div class="flagship-product__stage" aria-hidden="true">
+            <div class="flagship-product__frame">
+              <div class="flagship-product__bar"><span /><span /><span /> <span>usepersonal.app</span></div>
+              <div class="flagship-product__screens">
+                <img v-for="(step, index) in productSteps" :key="step.image"
+                  :src="step.image"
+                  :srcset="step.small ? `${step.small} 640w, ${step.image} 1280w` : undefined"
+                  sizes="(max-width: 1440px) 58vw, 780px"
+                  :width="step.width" :height="step.height" alt="" loading="lazy" decoding="async"
+                  :class="{ 'is-current': activeProductStep === index }">
               </div>
             </div>
           </div>
+          <ol class="flagship-product__steps">
+            <li v-for="(step, index) in productSteps" :key="step.image" :data-step="index" :class="{ 'is-current': activeProductStep === index }">
+              <p class="flagship__kicker">0{{ index + 1 }}</p>
+              <h3>{{ step.title }}</h3>
+              <p>{{ step.text }}</p>
+              <img
+                class="flagship-product__mobile"
+                :src="step.small ?? step.image"
+                :width="step.width" :height="step.height" :alt="step.alt"
+                loading="lazy" decoding="async"
+              >
+            </li>
+          </ol>
         </div>
-      </div>
-    </section>
+        <div class="flagship__actions">
+          <a class="flagship__text-link" href="https://usepersonal.app/" target="_blank" rel="noopener noreferrer">Découvrir Personal <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></a>
+          <NuxtLink class="flagship__text-link" :to="localePath('/projects/personal')">Les choix de conception <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
+        </div>
+      </section>
 
-  </main>
+      <section class="flagship-founder" aria-labelledby="founder-title">
+        <div class="flagship__shell flagship-founder__layout">
+          <figure class="flagship-founder__portrait">
+            <img
+              src="/img/studio/founder-640.webp"
+              srcset="/img/studio/founder-640.webp 640w, /img/studio/founder-1280.webp 1280w"
+              sizes="(max-width: 720px) calc(100vw - 40px), 42vw"
+              alt="Portrait de Mohamed Chettah" width="1280" height="1125" loading="lazy" decoding="async"
+            >
+            <figcaption>Fondateur de MC Studio · Depuis 2024</figcaption>
+          </figure>
+          <div class="flagship-founder__copy">
+            <p class="flagship__kicker">Derrière le studio</p>
+            <h2 id="founder-title">Mohamed Chettah</h2>
+            <p class="flagship-founder__statement">Je conçois, je développe et je lance mes propres produits.</p>
+            <p>J’ai fondé MC Studio pour relier les décisions d’un entrepreneur au travail de celles et ceux qui construisent le produit. Sur Personal, je fais les mêmes arbitrages qu’avec mes clients. Que faut-il livrer d’abord ? Que comprend l’utilisateur ? Que faudra-t-il maintenir dans six mois ?</p>
+            <p>Vous échangez directement avec moi, du premier cadrage aux décisions de design et d’architecture.</p>
+            <div class="flagship__actions">
+              <NuxtLink class="flagship__text-link" :to="localePath('/a-propos')">Le studio <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
+              <a class="flagship__text-link" href="https://mohamedchettah.fr/" target="_blank" rel="noopener noreferrer">Site personnel <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></a>
+              <a class="flagship__text-link" href="https://www.linkedin.com/in/mohamed-chettah/" target="_blank" rel="noopener noreferrer">LinkedIn <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="flagship__section flagship__shell" aria-labelledby="process-title">
+        <header class="flagship__section-head">
+          <div>
+            <p class="flagship__kicker">Notre méthode</p>
+            <h2 id="process-title">Du premier échange aux premiers usages.</h2>
+          </div>
+          <p>À chaque étape, vous savez ce que nous construisons, ce qui reste à décider et ce que vous pouvez déjà essayer.</p>
+        </header>
+        <ol class="flagship-process">
+          <li v-for="(phase, index) in phases" :key="phase.title">
+            <span class="flagship__kicker" aria-hidden="true">0{{ index + 1 }}</span>
+            <h3>{{ phase.title }}</h3>
+            <p>{{ phase.text }}</p>
+          </li>
+        </ol>
+        <figure v-if="clientQuote" class="flagship-quote">
+          <blockquote>« {{ clientQuote }} »</blockquote>
+          <figcaption>
+            <img v-if="client.testimonial" :src="client.testimonial.avatar" alt="" width="48" height="48" loading="lazy">
+            <span><strong>{{ client.testimonial?.name }}</strong><br>Cofondateur de R&amp;A Energy</span>
+            <NuxtLink :to="localePath('/projects/ra-energy')">Sur la création du site R&amp;A Energy <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="flagship__section flagship__shell flagship-notes" aria-labelledby="notes-title">
+        <header class="flagship__section-head">
+          <div>
+            <p class="flagship__kicker">Publications de Mohamed</p>
+            <h2 id="notes-title">Dans les coulisses.</h2>
+          </div>
+          <p>Des projets racontés de l’intérieur et des étapes du parcours qui a donné naissance à MC Studio.</p>
+        </header>
+        <ul>
+          <li v-for="post in posts" :key="post.href">
+            <a :href="post.href" target="_blank" rel="noopener noreferrer">
+              <p class="flagship__kicker">{{ post.network }}</p>
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.context }}</p>
+              <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" />
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="flagship-closing" aria-labelledby="closing-title">
+        <div class="flagship__shell">
+          <h2 id="closing-title">Quel logiciel vous ferait avancer ?</h2>
+          <div>
+            <p>Parlez-nous du produit que vous voulez lancer ou du travail que vous aimeriez simplifier. Nous commencerons par comprendre le besoin.</p>
+            <NuxtLink class="flagship__button" :to="localePath('/contact')">Parlons de votre projet <UIcon name="i-tabler-arrow-up-right" aria-hidden="true" /></NuxtLink>
+          </div>
+        </div>
+      </section>
+    </main>
+    <FooterSection />
+  </div>
 </template>
 
-<style scoped>
-.global-home__city-title { display: block; margin-top: .12em; }
-.global-home__hero { isolation: isolate; }
-.global-home__hero::before { content: ''; position: absolute; inset: 8% 10% 2%; z-index: -1; border-radius: 999px; background: radial-gradient(ellipse at center, rgba(240,191,108,.13), transparent 66%); filter: blur(12px); pointer-events: none; }
-.global-home__hero-clouds { position: absolute; inset: 0; z-index: -3; width: 100%; max-width: none; height: 100%; object-fit: cover; object-position: center; pointer-events: none; }
-.global-home__hero-vignette { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, rgba(15,15,15,.08) 0%, rgba(15,15,15,.18) 48%, rgba(15,15,15,.82) 100%), radial-gradient(ellipse at center, rgba(15,15,15,.03), rgba(15,15,15,.42) 88%); pointer-events: none; }
-.global-home__hero-orb { position: absolute; top: 50%; left: 50%; z-index: -1; width: clamp(180px, 24vw, 360px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(240,191,108,.18), rgba(240,191,108,0) 68%); filter: blur(20px); transform: translate(-50%, -50%); pointer-events: none; }
-.global-home__hero h1 { width: 100%; animation: home-title-in 900ms cubic-bezier(.22,1,.36,1) both; background: none; color: #fff; -webkit-background-clip: border-box; -webkit-text-fill-color: #fff; }
-.global-home__hero p { animation: home-copy-in 900ms .14s cubic-bezier(.22,1,.36,1) both; }
-.global-home__hero-main { min-height: 380px; padding-block: 0 150px; }
-.global-home__hero-testimonial { position: absolute; top: calc(100% + 28px); left: 50%; margin: 0; transform: translateX(-50%); }
-.global-home__hero-title-visual { display: block; }
-.global-home__hero-title-prefix, .global-home__hero-title-spacer { display: inline; }
-.global-home__hero-word-rotator { display: inline-grid; text-align: left; vertical-align: baseline; }
-.global-home__hero-word-placeholder, .global-home__hero-word { grid-area: 1 / 1; }
-.global-home__hero-word-placeholder { visibility: hidden; }
-.global-home__hero-word { display: block; }
-.global-home__hero-actions { --hero-cta-width: 225px; position: relative; display: grid; grid-template-columns: repeat(2,var(--hero-cta-width)); animation: home-copy-in 900ms .26s cubic-bezier(.22,1,.36,1) both; }
-.global-home__hero-cta { box-sizing: border-box; display: inline-flex; inline-size: 100%; min-inline-size: 0; block-size: 44px; min-block-size: 44px; max-block-size: 44px; flex: none; align-items: center; justify-content: center; gap: 10px; border: 0; border-radius: 16px; padding: 0 18px; font: 600 15px/1 Inter, sans-serif; white-space: nowrap; text-decoration: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.22), 0 14px 34px rgba(0,0,0,.2); backdrop-filter: blur(18px); transition: background 220ms ease, color 220ms ease; }
-.global-home__hero-cta--primary { background: rgba(255,255,255,.94); color: #171717; }
-.global-home__hero-cta--secondary { block-size: 45px; min-block-size: 45px; max-block-size: 45px; background: rgba(20,20,20,.72); color: #fff; }
-.global-home__hero-cta--primary:hover { background: #fff; }
-.global-home__hero-cta--secondary:hover { background: rgba(31,31,31,.8); }
-.global-home__hero-cta:focus-visible { outline: 2px solid #f0bf6c; outline-offset: 4px; }
-.global-home__hero-cta-text-window { display: block; height: 1em; overflow: hidden; }
-.global-home__hero-cta-text-track { display: flex; flex-direction: column; }
-.global-home__hero-cta-text { display: block; height: 1em; flex: none; line-height: 1; }
-.global-home__hero-proof { display: flex; align-items: center; justify-content: center; gap: 16px; color: rgba(255,255,255,.9); font: 500 14px/1 Inter, sans-serif; animation: home-copy-in 900ms .34s cubic-bezier(.22,1,.36,1) both; }
-.global-home__availability { display: inline-flex; align-items: center; gap: 10px; margin: 0; white-space: nowrap; }
-.global-home__availability-dot { width: 10px; height: 10px; border: 2px solid #f8d699; border-radius: 50%; background: #f0bf6c; box-shadow: 0 0 0 4px rgba(240,191,108,.12); }
-.global-home__hero-references { animation: home-copy-in 900ms .42s cubic-bezier(.22,1,.36,1) both; }
-.global-home__hero-reference-label { margin: 0 0 20px; color: rgba(255,255,255,.4) !important; font: 600 10px/1 Inter, sans-serif !important; letter-spacing: .24em; text-transform: uppercase; }
-.global-home__hero-reference-marquee { width: 100%; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-.global-home__hero-reference-track { display: flex; width: max-content; will-change: transform; animation: hero-reference-marquee 28s linear infinite; }
-.global-home__hero-reference-marquee:hover .global-home__hero-reference-track { animation-play-state: paused; }
-.global-home__hero-reference-group { display: flex; flex: none; align-items: center; gap: 16px; padding-right: 16px; }
-.global-home__reference { display: flex; width: 190px; min-width: 0; height: 76px; flex: none; align-items: center; justify-content: center; gap: 10px; color: rgba(255,255,255,.62); filter: grayscale(1); font: 580 15px/1 Inter,sans-serif; letter-spacing: -.025em; white-space: nowrap; transition: color 220ms ease, filter 220ms ease; }
-.global-home__reference:hover { color: rgba(255,255,255,.9); filter: grayscale(0); }
-.global-home__reference img { width: 34px; height: 34px; flex: 0 0 34px; object-fit: contain; opacity: .76; transition: opacity 220ms ease; }
-.global-home__reference:hover img { opacity: 1; }
-.global-home__reference--ra img, .global-home__reference--maison img { filter: brightness(0) invert(1); }
-.global-home__reference--personal img { border-radius: 7px; }
-.global-home__reference--arises img { filter: grayscale(1); }
-.global-home__reference--shika img { width: 82px; flex-basis: 82px; filter: brightness(0) invert(1); }
-.global-home__reference--abri-toi img, .global-home__reference--newlense img { width: 120px; height: 40px; flex-basis: 120px; }
-@keyframes hero-reference-marquee { to { transform: translateX(-50%); } }
-.global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: opacity 450ms ease, filter 450ms ease, transform 450ms cubic-bezier(.22,1,.36,1); }
-.global-home-hero-word-enter-from { opacity: 0; filter: blur(8px); transform: translateY(.65em); }
-.global-home-hero-word-leave-to { opacity: 0; filter: blur(8px); transform: translateY(-.65em); }
-.global-home__projects-showcase { border-top: 1px solid rgba(255,255,255,.1); border-bottom: 1px solid rgba(255,255,255,.1); }
-.projects-showcase__link { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 0 17px; color: rgba(255,255,255,.88); font: 500 14px/1 Inter, sans-serif; text-decoration: none; transition: background 200ms ease, border-color 200ms ease, color 200ms ease; }
-.projects-showcase__link:hover { border-color: rgba(255,255,255,.42); background: rgba(255,255,255,.06); color: #fff; }
-.projects-showcase__frame { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 28px; padding: clamp(8px,1.3vw,18px); background-color: #151515; background-image: linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px); background-size: 48px 48px; text-decoration: none; transition: border-color 250ms ease, transform 350ms cubic-bezier(.22,1,.36,1); }
-.projects-showcase__screen { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: clamp(16px,2vw,26px); background: #0d0d0d; box-shadow: 0 28px 80px rgba(0,0,0,.32); }
-.projects-showcase__screen img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: center top; transition: transform 650ms cubic-bezier(.22,1,.36,1); }
-@media (hover: hover) { .projects-showcase__frame:hover { border-color: rgba(255,255,255,.28); transform: translateY(-4px); } .projects-showcase__frame:hover .projects-showcase__screen img { transform: scale(1.015); } }
-.global-home__offers { border-bottom: 1px solid rgba(255,255,255,.1); }
-.offers-feature__heading { display: flex; align-items: baseline; gap: clamp(22px,5vw,64px); }
-.offers-feature__index { color: rgba(255,255,255,.42); font: 400 clamp(2rem,4vw,3.75rem)/1 Manrope, sans-serif; letter-spacing: -.06em; }
-.offers-feature__image { overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 22px; background: #161616; }
-.offers-feature__image img { display: block; width: 100%; aspect-ratio: 1 / .72; object-fit: cover; object-position: center; }
-.offers-feature__item { display: flex; align-items: flex-start; gap: 11px; color: rgba(255,255,255,.78); font: 400 15px/1.5 Inter, sans-serif; }
-.offers-feature__item span { display: inline-grid; width: 19px; height: 19px; flex: 0 0 19px; place-items: center; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; color: #fff; font-size: 11px; }
-.offers-feature__cta { display: inline-flex; min-height: 44px; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,.22); border-radius: 12px; padding: 0 16px; color: #fff; font: 500 14px/1 Inter, sans-serif; text-decoration: none; transition: background 200ms ease, border-color 200ms ease; }
-.offers-feature__cta:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); }
-.project-teaser:hover .project-teaser__type { color: rgba(255,255,255,.8); }
-.world-card:focus-visible, .project-teaser:focus-visible, .projects-showcase__frame:focus-visible, .projects-showcase__link:focus-visible, .offers-feature__cta:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
-.home-business-content { --color-gold: #fff; }
-.home-business-content__separator { width: min(1216px, calc(100% - 48px)); height: 1px; margin: clamp(24px, 3vw, 44px) auto; background: linear-gradient(90deg, transparent, rgba(255,255,255,.14) 20%, rgba(255,255,255,.14) 80%, transparent); }
-.home-business-content :deep(.text-gradient) { background: none !important; color: var(--text-primary) !important; -webkit-background-clip: border-box !important; -webkit-text-fill-color: currentColor !important; }
-.home-business-content :deep(.project-showcase) { background: #151515; }
-.home-business-content :deep(.project-grid-pattern) { background-color: #151515; }
-.home-business-content :deep(.team-card::before) { background: linear-gradient(to bottom, rgba(255,255,255,.06), transparent 38%); }
-.home-business-content :deep(.offers-card), .home-business-content :deep(.offers-card--featured) { background: linear-gradient(to bottom, rgba(255,255,255,.05), transparent 34%), color-mix(in srgb, var(--bg-secondary) 76%, transparent); }
-.home-business-content :deep(.offers-card__cta) { background: #fff; }
-.home-business-content :deep(.offers-card__check) { border-color: rgba(255,255,255,.26); color: #fff; }
-.home-business-content :deep(#services .offer-number) { color: rgba(255,255,255,.42); }
-.home-business-content :deep(#services .offer-row-header:hover .offer-number), .home-business-content :deep(#services .offer-row-header:hover .offer-row-title) { color: #fff; }
-.home-business-content :deep(#services .offer-toggle-bar) { background: rgba(255,255,255,.7); }
-.home-business-content :deep(#services .offer-label) { color: rgba(255,255,255,.5); }
-.home-business-content :deep(#services [class*="F0BF6C"]) { color: #fff; }
-.home-business-content :deep(#avis > div:first-child) { background: rgba(255,255,255,.06); }
-.home-business-content :deep(#avis article) { transition-property: border-color, background-color, box-shadow; }
-.home-business-content :deep(#avis article:hover) { border-color: rgba(255,255,255,.28); }
-.home-business-content :deep(#avis article > div:first-child) { color: rgba(255,255,255,.12); }
-.home-business-content :deep(#faq .bg-\[linear-gradient\(135deg\,var\(--color-gold\)_0\%\,\#e8a84c_100\%\)\]) { background: #222 !important; }
-.home-business-content :deep(#faq .\!bg-\[var\(--color-gold\)\]) { background: #fff !important; color: #111 !important; }
-@keyframes home-title-in { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes home-copy-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-
-@media (min-width: 641px) and (max-height: 700px) {
-  .global-home__hero { padding-top: 0; padding-bottom: 20px; }
-  .global-home__hero-main { min-height: 0; padding-bottom: 104px; }
-  .global-home__hero-proof { margin-bottom: 8px; }
-  .global-home__hero h1 { font-size: clamp(32px,4.4vw,50px); }
-  .global-home__hero-main > p { margin-top: 10px; }
-  .global-home__hero-actions { margin-top: 10px; }
-  .global-home__hero-reference-label { margin-bottom: 8px; }
-  .global-home__reference { height: 50px; }
-}
-
-@media (max-width: 640px) {
-  .global-home__worlds { overflow: hidden; }
-  .global-home__worlds > .grid { min-width: 0; }
-  .world-card { min-height: 340px; border-radius: 18px; padding: 22px; }
-  .world-card__top { top: 22px; right: 22px; }
-  .world-card__arrow { width: 40px; height: 40px; font-size: 19px; }
-  .world-card__audience { font-size: 11px; letter-spacing: .16em; }
-  .world-card__title { max-width: 100%; font-size: clamp(29px,8vw,36px); line-height: 1.02; letter-spacing: -.055em; overflow-wrap: anywhere; }
-  .world-card__body { max-width: 100%; margin-top: 16px; font-size: 15px; line-height: 1.55; }
-  .world-card__content > :last-child { margin-top: 22px; font-size: 14px; }
-  .global-home__hero { min-height: calc(100svh - 88px); padding-top: clamp(48px,7svh,68px); }
-  .global-home__hero-main { min-height: 420px; padding-block: 0 164px; }
-  .global-home__hero h1 { max-width: 420px; font-size: clamp(32px,8vw,40px); line-height: 1.04; letter-spacing: -.04em; }
-  .global-home__hero-title-prefix { display: block; }
-  .global-home__hero-title-spacer { display: none; }
-  .global-home__hero-word-rotator { display: grid; width: 100%; margin-top: .12em; text-align: center; }
-  .global-home__hero-actions { --hero-cta-width: 250px; grid-template-columns: minmax(0,var(--hero-cta-width)); }
-  .global-home__hero-testimonial { top: calc(100% + 8px); }
-  .global-home__hero-proof { flex-direction: column; gap: 12px; font-size: 13px; }
-  .global-home__hero-reference-label { margin-bottom: 14px; }
-  .global-home__hero-reference-marquee { mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
-  .global-home__hero-reference-track { animation-duration: 22s; }
-  .global-home__hero-reference-group { gap: 8px; padding-right: 8px; }
-  .global-home__reference { width: 160px; height: 58px; gap: 8px; font-size: 11px; }
-  .global-home__reference img { width: 28px; height: 28px; flex-basis: 28px; }
-  .global-home__reference--shika img { width: 68px; flex-basis: 68px; }
-  .global-home__reference--abri-toi img, .global-home__reference--newlense img { width: 100px; height: 34px; flex-basis: 100px; }
-  .home-business-content__separator { margin-block: 24px; }
-  .projects-showcase__link { width: fit-content; }
-  .projects-showcase__frame { margin-top: 32px; border-radius: 20px; background-size: 32px 32px; }
-  .offers-feature__heading { gap: 18px; }
-  .offers-feature__image { border-radius: 16px; }
-}
-
-@media (min-width: 1024px) {
-  .global-home__hero h1.global-home__hero-title--two-lines { max-width: 1280px; font-size: clamp(36px,3.8vw,58px); }
-  .global-home__hero-title--two-lines .global-home__hero-title-prefix { display: block; white-space: nowrap; }
-  .global-home__hero-title--two-lines .global-home__hero-title-spacer { display: none; }
-  .global-home__hero-title--two-lines .global-home__hero-word-rotator { white-space: nowrap; }
-  .world-card__title { min-height: 2.88em; }
-  .world-card__body { min-height: 3.5rem; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .global-home__hero h1, .global-home__hero p, .global-home__hero-actions, .global-home__hero-references { animation: none; }
-  .global-home__hero-reference-track { animation: none; }
-  .global-home-hero-word-enter-active, .global-home-hero-word-leave-active { transition: none; }
-  .global-home__hero-orb, .project-teaser { transition: none; animation: none; transform: none; }
-  .world-card__arrow, .world-card__cta-arrow { transition: none; }
-  .world-card:hover .world-card__arrow, .world-card:hover .world-card__cta-arrow { transform: none; }
-}
-</style>
+<style scoped src="../assets/css/flagship.css"></style>
