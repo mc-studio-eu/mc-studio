@@ -274,7 +274,7 @@ async function submit() {
         <div v-if="showCalendar" id="booking-calendar">
           <iframe
             class="contact-studio__calendar"
-            src="https://cal.com/mc-studio/discutons-de-votre-projet?embed=true&theme=dark"
+            src="https://cal.com/mc-studio/discutons-de-votre-projet?embed=true&theme=light"
             title="Réserver un échange avec MC Studio"
             loading="lazy"
           />
@@ -295,6 +295,9 @@ async function submit() {
 </template>
 
 <style scoped>
+.contact-studio .studio-page__hero { padding-block: clamp(55px, 6.5vw, 100px) clamp(27px, 3.9vw, 64px); }
+.contact-studio .studio-page__section { padding-top: clamp(28px, 4.6vw, 72px); }
+.contact-studio .studio-page__section h2 { font-size: clamp(2.65rem, 4.1vw, 4.6rem); }
 .contact-studio__person {
   display: flex;
   align-items: center;
@@ -302,9 +305,10 @@ async function submit() {
   margin: 32px 0 18px;
 }
 .contact-studio__person img {
-  border-radius: 50%;
   object-fit: cover;
+  object-position: 48% 43%;
   height: 72px;
+  filter: grayscale(1) sepia(.12);
 }
 .contact-studio__person strong,
 .contact-studio__person span {
@@ -312,7 +316,7 @@ async function submit() {
 }
 .contact-studio__person span {
   font-size: 13px;
-  color: #b8b5ae;
+  color: var(--editorial-muted);
   margin-top: 5px;
 }
 .contact-studio__alternatives {
@@ -323,7 +327,7 @@ async function submit() {
 }
 .contact-studio__fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px 20px;
 }
 .contact-studio__full {
@@ -340,28 +344,28 @@ async function submit() {
 .contact-studio__form textarea {
   width: 100%;
   min-width: 0;
-  background: #191919;
-  color: #f5f3ee;
-  border: 1px solid #ffffff38;
-  border-radius: 4px;
+  background: #fbf8f1;
+  color: var(--editorial-ink);
+  border: 1px solid #857d6d80;
+  border-radius: 0;
   padding: 14px;
   font:
     400 16px/1.5 'Host Grotesk',
     sans-serif;
   min-height: 52px;
-  color-scheme: dark;
+  color-scheme: light;
 }
 .contact-studio__form textarea {
   resize: vertical;
 }
 .contact-studio__form input::placeholder,
 .contact-studio__form textarea::placeholder {
-  color: #95938e;
+  color: #625c52;
 }
 .contact-studio__hint {
   font-size: 12px;
   line-height: 1.7;
-  color: #aaa69e;
+  color: var(--editorial-muted);
   margin: 0 0 24px;
 }
 .contact-studio__fields + .contact-studio__hint {
@@ -370,7 +374,7 @@ async function submit() {
 .contact-studio__hint a {
   text-decoration: underline;
   text-underline-offset: 3px;
-  color: #e4dfd5;
+  color: var(--editorial-ink);
 }
 .contact-studio__trap {
   position: absolute;
@@ -380,7 +384,7 @@ async function submit() {
   clip-path: inset(50%);
 }
 .contact-studio__error {
-  color: #ffc4b5;
+  color: #9d261b;
   margin-bottom: 24px;
 }
 .contact-studio__form button:disabled {
@@ -389,8 +393,8 @@ async function submit() {
 }
 .contact-studio__success {
   padding: 32px;
-  background: #191919;
-  border-top: 2px solid #f0bf6c;
+  background: #e9e0d0;
+  border-top: 2px solid var(--editorial-gold);
 }
 .contact-studio__success p {
   line-height: 1.7;

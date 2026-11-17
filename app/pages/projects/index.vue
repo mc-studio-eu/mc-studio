@@ -12,7 +12,6 @@ const groups = [
     title: 'Applications clients',
     items: [
       ...priority.map((slug) => projects.find((p) => p.slug === slug)!),
-
     ],
   },
   {
@@ -35,7 +34,7 @@ useStudioSeo(
 )
 </script>
 <template>
-  <div class="studio-page">
+  <div class="studio-page studio-work-index">
     <StudioNavbar />
     <main class="studio-page__wrap">
       <header class="studio-page__hero">
@@ -47,9 +46,10 @@ useStudioSeo(
         </p>
       </header>
       <section
-        v-for="group in groups"
+        v-for="(group, index) in groups"
         :key="group.title"
         class="studio-page__section"
+        :class="{ 'studio-work-index__lead': index === 0 }"
       >
         <h2>{{ group.title }}</h2>
         <div class="work-grid">
@@ -84,53 +84,52 @@ useStudioSeo(
   </div>
 </template>
 <style scoped>
+.studio-work-index .studio-page__section > h2 {
+  margin-bottom: 30px;
+  font-family: 'Host Grotesk', sans-serif;
+  font-size: clamp(1.65rem, 2.8vw, 2.9rem);
+  font-weight: 460;
+  letter-spacing: -.055em;
+}
 .work-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 56px 32px;
+  gap: clamp(29px, 4.8vw, 68px) clamp(18px, 4vw, 58px);
 }
-.work-entry {
-  display: block;
-  text-decoration: none;
-  color: inherit;
+.studio-work-index__lead .work-grid {
+  grid-template-columns: minmax(0, 1.34fr) minmax(0, 1fr);
+  align-items: start;
 }
-.work-image {
-  overflow: hidden;
-  background: #20201e;
-}
+.studio-work-index__lead .work-entry:nth-child(2) { margin-top: clamp(15px, 5vw, 68px); }
+.work-entry { display: block; text-decoration: none; color: inherit; }
+.work-image { overflow: hidden; background: #e5ded0; }
 .work-image img {
+  display: block;
   width: 100%;
   aspect-ratio: 1.6;
   object-fit: cover;
-  transition: transform 0.45s ease;
+  transition: transform .45s ease;
 }
-.work-entry:hover img {
-  transform: scale(1.025);
-}
+.studio-work-index__lead .work-entry:first-child img { aspect-ratio: 1.27; }
+.work-entry:hover img { transform: scale(1.025); }
 .work-entry h3 {
   display: flex;
   justify-content: space-between;
-  font-size: clamp(24px, 3vw, 42px);
-  letter-spacing: -0.045em;
-  margin-top: 16px;
+  gap: 12px;
+  margin: 16px 0 5px;
+  padding-top: 13px;
+  border-top: 1px solid var(--editorial-rule);
+  font-size: clamp(1.4rem, 2.75vw, 2.6rem);
+  letter-spacing: -.045em;
+  line-height: 1.1;
 }
-.work-entry span {
-  color: #f0bf6c;
-}
-.work-entry p {
-  color: #b8b5ae;
-  line-height: 1.6;
-  max-width: 52ch;
-}
+.work-entry span { color: var(--editorial-gold); }
+.work-entry p { max-width: 53ch; color: var(--editorial-muted); line-height: 1.55; }
 @media (max-width: 700px) {
-  .work-grid {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
+  .work-grid, .studio-work-index__lead .work-grid { grid-template-columns: minmax(0, 1fr); }
+  .studio-work-index__lead .work-entry:nth-child(2) { margin-top: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .work-entry:hover img {
-    transform: none;
-  }
+  .work-entry:hover img { transform: none; }
 }
 </style>

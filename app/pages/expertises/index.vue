@@ -34,7 +34,6 @@ useStudioSeo(
           :key="item.slug"
           class="studio-page__row"
         >
-          <span class="studio-page__number">{{ item.number }}</span>
           <div>
             <h2>{{ item.title }}</h2>
             <NuxtLink

@@ -23,8 +23,8 @@ useStudioSeo(
         <NuxtLink class="studio-page__text-link" :to="localePath('/expertises')"
           >← Toutes les expertises</NuxtLink
         >
-        <p class="studio-page__eyebrow" style="margin-top: 36px">
-          {{ expertise.number }} / {{ expertise.title }}
+        <p class="studio-page__context">
+          {{ expertise.title }}
         </p>
         <h1>{{ expertise.headline }}</h1>
         <p class="studio-page__lead">{{ expertise.intro }}</p>
@@ -36,11 +36,10 @@ useStudioSeo(
         <p class="studio-page__eyebrow">Les usages</p>
         <h2>{{ expertise.audience }}</h2>
         <article
-          v-for="(use, i) in expertise.uses"
+          v-for="use in expertise.uses"
           :key="use[0]"
           class="studio-page__row"
         >
-          <span class="studio-page__number">0{{ i + 1 }}</span>
           <h3>{{ use[0] }}</h3>
           <p>{{ use[1] }}</p>
         </article>

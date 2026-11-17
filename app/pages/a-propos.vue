@@ -16,7 +16,7 @@ useStudioSeo(
       <header class="studio-page__hero studio-page__split founder-intro">
         <div>
           <p class="studio-page__eyebrow">Le fondateur</p>
-          <h1>Mohamed Chettah</h1>
+          <h1>Mohamed<br />Chettah</h1>
           <p class="studio-page__lead">
             En 2024, pendant ses études en ingénierie du web, Mohamed crée MC
             Studio. Aujourd’hui, il partage son temps entre les logiciels du
@@ -29,7 +29,8 @@ useStudioSeo(
             >Retrouver Mohamed sur LinkedIn ↗</a
           >
         </div>
-        <img
+        <figure>
+          <img
           src="/img/studio/founder-1280.webp"
           srcset="
             /img/studio/founder-640.webp   640w,
@@ -39,7 +40,9 @@ useStudioSeo(
           alt="Portrait de Mohamed Chettah"
           width="1280"
           height="1125"
-        />
+          />
+          <figcaption>Mohamed Chettah · Fondateur de MC Studio</figcaption>
+        </figure>
       </header>
       <section class="studio-page__section studio-page__split">
         <h2>Du besoin terrain à la première version.</h2>
@@ -109,11 +112,26 @@ useStudioSeo(
 <style scoped>
 .founder-intro {
   align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .82fr);
 }
+.founder-intro figure { margin: 0; min-width: 0; }
 .founder-intro img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 6px;
+  aspect-ratio: .92;
+  object-fit: cover;
+  object-position: 49% 47%;
+  filter: grayscale(1) sepia(.12);
+}
+.founder-intro figcaption {
+  padding: 11px 0 0;
+  border-top: 1px solid var(--editorial-ink);
+  color: var(--editorial-muted);
+  font-size: .83rem;
+}
+@media (max-width: 720px) {
+  .founder-intro { grid-template-columns: minmax(0, 1fr); }
+  .founder-intro img { aspect-ratio: 1.2; }
 }
 </style>
