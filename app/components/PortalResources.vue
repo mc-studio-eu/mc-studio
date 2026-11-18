@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { resourceLabels, resourceIcons, money, portalDate, type PortalResource, type ResourceKind, type PortalMember } from '~/types/portal'
 import { PORTAL_FILE_MAX_BYTES, PORTAL_FILE_QUOTA_BYTES } from '#shared/portal-upload'
+import { portalFilePreview } from '#shared/portal-file-preview'
 const fileMaxMiB = PORTAL_FILE_MAX_BYTES / 1024 / 1024
 const projectQuotaMiB = PORTAL_FILE_QUOTA_BYTES / 1024 / 1024
 const props = defineProps<{projectId:string; kind?:ResourceKind|'assets'|'satisfaction'; initialKind?:ResourceKind|'assets'|'satisfaction'; admin?:boolean;canContribute?:boolean;canReview?:boolean;members?:PortalMember[]}>()
@@ -27,6 +28,29 @@ const uploadProjectId = ref('')
 const projectUploading = computed(()=>uploading.value && uploadProjectId.value===props.projectId)
 const filtered = computed(() => items.value.filter(r=>(r.title+' '+r.description+' '+r.content).toLowerCase().includes(search.value.toLowerCase())))
 const editing = ref(false), editingId = ref(''), reading = ref<PortalResource|null>(null), reviewing = ref<PortalResource|null>(null), feedback = ref('')
+const previewDialog = ref<HTMLDialogElement|null>(null)
+const previewFile = ref<PortalResource|null>(null)
+const previewError = ref(false)
+const previewTitleId = useId()
+const previewFormat = computed(() => previewFile.value ? portalFilePreview(previewFile.value.fileName) : undefined)
+const downloadHref = computed(() => previewFile.value ? `/api/portal/files/${encodeURIComponent(previewFile.value.id)}` : '')
+const previewHref = computed(() => `${downloadHref.value}?preview=1`)
+
+async function openPreview(file: PortalResource) {
+ if (!portalFilePreview(file.fileName) || previewDialog.value?.open) return
+ previewError.value = false
+ previewFile.value = file
+ await nextTick()
+ if (previewFile.value?.id === file.id) previewDialog.value?.showModal()
+}
+
+function closePreview() {
+ previewDialog.value?.close()
+ previewFile.value = null
+}
+
+watch([kind, () => props.projectId], closePreview)
+
 const emptyForm = () => ({title:'',description:'',url:'',content:'',amount:0,status:'available',dueDate:'',global:false})
 const form = reactive(emptyForm())
 const load = async () => {
@@ -159,6 +183,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
     <div><span :class="['pr-badge',r.status]">{{r.projectId===null?'Guide commun':labels[r.status]}}</span></div>
     <div class="pr-date"><template v-if="r.kind==='payment'"><strong class="pr-amount">{{money(r.amount)}}</strong><small>{{portalDate(r.dueDate)}}</small></template><template v-else>{{portalDate(r.createdAt)}}</template></div>
     <div class="pr-actions">
+     <button v-if="r.kind==='file' && r.fileName && r.fileSize>0 && portalFilePreview(r.fileName)" type="button" class="pr-secondary" :aria-label="'Aperçu de '+r.title" @click="openPreview(r)"><UIcon name="i-tabler-eye" aria-hidden="true"/>Aperçu</button>
      <a v-if="r.fileName" class="pr-secondary" :href="`/api/portal/files/${r.id}`" :aria-label="'Télécharger '+r.title"><UIcon name="i-tabler-download"/>Télécharger</a>
      <a v-if="r.url && r.kind!=='payment'" class="pr-secondary" :href="r.url" target="_blank" rel="noopener noreferrer">Ouvrir<UIcon name="i-tabler-arrow-up-right"/></a>
      <button v-if="r.kind==='wiki' && r.content" class="pr-secondary" @click="reading=r">Lire<UIcon name="i-tabler-arrow-up-right"/></button>
@@ -183,6 +208,25 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
   </div>
   </template>
   </template>
+  <dialog ref="previewDialog" class="pr-file-preview" :aria-labelledby="previewTitleId" @cancel.prevent="closePreview" @click.self="closePreview">
+   <template v-if="previewFile">
+    <header class="pr-preview-header">
+     <div><h2 :id="previewTitleId">{{previewFile.title}}</h2><p v-if="previewFile.fileName!==previewFile.title">{{previewFile.fileName}}</p></div>
+     <button type="button" class="pr-icon-button" aria-label="Fermer l’aperçu" autofocus @click="closePreview"><UIcon name="i-tabler-x" aria-hidden="true"/></button>
+    </header>
+    <div class="pr-preview-content" :class="{'pr-preview-pdf':previewFormat?.kind==='pdf'}">
+     <p v-if="previewError" role="status">L’aperçu n’est pas disponible. Vous pouvez télécharger le fichier.</p>
+     <iframe v-else-if="previewFormat?.kind==='pdf'" :src="previewHref" :title="`PDF · ${previewFile.title}`" referrerpolicy="no-referrer"/>
+     <img v-else-if="previewFormat?.kind==='image'" :src="previewHref" :alt="previewFile.title" @error="previewError=true"/>
+     <video v-else-if="previewFormat?.kind==='video'" :src="previewHref" :aria-label="previewFile.title" controls playsinline preload="metadata" @error="previewError=true"/>
+     <audio v-else-if="previewFormat?.kind==='audio'" :src="previewHref" :aria-label="previewFile.title" controls preload="metadata" @error="previewError=true"/>
+    </div>
+    <footer class="pr-preview-actions">
+     <a v-if="previewFormat?.kind==='pdf'" class="pr-secondary" :href="previewHref" target="_blank" rel="noopener noreferrer">Ouvrir le PDF<UIcon name="i-tabler-external-link" aria-hidden="true"/></a>
+     <a class="pr-secondary" :href="downloadHref"><UIcon name="i-tabler-download" aria-hidden="true"/>Télécharger</a>
+    </footer>
+   </template>
+  </dialog>
  </section>
 </template>
 <style scoped>
@@ -213,6 +257,20 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-icon-button{display:inline-grid;place-items:center;min-width:36px;height:40px;padding:0;border:1px solid var(--portal-line);background:var(--portal-raised);border-radius:8px;color:var(--portal-muted);font-size:17px!important}
 .pr-delete-button{color:var(--portal-danger)!important}
 .pr-delete-button:hover{background:var(--portal-danger-soft)}
+.pr-file-preview{position:fixed;inset:0;margin:auto;padding:0;width:min(1000px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - 32px);overflow:auto;border:1px solid var(--portal-line);border-radius:12px;background:var(--portal-surface);color:var(--portal-text)}
+.pr-file-preview::backdrop{background:rgba(0,0,0,.68)}
+.pr-preview-header,.pr-preview-actions{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--portal-surface)}
+.pr-preview-header{justify-content:space-between;border-bottom:1px solid var(--portal-line)}
+.pr-preview-header>div{min-width:0;overflow-wrap:anywhere}
+.pr-preview-header h2{font-size:clamp(1.05rem,3vw,1.4rem);margin:0}
+.pr-preview-header p{margin:2px 0 0}
+.pr-preview-header button{flex:none}
+.pr-preview-content{display:grid;place-items:center;min-height:100px;background:var(--portal-raised);padding:12px}
+.pr-preview-content :is(img,video){display:block;max-width:100%;max-height:min(66dvh,700px);object-fit:contain}
+.pr-preview-content audio{width:min(100%,520px)}
+.pr-preview-content.pr-preview-pdf{padding:0}
+.pr-preview-content iframe{display:block;width:100%;height:clamp(180px,calc(100dvh - 164px),720px);border:0;background:#fff}
+.pr-preview-actions{justify-content:flex-end;flex-wrap:wrap;border-top:1px solid var(--portal-line)}
 .pr-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:24px 0 16px;color:var(--portal-muted);font-size:12px}
 .pr label.pr-search-box{display:flex;align-items:center;gap:8px;margin:0;padding:0 12px;min-height:40px;max-width:280px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-raised)}
 .pr-search-box:focus-within{outline:2px solid var(--portal-accent);outline-offset:2px}
