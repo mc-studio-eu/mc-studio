@@ -169,6 +169,35 @@ try {
     assert.equal((await write('client', base)).status, 403)
     assert.equal((await write('admin', 'https://different.example')).status, 403)
     assert.equal((await write('admin', base)).status, 200)
+    const timer = `${admin}/timer`
+    assert.equal((await fetch(timer)).status, 401)
+    assert.equal((await fetch(timer, { headers: cookie('client') })).status, 403)
+    const initialTimer = await fetch(timer, { headers: cookie('admin') })
+    assert.equal(initialTimer.status, 200)
+    assert.equal(initialTimer.headers.get('cache-control'), 'private, no-store')
+    assert.equal((await initialTimer.json()).active, null)
+    const writeTimer = (role, origin, body) => fetch(timer, { method: 'POST',
+      headers: { ...cookie(role), origin, 'content-type': 'application/json' }, body: JSON.stringify(body) })
+    const timerInput = { action: 'start', projectId, description: 'Test HTTP' }
+    assert.equal((await writeTimer('client', base, timerInput)).status, 403)
+    assert.equal((await writeTimer('admin', 'https://different.example', timerInput)).status, 403)
+    const timerStarted = await writeTimer('admin', base, timerInput)
+    assert.equal(timerStarted.status, 200, await timerStarted.clone().text())
+    const { session: startedSession } = await timerStarted.json()
+    assert.equal((await (await fetch(timer, { headers: cookie('admin') })).json()).active.id, startedSession.id)
+    const timerStopped = await writeTimer('admin', base, { action: 'stop', id: startedSession.id })
+    assert.equal(timerStopped.status, 200, await timerStopped.clone().text())
+    assert.equal((await (await fetch(admin, { headers: cookie('admin') })).json()).timeSessions[0].id, startedSession.id)
+    const clockify = `${base}/api/portal/admin/clockify`
+    assert.equal((await fetch(clockify)).status, 401)
+    assert.equal((await fetch(clockify, { headers: cookie('client') })).status, 403)
+    const clockifyView = await fetch(clockify, { headers: cookie('admin') })
+    assert.equal(clockifyView.status, 200, await clockifyView.clone().text())
+    assert.equal(clockifyView.headers.get('cache-control'), 'private, no-store')
+    const clockifyData = await clockifyView.json()
+    assert.ok(clockifyData.clients.some(client => client.id === organizationId))
+    assert.ok(clockifyData.projects.some(project => project.id === projectId && project.organizationId === organizationId))
+    assert.equal(clockifyData.timeSessions[0].id, startedSession.id)
     for (const path of ['/studio', '/studio/templates']) {
       const url = `${base}/api/portal/admin${path}`
       assert.equal((await fetch(url)).status, 401)

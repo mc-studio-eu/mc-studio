@@ -10,10 +10,10 @@ type Client = { members: TeamMember[]; invitations: TeamInvitation[]; id: string
 const ready = ref(false)
 const loadError = ref('')
 const route = useRoute(), router = useRouter(), localePath = useLocalePath()
-type AdminSection = 'today' | 'commercial' | 'operations' | 'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'
+type AdminSection = 'today' | 'commercial' | 'clockify' | 'operations' | 'clients' | 'projects' | 'growth' | 'assets' | 'account' | 'notifications' | 'storage'
 type ProjectTab = 'roadmap' | 'requests' | 'settings' | 'resources'
 type AdminResource = ResourceKind | 'assets' | 'satisfaction'
-const adminSections: readonly string[] = ['today', 'commercial', 'operations', 'clients', 'projects', 'growth', 'assets', 'account', 'notifications', 'storage']
+const adminSections: readonly string[] = ['today', 'commercial', 'clockify', 'operations', 'clients', 'projects', 'growth', 'assets', 'account', 'notifications', 'storage']
 const isResourceTab = (value: unknown): value is AdminResource => typeof value === 'string' && (value === 'assets' || value === 'satisfaction' || Object.hasOwn(resourceLabels, value))
 const projectTabs = [
   { id: 'roadmap', label: 'Roadmap', icon: 'i-tabler-route' },
@@ -475,6 +475,8 @@ onBeforeUnmount(() => {
 
           <button :class="{ active: section === 'commercial' }" :aria-current="section === 'commercial' ? 'page' : undefined" @click="goToSection('commercial')"><UIcon name="i-tabler-briefcase" />CRM & finances</button>
 
+          <button :class="{ active: section === 'clockify' }" :aria-current="section === 'clockify' ? 'page' : undefined" @click="goToSection('clockify')"><UIcon name="i-tabler-clock" />Clockify</button>
+
           <button :class="{ active: section === 'operations' }" :aria-current="section === 'operations' ? 'page' : undefined" @click="goToSection('operations')"><UIcon name="i-tabler-automation" />Automatisations</button>
 
           <button :class="{ active: section === 'clients' && !selected }" :aria-current="section === 'clients' && !selected ? 'page' : undefined" @click="goToSection('clients')"><UIcon name="i-tabler-users" />Clients</button>
@@ -507,6 +509,7 @@ onBeforeUnmount(() => {
 
           <PortalStudio v-if="section==='today' && !selected" :clients="clients" @project-created="loadClients" @invite="id => { const client = clients.find(client => client.id === id); if (client) startInvite(client) }" />
           <PortalCommercial v-else-if="section==='commercial' && !selected" @changed="loadClients" />
+          <PortalClockify v-else-if="section==='clockify' && !selected" />
           <PortalOperations v-else-if="section==='operations' && !selected" />
           <PortalAccount v-else-if="section==='account' && !selected" :name="adminName" :email="adminEmail"/><PortalNotifications v-else-if="section==='notifications' && !selected" @open-project="openNotificationProject"/><PortalGrowth v-else-if="section==='growth' && !selected"/>
 

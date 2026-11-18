@@ -99,4 +99,15 @@ CREATE TABLE IF NOT EXISTS portal_finance_costs (
  CHECK(minutes > 0 OR cost_cents > 0)
 );
 CREATE INDEX IF NOT EXISTS finance_costs_project_idx ON portal_finance_costs(project_id);
+
+CREATE TABLE IF NOT EXISTS portal_finance_time_sessions (
+ id TEXT PRIMARY KEY, project_id TEXT REFERENCES projects(id) ON DELETE SET NULL, project_name TEXT NOT NULL,
+ actor_id TEXT REFERENCES users(id) ON DELETE SET NULL, description TEXT NOT NULL DEFAULT '',
+ started_at TEXT NOT NULL, stopped_at TEXT, duration_seconds INTEGER,
+ CHECK((stopped_at IS NULL AND duration_seconds IS NULL) OR
+       (stopped_at IS NOT NULL AND duration_seconds IS NOT NULL AND duration_seconds >= 0 AND stopped_at >= started_at))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS finance_time_active_actor_idx ON portal_finance_time_sessions(actor_id) WHERE stopped_at IS NULL;
+CREATE INDEX IF NOT EXISTS finance_time_stopped_idx ON portal_finance_time_sessions(stopped_at DESC,id) WHERE stopped_at IS NOT NULL;
+CREATE INDEX IF NOT EXISTS finance_time_project_idx ON portal_finance_time_sessions(project_id);
 `

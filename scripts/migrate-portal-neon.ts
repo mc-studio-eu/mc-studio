@@ -21,7 +21,7 @@ try {
     'portal_studio_template_versions','portal_studio_launches','portal_studio_request_qualification',
     'portal_crm_contacts','portal_crm_opportunities','portal_crm_opportunity_history','portal_crm_calls',
     'portal_crm_documents','portal_crm_document_versions','portal_crm_signatures',
-    'portal_finance_invoices','portal_finance_installments','portal_finance_entries','portal_finance_budgets','portal_finance_costs',
+    'portal_finance_invoices','portal_finance_installments','portal_finance_entries','portal_finance_budgets','portal_finance_costs','portal_finance_time_sessions',
     'portal_contact_submissions']
    const keys: Record<string, string[]> = {
     sessions: ['token_hash'], portal_password_resets: ['token_hash'], portal_settings: ['key'],

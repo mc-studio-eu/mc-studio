@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { createError } from 'h3'
 import { roadmapDate } from '../../shared/portal-roadmap.ts'
 import type { PortalDatabase } from './portal-db.ts'
+import { readProjectTimeHistory } from './portal-project-timer.ts'
 
 type Input = Record<string, unknown>
 type EntrySource = 'manual' | 'webhook'
@@ -550,6 +551,7 @@ export async function commercialSnapshot(db: PortalDatabase) {
       c.occurred_on AS occurredOn,c.minutes,c.cost_cents AS costCents,u.name AS author
       FROM portal_finance_costs c LEFT JOIN projects p ON p.id=c.project_id LEFT JOIN users u ON u.id=c.created_by
       ORDER BY c.occurred_on DESC,c.created_at DESC,c.id`).all()
+    const timeSessions = await readProjectTimeHistory(tx)
 
     const outstanding = await commercialOutstanding(tx)
     const currentDate = today()
@@ -560,7 +562,7 @@ export async function commercialSnapshot(db: PortalDatabase) {
       refunds: installments.reduce((sum, term) => sum + term.refunds, 0),
     }
     return { contacts, opportunities, history, calls, documents, versions, organizations, projects, invoices, installments,
-      entries, costs, outstanding, summary, today: currentDate }
+      entries, costs, timeSessions, outstanding, summary, today: currentDate }
   })
 }
 

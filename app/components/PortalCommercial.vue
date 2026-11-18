@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { portalProjectTimeSeconds, portalTimerDuration, type PortalTimeSession } from '#shared/portal-project-timer'
+
 interface Contact {
   id: string; name: string; company: string; email: string; phone: string; role: string; notes: string
   organizationId: string | null; organizationName: string | null; archivedAt: string | null
@@ -45,7 +47,7 @@ interface Snapshot {
     snapshot: Partial<Opportunity> & { message?: string; audience?: string; social?: string } }>
   calls: Call[]; documents: CommercialDocument[]; versions: Version[]
   organizations: Array<{ id: string; name: string }>; projects: Project[]
-  invoices: Invoice[]; installments: Installment[]; entries: Entry[]; costs: Cost[]
+  invoices: Invoice[]; installments: Installment[]; entries: Entry[]; costs: Cost[]; timeSessions: PortalTimeSession[]
   outstanding: Array<Installment & { title: string; reference: string; organizationName: string }>
   summary: { expectedCents: number; overdueCents: number; receipts: number; refunds: number }
 }
@@ -80,6 +82,7 @@ const activeOpportunityId = ref('')
 const activeContactId = ref('')
 const activeInvoiceId = ref('')
 const activeProjectId = ref('')
+const projectTimer = ref<{ canStart: boolean; start: (description: string) => void }>()
 const activeOpportunity = computed(() => snapshot.value?.opportunities.find(item => item.id === activeOpportunityId.value))
 const activeContact = computed(() => snapshot.value?.contacts.find(item => item.id === activeContactId.value))
 const activeInvoice = computed(() => snapshot.value?.invoices.find(item => item.id === activeInvoiceId.value))
@@ -91,8 +94,15 @@ const activeCalls = computed(() => snapshot.value?.calls.filter(item => item.opp
 const activeDocuments = computed(() => snapshot.value?.documents.filter(item => item.opportunityId === activeOpportunityId.value) || [])
 const activeHistory = computed(() => snapshot.value?.history.filter(item => item.opportunityId === activeOpportunityId.value) || [])
 const activeCosts = computed(() => snapshot.value?.costs.filter(item => item.projectId === activeProjectId.value) || [])
+const activeSessions = computed(() => snapshot.value?.timeSessions.filter(item => item.projectId === activeProjectId.value) || [])
+const orphanSessions = computed(() => snapshot.value?.timeSessions.filter(item => !item.projectId) || [])
+const lastStoppedSessionId = computed(() => snapshot.value?.timeSessions[0]?.id ?? null)
 const costTotal = computed(() => activeCosts.value.reduce((sum, item) => sum + item.costCents, 0))
-const minutesTotal = computed(() => activeCosts.value.reduce((sum, item) => sum + item.minutes, 0))
+const secondsTotal = computed(() => portalProjectTimeSeconds(activeCosts.value, activeSessions.value))
+const timeVariance = computed(() => {
+  const difference = secondsTotal.value - (activeProject.value?.estimatedMinutes ?? 0) * 60
+  return `${difference < 0 ? '−' : difference > 0 ? '+' : ''}${portalTimerDuration(Math.abs(difference))}`
+})
 const orphanCosts = computed(() => snapshot.value?.costs.filter(item => !item.projectId) || [])
 const billedInvoices = computed(() => snapshot.value?.invoices.filter(item => item.projectId === activeProjectId.value && !item.cancelledAt) || [])
 const billed = computed(() => billedInvoices.value.reduce((sum, item) => sum + item.netCents, 0))
@@ -802,10 +812,12 @@ onMounted(refresh)
             </select>
           </label>
         </div>
+        <PortalProjectTimer ref="projectTimer" :project="activeProject" :last-stopped-session-id="lastStoppedSessionId"
+          @recorded="refresh" @history-changed="refresh" />
         <template v-if="activeProject">
           <dl class="metrics">
             <div class="panel"><dt>Temps estimé</dt><dd>{{ activeProject.estimatedMinutes != null ? minutes(activeProject.estimatedMinutes) : '—' }}</dd></div>
-            <div class="panel"><dt>Temps saisi</dt><dd>{{ activeCosts.length ? minutes(minutesTotal) : '—' }}</dd></div>
+            <div class="panel"><dt>Temps saisi</dt><dd>{{ activeCosts.length || activeSessions.length ? portalTimerDuration(secondsTotal) : '—' }}</dd></div>
             <div class="panel"><dt>Coûts HT estimés</dt><dd>{{ activeProject.estimatedCents != null ? money(activeProject.estimatedCents) : '—' }}</dd></div>
             <div class="panel"><dt>Coûts HT saisis</dt><dd>{{ activeCosts.length ? money(costTotal) : '—' }}</dd></div>
           </dl>
@@ -818,17 +830,26 @@ onMounted(refresh)
               <div><dt>Facturé HT</dt><dd>{{ billedInvoices.length ? money(billed) : '—' }}</dd></div>
               <div><dt>Facturé HT moins coûts estimés</dt><dd>{{ estimatedMargin != null ? money(estimatedMargin) : '—' }}</dd></div>
               <div><dt>Facturé HT moins coûts saisis</dt><dd>{{ margin != null ? money(margin) : '—' }}</dd></div>
-              <div v-if="activeProject.estimatedMinutes != null && activeCosts.length"><dt>Écart de temps réel / estimé</dt><dd>{{ minutesTotal - activeProject.estimatedMinutes }} min</dd></div>
+              <div v-if="activeProject.estimatedMinutes != null && (activeCosts.length || activeSessions.length)"><dt>Écart de temps réel / estimé</dt><dd>{{ timeVariance }}</dd></div>
               <div v-if="activeProject.estimatedCents != null && activeCosts.length"><dt>Écart de coût réel / estimé</dt><dd>{{ money(costTotal - activeProject.estimatedCents) }}</dd></div>
             </dl>
-            <p class="muted">Le calcul utilise les factures actives et les coûts HT saisis. Renseignez le coût du temps dans chaque saisie concernée. Les remboursements affectent la trésorerie. Pour ajuster le facturé HT, annulez la facture lorsque le solde encaissé est nul et référencez le document de remplacement.</p>
+            <p class="muted">Le calcul utilise les factures actives et les coûts HT saisis. Le chronomètre enregistre la durée. Pour comptabiliser aussi le coût de ce temps, ajoutez une saisie avec une durée de 0 min. Les remboursements affectent la trésorerie. Pour ajuster le facturé HT, annulez la facture lorsque le solde encaissé est nul et référencez le document de remplacement.</p>
           </section>
           <section class="panel">
             <header class="heading">
               <h3>Temps et coûts réels</h3>
               <button type="button" class="portal-primary" :disabled="working" @click="editCost()">Ajouter une saisie</button>
             </header>
-            <p v-if="!activeCosts.length" class="muted">Aucune saisie pour ce projet.</p>
+            <p v-if="!activeCosts.length && !activeSessions.length" class="muted">Aucune saisie pour ce projet.</p>
+            <article v-for="item in activeSessions" :key="item.id" class="subitem">
+              <header class="heading">
+                <div>
+                  <p><strong>{{ item.description || 'Session chronométrée' }}</strong> <span class="badge">Chronomètre</span></p>
+                  <p>{{ timestamp(item.startedAt) }} · {{ portalTimerDuration(item.durationSeconds ?? 0) }}<span v-if="item.author"> · {{ item.author }}</span></p>
+                </div>
+                <button type="button" class="quiet-button" :disabled="working || !projectTimer?.canStart" @click="projectTimer?.start(item.description)">Relancer</button>
+              </header>
+            </article>
             <article v-for="item in activeCosts" :key="item.id" class="subitem">
               <header class="heading">
                 <div><p><strong>{{ item.label }}</strong></p><p>{{ when(item.occurredOn) }} · {{ minutes(item.minutes) }} · {{ money(item.costCents) }} HT</p></div>
@@ -842,9 +863,10 @@ onMounted(refresh)
         </template>
         <p v-else class="muted">Créez un projet pour suivre ses coûts et son temps.</p>
 
-        <details v-if="orphanCosts.length" class="panel orphan-costs">
+        <details v-if="orphanCosts.length || orphanSessions.length" class="panel orphan-costs">
           <summary>Saisies conservées de projets supprimés</summary>
           <ol class="record-list">
+            <li v-for="item in orphanSessions" :key="item.id">{{ item.projectName }} · {{ item.description || 'Session chronométrée' }} · {{ timestamp(item.startedAt) }} · {{ portalTimerDuration(item.durationSeconds ?? 0) }}</li>
             <li v-for="item in orphanCosts" :key="item.id">{{ item.projectName }} · {{ item.label }} · {{ when(item.occurredOn) }} · {{ minutes(item.minutes) }} · {{ money(item.costCents) }} HT</li>
           </ol>
         </details>
