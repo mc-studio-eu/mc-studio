@@ -208,7 +208,8 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
   </div>
   </template>
   </template>
-  <dialog ref="previewDialog" class="pr-file-preview" :aria-labelledby="previewTitleId" @cancel.prevent="closePreview" @click.self="closePreview">
+  <dialog ref="previewDialog" class="pr-file-preview" :class="{'pr-file-preview-document':previewFormat?.kind==='pdf'}"
+   :aria-labelledby="previewTitleId" @cancel.prevent="closePreview" @click.self="closePreview">
    <template v-if="previewFile">
     <header class="pr-preview-header">
      <div><h2 :id="previewTitleId">{{previewFile.title}}</h2><p v-if="previewFile.fileName!==previewFile.title">{{previewFile.fileName}}</p></div>
@@ -258,6 +259,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-delete-button{color:var(--portal-danger)!important}
 .pr-delete-button:hover{background:var(--portal-danger-soft)}
 .pr-file-preview{position:fixed;inset:0;margin:auto;padding:0;width:min(1000px,calc(100% - 32px));max-width:none;max-height:calc(100dvh - 32px);overflow:auto;border:1px solid var(--portal-line);border-radius:12px;background:var(--portal-surface);color:var(--portal-text)}
+.pr-file-preview-document[open]{display:grid;grid-template-rows:auto minmax(100px,1fr) auto;height:min(840px,calc(100dvh - 32px))}
 .pr-file-preview::backdrop{background:rgba(0,0,0,.68)}
 .pr-preview-header,.pr-preview-actions{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--portal-surface)}
 .pr-preview-header{justify-content:space-between;border-bottom:1px solid var(--portal-line)}
@@ -269,7 +271,7 @@ const labels:Record<string,string>={due:'À régler',paid:'Réglé',cancelled:'A
 .pr-preview-content :is(img,video){display:block;max-width:100%;max-height:min(66dvh,700px);object-fit:contain}
 .pr-preview-content audio{width:min(100%,520px)}
 .pr-preview-content.pr-preview-pdf{padding:0}
-.pr-preview-content iframe{display:block;width:100%;height:clamp(180px,calc(100dvh - 164px),720px);border:0;background:#fff}
+.pr-preview-content iframe{display:block;width:100%;height:100%;border:0;background:#fff}
 .pr-preview-actions{justify-content:flex-end;flex-wrap:wrap;border-top:1px solid var(--portal-line)}
 .pr-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:24px 0 16px;color:var(--portal-muted);font-size:12px}
 .pr label.pr-search-box{display:flex;align-items:center;gap:8px;margin:0;padding:0 12px;min-height:40px;max-width:280px;border:1px solid var(--portal-line);border-radius:8px;background:var(--portal-raised)}
