@@ -198,6 +198,18 @@ try {
     assert.ok(clockifyData.clients.some(client => client.id === organizationId))
     assert.ok(clockifyData.projects.some(project => project.id === projectId && project.organizationId === organizationId))
     assert.equal(clockifyData.timeSessions[0].id, startedSession.id)
+    const stoppedSession = clockifyData.timeSessions[0]
+    const deleteSession = { action: 'deleteSession', id: stoppedSession.id, expected: {
+      projectId: stoppedSession.projectId, description: stoppedSession.description, startedAt: stoppedSession.startedAt,
+      stoppedAt: stoppedSession.stoppedAt, durationSeconds: stoppedSession.durationSeconds,
+    } }
+    assert.equal((await writeTimer('client', base, deleteSession)).status, 403)
+    assert.equal((await writeTimer('admin', 'https://different.example', deleteSession)).status, 403)
+    const deletedSession = await writeTimer('admin', base, deleteSession)
+    assert.equal(deletedSession.status, 200, await deletedSession.clone().text())
+    assert.deepEqual(await deletedSession.json(), { id: stoppedSession.id, deleted: true })
+    assert.deepEqual(await (await writeTimer('admin', base, deleteSession)).json(), { id: stoppedSession.id, deleted: false })
+    assert.ok(!(await (await fetch(clockify, { headers: cookie('admin') })).json()).timeSessions.some(session => session.id === stoppedSession.id))
     for (const path of ['/studio', '/studio/templates']) {
       const url = `${base}/api/portal/admin${path}`
       assert.equal((await fetch(url)).status, 401)
