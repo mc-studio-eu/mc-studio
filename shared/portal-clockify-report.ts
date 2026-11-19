@@ -1,8 +1,15 @@
 import { clockifyLocalDate, type PortalClockifySnapshot } from './portal-clockify.ts'
 
 export type ClockifyReportPeriod = 'week' | 'month'
-export interface ClockifyReportRange { start: string; end: string; dates: string[] }
+export interface ClockifyReportRange {
+  start: string
+  end: string
+  dates: string[]
+  aggregation: 'day' | 'month' | 'year'
+  bucketYears: number
+}
 export interface ClockifyReportGroup { key: string; name: string; detail: string; seconds: number }
+export interface ClockifyReportFilters { clientId?: string; projectId?: string }
 
 export function clockifyReportDate(value: unknown): value is string {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
@@ -25,13 +32,33 @@ export function clockifyReportRange(anchor: string, period: ClockifyReportPeriod
   const last = new Date(first)
   if (period === 'month') last.setUTCMonth(last.getUTCMonth() + 1, 0)
   else last.setUTCDate(last.getUTCDate() + 6)
+  return buildRange(dateString(first), dateString(last))
+}
+
+function buildRange(start: string, end: string): ClockifyReportRange {
+  const first = dayDate(start)
+  const last = dayDate(end)
+  const dayCount = Math.round((last.getTime() - first.getTime()) / 86400000) + 1
+  const monthCount = (last.getUTCFullYear() - first.getUTCFullYear()) * 12 + last.getUTCMonth() - first.getUTCMonth() + 1
+  const aggregation = dayCount <= 62 ? 'day' : monthCount <= 36 ? 'month' : 'year'
+  const bucketYears = aggregation === 'year' ? Math.ceil((last.getUTCFullYear() - first.getUTCFullYear() + 1) / 60) : 1
   const dates: string[] = []
   const cursor = new Date(first)
   while (cursor <= last) {
     dates.push(dateString(cursor))
-    cursor.setUTCDate(cursor.getUTCDate() + 1)
+    if (aggregation === 'day') cursor.setUTCDate(cursor.getUTCDate() + 1)
+    else if (aggregation === 'month') cursor.setUTCMonth(cursor.getUTCMonth() + 1, 1)
+    else {
+      cursor.setUTCMonth(0, 1)
+      cursor.setUTCFullYear(cursor.getUTCFullYear() + bucketYears)
+    }
   }
-  return { start: dateString(first), end: dateString(last), dates }
+  return { start, end, dates, aggregation, bucketYears }
+}
+
+export function clockifyReportCustomRange(start: string, end: string): ClockifyReportRange | undefined {
+  if (!clockifyReportDate(start) || !clockifyReportDate(end) || start > end) return
+  return buildRange(start, end)
 }
 
 export function clockifyReportMove(anchor: string, period: ClockifyReportPeriod, direction: -1 | 1) {
@@ -43,9 +70,12 @@ export function clockifyReportMove(anchor: string, period: ClockifyReportPeriod,
   return dateString(date)
 }
 
-export function clockifyReport(data: PortalClockifySnapshot, range: ClockifyReportRange) {
-  const days = range.dates.map(date => ({ date, seconds: 0 }))
-  const dayByDate = new Map(days.map(day => [day.date, day]))
+export function clockifyReport(data: PortalClockifySnapshot, range: ClockifyReportRange, filters: ClockifyReportFilters = {}) {
+  const days = range.dates.map((date, index) => {
+    const nextDate = range.dates[index + 1]
+    const end = nextDate ? new Date(dayDate(nextDate).getTime() - 86400000) : dayDate(range.end)
+    return { date, endDate: dateString(end), seconds: 0 }
+  })
   const projectById = new Map(data.projects.map(project => [project.id, project]))
   const clientById = new Map(data.clients.map(client => [client.id, client]))
   const projects = new Map<string, ClockifyReportGroup>()
@@ -61,13 +91,16 @@ export function clockifyReport(data: PortalClockifySnapshot, range: ClockifyRepo
 
   for (const session of data.timeSessions) {
     if (session.stoppedAt === null || session.durationSeconds === null) continue
-    const day = dayByDate.get(clockifyLocalDate(session.startedAt))
+    if (filters.projectId && session.projectId !== filters.projectId) continue
+    const project = session.projectId ? projectById.get(session.projectId) : undefined
+    if (filters.clientId && project?.organizationId !== filters.clientId) continue
+    const date = clockifyLocalDate(session.startedAt)
+    const day = days.find(bucket => date >= bucket.date && date <= bucket.endDate)
     if (!day) continue
     const seconds = session.durationSeconds
     day.seconds += seconds
     totalSeconds += seconds
     sessionCount++
-    const project = session.projectId ? projectById.get(session.projectId) : undefined
     const client = project ? clientById.get(project.organizationId) : undefined
     add(projects, project?.id ?? `deleted:${session.projectName}`, project?.name ?? session.projectName,
       client?.name ?? 'Projet supprimé', seconds)

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict'
-import { clockifyReport, clockifyReportDate, clockifyReportMove, clockifyReportRange } from '../shared/portal-clockify-report.ts'
+import { clockifyReport, clockifyReportCustomRange, clockifyReportDate, clockifyReportMove, clockifyReportRange } from '../shared/portal-clockify-report.ts'
 
 const session = (id, startedAt, durationSeconds, projectId = 'site', projectName = 'Site') => ({
   id, startedAt, stoppedAt: durationSeconds === null ? null : new Date(Date.parse(startedAt) + durationSeconds * 1000).toISOString(),
@@ -65,4 +65,63 @@ assert.equal(empty.days.length, 31)
 assert.ok(empty.days.every(day => day.seconds === 0))
 assert.deepEqual(empty.projects, [])
 assert.deepEqual(empty.clients, [])
-console.log('PASS rapport Clockify : semaines/mois, jours Paris et DST, secondes exactes, regroupements et actualisation')
+
+const filteredClient = clockifyReport(data, week, { clientId: 'atelier' })
+assert.equal(filteredClient.totalSeconds, 9000)
+assert.equal(filteredClient.sessionCount, 3)
+assert.deepEqual(filteredClient.clients.map(client => client.key), ['atelier'])
+assert.deepEqual(filteredClient.projects.map(project => project.key), ['site'])
+const filteredProject = clockifyReport(data, week, { projectId: 'app' })
+assert.equal(filteredProject.totalSeconds, 7242)
+assert.equal(filteredProject.days.reduce((total, day) => total + day.seconds, 0), filteredProject.totalSeconds)
+assert.deepEqual(filteredProject.projects.map(project => project.key), ['app'])
+assert.equal(clockifyReport(data, week, { clientId: 'atelier', projectId: 'app' }).totalSeconds, 0)
+assert.equal(clockifyReport(data, week, { projectId: 'deleted-project' }).totalSeconds, 0)
+assert.equal(clockifyReport(data, week, { clientId: 'unknown-client' }).totalSeconds, 0)
+
+assert.equal(clockifyReportCustomRange('2026-02-30', '2026-03-01'), undefined)
+assert.equal(clockifyReportCustomRange('2026-11-20', '2026-11-19'), undefined)
+const singleDay = clockifyReportCustomRange('2026-11-16', '2026-11-16')
+assert.equal(singleDay.dates.length, 1)
+assert.equal(clockifyReport(data, singleDay).totalSeconds, 1800)
+const custom = clockifyReportCustomRange('2026-11-16', '2026-11-17')
+const customReport = clockifyReport(data, custom)
+assert.equal(customReport.totalSeconds, 9042)
+assert.equal(clockifyReport(data, custom, { clientId: 'studio' }).totalSeconds, 7242)
+
+// Inclusive dates use Paris calendar days on both sides of midnight and across DST.
+const edges = { ...data, timeSessions: [
+  session('before', '2026-11-15T22:59:59.000Z', 10),
+  session('first', '2026-11-15T23:00:00.000Z', 20),
+  session('last', '2026-11-16T22:59:59.000Z', 30),
+  session('after', '2026-11-16T23:00:00.000Z', 40),
+] }
+assert.equal(clockifyReport(edges, singleDay).totalSeconds, 50)
+const dstDay = clockifyReportCustomRange('2026-10-25', '2026-10-25')
+assert.equal(clockifyReport({ ...data, timeSessions: [session('summer', '2026-10-25T00:30:00.000Z', 60), session('winter', '2026-10-25T01:30:00.000Z', 120)] }, dstDay).totalSeconds, 180)
+
+const quarter = clockifyReportCustomRange('2026-01-15', '2026-03-21')
+assert.equal(quarter.aggregation, 'month')
+assert.deepEqual(quarter.dates, ['2026-01-15', '2026-02-01', '2026-03-01'])
+const quarterReport = clockifyReport({ ...data, timeSessions: [
+  session('jan', '2026-01-31T10:00:00.000Z', 10),
+  session('feb', '2026-02-01T10:00:00.000Z', 20),
+  session('march', '2026-03-21T10:00:00.000Z', 30),
+  session('outside', '2026-03-22T10:00:00.000Z', 40),
+] }, quarter)
+assert.equal(quarterReport.totalSeconds, 60)
+assert.deepEqual(quarterReport.days.map(day => [day.date, day.endDate, day.seconds]), [
+  ['2026-01-15', '2026-01-31', 10], ['2026-02-01', '2026-02-28', 20], ['2026-03-01', '2026-03-21', 30],
+])
+const decades = clockifyReportCustomRange('1980-01-01', '2026-12-31')
+assert.equal(decades.aggregation, 'year')
+assert.equal(decades.dates.length, 47)
+assert.equal(clockifyReport(data, decades).totalSeconds, data.timeSessions.reduce((sum, session) => sum + (session.durationSeconds ?? 0), 0))
+const enormous = clockifyReportCustomRange('0001-01-01', '9999-12-31')
+assert.ok(enormous.dates.length <= 60)
+assert.ok(enormous.bucketYears > 1)
+const enormousReport = clockifyReport(data, enormous)
+assert.equal(enormousReport.totalSeconds, clockifyReport(data, decades).totalSeconds)
+assert.equal(enormousReport.days.reduce((total, day) => total + day.seconds, 0), enormousReport.totalSeconds)
+assert.equal(enormousReport.days.at(-1).endDate, '9999-12-31')
+console.log('PASS rapport Clockify : filtres combinés, plages Paris inclusives, DST, agrégation bornée, navigation et actualisation')
