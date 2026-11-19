@@ -165,7 +165,37 @@ try {
   assert.equal(sessionDurationSeconds('01:30:00'), 5400)
   assert.equal(sessionDurationSeconds('01:90:00'), null)
 
-  console.log('PASS chronomètre, corrections, saisie manuelle, conflits concurrents, totaux et horaires Paris')
+  const removeSession = (session, actor = 'admin') => projectTimerMutation(db,
+    { action: 'deleteSession', id: session.id, expected: expected(session) }, actor)
+  await assert.rejects(projectTimerMutation(db, { action: 'deleteSession', id: manual.id }, 'admin'), errorStatus(400))
+  await assert.rejects(removeSession(manual), errorStatus(409))
+  assert.ok((await readClockifySnapshot(db)).timeSessions.some(session => session.id === manual.id))
+  const deletingActive = (await start()).session
+  await assert.rejects(removeSession(deletingActive), errorStatus(409))
+  assert.equal((await status()).active.id, deletingActive.id)
+  const beforeDelete = await status()
+  const removed = await Promise.all([removeSession(created[0].session), removeSession(created[0].session, 'other')])
+  assert.deepEqual(removed.map(result => result.deleted).sort(), [false, true])
+  const afterDelete = await status()
+  assert.notEqual(afterDelete.historyRevision, beforeDelete.historyRevision)
+  assert.equal(afterDelete.active.id, deletingActive.id)
+  assert.ok(!(await readClockifySnapshot(db)).timeSessions.some(session => session.id === created[0].session.id))
+  assert.deepEqual(await removeSession(created[0].session), { id: created[0].session.id, deleted: false })
+  assert.equal((await status()).historyRevision, afterDelete.historyRevision)
+  const after = await commercialSnapshot(db)
+  assert.equal(portalProjectTimeSeconds(after.costs, after.timeSessions.filter(session => session.projectId === 'project')), 4 * 60 + 42 + 5400)
+  assert.deepEqual(after.costs.map(item => [item.minutes, item.costCents]), [[4, 3000]])
+  assert.deepEqual(await removeSession(preserved), { id: preserved.id, deleted: true })
+  assert.ok(!(await commercialSnapshot(db)).timeSessions.some(session => session.id === preserved.id))
+  // Legacy stopped sessions share the deletion route, including the exact-second original timer.
+  await removeSession(stopped.session)
+  assert.ok(!(await readClockifySnapshot(db)).timeSessions.some(session => session.id === stopped.session.id))
+  const sessionsBeforeCostDelete = (await commercialSnapshot(db)).timeSessions.length
+  await commercialMutation(db, { action: 'removeCost', id: after.costs[0].id }, 'admin')
+  assert.equal((await commercialSnapshot(db)).timeSessions.length, sessionsBeforeCostDelete)
+  await stop(deletingActive.id)
+
+  console.log('PASS chronomètre, édition, suppression concurrente, saisie manuelle, totaux et horaires Paris')
 } finally {
   mock.timers.reset()
   await db.close()

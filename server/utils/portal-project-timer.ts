@@ -63,6 +63,31 @@ function timestamp(value: unknown, label: string) {
   return value
 }
 
+function assertSessionUnchanged(current: Record<string, unknown>, value: unknown) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) fail(400, 'La version initiale de la session est requise.')
+  const expected = value as Record<string, unknown>
+  if (Object.keys(current).some(key => current[key] !== expected[key])) {
+    fail(409, 'Cette session a été modifiée. Fermez le formulaire et actualisez la liste avant de réessayer.')
+  }
+}
+
+async function deleteTimeSession(db: PortalDatabase, input: Record<string, unknown>) {
+  const id = field(input.id, 'session', 100, true)
+  if (!input.expected || typeof input.expected !== 'object' || Array.isArray(input.expected)) {
+    fail(400, 'La version initiale de la session est requise.')
+  }
+  return db.transaction(async tx => {
+    const current = await tx.prepare(`SELECT project_id AS projectId,description,started_at AS startedAt,stopped_at AS stoppedAt,
+      duration_seconds AS durationSeconds FROM portal_finance_time_sessions WHERE id=?${tx.dialect === 'postgres' ? ' FOR UPDATE' : ''}`).get(id)
+    if (!current) return { id, deleted: false }
+    if (!current.stoppedAt) fail(409, 'Arrêtez le chronomètre avant de supprimer la session.')
+    assertSessionUnchanged(current, input.expected)
+    await tx.prepare('DELETE FROM portal_finance_time_sessions WHERE id=?').run(id)
+    await changeHistoryRevision(tx)
+    return { id, deleted: true }
+  })
+}
+
 async function saveTimeSession(db: PortalDatabase, input: Record<string, unknown>, actor: string) {
   const id = input.id == null ? null : field(input.id, 'session', 100, true)
   const projectId = input.projectId === null && id ? null : field(input.projectId, 'projet', 100, true)
@@ -82,11 +107,7 @@ async function saveTimeSession(db: PortalDatabase, input: Record<string, unknown
         duration_seconds AS durationSeconds FROM portal_finance_time_sessions WHERE id=?${tx.dialect === 'postgres' ? ' FOR UPDATE' : ''}`).get(id)
       if (!current) fail(404, 'Session introuvable.')
       if (!current.stoppedAt) fail(409, 'Arrêtez le chronomètre avant de modifier la session.')
-      const expected = input.expected as Record<string, unknown> | undefined
-      if (!expected || typeof expected !== 'object' || Array.isArray(expected)) fail(400, 'La version initiale de la session est requise.')
-      if (Object.keys(current).some(key => current[key] !== expected[key])) {
-        fail(409, 'Cette session a été modifiée. Fermez le formulaire et actualisez la liste avant de réessayer.')
-      }
+      assertSessionUnchanged(current, input.expected)
       if (!projectId && current.projectId !== null) fail(400, 'Sélectionnez un projet.')
       await tx.prepare(`UPDATE portal_finance_time_sessions SET project_id=?,project_name=COALESCE(?,project_name),
         description=?,started_at=?,stopped_at=?,duration_seconds=? WHERE id=?`)
@@ -113,6 +134,7 @@ export async function projectTimerMutation(db: PortalDatabase, value: unknown, a
   const { action, projectId: projectValue, description: descriptionValue, id: idValue } = value as Record<string, unknown>
 
   if (action === 'saveSession') return saveTimeSession(db, value as Record<string, unknown>, actor)
+  if (action === 'deleteSession') return deleteTimeSession(db, value as Record<string, unknown>)
 
   if (action === 'start') {
     const projectId = field(projectValue, 'projet', 100, true)

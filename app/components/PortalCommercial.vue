@@ -85,6 +85,7 @@ const activeInvoiceId = ref('')
 const activeProjectId = ref('')
 const projectTimer = ref<{ canStart: boolean; start: (description: string) => void }>()
 const sessionEditor = ref<{ open: (session: PortalTimeSession) => void; close: () => void }>()
+const sessionDelete = ref<{ open: (session: PortalTimeSession) => void; close: () => void }>()
 const activeOpportunity = computed(() => snapshot.value?.opportunities.find(item => item.id === activeOpportunityId.value))
 const activeContact = computed(() => snapshot.value?.contacts.find(item => item.id === activeContactId.value))
 const activeInvoice = computed(() => snapshot.value?.invoices.find(item => item.id === activeInvoiceId.value))
@@ -154,6 +155,7 @@ function clearEditor() {
 }
 function changeTab(value: Tab) {
   sessionEditor.value?.close()
+  sessionDelete.value?.close()
   tab.value = value
   query.value = ''
   feedback.value = ''
@@ -852,6 +854,7 @@ onMounted(refresh)
                 </div>
                 <div class="action-row">
                   <button type="button" class="quiet-button" :disabled="working" @click="sessionEditor?.open(item)">Modifier</button>
+                  <button type="button" class="quiet-button" :disabled="working" @click="sessionDelete?.open(item)">Supprimer</button>
                   <button type="button" class="quiet-button" :disabled="working || !projectTimer?.canStart" @click="projectTimer?.start(item.description)">Relancer</button>
                 </div>
               </header>
@@ -872,12 +875,13 @@ onMounted(refresh)
         <details v-if="orphanCosts.length || orphanSessions.length" class="panel orphan-costs">
           <summary>Saisies conservées de projets supprimés</summary>
           <ol class="record-list">
-            <li v-for="item in orphanSessions" :key="item.id">{{ item.projectName }} · {{ item.description || 'Session chronométrée' }} · {{ timestamp(item.startedAt) }} · {{ portalTimerDuration(item.durationSeconds ?? 0) }} <button type="button" class="quiet-button" :disabled="working" @click="sessionEditor?.open(item)">Modifier</button></li>
+            <li v-for="item in orphanSessions" :key="item.id">{{ item.projectName }} · {{ item.description || 'Session chronométrée' }} · {{ timestamp(item.startedAt) }} · {{ portalTimerDuration(item.durationSeconds ?? 0) }} <button type="button" class="quiet-button" :disabled="working" @click="sessionEditor?.open(item)">Modifier</button> <button type="button" class="quiet-button" :disabled="working" @click="sessionDelete?.open(item)">Supprimer</button></li>
             <li v-for="item in orphanCosts" :key="item.id">{{ item.projectName }} · {{ item.label }} · {{ when(item.occurredOn) }} · {{ minutes(item.minutes) }} · {{ money(item.costCents) }} HT</li>
           </ol>
         </details>
       </section>
       <PortalTimeSessionEditor ref="sessionEditor" :clients="snapshot.organizations" :projects="snapshot.projects" @saved="refresh" />
+      <PortalTimeSessionDeleteDialog ref="sessionDelete" @deleted="refresh" />
     </template>
   </section>
 </template>
