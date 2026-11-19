@@ -50,11 +50,12 @@ async function connect(): Promise<PortalDatabase> {
   } catch (error) { await client.query('ROLLBACK'); throw error }
   finally { client.release() }
   const query = async (sql: string, args: any[]) => {
+   const execute = (client: PoolClient) => client.query(postgresSql(sql), args)
    const current = transactionContext.getStore()
-   if (current) return current.query(postgresSql(sql), args)
-   const c = await pool.connect()
-   try { await c.query('SET search_path TO mc_portal'); return await c.query(postgresSql(sql), args) }
-   finally { c.release() }
+   if (current) return execute(current)
+   // A transaction pooler can switch PostgreSQL backends between statements.
+   // Keep SET LOCAL and the application query in the same transaction.
+   return db.transaction(() => execute(transactionContext.getStore()!))
   }
   const db: PortalDatabase = {
    dialect: 'postgres',
