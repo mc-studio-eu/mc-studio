@@ -8,6 +8,7 @@ const error = ref('')
 const clientId = ref('')
 const projectId = ref('')
 const timer = ref<{ canRestart: boolean; start: (description: string, projectId: string) => void }>()
+const sessionEditor = ref<{ open: (session?: PortalTimeSession, defaultProjectId?: string) => void }>()
 const projects = computed(() => data.value?.projects.filter(project => project.organizationId === clientId.value) ?? [])
 const project = computed(() => projects.value.find(item => item.id === projectId.value))
 const clientsById = computed(() => new Map(data.value?.clients.map(client => [client.id, client.name])))
@@ -70,9 +71,12 @@ onMounted(refresh)
 
 <template>
   <section class="clockify" aria-labelledby="clockify-title">
-    <h1 id="clockify-title">Clockify</h1>
+    <header class="clockify-heading">
+      <h1 id="clockify-title">Clockify</h1>
+      <button type="button" class="quiet-button" :disabled="!data" @click="sessionEditor?.open(undefined, projectId)"><UIcon name="i-tabler-plus" aria-hidden="true" /> Ajouter une session</button>
+    </header>
 
-    <PortalProjectTimer ref="timer" :project="project" :last-stopped-session-id="lastStoppedSessionId"
+    <PortalProjectTimer ref="timer" :project="project" :last-stopped-session-id="lastStoppedSessionId" :history-revision="data?.historyRevision"
       description-label="Tâche (facultative)" description-placeholder="Ex. Intégrer la page d’accueil"
       @recorded="refresh" @history-changed="refresh">
       <template #selection="{ pending }">
@@ -128,14 +132,18 @@ onMounted(refresh)
                 </span>
                 <strong>{{ portalTimerDuration(session.durationSeconds ?? 0) }}</strong>
               </div>
-              <button v-if="session.projectId" type="button" class="quiet-button" :disabled="!timer?.canRestart" @click="restart(session)">
-                <UIcon name="i-tabler-player-play" aria-hidden="true" /> Relancer
-              </button>
+              <div class="clockify-session-actions">
+                <button type="button" class="quiet-button" @click="sessionEditor?.open(session)">Modifier</button>
+                <button v-if="session.projectId" type="button" class="quiet-button" :disabled="!timer?.canRestart" @click="restart(session)">
+                  <UIcon name="i-tabler-player-play" aria-hidden="true" /> Relancer
+                </button>
+              </div>
             </li>
           </ul>
         </div>
       </section>
     </section>
+    <PortalTimeSessionEditor ref="sessionEditor" :clients="data?.clients ?? []" :projects="data?.projects ?? []" @saved="refresh" />
   </section>
 </template>
 
@@ -144,6 +152,8 @@ onMounted(refresh)
 .clockify :is(h1, h2, h3, h4, p) { margin: 0; overflow-wrap: anywhere; }
 .clockify h1 { font-size: clamp(1.65rem, 3vw, 2.2rem); }
 .clockify h2 { font-size: 1.25rem; }
+.clockify-heading, .clockify-session-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.clockify-heading { justify-content: space-between; }
 .clockify-selection { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); flex: 1 1 100%; gap: .65rem 1rem; min-width: 0; }
 .clockify-selection label { display: grid; align-content: start; gap: .35rem; min-width: 0; font-size: .875rem; }
 .clockify-selection select { width: 100%; min-height: 44px; padding: .5rem .65rem; border: 1px solid var(--portal-line); background: var(--portal-control); }
@@ -170,6 +180,6 @@ onMounted(refresh)
   .clockify-session { grid-template-columns: minmax(0, 1fr) auto; }
   .clockify-task { grid-column: 1 / -1; }
   .clockify-duration { justify-items: start; }
-  .clockify-session button { grid-column: 2; }
+  .clockify-session-actions { grid-column: 2; }
 }
 </style>

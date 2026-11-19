@@ -1,6 +1,7 @@
 import type { PortalTimeSession } from './portal-project-timer.ts'
 
 export interface PortalClockifySnapshot {
+  historyRevision: string
   clients: Array<{ id: string; name: string }>
   projects: Array<{ id: string; name: string; organizationId: string }>
   timeSessions: PortalTimeSession[]

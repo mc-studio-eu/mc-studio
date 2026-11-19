@@ -35,13 +35,14 @@ interface Entry {
   amountCents: number; occurredOn: string; note: string; recordedBy: string | null; recordedAt: string
 }
 interface Project {
-  id: string; name: string; organizationName: string; estimatedMinutes: number | null; estimatedCents: number | null
+  id: string; name: string; organizationId: string; organizationName: string; estimatedMinutes: number | null; estimatedCents: number | null
 }
 interface Cost {
   id: string; projectId: string | null; projectName: string; label: string; occurredOn: string
   minutes: number; costCents: number; author: string | null
 }
 interface Snapshot {
+  historyRevision: string
   today: string; contacts: Contact[]; opportunities: Opportunity[]
   history: Array<{ id: string; opportunityId: string; kind: keyof typeof historyLabels; author: string | null; createdAt: string
     snapshot: Partial<Opportunity> & { message?: string; audience?: string; social?: string } }>
@@ -83,6 +84,7 @@ const activeContactId = ref('')
 const activeInvoiceId = ref('')
 const activeProjectId = ref('')
 const projectTimer = ref<{ canStart: boolean; start: (description: string) => void }>()
+const sessionEditor = ref<{ open: (session: PortalTimeSession) => void; close: () => void }>()
 const activeOpportunity = computed(() => snapshot.value?.opportunities.find(item => item.id === activeOpportunityId.value))
 const activeContact = computed(() => snapshot.value?.contacts.find(item => item.id === activeContactId.value))
 const activeInvoice = computed(() => snapshot.value?.invoices.find(item => item.id === activeInvoiceId.value))
@@ -151,6 +153,7 @@ function clearEditor() {
   error.value = ''
 }
 function changeTab(value: Tab) {
+  sessionEditor.value?.close()
   tab.value = value
   query.value = ''
   feedback.value = ''
@@ -812,7 +815,7 @@ onMounted(refresh)
             </select>
           </label>
         </div>
-        <PortalProjectTimer ref="projectTimer" :project="activeProject" :last-stopped-session-id="lastStoppedSessionId"
+        <PortalProjectTimer ref="projectTimer" :project="activeProject" :last-stopped-session-id="lastStoppedSessionId" :history-revision="snapshot.historyRevision"
           @recorded="refresh" @history-changed="refresh" />
         <template v-if="activeProject">
           <dl class="metrics">
@@ -847,7 +850,10 @@ onMounted(refresh)
                   <p><strong>{{ item.description || 'Session chronométrée' }}</strong> <span class="badge">Chronomètre</span></p>
                   <p>{{ timestamp(item.startedAt) }} · {{ portalTimerDuration(item.durationSeconds ?? 0) }}<span v-if="item.author"> · {{ item.author }}</span></p>
                 </div>
-                <button type="button" class="quiet-button" :disabled="working || !projectTimer?.canStart" @click="projectTimer?.start(item.description)">Relancer</button>
+                <div class="action-row">
+                  <button type="button" class="quiet-button" :disabled="working" @click="sessionEditor?.open(item)">Modifier</button>
+                  <button type="button" class="quiet-button" :disabled="working || !projectTimer?.canStart" @click="projectTimer?.start(item.description)">Relancer</button>
+                </div>
               </header>
             </article>
             <article v-for="item in activeCosts" :key="item.id" class="subitem">
@@ -866,11 +872,12 @@ onMounted(refresh)
         <details v-if="orphanCosts.length || orphanSessions.length" class="panel orphan-costs">
           <summary>Saisies conservées de projets supprimés</summary>
           <ol class="record-list">
-            <li v-for="item in orphanSessions" :key="item.id">{{ item.projectName }} · {{ item.description || 'Session chronométrée' }} · {{ timestamp(item.startedAt) }} · {{ portalTimerDuration(item.durationSeconds ?? 0) }}</li>
+            <li v-for="item in orphanSessions" :key="item.id">{{ item.projectName }} · {{ item.description || 'Session chronométrée' }} · {{ timestamp(item.startedAt) }} · {{ portalTimerDuration(item.durationSeconds ?? 0) }} <button type="button" class="quiet-button" :disabled="working" @click="sessionEditor?.open(item)">Modifier</button></li>
             <li v-for="item in orphanCosts" :key="item.id">{{ item.projectName }} · {{ item.label }} · {{ when(item.occurredOn) }} · {{ minutes(item.minutes) }} · {{ money(item.costCents) }} HT</li>
           </ol>
         </details>
       </section>
+      <PortalTimeSessionEditor ref="sessionEditor" :clients="snapshot.organizations" :projects="snapshot.projects" @saved="refresh" />
     </template>
   </section>
 </template>

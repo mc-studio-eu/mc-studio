@@ -4,6 +4,7 @@ import { portalTimerDuration, type PortalTimeSession } from '#shared/portal-proj
 const props = defineProps<{
   project?: { id: string; name: string }
   lastStoppedSessionId: string | null
+  historyRevision?: string
   descriptionLabel?: string
   descriptionPlaceholder?: string
 }>()
@@ -44,12 +45,12 @@ async function sync() {
   const currentRevision = revision
   syncing = true
   try {
-    const state = await $fetch<{ active: PortalTimeSession | null; lastStoppedSessionId: string | null; serverNow: string }>(endpoint)
+    const state = await $fetch<{ active: PortalTimeSession | null; lastStoppedSessionId: string | null; historyRevision: string; serverNow: string }>(endpoint)
     if (currentRevision !== revision) return
     applyState(state.active, state.serverNow)
     if (!ready.value) error.value = ''
     ready.value = true
-    if (state.lastStoppedSessionId !== props.lastStoppedSessionId) emit('historyChanged')
+    if (state.lastStoppedSessionId !== props.lastStoppedSessionId || state.historyRevision !== (props.historyRevision ?? '')) emit('historyChanged')
   } catch {
     if (currentRevision === revision && !ready.value) error.value = 'Impossible de charger le chronomètre. Réessayez.'
   } finally {
@@ -106,7 +107,7 @@ onMounted(() => {
   document.addEventListener('visibilitychange', syncWhenVisible)
   if (typeof BroadcastChannel !== 'undefined') {
     channel = new BroadcastChannel('mc-portal-project-timer')
-    channel.onmessage = () => { void sync() }
+    channel.onmessage = () => { emit('historyChanged'); void sync() }
   }
 })
 
@@ -122,7 +123,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="project-timer" aria-labelledby="project-timer-title">
+  <section class="project-timer" :class="{ 'tracker-bar': $slots.selection }" aria-labelledby="project-timer-title">
     <div class="timer-heading">
       <div>
         <h2 id="project-timer-title">Chronomètre de projet</h2>
@@ -179,6 +180,14 @@ onUnmounted(() => {
 .timer-error { color: var(--portal-danger); }
 .timer-feedback { color: var(--portal-success); }
 .project-timer > .quiet-button { justify-self: start; }
+@media (min-width: 1080px) {
+  .tracker-bar .timer-form {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(11rem, 1.2fr) auto;
+    align-items: end;
+  }
+  .tracker-bar .timer-display { font-size: 1.75rem; }
+}
 @media (max-width: 460px) {
   .timer-actions, .timer-form { display: grid; grid-template-columns: minmax(0, 1fr); }
 }

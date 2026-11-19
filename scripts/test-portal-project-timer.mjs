@@ -9,6 +9,7 @@ import { portalDb } from '../server/utils/portal-db.ts'
 import { projectTimerMutation, projectTimerStatus, readClockifySnapshot } from '../server/utils/portal-project-timer.ts'
 import { clockifyWeeks } from '../shared/portal-clockify.ts'
 import { portalProjectTimeSeconds, portalTimerDuration } from '../shared/portal-project-timer.ts'
+import { sessionDurationSeconds, sessionParisCandidates, sessionParisTime } from '../shared/portal-time-session-editor.ts'
 
 // Run with `node scripts/test-portal-project-timer.mjs` against a disposable SQLite database.
 const directory = mkdtempSync(join(tmpdir(), 'mc-portal-project-timer-'))
@@ -32,7 +33,7 @@ try {
   await db.prepare(`INSERT INTO users(id,email,name,password_hash,role) VALUES
     ('admin','admin@example.test','Admin','unused','admin'),('other','other@example.test','Autre admin','unused','admin')`).run()
 
-  assert.deepEqual(await status(), { active: null, lastStoppedSessionId: null, serverNow: startDate.toISOString() })
+  assert.deepEqual(await status(), { active: null, lastStoppedSessionId: null, historyRevision: '', serverNow: startDate.toISOString() })
   await assert.rejects(start('unknown'), errorStatus(404))
   await assert.rejects(start('project', 'x'.repeat(161)), errorStatus(400))
   await assert.rejects(start('project', 123), errorStatus(400))
@@ -107,7 +108,64 @@ try {
     ['2026-10-19', 60, [['2026-10-25', 60, ['sunday']]]],
   ])
 
-  console.log('PASS chronomètre persistant, isolation par admin, concurrence, arrêt idempotent, précision et historique')
+  const manualInput = { action: 'saveSession', requestId: 'manual-21-hours', projectId: 'project', description: 'Chronomètre oublié',
+    startedAt: '2026-10-28T18:04:22.423Z', stoppedAt: '2026-10-29T15:04:22.823Z' }
+  const manual = (await projectTimerMutation(db, manualInput, 'admin')).session
+  assert.equal(manual.durationSeconds, 21 * 3600)
+  assert.equal((await status()).active, null)
+  const revision = (await status()).historyRevision
+  assert.ok(revision)
+  const expected = session => ({ projectId: session.projectId, description: session.description, startedAt: session.startedAt,
+    stoppedAt: session.stoppedAt, durationSeconds: session.durationSeconds })
+  const correction = { ...manualInput, id: manual.id, requestId: undefined, expected: expected(manual), stoppedAt: '2026-10-28T19:34:22.423Z' }
+  const corrected = (await projectTimerMutation(db, correction, 'other')).session
+  assert.equal(corrected.id, manual.id)
+  assert.equal(corrected.author, 'Admin')
+  assert.equal(corrected.durationSeconds, 5400)
+  assert.notEqual((await status()).historyRevision, revision)
+  await assert.rejects(projectTimerMutation(db, correction, 'admin'), errorStatus(409))
+  const renamed = (await projectTimerMutation(db, { ...correction, expected: expected(corrected), description: 'Tâche corrigée' }, 'admin')).session
+  assert.equal(renamed.startedAt, manual.startedAt)
+  assert.equal(renamed.stoppedAt, corrected.stoppedAt)
+  assert.equal(renamed.durationSeconds, 5400)
+  const parallel = await Promise.allSettled([
+    projectTimerMutation(db, { ...correction, expected: expected(renamed), description: 'Version A' }, 'admin'),
+    projectTimerMutation(db, { ...correction, expected: expected(renamed), description: 'Version B' }, 'other'),
+  ])
+  assert.equal(parallel.filter(item => item.status === 'fulfilled').length, 1)
+  assert.equal(parallel.find(item => item.status === 'rejected').reason.statusCode, 409)
+  const newManual = { ...manualInput, requestId: 'manual-retry', description: 'Saisie manuelle',
+    startedAt: '2026-10-28T16:00:00.000Z', stoppedAt: '2026-10-28T16:30:00.000Z' }
+  const created = await Promise.all([projectTimerMutation(db, newManual, 'admin'), projectTimerMutation(db, newManual, 'admin')])
+  assert.equal(created[0].session.id, created[1].session.id)
+  assert.equal(created[0].session.durationSeconds, 1800)
+  assert.equal((await readClockifySnapshot(db)).timeSessions.filter(session => session.id === created[0].session.id).length, 1)
+  await assert.rejects(projectTimerMutation(db, { ...newManual, description: 'Autre tâche' }, 'admin'), errorStatus(409))
+  await assert.rejects(projectTimerMutation(db, { ...newManual, requestId: 'no-project', projectId: 'unknown' }, 'admin'), errorStatus(404))
+  await assert.rejects(projectTimerMutation(db, { ...newManual, stoppedAt: '2026-10-28T15:00:00.000Z' }, 'admin'), errorStatus(400))
+  await assert.rejects(projectTimerMutation(db, { ...newManual, stoppedAt: '2027-01-01T00:00:00.000Z' }, 'admin'), errorStatus(400))
+  await assert.rejects(projectTimerMutation(db, { ...newManual, startedAt: '2026-02-30T00:00:00.000Z' }, 'admin'), errorStatus(400))
+  await assert.rejects(projectTimerMutation(db, { ...newManual, startedAt: '1900-01-01T00:00:00.000Z' }, 'admin'), errorStatus(400))
+  const active = (await start()).session
+  await assert.rejects(projectTimerMutation(db, { ...correction, id: active.id, expected: expected(active) }, 'admin'), errorStatus(409))
+  assert.equal((await status()).active.id, active.id)
+  await stop(active.id)
+  const preserved = (await projectTimerMutation(db, { ...correction, id: retained.id, projectId: null, expected: expected(retained) }, 'admin')).session
+  assert.equal(preserved.projectName, retained.projectName)
+  assert.equal(preserved.projectId, null)
+  const updatedSnapshot = await commercialSnapshot(db)
+  const projectSessions = updatedSnapshot.timeSessions.filter(session => session.projectId === 'project')
+  assert.equal(portalProjectTimeSeconds(updatedSnapshot.costs, projectSessions), 4 * 60 + 42 + 5400 + 1800)
+
+  assert.equal(sessionParisTime('2026-10-25T00:30:00.000Z'), '2026-10-25T02:30:00')
+  assert.deepEqual(sessionParisCandidates('2026-10-25T02:30'), ['2026-10-25T00:30:00.000Z', '2026-10-25T01:30:00.000Z'])
+  assert.deepEqual(sessionParisCandidates('2026-03-29T02:30'), [])
+  assert.deepEqual(sessionParisCandidates('2026-02-30T02:30'), [])
+  assert.deepEqual(sessionParisCandidates('2026-10-30T10:30:27'), ['2026-10-30T09:30:27.000Z'])
+  assert.equal(sessionDurationSeconds('01:30:00'), 5400)
+  assert.equal(sessionDurationSeconds('01:90:00'), null)
+
+  console.log('PASS chronomètre, corrections, saisie manuelle, conflits concurrents, totaux et horaires Paris')
 } finally {
   mock.timers.reset()
   await db.close()
