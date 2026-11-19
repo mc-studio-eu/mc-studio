@@ -3,6 +3,9 @@ import { clockifyLocalDate, clockifyWeeks, type PortalClockifySnapshot } from '#
 import { portalTimerDuration, type PortalTimeSession } from '#shared/portal-project-timer'
 
 const data = ref<PortalClockifySnapshot>()
+const route = useRoute()
+const router = useRouter()
+const mode = computed(() => route.query.view === 'rapport' ? 'rapport' : 'suivi')
 const loading = ref(false)
 const error = ref('')
 const clientId = ref('')
@@ -67,6 +70,10 @@ function restart(session: PortalTimeSession) {
   timer.value.start(session.description, item.id)
 }
 
+function changeMode(view: 'suivi' | 'rapport') {
+  return router.push({ query: { ...route.query, view: view === 'rapport' ? 'rapport' : undefined } })
+}
+
 onMounted(refresh)
 </script>
 
@@ -77,7 +84,12 @@ onMounted(refresh)
       <button type="button" class="quiet-button" :disabled="!data" @click="sessionEditor?.open(undefined, projectId)"><UIcon name="i-tabler-plus" aria-hidden="true" /> Ajouter une session</button>
     </header>
 
-    <PortalProjectTimer ref="timer" :project="project" :last-stopped-session-id="lastStoppedSessionId" :history-revision="data?.historyRevision"
+    <nav class="clockify-modes" aria-label="Vues Clockify">
+      <button type="button" :aria-current="mode === 'suivi' ? 'page' : undefined" @click="changeMode('suivi')">Suivi du temps</button>
+      <button type="button" :aria-current="mode === 'rapport' ? 'page' : undefined" @click="changeMode('rapport')"><UIcon name="i-tabler-chart-bar" aria-hidden="true" /> Rapport</button>
+    </nav>
+
+    <PortalProjectTimer v-show="mode === 'suivi'" ref="timer" :project="project" :last-stopped-session-id="lastStoppedSessionId" :history-revision="data?.historyRevision"
       description-label="Tâche (facultative)" description-placeholder="Ex. Intégrer la page d’accueil"
       @recorded="refresh" @history-changed="refresh">
       <template #selection="{ pending }">
@@ -104,7 +116,8 @@ onMounted(refresh)
       <button type="button" class="quiet-button" @click="refresh">Réessayer</button>
     </div>
 
-    <section v-if="data" class="clockify-history" aria-labelledby="clockify-history-title" :aria-busy="loading">
+    <PortalClockifyReport v-if="data && mode === 'rapport'" :data="data" />
+    <section v-if="data && mode === 'suivi'" class="clockify-history" aria-labelledby="clockify-history-title" :aria-busy="loading">
       <h2 id="clockify-history-title">Historique des sessions</h2>
       <p v-if="!weeks.length" class="clockify-empty clockify-muted">Les sessions terminées apparaîtront ici.</p>
       <section v-for="week in weeks" :key="week.monday" class="clockify-week" :aria-labelledby="`clockify-week-${week.monday}`">
@@ -158,6 +171,9 @@ onMounted(refresh)
 .clockify-heading, .clockify-session-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
 .clockify-heading { justify-content: space-between; }
 .clockify-delete { color: var(--portal-danger); }
+.clockify-modes { display: flex; gap: .4rem 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--portal-line); }
+.clockify-modes button { display: flex; align-items: center; gap: .4rem; min-height: 44px; padding: .4rem .65rem; background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--portal-muted); }
+.clockify-modes button[aria-current] { color: var(--portal-accent-text); border-bottom-color: var(--portal-accent); }
 .clockify-selection { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); flex: 1 1 100%; gap: .65rem 1rem; min-width: 0; }
 .clockify-selection label { display: grid; align-content: start; gap: .35rem; min-width: 0; font-size: .875rem; }
 .clockify-selection select { width: 100%; min-height: 44px; padding: .5rem .65rem; border: 1px solid var(--portal-line); background: var(--portal-control); }
